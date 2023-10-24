@@ -17,6 +17,10 @@
       </template>
     </v-app-bar>
     <v-btn> Button </v-btn> 
+    <v-main>
+      <slot>
+      </slot>
+    </v-main>
   </v-app>
 </template> 
 

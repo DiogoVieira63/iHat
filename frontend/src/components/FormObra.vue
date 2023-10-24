@@ -21,7 +21,7 @@ async function submit (event){
       >
         <template v-slot:activator="{ props }">
           <v-btn icon color="primary" v-bind="props">
-            <v-icon color="black">mdi-plus</v-icon>
+            <v-icon  color="black">mdi-plus</v-icon>
           </v-btn>
         </template>
         <v-card>
