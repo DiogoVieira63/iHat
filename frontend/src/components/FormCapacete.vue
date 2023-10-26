@@ -55,8 +55,8 @@ const { handleSubmit, handleReset } = useForm({
         </template>
         <v-card>
 			<v-form @submit.prevent="submit">
-          <v-card-title>template
-            <span class="text-h5">Registar Obra</span>
+          <v-card-title>
+            <span class="text-h5">Registar Capacete</span>
           </v-card-title>
           <v-card-text>
             <v-container>
