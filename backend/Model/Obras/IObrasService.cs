@@ -1,7 +1,7 @@
 namespace iHat.Model.Obras;
 
-interface IObrasService{
-    void AllObras(int id);
+public interface IObrasService{
+    Task<List<Obra>> GetObrasOfResponsavel(int idResponsavel);
     void AddObra(string name);
 }
     
