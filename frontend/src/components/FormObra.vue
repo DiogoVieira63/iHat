@@ -20,10 +20,8 @@ async function submit (event){
         width="1024"
       >
         <template v-slot:activator="{ props }">
-          <v-btn
-            color="primary"
-            v-bind="props">
-            Registar Obra
+          <v-btn icon color="primary" v-bind="props">
+            <v-icon  color="black">mdi-plus</v-icon>
           </v-btn>
         </template>
         <v-card>
