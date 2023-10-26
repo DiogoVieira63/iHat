@@ -4,18 +4,18 @@ import Lista from "../components/Lista.vue"
 import PageLayout from "../components/PageLayout.vue"
 import { computed, ref, watch } from "vue"
 
-const obras = [{ 'Nome da obra': 'Obra1', 'Estado': 'Pendente' }, { 'Nome da obra': 'Obra2', 'Estado': 'Em Curso' }]
-const Capacetes = [{ 'Id': '1', 'Estado': 'Pendente' }, { 'Id': '2', 'Estado': 'Em Curso' }, { 'Id': '3', 'Estado': 'Planeado' }]
-const tab = ref("Obras")
+const obras = [{ 'id':'1','Nome da obra': 'Obra1', 'Estado': 'Pendente' }, { 'id':'2','Nome da obra': 'Obra2', 'Estado': 'Em Curso' }]
+const Capacetes = [{ 'id': '1', 'Estado': 'Pendente' }, { 'id': '2', 'Estado': 'Em Curso' }, { 'id': '3', 'Estado': 'Planeado' }]
+const tab = ref("obras")
 const list = ref(obras)
 const formObra = ref(true)
 const search = ref("")
 
 watch(tab, (newValue, oldValue) => {
-  if (newValue === "Obras") {
+  if (newValue === "obras") {
     list.value = obras
     formObra.value = true
-  } else if (newValue === "Capacetes") {
+  } else if (newValue === "capacetes") {
     list.value = Capacetes
     formObra.value = false
   }
@@ -46,13 +46,13 @@ const filteredList = computed(() => {
           <v-col cols="12" xl="2" lg="3" md="6" class="text-center">
             <v-tabs v-model="tab" class="rounded-t-xl align-start" bg-color="grey lighten-3" color="black"
               align-tabs="center">
-              <v-tab value="Obras" color="black">Obras</v-tab>
-              <v-tab value="Capacetes" color="black">Capacetes</v-tab>
+              <v-tab value="obras" color="black">Obras</v-tab>
+              <v-tab value="capacetes" color="black">Capacetes</v-tab>
             </v-tabs>
           </v-col>
           <v-spacer></v-spacer>
           <v-col>
-            <v-text-field :loading="loading" density="compact" variant="solo" label="Search" v-model="search"
+            <v-text-field density="compact" variant="solo" label="Search" v-model="search"
               append-inner-icon="mdi-magnify" single-line hide-details></v-text-field>
           </v-col>
           <v-col cols="6" md="1" align-self="end">
@@ -60,7 +60,7 @@ const filteredList = computed(() => {
             <!--FormCapacete v-else/-->
           </v-col>
         </v-row>
-        <Lista v-if="filteredList.length > 0" :list="filteredList" />
+        <Lista v-if="filteredList.length > 0" :list="filteredList" :path="tab"/>
         <v-alert v-else dense type="info">No results found</v-alert>
       </v-sheet>
     </v-container>
