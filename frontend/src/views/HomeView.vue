@@ -1,5 +1,6 @@
 <script setup>
 import FormObra from "../components/FormObra.vue"
+
 import Lista from "../components/Lista.vue"
 import PageLayout from "../components/PageLayout.vue"
 import { computed, ref, watch } from "vue"
@@ -65,7 +66,7 @@ const filteredList = computed(() => {
           </v-col>
           <v-col cols="6" md="1" align-self="end">
             <FormObra v-if="formObra" class="mb-1" />
-            <!--FormCapacete v-else/-->
+            <FormCapacete v-else/>
           </v-col>
         </v-row>
         <Lista v-if="filteredList.length > 0" :list="filteredList" :path="tab" :headers="headers"/>
