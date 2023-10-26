@@ -5,11 +5,19 @@ import PageLayout from "../components/PageLayout.vue"
 import { computed, ref, watch } from "vue"
 
 const obras = [{ 'id':'1','Nome da obra': 'Obra1', 'Estado': 'Pendente' }, { 'id':'2','Nome da obra': 'Obra2', 'Estado': 'Em Curso' }]
-const Capacetes = [{ 'id': '1', 'Estado': 'Pendente' }, { 'id': '2', 'Estado': 'Em Curso' }, { 'id': '3', 'Estado': 'Planeado' }]
+const Capacetes = [{ 'id': '1', 'Estado': 'Livre' }, { 'id': '2', 'Estado': 'Em uso' }, { 'id': '3', 'Estado': 'Ocupado' }]
 const tab = ref("obras")
 const list = ref(obras)
 const formObra = ref(true)
 const search = ref("")
+
+const headers = computed(() => {
+  if (tab.value === "obras") {
+    return ["Nome da obra", "Estado"]
+  } else if (tab.value === "capacetes") {
+    return ["Estado"]
+  }
+})
 
 watch(tab, (newValue, oldValue) => {
   if (newValue === "obras") {
@@ -60,7 +68,7 @@ const filteredList = computed(() => {
             <!--FormCapacete v-else/-->
           </v-col>
         </v-row>
-        <Lista v-if="filteredList.length > 0" :list="filteredList" :path="tab"/>
+        <Lista v-if="filteredList.length > 0" :list="filteredList" :path="tab" :headers="headers"/>
         <v-alert v-else dense type="info">No results found</v-alert>
       </v-sheet>
     </v-container>

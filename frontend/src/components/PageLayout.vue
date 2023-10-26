@@ -16,7 +16,6 @@
         <v-btn icon="mdi-dots-vertical"></v-btn>
       </template>
     </v-app-bar>
-    <v-btn> Button </v-btn> 
     <v-main>
       <slot>
       </slot>

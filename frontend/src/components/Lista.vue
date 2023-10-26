@@ -6,21 +6,25 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const props = defineProps({
-  list: {
-    type: Array,
-    required: true
-  },
+    list: {
+      type: Array,
+      required: true
+    },
     path: {
         type: String,
         required: true
+    },
+    headers: {
+        type: Array,
+        required: true
     }
+
 })
 
 
-const headers = computed(() => Object.keys(props.list[0]))
-const numColsPercent = computed(() => (100 / headers.value.length) + "%")
+const numColsPercent = computed(() => (100 / props.headers.length) + "%")
 const page = ref(1);
-const maxPerPage = 3;
+const maxPerPage = 2;
 const numPages = computed(() => Math.ceil(props.list.length / maxPerPage));
 
 watch([page,numPages],()=>{
@@ -45,14 +49,14 @@ const rows = computed(() => {
     <v-table height="50vh" hover>
         <thead>
             <tr>
-                <th v-for="header in headers" :key="header" class="text-left" >
+                <th v-for="header in props.headers" :key="header" class="text-left" >
                     {{ header }}
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="(row, rowIndex) in rows" :key="rowIndex" @click="changePage(row.id)">
-                <td v-for="header in headers" :key="header" class="text-left" > 
+                <td v-for="header in props.headers" :key="header" class="text-left" > 
                     {{ row[header] }}
                 </td>
             </tr>
