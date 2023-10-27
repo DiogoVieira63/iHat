@@ -1,8 +1,11 @@
 <script setup>
 import FormObra from "../components/FormObra.vue"
+import PageLayout from "../components/PageLayout.vue"
+
 </script>
 
 <template>
-  <FormObra />
+  <PageLayout>  <FormObra />
+</PageLayout>
 </template>
 

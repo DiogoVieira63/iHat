@@ -1,8 +1,26 @@
-<script setup>
-
-
-
+<script>
+  export default {
+    data: () => ({
+      links: ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'],
+    }),
+  }
 </script>
+
+<style scoped>
+.v-footer--full-width {
+  width: 100%;
+  left: 0;
+  right: 0;
+  position: absolute; 
+  bottom: 0;
+}
+
+.v-row--full-width {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+</style>
 
 
  <template>
@@ -16,8 +34,29 @@
         <v-btn icon="mdi-dots-vertical"></v-btn>
       </template>
     </v-app-bar>
-    <v-btn> Button </v-btn> 
+    <v-main>
+      <slot></slot>
+    </v-main>
+    <v-footer rounded w-auto color="#B38DF7" class="v-footer--full-width">
+      <v-row justify="center" no-gutters class="v-row--full-width">
+        <v-btn
+          v-for="link in links"
+          :key="link"
+          color="white"
+          variant="text"
+          class="mx-2"
+          rounded="xl"
+        >
+          {{ link }}
+        </v-btn>
+        <v-col class="text-center mt-4" cols="12">
+          {{ new Date().getFullYear() }} — <strong>iHat</strong>
+        </v-col>
+      </v-row>
+    </v-footer>
   </v-app>
+  
+  
 </template> 
 
 
