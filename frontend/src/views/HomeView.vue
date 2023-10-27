@@ -1,6 +1,5 @@
 <script setup>
 import FormObra from "../components/FormObra.vue"
-
 import Lista from "../components/Lista.vue"
 import PageLayout from "../components/PageLayout.vue"
 import { computed, ref, watch } from "vue"
@@ -42,12 +41,9 @@ const filteredList = computed(() => {
     return filtered && filtered.length > 0 ? filtered : [];
   }
 });
-
-
 </script>
 
 <template>
-
   <PageLayout>
     <v-container>
       <v-sheet class="mx-auto" max-width="1500px">
