@@ -16,6 +16,4 @@ public class Obra
     public string Mapa { get; set; }
     public List<int> Capacetes { get; set; }
     public List<string> Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
-
-
 }

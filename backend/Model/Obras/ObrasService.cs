@@ -53,4 +53,9 @@ public class ObrasService: IObrasService{
 
     public void AddObra(string name){
     }
+
+    public async Task<Obra> GetObra(string idObra){
+        var obras = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
+        return obras;
+    }
 }

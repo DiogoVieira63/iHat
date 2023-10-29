@@ -37,7 +37,8 @@ public class IHatController : ControllerBase{
 
     }
 
-    [HttpGet("construction")]
+    // Get all constructions managed by the user that made the request
+    [HttpGet("constructions")]
     public async Task<ActionResult<List<Obra>>> GetConstruction(){
         
         var lista = await _facade.GetObras(1);
@@ -49,8 +50,16 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
-    /*[HttpGet("construction\{id}")]
-    public void GetConstruction(string id){
-    
-    }*/
+    // Get the construction identified by the id
+    // ihat/construction/{id}
+    [HttpGet("construction/{id}")]
+    public async Task<ActionResult<Obra>> GetConstruction(string id){
+        if (id != null){
+            return await _facade.GetObra(id);
+            // return Ok(id);
+        }
+        else{
+            return NotFound();
+        }
+    }
 }
