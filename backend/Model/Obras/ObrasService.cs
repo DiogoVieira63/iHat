@@ -51,6 +51,21 @@ public class ObrasService: IObrasService{
         return obras;
     }
 
-    public void AddObra(string name){
+    public async Task AddObra(string name, int idResponsavel){
+        var newObra = new Obra(name, idResponsavel);
+
+        var checkIfConstructionSameName = 
+            await _obraCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
+
+        if(checkIfConstructionSameName != null){
+            throw new Exception("Construction with this name already exists.");
+        }
+
+        try{
+            await _obraCollection.InsertOneAsync(newObra);
+        }
+        catch (Exception e){
+            throw new Exception(e.Message);
+        }
     }
 }

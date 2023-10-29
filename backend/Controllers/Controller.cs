@@ -25,13 +25,6 @@ public class IHatController : ControllerBase{
 
     }
 
-    [HttpPost("construction")]
-    public void NewConstruction(string name){
-        Console.WriteLine("New Construction POST Request");
-
-        _facade.NewConstruction(name);
-    }
-
     [HttpPost("helmet")]
     public void NewHelmet(){
 
@@ -53,4 +46,17 @@ public class IHatController : ControllerBase{
     public void GetConstruction(string id){
     
     }*/
+
+
+    [HttpPost("construction")]
+    public async Task<IActionResult> NewConstruction(string name){
+
+        try{
+            await _facade.NewConstruction(name);
+        }
+        catch (Exception e){
+            return BadRequest(e.Message);
+        }
+        return Ok();
+    }
 }

@@ -15,7 +15,15 @@ public class Obra
     public List<string> Zonas { get; set; } //GeoJSON
     public string Mapa { get; set; }
     public List<int> Capacetes { get; set; }
-    public List<string> Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
+    public string Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
 
 
+    public Obra(string name, int idResponsavel){
+        this.IdResponsavel = idResponsavel;
+        this.Name = name;
+        this.Zonas = new List<string>();
+        this.Mapa = "";
+        this.Capacetes = new List<int>();
+        this.Status = "Planeada";
+    }
 }
