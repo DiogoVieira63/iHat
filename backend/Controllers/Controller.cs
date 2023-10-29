@@ -1,5 +1,6 @@
 using iHat.Model.iHatFacade;
 using iHat.Model.Obras;
+using iHat.Model.Capacetes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iHat.Controllers;
@@ -25,32 +26,79 @@ public class IHatController : ControllerBase{
 
     }
 
-    [HttpPost("construction")]
-    public void NewConstruction(string name){
-        Console.WriteLine("New Construction POST Request");
+    // [HttpPost("construction")]
+    // public void NewConstruction(string name){
+    //     Console.WriteLine("New Construction POST Request");
 
-        _facade.NewConstruction(name);
-    }
+    //     _facade.NewConstruction(name);
+    // }
 
-    [HttpPost("helmet")]
-    public void NewHelmet(){
+    
 
-    }
-
-    [HttpGet("construction")]
-    public async Task<ActionResult<List<Obra>>> GetConstruction(){
+    // [HttpGet("construction")]
+    // public async Task<ActionResult<List<Obra>>> GetConstruction(){
         
-        var lista = await _facade.GetObras(1);
+    //     var lista = await _facade.GetObras(1);
 
-        if(lista == null){
-            return NotFound();
-        }
+    //     if(lista == null){
+    //         return NotFound();
+    //     }
         
-        return lista;
-    }
+    //     return lista;
+    // }
 
     /*[HttpGet("construction\{id}")]
     public void GetConstruction(string id){
     
     }*/
+
+    [HttpPost("helmet")]
+   public async Task<IActionResult> NewHelmet(Capacete capacete){
+        Console.WriteLine("New Helmet POST Request");
+        try
+        {
+            await _facade.AddHelmet(capacete);
+            return Ok(); // Retorna uma resposta de sucesso
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
+        }
+    }
+    
+
+    [HttpGet("helmett")]
+    public async Task<ActionResult<List<Capacete>>> GetAllHelmets(){
+        Console.WriteLine("Get All Helmets GET Request");
+
+        var lista = await _facade.GetAll();
+
+        if(lista == null){
+            return NotFound();
+        }
+
+        return lista;
+    }
+
+    // [HttpGet("helmet\{id}")]
+    // public async Task<ActionResult<Capacete>> GetHelmet(int id){
+    //     Console.WriteLine("Get Helmet GET Request");
+
+    //     var capacete = await _facade.GetCapacete(id);
+
+    //     if(capacete == null){
+    //         return NotFound();
+    //     }
+
+    //     return capacete;
+    // }
+
+    // [HttpDelete("helmet\{id}")]
+    // public async Task<IActionResult> DeleteHelmet(int id){
+
+    // }
+
+
+
+   
 }

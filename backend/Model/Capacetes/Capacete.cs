@@ -4,6 +4,8 @@ namespace iHat.Model.Capacetes;
 
 public class Capacete
 {
+    // [BsonId] // Primary key
+    // [BsonRepresentation(BsonType.ObjectId)] // permite passar uma variável do tipo ObjectId como string
     public int Id { get; set; }
     public string Status { get; set; }
     public string Info { get; set; }
