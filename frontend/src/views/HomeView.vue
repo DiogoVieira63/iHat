@@ -40,9 +40,6 @@ watch(tab, (newValue, oldValue) => {
 <template>
   <PageLayout>
     <v-container>
-        <LogsObra></LogsObra>
-    </v-container>
-    <v-container>
       <v-sheet class="mx-auto" max-width="1500px">
         <Lista v-if="list.length > 0" :list="list" :path="tab" :headers="headers">
           <template v-slot:tabs>
