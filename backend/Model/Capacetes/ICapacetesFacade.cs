@@ -2,8 +2,9 @@ namespace iHat.Model.Capacetes;
 
 public interface ICapacetesFacade{
     Task<List<Capacete>> GetAll();
-    Task<Capacete> GetById(int id);
+    Task<Capacete> GetById(string id);
+    Task<List<Capacete>> GetAllCapacetesdaObra(string idObra);
     Task Add(Capacete capacete);
-    Task Delete(int id);
-    Task AddCapaceteToObra(int idCapacete, string idObra);
+    Task DeleteCapaceteToObra(string id);
+    Task AddCapaceteToObra(string idCapacete, string idObra);
 }

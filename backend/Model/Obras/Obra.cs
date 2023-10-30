@@ -14,8 +14,8 @@ public class Obra
     public string Name { get; set; }
     public List<string> Zonas { get; set; } //GeoJSON
     public string Mapa { get; set; }
-    public List<int> Capacetes { get; set; }
-    public List<string> Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
+    public List<string> Capacetes { get; set; }
+    public string Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
 
 
 }

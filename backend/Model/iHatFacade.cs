@@ -8,8 +8,9 @@ public class iHatFacade: IiHatFacade{
     private readonly IObrasService iobras;
     private readonly ICapacetesFacade icapacetes;
 
-    public iHatFacade(IObrasService obrasService){
+    public iHatFacade(IObrasService obrasService, ICapacetesFacade capacetesFacades){
         iobras = obrasService;
+        icapacetes = capacetesFacades;
     }
 
     // public async Task NewConstruction(string name){
@@ -47,15 +48,19 @@ public class iHatFacade: IiHatFacade{
         return await icapacetes.GetAll();
     }
 
-    public async Task<Capacete> GetCapacete(int id){
+    public async Task<Capacete> GetCapacete(string id){
         return await icapacetes.GetById(id);
     }
 
-    public async Task Delete(int id){
-        await icapacetes.Delete(id);
+    public async Task<List<Capacete>> GetAllCapacetesdaObra(string idObra){
+        return await icapacetes.GetAllCapacetesdaObra(idObra);
     }
 
-    public async Task AddCapaceteToObra(int idCapacete, string idObra){
+    public async Task DeleteCapaceteToObra(string id){
+        await icapacetes.DeleteCapaceteToObra(id);
+    }
+
+    public async Task AddCapaceteToObra(string idCapacete, string idObra){
         await icapacetes.AddCapaceteToObra(idCapacete, idObra);
     }
 

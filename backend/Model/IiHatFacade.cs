@@ -1,18 +1,21 @@
 using iHat.Model.Capacetes;
+using iHat.Model.Obras;
 
 public interface IiHatFacade{
 
     // Task NewConstruction(string name);
 
-    // Task<List<Obra>> GetObras(int idResponsavel);
+    Task<List<Obra>> GetObras(int idResponsavel);
 
     Task AddHelmet(Capacete capacete);
 
     Task<List<Capacete>> GetAll();
 
-    Task<Capacete> GetCapacete(int id);
+    Task<Capacete> GetCapacete(string id);
 
-    Task Delete(int id);
+    Task<List<Capacete>> GetAllCapacetesdaObra(string idObra);
 
-    Task AddCapaceteToObra(int idCapacete, string idObra);
+    Task DeleteCapaceteToObra(string id);
+
+    Task AddCapaceteToObra(string idCapacete, string idObra);
 }
