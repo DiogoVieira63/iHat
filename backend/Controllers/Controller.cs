@@ -48,6 +48,7 @@ public class IHatController : ControllerBase{
     }*/
 
 
+    // Input: name, mapa, estado
     [HttpPost("construction")]
     public async Task<IActionResult> NewConstruction(string name){
 
