@@ -4,7 +4,7 @@ import PageLayout from "../components/PageLayout.vue"
 import { computed, ref, watch, onMounted, nextTick } from "vue"
 import { useRoute, useRouter } from 'vue-router'
 import RowObra from "@/components/RowObra.vue"
-
+import MapEditor from "@/components/MapEditor.vue"
 
 const route = useRoute()
 const router = useRouter()
@@ -48,10 +48,6 @@ onMounted(() => {
 })
 
 
-function changePage(id) {
-    router.push({ path: `${props.path}/${id}` })
-}
-
 function removeCapacete(id) {
     list.value = list.value.filter(item => item.id !== id)
 }
@@ -79,6 +75,7 @@ function removeCapacete(id) {
                 <v-btn density="compact" icon="mdi-pencil" @click="toggleEditing"></v-btn>
               </v-col>
             </v-row>
+            <map-editor />
           </v-col>
           <v-col cols="12" md="6" class="pa-16">
               <Lista v-if="list.length > 0" :list="list" path="/capacetes" :headers="headers" :maxPerPage="8">
