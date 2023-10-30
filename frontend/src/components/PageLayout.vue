@@ -1,9 +1,5 @@
-<script>
-  export default {
-    data: () => ({
-      links: ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'],
-    }),
-  }
+<script setup>
+  const links=  ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'];
 </script>
 
 <style scoped>
@@ -37,7 +33,7 @@
     <v-main>
       <slot></slot>
     </v-main>
-    <v-footer rounded w-auto color="#B38DF7" class="v-footer--full-width">
+    <v-footer rounded w-auto color="primary" class="v-footer--full-width">
       <v-row justify="center" no-gutters class="v-row--full-width">
         <v-btn
           v-for="link in links"
