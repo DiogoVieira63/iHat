@@ -8,21 +8,30 @@
 </script>
 
 <template>
-    <v-infinite-scroll :height="20" side="both" @load="load">
-        <v-timeline side="end" align="start">
+    <v-infinite-scroll :height="200" side="both" @load="load">
+        <v-timeline side="both" align="start">
             <v-timeline-item v-for="item in items"
               :dot-color="item.color"
-              size="small"
+              size="large"
+              icon="mdi-alert-outline"
+              class="me-4"
             >
-              <div class="d-flex">
-                <strong class="me-4">{{item.time}}</strong>
-                <div>
-                  <strong>{{item.message}}</strong>
-                  <div class="text-caption">
-                    {{item.description}}
-                  </div>
-                </div>
-              </div>
+              <v-card>
+                <v-card-title :class="'bg-' + item.color">
+                  <h2 class="font-weight-light">
+                    {{item.message}}
+                  </h2>
+                </v-card-title>
+                <v-card-text>
+                  {{item.description}}
+                </v-card-text>
+              </v-card>
+              <template v-slot:opposite>
+                  <div
+                    :class="`pt-1 headline font-weight-bold text-${item.color}`"
+                    v-text="item.time"
+                  ></div>
+                </template>
             </v-timeline-item>
         </v-timeline>
     </v-infinite-scroll>

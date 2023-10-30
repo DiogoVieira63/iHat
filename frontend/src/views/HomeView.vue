@@ -5,6 +5,8 @@ import Lista from "../components/Lista.vue"
 import PageLayout from "../components/PageLayout.vue"
 import { computed, ref, watch } from "vue"
 
+import LogsObra from "@/components/LogsObra.vue"
+
 const obras = [{ 'id': '1', 'Nome da obra': 'Obra1', 'Estado': 'Pendente' }, { 'id': '2', 'Nome da obra': 'Obra2', 'Estado': 'Em Curso' }]
 const Capacetes = [{ 'id': '1', 'Estado': 'Livre' }, { 'id': '2', 'Estado': 'Em uso' }, { 'id': '3', 'Estado': '<v-btn>BUTTON<v-btn>' }]
 const tab = ref("obras")
@@ -37,6 +39,9 @@ watch(tab, (newValue, oldValue) => {
 
 <template>
   <PageLayout>
+    <v-container>
+        <LogsObra></LogsObra>
+    </v-container>
     <v-container>
       <v-sheet class="mx-auto" max-width="1500px">
         <Lista v-if="list.length > 0" :list="list" :path="tab" :headers="headers">
