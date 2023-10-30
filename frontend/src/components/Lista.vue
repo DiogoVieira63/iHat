@@ -43,7 +43,6 @@ watch([page, numPages], () => {
 const rows = computed(() => {
     const startIndex = (page.value - 1) * props.maxPerPage;
     const endIndex = startIndex + props.maxPerPage;
-    console.log(startIndex, endIndex)
     if (!search.value) {
         return props.list.slice(startIndex, endIndex);
     } else {

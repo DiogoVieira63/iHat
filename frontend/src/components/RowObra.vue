@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { ref } from "vue"
+import { ref, computed } from "vue"
+import Confirmation from './Confirmation.vue';
 
 
 const props = defineProps({
@@ -29,10 +30,10 @@ function currentEstado(value) {
 }
 
 function changeEstado(confirmation) {
-    if(confirmation){
+    if (confirmation) {
         props.row.Estado = newEstado(props.row.Estado)
     }
-    else{
+    else {
         estado.value = !estado.value
     }
     dialog.value = false
@@ -40,13 +41,15 @@ function changeEstado(confirmation) {
 
 const emit = defineEmits(['removeCapacete'])
 
-function removeCapacete() {
+function removeCapacete(confirmation) {
     removeDialog.value = false
-    emit('removeCapacete', props.row.id)
+    if (confirmation)
+        emit('removeCapacete', props.row.id)
 }
 
-
-
+function isInUso() {
+    return props.row.Estado === "Em uso"
+}
 
 </script>
 <template>
@@ -55,52 +58,27 @@ function removeCapacete() {
     <td>
         <v-row>
             <v-col cols="5">
-                <v-dialog v-model="dialog" persistent width="auto">
-                    <template v-slot:activator="{ props }">
-                        <v-switch v-bind="props" v-model="estado" :disabled="row.Estado == 'Em uso'" color="info"></v-switch>
+                <confirmation title="Confirmação" :function="changeEstado">
+                    <template #button="{ prop }">
+                        <v-switch v-bind="prop" v-model="estado" :disabled="row.Estado == 'Em uso'" color="info"></v-switch>
                     </template>
-                    <v-card>
-                        <v-card-title class="text-h5">
-                            Confirmação
-                        </v-card-title>
-                        <v-card-text>Tem a certeza que pretende mudar o Estado deste
-                            capacete para {{ newEstado(props.row['Estado']) }}?</v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="green-darken-1" variant="text" @click="changeEstado(false)">
-                                Não
-                            </v-btn>
-                            <v-btn color="green-darken-1" variant="text" @click="changeEstado(true)">
-                                Sim
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-            </v-col>
-            <v-col cols="6">
-                <v-dialog v-model="removeDialog" persistent width="auto">
-                    <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" color="grey" text class="mt-2">
-                            <v-icon>mdi-delete</v-icon>
-                        </v-btn>
+                    <template v-slot:message>
+                        Tem a certeza que pretende mudar o Estado do<strong> Capacete {{ props.row.id }}</strong> de
+                        <span class='text-red'> {{ props.row.Estado }}</span> para
+                        <span class="text-green"> {{ newEstado(props.row['Estado']) }}?</span>
                     </template>
-                    <v-card>
-                        <v-card-title class="text-h5">
-                            Confirmação
-                        </v-card-title>
-                        <v-card-text>Tem a certeza que pretende remover o Capacete {{ row.id }} da obra?</v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="red" variant="text" @click="removeCapacete">
-                                Não
-                            </v-btn>
-                            <v-btn color="green" variant="text" @click="removeCapacete">
-                                Sim
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
+                </confirmation>
             </v-col>
+            <confirmation title="Confirmação"  :function="removeCapacete">
+                <template #button="{ prop }">
+                    <v-btn v-bind="prop" color="grey" text class="mt-6" :disabled="isInUso()">
+                        <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                </template>
+                <template v-slot:message>
+                    Tem a certeza que pretende remover o <strong> Capacete {{ props.row.id }}</strong> da obra?
+                </template>
+            </confirmation>
         </v-row>
     </td>
 </template>
