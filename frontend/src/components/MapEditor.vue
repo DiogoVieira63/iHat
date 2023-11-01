@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { onMounted } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 
 const isDrawing = ref(false);
 const addMarker = ref(false);
@@ -9,7 +10,18 @@ const selectedZone = ref(null);
 const imageSrc = ref('/Duplex-0.svg');
 const width = ref(700);
 const toggle = ref(null);
+const polygons = ref({});
+const drawPoints = ref([]);
+const svg = ref(null);
+const rect = ref(null);
+let id = 0;
 
+onMounted(() => {
+    nextTick(() => {
+        rect.value = svg.value.getBoundingClientRect();
+        console.log("Rect2", rect);
+    });
+});
 
 
 watch(toggle, (newValue, oldValue) => {
@@ -39,71 +51,59 @@ const endDrawing = () => {
 
 
 const svgClick = (e) => {
-    const svg = document.querySelector('#my-svg');
-    console.log(svg, typeof (svg));
-    if (isDrawing.value || addMarker.value) {
-        const rect = svg.getBoundingClientRect();
+    if (isDrawing.value ) {
         const x =
-            ((e.clientX - rect.left) * svg.viewBox.baseVal.width) /
-            rect.width;
+            ((e.clientX - rect.value.left) * width.value) /
+            rect.value.width;
         const y =
-            ((e.clientY - rect.top) * svg.viewBox.baseVal.height) /
-            rect.height;
+            ((e.clientY - rect.value.top) * width.value) / //change to height
+            rect.value.height;
 
-        if (addMarker.value) {
-            addMapMarker(x, y);
-        }
-        else{
-            polygonPoints.value.push({ x, y });
-            createPoint(x, y);
-        }
+        polygonPoints.value.push({ x, y });
+        createPoint(x, y);
     }
 };
 const createPoint = (x, y) => {
-    const point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    point.setAttribute('cx', x);
-    point.setAttribute('cy', y);
-    point.setAttribute('r', 3);
-    point.setAttribute('fill', 'red');
-    document.querySelector('#my-svg').appendChild(point);
+    const point = {}
+    point['x'] = x
+    point['y'] = y
+    drawPoints.value.push(point);
 };
 
 const createPolygon = (points) => {
     if (points.length >= 3) {
-        const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         const pointString = points.map(point => `${point.x},${point.y}`).join(' ');
-        polygon.setAttribute('points', pointString);
-        polygon.setAttribute('fill', 'red');
-        polygon.setAttribute('fill-opacity', '0.5');
-        polygon.addEventListener('click', () => {
-            selectZone(polygon);
-        });
-        selectZone(polygon);
-        document.querySelector('#my-svg').appendChild(polygon);
+        let polygon = { "points": pointString, "id": id, stroke: "none" }
+        polygons.value[id] = polygon;
         zones.value.push(polygon);
+        selectZone(id);
+        id += 1;
     }
 };
 
-const selectZone = (zone) => {
-    if (selectedZone.value) {
-        selectedZone.value.setAttribute('stroke', 'none');
+const unselectZones = () => {
+    for (const [key, value] of Object.entries(polygons.value)) {
+        polygons.value[key].stroke = "none";
     }
-    if (selectedZone.value === zone) {
-        selectedZone.value = null;
-        return;
-    }
-    selectedZone.value = zone;
-    selectedZone.value.setAttribute('stroke', 'yellow');
-};
+}
+
+const selectZone = (id) => {
+    unselectZones();
+    selectedZone.value = id;
+    polygons.value[id].stroke = "yellow";
+}
+
+
 
 const deleteZone = () => {
     if (selectedZone.value) {
-        document.querySelector('#my-svg').removeChild(selectedZone.value);
-        zones.value = zones.value.filter(zone => zone !== selectedZone.value);
+        delete polygons.value[selectedZone.value];
         selectedZone.value = null;
         toggle.value = null;
     }
 };
+
+/*
 const addMapMarker = (x, y) => {
     // Create the SVG namespace
     const svgNS = "http://www.w3.org/2000/svg";
@@ -144,10 +144,9 @@ const addMapMarker = (x, y) => {
     // Append the marker to the main SVG
     document.querySelector('#my-svg').appendChild(marker);
 };
-
+*/
 const clearPoints = () => {
-    const points = document.querySelectorAll('circle');
-    points.forEach(point => document.querySelector('#my-svg').removeChild(point));
+    drawPoints.value = [];
 };
 
 const viewBox = `0 0 ${width.value} ${width.value}`
@@ -158,16 +157,24 @@ const viewBox = `0 0 ${width.value} ${width.value}`
 
 
 <template>
-    <h1>{{ toggle }} {{ isDrawing }}{{ addMarker }}</h1>
-    <svg @click="svgClick" ref="svg" id="my-svg" :width=width :height=width :viewBox="viewBox">
+    <v-row>
+        <v-btn-toggle v-model="toggle" divided color="info">
+            <v-btn>Start Drawing</v-btn>
+            <v-btn :disabled="toggle != 0">End Drawing</v-btn>
+            <v-btn :disabled="selectedZone == null">Delete Zone</v-btn>
+            <!--v-btn >Add Random Marker</v-btn-->
+        </v-btn-toggle>
+    </v-row>
+    <svg @click="svgClick" ref="svg" id="my-svg" :width=width :height=width :viewBox="viewBox" class="border">
         <image :xlink:href="imageSrc" x="0" y="0" :width="width" :height="width" />
+        <g v-for="(polygon, id) in polygons">
+            <polygon :points="polygon.points" fill="red" fill-opacity="0.5" @click="selectZone(id)"
+                :stroke="polygon.stroke" />
+        </g>
+        <g v-for="point in drawPoints">
+            <circle :cx="point.x" :cy="point.y" r="3" fill="red" />
+        </g>
     </svg>
-    <v-btn-toggle v-model="toggle" divided color="info">
-        <v-btn >Start Drawing</v-btn>
-        <v-btn :disabled="toggle != 0">End Drawing</v-btn>
-        <v-btn :disabled="selectedZone == null">Delete Zone</v-btn>
-        <v-btn >Add Random Marker</v-btn>
-    </v-btn-toggle>
 </template>
   
 
