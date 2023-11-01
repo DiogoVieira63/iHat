@@ -2,19 +2,23 @@
 import { onMounted } from 'vue';
 import { ref, watch, nextTick } from 'vue';
 
-const isDrawing = ref(false);
-const addMarker = ref(false);
-const polygonPoints = ref([]);
-const zones = ref([]);
-const selectedZone = ref(null);
-const imageSrc = ref('/Duplex-0.svg');
-const width = ref(700);
-const toggle = ref(null);
+const width = 700;
+let id = 0;
+
+
 const polygons = ref({});
 const drawPoints = ref([]);
+const polygonPoints = ref([]);
+const randomPoints = ref([]);
+const zones = ref([]);
+const imageSrc = ref('/Duplex-0.svg');
+const selectedZone = ref(null);
+const toggle = ref(null);
+const intersected = ref({});
+
 const svg = ref(null);
 const rect = ref(null);
-let id = 0;
+const polygonsDom = ref(null);
 
 onMounted(() => {
     nextTick(() => {
@@ -25,49 +29,60 @@ onMounted(() => {
 
 
 watch(toggle, (newValue, oldValue) => {
-    if (newValue === 0) {
+    if (newValue === "startDraw") {
         startDrawing();
-    } else if (newValue === 1) {
+    } else if (newValue === "endDraw") {
         endDrawing();
-    } else if (newValue === 2) {
+        toggle.value = null;
+    } else if (newValue === "deleteZone") {
         deleteZone();
-    } else if (newValue === 3) {
-        addMarker.value = true;
+        toggle.value = null;
+    } else if (newValue === "clear") {
+        randomPoints.value = [];
+        drawPoints.value = [];
+        polygons.value = {};
+        zones.value = [];
+        selectedZone.value = null;
+        intersected.value = {};
+        toggle.value = null;
     }
 });
 
 const startDrawing = () => {
-    isDrawing.value = true;
     polygonPoints.value = [];
 };
 
 const endDrawing = () => {
-    isDrawing.value = false;
     createPolygon(polygonPoints.value);
     clearPoints();
     polygonPoints.value = [];
-    toggle.value = null;
 };
 
 
 const svgClick = (e) => {
-    if (isDrawing.value ) {
+    if (toggle.value === "startDraw" || toggle.value === "addMark") {
         const x =
-            ((e.clientX - rect.value.left) * width.value) /
+            ((e.clientX - rect.value.left) * width) /
             rect.value.width;
         const y =
-            ((e.clientY - rect.value.top) * width.value) / //change to height
+            ((e.clientY - rect.value.top) * width) / //change to height
             rect.value.height;
 
-        polygonPoints.value.push({ x, y });
-        createPoint(x, y);
+        if (toggle.value === "startDraw") {
+            polygonPoints.value.push({ x, y });
+            createPoint(drawPoints, x, y);
+        }
+        else if (toggle.value === "addMark") {
+            createPoint(randomPoints, x, y);
+            checkIfIntersect();
+        }
     }
 };
-const createPoint = (x, y) => {
+const createPoint = (array, x, y) => {
     const point = {}
     point['x'] = x
     point['y'] = y
-    drawPoints.value.push(point);
+    array.value.push(point);
 };
 
 const createPolygon = (points) => {
@@ -88,6 +103,9 @@ const unselectZones = () => {
 }
 
 const selectZone = (id) => {
+    if (toggle.value === "startDraw" || toggle.value === "addMark") {
+        return;
+    }
     unselectZones();
     selectedZone.value = id;
     polygons.value[id].stroke = "yellow";
@@ -98,58 +116,39 @@ const selectZone = (id) => {
 const deleteZone = () => {
     if (selectedZone.value) {
         delete polygons.value[selectedZone.value];
+        delete intersected.value[selectedZone.value];
         selectedZone.value = null;
-        toggle.value = null;
     }
 };
 
-/*
-const addMapMarker = (x, y) => {
-    // Create the SVG namespace
-    const svgNS = "http://www.w3.org/2000/svg";
 
-    // Create the marker SVG element
-    const marker = document.createElementNS(svgNS, 'svg');
-
-    // Set the marker attributes
-    marker.setAttributeNS(null, 'width', '50px');
-    marker.setAttributeNS(null, 'height', '50px');
-    marker.setAttributeNS(null, 'viewBox', '0 0 24 24');
-    marker.setAttributeNS(null, 'fill', 'none');
-
-    // Create the first path of the marker
-    const path1 = document.createElementNS(svgNS, 'path');
-    path1.setAttributeNS(null, 'd', 'M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z');
-    path1.setAttributeNS(null, 'stroke', '#000000');
-    path1.setAttributeNS(null, 'stroke-width', '2');
-    path1.setAttributeNS(null, 'stroke-linecap', 'round');
-    path1.setAttributeNS(null, 'stroke-linejoin', 'round');
-
-    // Create the second path of the marker
-    const path2 = document.createElementNS(svgNS, 'path');
-    path2.setAttributeNS(null, 'd', 'M12 22C16 18 20 14.4183 20 10C20 5.58172 16.4183 2 12 2C7.58172 2 4 5.58172 4 10C4 14.4183 8 18 12 22Z');
-    path2.setAttributeNS(null, 'stroke', '#000000');
-    path2.setAttributeNS(null, 'stroke-width', '2');
-    path2.setAttributeNS(null, 'stroke-linecap', 'round');
-    path2.setAttributeNS(null, 'stroke-linejoin', 'round');
-
-    // Append the paths to the marker
-    marker.appendChild(path1);
-    marker.appendChild(path2);
-
-    // Set the position of the marker
-    marker.setAttributeNS(null, 'x', x - 27);
-    marker.setAttributeNS(null, 'y', y - 45);
-
-    // Append the marker to the main SVG
-    document.querySelector('#my-svg').appendChild(marker);
-};
-*/
 const clearPoints = () => {
     drawPoints.value = [];
 };
 
-const viewBox = `0 0 ${width.value} ${width.value}`
+const checkIfIntersect = () => {
+    // iterate to randomPoints
+    let int = {};
+    for (let j = 0; j < polygonsDom.value.length; j++) {
+        let polygon = polygonsDom.value[j];
+        int[polygon.id] = []
+        for (let i = 0; i < randomPoints.value.length; i++) {
+            let p = randomPoints.value[i];
+            // iterate to polygons
+            let point = svg.value.createSVGPoint();
+            point.x = p.x;
+            point.y = p.y;
+            if (polygon.isPointInFill(point) || polygon.isPointInStroke(point)) {
+                console.log("Intersect", polygon.id);
+                int[polygon.id].push(p);
+            }
+        }
+    }
+    intersected.value = int;
+}
+
+
+const viewBox = `0 0 ${width} ${width}`
 
 </script>
 
@@ -157,24 +156,23 @@ const viewBox = `0 0 ${width.value} ${width.value}`
 
 
 <template>
-    <v-row>
-        <v-btn-toggle v-model="toggle" divided color="info">
-            <v-btn>Start Drawing</v-btn>
-            <v-btn :disabled="toggle != 0">End Drawing</v-btn>
-            <v-btn :disabled="selectedZone == null">Delete Zone</v-btn>
-            <!--v-btn >Add Random Marker</v-btn-->
-        </v-btn-toggle>
-    </v-row>
+    <v-btn-toggle v-model="toggle" color="info" variant="outlined">
+        <v-btn value="startDraw">Start Drawing</v-btn>
+        <v-btn value="endDraw" :disabled="toggle != 'startDraw' || drawPoints.length < 3">End Drawing</v-btn>
+        <v-btn value="deleteZone" :disabled="selectedZone == null">Delete Zone</v-btn>
+        <v-btn value="addMark">Add Marker</v-btn>
+        <v-btn value="clear">Clear</v-btn>
+    </v-btn-toggle>
     <svg @click="svgClick" ref="svg" id="my-svg" :width=width :height=width :viewBox="viewBox" class="border">
         <image :xlink:href="imageSrc" x="0" y="0" :width="width" :height="width" />
-        <g v-for="(polygon, id) in polygons">
-            <polygon :points="polygon.points" fill="red" fill-opacity="0.5" @click="selectZone(id)"
-                :stroke="polygon.stroke" />
-        </g>
-        <g v-for="point in drawPoints">
-            <circle :cx="point.x" :cy="point.y" r="3" fill="red" />
-        </g>
+        <polygon v-for="(polygon, id) in polygons" ref="polygonsDom" :id="id" :points="polygon.points" fill="red"
+            fill-opacity="0.5" @click="selectZone(id)" :stroke="polygon.stroke" />
+        <circle v-for="point in drawPoints" :cx="point.x" :cy="point.y" r="3" fill="red" />
+        <circle v-for="point in randomPoints" :cx="point.x" :cy="point.y" r="3" fill="red" />
     </svg>
+    <p v-for="(points, id) in intersected" :key="id">
+        Zone {{ id }}: {{ points.length }}
+    </p>
 </template>
   
 
