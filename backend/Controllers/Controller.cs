@@ -53,4 +53,11 @@ public class IHatController : ControllerBase{
     public void GetConstruction(string id){
     
     }*/
+
+    [HttpPost("atualizarEstado")]
+    public void AlteraEstadoObra(string obraId, string novoEstado) {
+
+        _facade.AlteraEstadoObra(obraId, "Tó");
+    }
+
 }

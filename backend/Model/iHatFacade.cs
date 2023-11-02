@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using iHat.Model.Obras;
 
 namespace iHat.Model.iHatFacade;
@@ -27,5 +29,11 @@ public class iHatFacade: IiHatFacade{
         return obras;
     }
 
+
+    public async void AlteraEstadoObra(string id, string estado){
+
+        iobras.AlteraEstadoObra(id, estado);
+
+    }
 
 }
