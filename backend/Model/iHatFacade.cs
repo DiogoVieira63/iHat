@@ -26,6 +26,10 @@ public class iHatFacade: IiHatFacade{
 
         return obras;
     }
+    public async Task RemoveObraById(string obraId){
+
+        await _obrasService.RemoveObraByIdAsync(obraId);
+    }
 
 
 }

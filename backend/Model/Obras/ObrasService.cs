@@ -53,4 +53,14 @@ public class ObrasService: IObrasService{
 
     public void AddObra(string name){
     }
+
+
+    public async Task RemoveObraByIdAsync(string obraId)
+    {
+        var filter = Builders<Obra>.Filter.Eq(o => o.Id, obraId);
+
+        await _obraCollection.DeleteOneAsync(filter);
+    }
+
+
 }
