@@ -1,3 +1,4 @@
+using FormEncode.Models;
 using iHat.Model.iHatFacade;
 using iHat.Model.Obras;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +9,12 @@ namespace iHat.Controllers;
 [Route("[controller]")] // mudar este nome....
 public class IHatController : ControllerBase{
 
-    // private readonly ILogger<IHatController> _logger;
+    private readonly ILogger<IHatController> _logger;
     private readonly IiHatFacade _facade;
 
-    public IHatController(IiHatFacade facade){
+    public IHatController(IiHatFacade facade, ILogger<IHatController> logger){
         _facade = facade;
+        _logger = logger;
     }
 
     [HttpPost("register")]
@@ -25,21 +27,13 @@ public class IHatController : ControllerBase{
 
     }
 
-    [HttpPost("construction")]
-    public void NewConstruction(string name){
-        Console.WriteLine("New Construction POST Request");
-
-        _facade.NewConstruction(name);
-    }
-
     [HttpPost("helmet")]
     public void NewHelmet(){
 
     }
 
-    // Get all constructions managed by the user that made the request
     [HttpGet("constructions")]
-    public async Task<ActionResult<List<Obra>>> GetConstruction(){
+    public async Task<ActionResult<List<Obra>?>> GetConstruction(){
         
         var lista = await _facade.GetObras(1);
 
@@ -61,5 +55,26 @@ public class IHatController : ControllerBase{
         else{
             return NotFound();
         }
+    }
+
+    // Input: name, mapa, estado
+    [HttpPost("construction")]
+    public async Task<IActionResult> NewConstruction(NewConstructionForm form){
+
+        _logger.LogWarning(form.Mapa);
+
+
+        if(form != null){
+            try{
+                await _facade.NewConstruction(form.Name, form.Mapa, form.Status);
+            }
+            catch (Exception e){
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
+        else
+            return BadRequest();
+
     }
 }

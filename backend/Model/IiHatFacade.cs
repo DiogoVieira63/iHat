@@ -2,7 +2,7 @@ using iHat.Model.Obras;
 
 public interface IiHatFacade{
 
-    void NewConstruction(string name);
+    Task NewConstruction(string name, string mapa, string status);
 
     Task<List<Obra>?> GetObras(int idResponsavel);
 
