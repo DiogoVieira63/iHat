@@ -11,7 +11,7 @@ public class iHatFacade: IiHatFacade{
         iobras = obrasService;
     }
 
-    public async Task NewConstruction(string name){
+    public async Task NewConstruction(string name, string mapa, string status){
 
         // TO DO:
         // Obter o id do responsável que realizou o pedido do post
@@ -19,7 +19,7 @@ public class iHatFacade: IiHatFacade{
 
         // Guarda na Base
         try{
-            await iobras.AddObra(name, idResponsavel); 
+            await iobras.AddObra(name, idResponsavel, mapa, status); 
         }
         catch(Exception e){
             throw new Exception(e.Message);
@@ -27,7 +27,7 @@ public class iHatFacade: IiHatFacade{
     }
 
 
-    public async Task<List<Obra>> GetObras(int idResponsavel){
+    public async Task<List<Obra>?> GetObras(int idResponsavel){
 
         var obras = await iobras.GetObrasOfResponsavel(idResponsavel);
 

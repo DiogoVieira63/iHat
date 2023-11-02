@@ -18,12 +18,12 @@ public class Obra
     public string Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
 
 
-    public Obra(string name, int idResponsavel){
+    public Obra(string name, int idResponsavel, string mapa, string status){
         this.IdResponsavel = idResponsavel;
         this.Name = name;
         this.Zonas = new List<string>();
-        this.Mapa = "";
+        this.Mapa = mapa;
         this.Capacetes = new List<int>();
-        this.Status = "Planeada";
+        this.Status = status;
     }
 }

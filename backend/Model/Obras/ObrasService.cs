@@ -7,8 +7,10 @@ namespace iHat.Model.Obras;
 public class ObrasService: IObrasService{
 
     public readonly IMongoCollection<Obra> _obraCollection;
+    private readonly ILogger<ObrasService> _logger;
 
-    public ObrasService(IOptions<DatabaseSettings> iHatDatabaseSettings){
+
+    public ObrasService(IOptions<DatabaseSettings> iHatDatabaseSettings, ILogger<ObrasService> logger){
         var mongoClient = new MongoClient(
             iHatDatabaseSettings.Value.ConnectionString);
 
@@ -17,11 +19,12 @@ public class ObrasService: IObrasService{
 
         _obraCollection = mongoDatabase.GetCollection<Obra>(
             iHatDatabaseSettings.Value.BooksCollectionName);
+
+        _logger = logger;
     }
 
 
     /*
-
     public async Task<List<Book>> GetAsync() =>
         await _booksCollection.Find(_ => true).ToListAsync();
 
@@ -51,8 +54,13 @@ public class ObrasService: IObrasService{
         return obras;
     }
 
-    public async Task AddObra(string name, int idResponsavel){
-        var newObra = new Obra(name, idResponsavel);
+    public async Task AddObra(string name, int idResponsavel, string mapa, string status){
+
+        /*if (status != "Planeada"){
+            _logger.LogInformation("Status of the new Construction is different from \"Planeada\".");
+        }*/
+
+        var newObra = new Obra(name, idResponsavel, mapa, status);
 
         var checkIfConstructionSameName = 
             await _obraCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
