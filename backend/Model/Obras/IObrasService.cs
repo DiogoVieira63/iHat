@@ -3,6 +3,6 @@ namespace iHat.Model.Obras;
 public interface IObrasService{
     Task<List<Obra>> GetObrasOfResponsavel(int idResponsavel);
     Task AddObra(string name, int idResponsavel, string mapa, string status);
-    Task<Obra> GetObra(string idObra);
+    Task<Obra> GetConstructionById(string idObra);
 }
     

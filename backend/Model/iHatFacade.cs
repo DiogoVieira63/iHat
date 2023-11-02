@@ -38,7 +38,7 @@ public class iHatFacade: IiHatFacade{
         return obras;
     }
 
-    public async Task<Obra> GetObra(string idObra){
-        return await iobras.GetObra(idObra);
+    public async Task<Obra> GetConstructionById(string idObra){
+        return await iobras.GetConstructionById(idObra);
     }
 }

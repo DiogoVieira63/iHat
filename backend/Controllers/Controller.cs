@@ -49,7 +49,7 @@ public class IHatController : ControllerBase{
     [HttpGet("construction/{id}")]
     public async Task<ActionResult<Obra>> GetConstruction(string id){
         if (id != null){
-            return await _facade.GetObra(id);
+            return await _facade.GetConstructionById(id);
             // return Ok(id);
         }
         else{

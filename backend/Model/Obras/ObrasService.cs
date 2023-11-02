@@ -77,7 +77,7 @@ public class ObrasService: IObrasService{
         }
     }
 
-    public async Task<Obra> GetObra(string idObra){
+    public async Task<Obra> GetConstructionById(string idObra){
         var obras = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
         return obras;
     }
