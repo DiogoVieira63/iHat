@@ -52,9 +52,13 @@ public class IHatController : ControllerBase{
     
     }*/
 
+//funcionar
     [HttpPost("helmet")]
-   public async Task<IActionResult> NewHelmet(Capacete capacete){
+//    public async Task<IActionResult> NewHelmet(Capacete capacete){
+    public async Task<IActionResult> NewHelmet(){
         Console.WriteLine("New Helmet POST Request");
+        var capacete = new Capacete("Em uso", "Sem Informação", "", "");
+        
         try
         {   
             await _facade.AddHelmet(capacete);
@@ -94,7 +98,7 @@ public class IHatController : ControllerBase{
         return capacete;
     }
 
-// alterar, ta mal
+// verificar
     [HttpGet("helmet/obra/{idObra}")]
     public async Task<ActionResult<List<Capacete>>> GetAllHelmetsFromObra(string idObra){
         Console.WriteLine("Get All Helmets From Obra GET Request");
