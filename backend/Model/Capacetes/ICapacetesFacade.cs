@@ -5,6 +5,6 @@ public interface ICapacetesFacade{
     Task<Capacete> GetById(string id);
     Task<List<Capacete>> GetAllCapacetesdaObra(string idObra);
     Task Add(Capacete capacete);
-    Task DeleteCapaceteToObra(string id);
+    Task DeleteCapaceteToObra(string id, string idObra);
     Task AddCapaceteToObra(string idCapacete, string idObra);
 }

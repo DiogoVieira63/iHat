@@ -66,7 +66,7 @@ public class IHatController : ControllerBase{
         }
     }
     
-
+//funcionar
     [HttpGet("helmet")]
     public async Task<ActionResult<List<Capacete>>> GetAllHelmets(){
         Console.WriteLine("Get All Helmets GET Request");
@@ -80,6 +80,7 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
+//funcionar
     [HttpGet("helmet/{id}")]
     public async Task<ActionResult<Capacete>> GetHelmet(string id){
         Console.WriteLine("Get Helmet GET Request");
@@ -93,11 +94,13 @@ public class IHatController : ControllerBase{
         return capacete;
     }
 
+// alterar, ta mal
     [HttpGet("helmet/obra/{idObra}")]
     public async Task<ActionResult<List<Capacete>>> GetAllHelmetsFromObra(string idObra){
         Console.WriteLine("Get All Helmets From Obra GET Request");
 
         var lista = await _facade.GetAllCapacetesdaObra(idObra);
+        // var lista = null;
 
         if(lista == null){
             return NotFound();
@@ -106,24 +109,34 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
-    [HttpDelete("helmet/{id}")]
-    public async Task<IActionResult> DeleteHelmet(string id){
+//ta mal
+    [HttpDelete("helmet/{idCapacete}/{idObra}")]
+    public async Task<IActionResult> DeleteHelmet(string idCapacete, string idObra){
         Console.WriteLine("Delete Helmet DELETE Request");
+
+        // string idObra = "6543c109e272c87c6b5f3d33";
 
         try
         {
-            await _facade.DeleteCapaceteToObra(id);
+            await _facade.DeleteCapaceteToObra(idCapacete, idObra);
             return Ok(); // Retorna uma resposta de sucesso
+            Console.WriteLine("Delete com sucesso");
+            
         }
         catch (Exception e)
         {
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
+            Console.WriteLine("Delete sem sucesso");
         }
     }
 
-    [HttpPost("helmet/obra/{idObra}")]
+// ta mal
+    [HttpPost("helmet/obra/{idObra}/{idCapacete}")]
     public async Task<IActionResult> AddHelmetToObra(string idCapacete, string idObra){
         Console.WriteLine("Add Helmet To Obra POST Request");
+
+        // string idCapacete = "6543c272e272c87c6b5f3d34";
+        // idObra= 6543cd51e272c87c6b5f3d35
 
         try
         {

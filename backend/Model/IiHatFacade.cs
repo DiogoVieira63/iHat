@@ -15,7 +15,7 @@ public interface IiHatFacade{
 
     Task<List<Capacete>> GetAllCapacetesdaObra(string idObra);
 
-    Task DeleteCapaceteToObra(string id);
+    Task DeleteCapaceteToObra(string id, string idObra);
 
     Task AddCapaceteToObra(string idCapacete, string idObra);
 }

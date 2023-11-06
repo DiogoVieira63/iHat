@@ -11,10 +11,10 @@ public class Capacete
     public string? Id { get; set; }
     public string Status { get; set; }
     public string Info { get; set; }
-    public Obra Obra { get; set; }
+    public string Obra { get; set; } //id da obra 
     public string Trabalhador { get; set; } // verificar isto se é string ou uma classe
 
-    public Capacete(string status, string info, Obra obra, string trabalhador)
+    public Capacete(string status, string info, string obra, string trabalhador)
     {
         Status = status;
         Info = info;

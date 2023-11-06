@@ -56,8 +56,8 @@ public class iHatFacade: IiHatFacade{
         return await icapacetes.GetAllCapacetesdaObra(idObra);
     }
 
-    public async Task DeleteCapaceteToObra(string id){
-        await icapacetes.DeleteCapaceteToObra(id);
+    public async Task DeleteCapaceteToObra(string id, string idObra){
+        await icapacetes.DeleteCapaceteToObra(id, idObra);
     }
 
     public async Task AddCapaceteToObra(string idCapacete, string idObra){
