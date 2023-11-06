@@ -19,11 +19,15 @@ function callFunction(value) {
     props.function(value)
 }
 
+function openDialog() {
+    dialog.value = true
+}
+
 </script>
 <template>
     <v-dialog v-model="dialog" persistent width="auto">
         <template v-slot:activator="{ props }">
-            <slot name="button" :prop="props"></slot>
+            <slot name="button" :prop="props" :open="openDialog" ></slot>
         </template>
         <v-card>
             <v-card-title class="text-h5">
