@@ -4,6 +4,7 @@ import PageLayout from "../components/PageLayout.vue"
 import { computed, ref, watch, onMounted, nextTick } from "vue"
 import { useRoute, useRouter } from 'vue-router'
 import RowObra from "@/components/RowObra.vue"
+import Map from "@/components/Map.vue"
 import Confirmation from "@/components/Confirmation.vue"
 //import MapEditor from "@/components/MapEditor.vue"
 
@@ -84,6 +85,7 @@ const filtersHeaders = ["Estado"]
           <v-col cols="auto">
             <v-btn density="compact" icon="mdi-pencil" @click="toggleEditing"></v-btn>
           </v-col>
+          <Map></Map>
         </v-row>
       </v-col>
       <v-col cols="12" lg="6" class="px-16">
