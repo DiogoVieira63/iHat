@@ -8,4 +8,6 @@ public class DatabaseSettings
 
     public string BooksCollectionName { get; set; } = null!;
 
+    public string CapacetesCollectionName { get; set; } = null!;
+
 }
