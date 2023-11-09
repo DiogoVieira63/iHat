@@ -68,9 +68,11 @@
                         await _obraCollection.UpdateOneAsync(obraFilter, obraUpdate);
 
                         // Atualize a coleção de capacetes
+                        // var capaceteFilter = Builders<Capacete>.Filter.Eq(x => x.Id, id);
+                        // var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Obra, null);
+                        // await _capaceteCollection.UpdateOneAsync(capaceteFilter, capaceteUpdate);
                         var capaceteFilter = Builders<Capacete>.Filter.Eq(x => x.Id, id);
-                        var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Obra, null);
-                        await _capaceteCollection.UpdateOneAsync(capaceteFilter, capaceteUpdate);
+                        await _capaceteCollection.DeleteOneAsync(capaceteFilter);
                     }
                     else
                     {
