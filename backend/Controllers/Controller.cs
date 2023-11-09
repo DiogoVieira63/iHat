@@ -1,3 +1,4 @@
+using FormEncode.Models;
 using iHat.Model.iHatFacade;
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
@@ -9,11 +10,12 @@ namespace iHat.Controllers;
 [Route("[controller]")] // mudar este nome....
 public class IHatController : ControllerBase{
 
-    // private readonly ILogger<IHatController> _logger;
+    private readonly ILogger<IHatController> _logger;
     private readonly IiHatFacade _facade;
 
-    public IHatController(IiHatFacade facade){
+    public IHatController(IiHatFacade facade, ILogger<IHatController> logger){
         _facade = facade;
+        _logger = logger;
     }
 
     [HttpPost("register")]
@@ -35,8 +37,8 @@ public class IHatController : ControllerBase{
 
     
 
-    [HttpGet("construction")]
-    public async Task<ActionResult<List<Obra>>> GetConstruction(){
+    [HttpGet("constructions")]
+    public async Task<ActionResult<List<Obra>?>> GetConstruction(){
         
         var lista = await _facade.GetObras(1);
 
@@ -46,6 +48,7 @@ public class IHatController : ControllerBase{
         
         return lista;
     }
+
 
     /*[HttpGet("construction\{id}")]
     public void GetConstruction(string id){
@@ -113,7 +116,7 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
-//ta mal
+//funciona
     [HttpDelete("helmet/{idCapacete}/{idObra}")]
     public async Task<IActionResult> DeleteHelmet(string idCapacete, string idObra){
         Console.WriteLine("Delete Helmet DELETE Request");
@@ -134,7 +137,7 @@ public class IHatController : ControllerBase{
         }
     }
 
-// ta mal
+// funciona
     [HttpPost("helmet/obra/{idObra}/{idCapacete}")]
     public async Task<IActionResult> AddHelmetToObra(string idCapacete, string idObra){
         Console.WriteLine("Add Helmet To Obra POST Request");
