@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using iHat.Model.Obras;
 using MongoDB.Bson.Serialization.Conventions;
 
@@ -36,6 +38,13 @@ public class iHatFacade: IiHatFacade{
         }
 
         return obras;
+    }
+
+
+    public async void AlteraEstadoObra(string id, string estado){
+
+        iobras.AlteraEstadoObra(id, estado);
+
     }
 
     public async Task<Obra> GetConstructionById(string idObra){

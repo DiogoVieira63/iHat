@@ -81,4 +81,27 @@ public class ObrasService: IObrasService{
         var obras = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
         return obras;
     }
+
+    public void AlteraEstadoObra(string id, string estado)
+    {
+        var obra = _obraCollection.Find(x => x.Id == id).FirstOrDefault();
+
+        if (obra == null)
+        {
+            Console.WriteLine("[iHatFacade] Obra não existe.");
+            return;
+        }   
+
+        obra.Status = estado;
+
+        try{
+            _obraCollection.ReplaceOne(x => x.Id == id, obra);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
+        }
+    }
+
 }

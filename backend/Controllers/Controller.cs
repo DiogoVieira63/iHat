@@ -44,6 +44,19 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
+
+    /*[HttpGet("construction\{id}")]
+    public void GetConstruction(string id){
+    
+    }*/
+
+    [HttpPost("atualizarEstado")]
+    public void AlteraEstadoObra(string obraId, string novoEstado) {
+
+        _facade.AlteraEstadoObra(obraId, "Tó");
+    }
+
+
     // Get the construction identified by the id
     // ihat/construction/{id}
     [HttpGet("construction/{id}")]
@@ -77,4 +90,5 @@ public class IHatController : ControllerBase{
             return BadRequest();
 
     }
+
 }
