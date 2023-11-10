@@ -3,16 +3,15 @@ import FormObra from "../components/FormObra.vue"
 import FormCapacete from "../components/FormCapacete.vue"
 import Lista from "../components/Lista.vue"
 import PageLayout from "../components/PageLayout.vue"
-import { computed, ref, watch, onMounted} from "vue"
+import { computed, ref, watch} from "vue"
 import { useRoute, useRouter } from 'vue-router'
 
-const obras = ref([])
-const capacetes = ref([])
+const obras = [{ 'id': '1', 'Nome da obra': 'Obra1', 'Estado': 'Pendente' }, { 'id': '2', 'Nome da obra': 'Obra2', 'Estado': 'Em Curso' }]
+const Capacetes = [{ 'id': '1', 'Estado': 'Livre' }, { 'id': '2', 'Estado': 'Em uso' }]
 const tab = ref("obras")
 const formObra = ref(true)
-const list = ref(obras.value)
+const list = ref(obras)
 const router = useRouter()
-
 
 onMounted(() => {
   for (let i = 0; i < 30; i++) {
@@ -66,13 +65,14 @@ watch(tab, (newValue, oldValue) => {
 function changePage(id) {
     router.push({ path: `/${tab.value}/${id}` })
 }
+
 </script>
 
 <template>
   <PageLayout>
     <v-container>
       <v-sheet class="mx-auto" max-width="1500px">
-        <Lista v-if="list.length > 0" :list="list" :headers="headers" :filterHeaders="['Estado']">
+        <Lista v-if="list.length > 0" :list="list" :headers="headers">
           <template v-slot:tabs>
             <v-tabs  v-model="tab" class="rounded-t-xl align-start" bg-color="grey lighten-3" color="black"
               align-tabs="center">
@@ -87,6 +87,11 @@ function changePage(id) {
           <template #row="{row, headers}">
             <td v-for="(_,key) in headers" :key="header"  @click="changePage(row.id)">
               {{ row[key] }}
+            </td>
+          </template>
+          <template #row="{row, headers}">
+            <td v-for="header in headers" :key="header" class="text-left" @click="changePage(row.id)">
+              {{ row[header] }}
             </td>
           </template>
         </Lista>
