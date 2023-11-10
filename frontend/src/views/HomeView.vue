@@ -3,14 +3,14 @@ import FormObra from "../components/FormObra.vue"
 import FormCapacete from "../components/FormCapacete.vue"
 import Lista from "../components/Lista.vue"
 import PageLayout from "../components/PageLayout.vue"
-import { computed, ref, watch} from "vue"
+import { computed, ref, watch, onMounted} from "vue"
 import { useRoute, useRouter } from 'vue-router'
 
-const obras = [{ 'id': '1', 'Nome da obra': 'Obra1', 'Estado': 'Pendente' }, { 'id': '2', 'Nome da obra': 'Obra2', 'Estado': 'Em Curso' }]
-const Capacetes = [{ 'id': '1', 'Estado': 'Livre' }, { 'id': '2', 'Estado': 'Em uso' }]
+const obras = ref([])
+const capacetes = ref([])
 const tab = ref("obras")
 const formObra = ref(true)
-const list = ref(obras)
+const list = ref([])
 const router = useRouter()
 
 onMounted(() => {
@@ -42,6 +42,7 @@ onMounted(() => {
     obras.value.push({ 'id': i, 'Nome da obra': 'Obra' + i, 'Estado': estadoObra })
     capacetes.value.push({ 'id': i, 'Estado': estado, 'Obra': obra})
   }
+  list.value = obras.value
 })
 
 const headers = computed(() => {
@@ -52,7 +53,7 @@ const headers = computed(() => {
   }
 })
 
-watch(tab, (newValue, oldValue) => {
+/*watch(tab, (newValue, oldValue) => {
   if (newValue === "obras") {
     list.value = obras.value
     formObra.value = true
@@ -61,6 +62,20 @@ watch(tab, (newValue, oldValue) => {
     formObra.value = false
   }
 })
+*/
+
+const changeTab = (newValue) => {
+  if (newValue === "obras") {
+    list.value = obras.value
+    formObra.value = true
+    console.log("obras", obras.value, list.value)
+  } else if (newValue === "capacetes") {
+    list.value = capacetes.value
+    formObra.value = false
+    console.log("capacetes", capacetes.value)
+  }
+}
+
 
 function changePage(id) {
     router.push({ path: `/${tab.value}/${id}` })
@@ -75,7 +90,7 @@ function changePage(id) {
         <Lista v-if="list.length > 0" :list="list" :headers="headers">
           <template v-slot:tabs>
             <v-tabs  v-model="tab" class="rounded-t-xl align-start" bg-color="grey lighten-3" color="black"
-              align-tabs="center">
+              align-tabs="center" @update:model-value="changeTab">
               <v-tab value="obras" color="black">Obras</v-tab>
               <v-tab value="capacetes" color="black">capacetes</v-tab>
             </v-tabs>
@@ -85,13 +100,8 @@ function changePage(id) {
             <FormCapacete v-else />
           </template>
           <template #row="{row, headers}">
-            <td v-for="(_,key) in headers" :key="header"  @click="changePage(row.id)">
+            <td v-for="(_,key) in headers" :key="row.id"  @click="changePage(row.id)">
               {{ row[key] }}
-            </td>
-          </template>
-          <template #row="{row, headers}">
-            <td v-for="header in headers" :key="header" class="text-left" @click="changePage(row.id)">
-              {{ row[header] }}
             </td>
           </template>
         </Lista>

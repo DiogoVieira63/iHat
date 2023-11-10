@@ -35,8 +35,8 @@ const links = ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'];
     <v-main>
       <slot></slot>
     </v-main>
-    <v-footer rounded w-auto color="primary" class="v-footer--full-width">
-      <v-row justify="center" no-gutters class="v-row--full-width">
+    <v-footer rounded w-auto color="primary" >
+      <v-row justify="center" no-gutters>
         <v-btn
           v-for="link in links"
           :key="link"
