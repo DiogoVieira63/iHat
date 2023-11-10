@@ -4,12 +4,12 @@
 
     namespace iHat.Model.Capacetes;
 
-    public class CapacetesFacade: ICapacetesFacade{
+    public class CapacetesService: ICapacetesService{
 
         public readonly IMongoCollection<Capacete> _capaceteCollection;
         public readonly IMongoCollection<Obra> _obraCollection;
 
-        public CapacetesFacade(IOptions<DatabaseSettings> iHatDatabaseSettings){
+        public CapacetesService(IOptions<DatabaseSettings> iHatDatabaseSettings){
             var mongoClient = new MongoClient(
                 iHatDatabaseSettings.Value.ConnectionString);
 
@@ -20,7 +20,7 @@
                 iHatDatabaseSettings.Value.CapacetesCollectionName);
 
             _obraCollection = mongoDatabase.GetCollection<Obra>(
-                iHatDatabaseSettings.Value.BooksCollectionName);
+                iHatDatabaseSettings.Value.ObrasCollectionName);
 
         }
 

@@ -1,11 +1,8 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using iHat.Model.Obras;
-<<<<<<< HEAD
 using iHat.Model.Capacetes;
-=======
 using MongoDB.Bson.Serialization.Conventions;
->>>>>>> aa5f5c9dc00d52f2d390e7b1fd0eae0bd7299053
 
 namespace iHat.Model.iHatFacade;
 
@@ -19,22 +16,6 @@ public class iHatFacade: IiHatFacade{
         icapacetes = capacetesFacades;
     }
 
-<<<<<<< HEAD
-    // public async Task NewConstruction(string name){
-
-    //     // TO DO:
-    //     // Obter o id do responsável que realizou o pedido do post
-    //     var idResponsavel = 1;
-
-    //     // Guarda na Base
-    //     try{
-    //         await iobras.AddObra(name, idResponsavel); 
-    //     }
-    //     catch(Exception e){
-    //         throw new Exception(e.Message);
-    //     }
-    // }
-=======
     public async Task NewConstruction(string name, string mapa, string status){
 
         // TO DO:
@@ -49,8 +30,6 @@ public class iHatFacade: IiHatFacade{
             throw new Exception(e.Message);
         }
     }
->>>>>>> aa5f5c9dc00d52f2d390e7b1fd0eae0bd7299053
-
 
     public async Task<List<Obra>?> GetObras(int idResponsavel){
 
@@ -61,6 +40,10 @@ public class iHatFacade: IiHatFacade{
         }
 
         return obras;
+    }
+
+    public async Task<Obra> GetConstructionById(string idObra){
+        return await iobras.GetConstructionById(idObra);
     }
 
     public async Task AddHelmet(Capacete capacete){
@@ -87,15 +70,7 @@ public class iHatFacade: IiHatFacade{
         await icapacetes.AddCapaceteToObra(idCapacete, idObra);
     }
 
-
-
     public async void AlteraEstadoObra(string id, string estado){
-
         iobras.AlteraEstadoObra(id, estado);
-
-    }
-
-    public async Task<Obra> GetConstructionById(string idObra){
-        return await iobras.GetConstructionById(idObra);
     }
 }

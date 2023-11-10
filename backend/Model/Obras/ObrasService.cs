@@ -18,7 +18,7 @@ public class ObrasService: IObrasService{
             iHatDatabaseSettings.Value.DatabaseName);
 
         _obraCollection = mongoDatabase.GetCollection<Obra>(
-            iHatDatabaseSettings.Value.BooksCollectionName);
+            iHatDatabaseSettings.Value.ObrasCollectionName);
 
         _logger = logger;
     }

@@ -27,18 +27,10 @@ public class IHatController : ControllerBase{
     public void LoginUser(){
 
     }
-
-    // [HttpPost("construction")]
-    // public void NewConstruction(string name){
-    //     Console.WriteLine("New Construction POST Request");
-
-    //     _facade.NewConstruction(name);
-    // }
-
     
 
     [HttpGet("constructions")]
-    public async Task<ActionResult<List<Obra>?>> GetConstruction(){
+    public async Task<ActionResult<List<Obra>?>> GetConstructions(){
         
         var lista = await _facade.GetObras(1);
 
@@ -50,14 +42,51 @@ public class IHatController : ControllerBase{
     }
 
 
-    /*[HttpGet("construction\{id}")]
-    public void GetConstruction(string id){
-    
-    }*/
+    // Get the construction identified by the id
+    // ihat/construction/{id}
+    [HttpGet("construction/{id}")]
+    public async Task<ActionResult<Obra>> GetConstruction(string id){
+        if (id != null){
+            return await _facade.GetConstructionById(id);
+            // return Ok(id);
+        }
+        else{
+            return NotFound();
+        }
+    }
 
-//funcionar
+
+    // Input: name, mapa, estado
+    [HttpPost("construction")]
+    public async Task<IActionResult> NewConstruction(NewConstructionForm form){
+
+        _logger.LogWarning(form.Mapa);
+
+
+        if(form != null){
+            try{
+                await _facade.NewConstruction(form.Name, form.Mapa, form.Status);
+            }
+            catch (Exception e){
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
+        else
+            return BadRequest();
+    }
+
+    [HttpPost("atualizarEstado")]
+    public void AlteraEstadoObra(string obraId, string novoEstado) {
+        _facade.AlteraEstadoObra(obraId, "Tó");
+    }
+
+
+
+
+    //funcionar
     [HttpPost("helmet")]
-//    public async Task<IActionResult> NewHelmet(Capacete capacete){
+    //    public async Task<IActionResult> NewHelmet(Capacete capacete){
     public async Task<IActionResult> NewHelmet(){
         Console.WriteLine("New Helmet POST Request");
         var capacete = new Capacete("Em uso", "Sem Informação", "", "");
@@ -126,14 +155,11 @@ public class IHatController : ControllerBase{
         try
         {
             await _facade.DeleteCapaceteToObra(idCapacete, idObra);
-            return Ok(); // Retorna uma resposta de sucesso
-            Console.WriteLine("Delete com sucesso");
-            
+            return Ok(); // Retorna uma resposta de sucesso            
         }
         catch (Exception e)
         {
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
-            Console.WriteLine("Delete sem sucesso");
         }
     }
 
