@@ -47,8 +47,8 @@ const { handleSubmit, handleReset } = useForm({
         width="1024"
       >
         <template v-slot:activator="{ props }">
-          <v-btn icon color="primary" v-bind="props">
-            <v-icon  color="black">mdi-plus</v-icon>
+          <v-btn icon variant="flat" color="primary" v-bind="props">
+            <v-icon  >mdi-plus</v-icon>
           </v-btn>
         </template>
         <v-card>

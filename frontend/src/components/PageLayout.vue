@@ -1,5 +1,5 @@
 <script setup>
-  const links=  ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'];
+const links = ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'];
 </script>
 
 <style scoped>
@@ -7,7 +7,7 @@
   width: 100%;
   left: 0;
   right: 0;
-  position: absolute; 
+  position: absolute;
   bottom: 0;
 }
 
@@ -19,11 +19,13 @@
 </style>
 
 
- <template>
+<template>
   <v-app>
-    <v-app-bar :elevation="3" color="primary" rounded height="100">
-			<v-btn icon><img src="/Hotpot.png" alt="Image" style="width: 80px; height: 80px;"/></v-btn>
-			<v-app-bar-title><b>iHat</b></v-app-bar-title>
+    <v-app-bar :elevation="3" color="primary" rounded height="80">
+      <v-app-bar-nav-icon>
+        <v-img src="/Hotpot.ico" alt="Image" width="60"></v-img>
+      </v-app-bar-nav-icon>
+      <v-app-bar-title><b>iHat</b></v-app-bar-title>
       <template v-slot:append>
         <v-btn icon="mdi-heart"></v-btn>
         <v-btn icon="mdi-magnify"></v-btn>
@@ -51,8 +53,6 @@
       </v-row>
     </v-footer>
   </v-app>
-  
-  
 </template> 
 
 

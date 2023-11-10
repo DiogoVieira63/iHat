@@ -1,6 +1,7 @@
 using iHat.Model;
 using iHat.Model.iHatFacade;
 using iHat.Model.Obras;
+using iHat.Model.Capacetes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("Database"));
 
 builder.Services.AddSingleton<IObrasService, ObrasService>();
+
+builder.Services.AddSingleton<ICapacetesFacade, CapacetesFacade>();
 
 builder.Services.AddSingleton<IiHatFacade, iHatFacade>();
 
