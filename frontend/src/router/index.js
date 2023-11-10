@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 // import HomeView from "../views/HomeView.vue";
 import Home from "../views/HomeView.vue";
 import Obra from "../views/ObraView.vue";
+import Capacete from "../views/CapaceteView.vue";
 
 const routes = [
   {
@@ -16,6 +17,10 @@ const routes = [
   {
     path: "/obras/:id",
     component: Obra,
+  },
+  {
+    path: "/capacetes/:id",
+    component: Capacete,
   }
   // {
   //   path: "/",

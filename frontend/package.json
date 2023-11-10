@@ -10,10 +10,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "apexcharts": "^3.44.0",
     "core-js": "^3.8.3",
     "vee-validate": "^4.11.8",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
+    "vue3-apexcharts": "^1.4.4",
     "vuetify": "^3.3.22"
   },
   "devDependencies": {

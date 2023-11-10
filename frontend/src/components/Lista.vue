@@ -19,6 +19,14 @@ const search = ref("")
 const filterMenu = ref(false)
 const sort = ref({ column: null, direction: null })
 
+const headers = computed(() => {
+    if (Array.isArray(props.headers)) {
+        // create object with headers as keys and empty array as values
+        return Object.fromEntries(props.headers.map(header => [header, []]))
+    }
+    return props.headers
+})
+
 const filterOptions = computed(() => {
     let options = {}
     if (!Array.isArray(props.headers)) {
@@ -38,15 +46,6 @@ const resetFilter = () => {
 
 const filter = ref(resetFilter());
 
-const headers = computed(() => {
-    if (Array.isArray(props.headers)) {
-        // create object with headers as keys and empty array as values
-        return Object.fromEntries(props.headers.map(header => [header, []]))
-    }
-    return props.headers
-})
-
-
 const filterFunc = ((row) => {
     let result = true
     for (let header in filter.value) {
@@ -56,7 +55,6 @@ const filterFunc = ((row) => {
     }
     return result;
 })
-
 
 const rowsFilter = computed(() => {
     let filtered = props.list.filter(filterFunc)
@@ -72,6 +70,8 @@ const rowsFilter = computed(() => {
     }
 });
 
+// Sorting
+
 const rowsSorted = computed(() => {
     if (sort.value.column) {
         return rowsFilter.value.sort((a, b) => {
@@ -85,6 +85,8 @@ const rowsSorted = computed(() => {
     }
     return rowsFilter.value
 })
+
+// Pagination
 
 const rowsPage = computed(() => {
     const startIndex = (page.value - 1) * maxPerPage.value;
