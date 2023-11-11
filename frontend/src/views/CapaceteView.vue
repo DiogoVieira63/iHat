@@ -3,7 +3,7 @@ import PageLayout from "../components/PageLayout.vue"
 import { computed, ref, watch, onMounted } from "vue"
 import { useRoute, useRouter } from 'vue-router'
 import ExampleGraph from "@/components/ExampleGraph.vue";
-
+import LiveData from "@/components/LiveData.vue";
 
 const options = {
     chart: {
@@ -27,15 +27,7 @@ const series = [{
     <PageLayout>
         <v-row justify="center" class="ma-2">
             <v-col cols="12" lg="6">
-                <v-card class="mx-auto" prepend-icon="mdi-home" height="80vh">
-                    <template v-slot:title>
-                        This is a title
-                    </template>
-
-                    <v-card-text>
-                        This is content
-                    </v-card-text>
-                </v-card>
+                <LiveData/>
             </v-col>
             <v-col cols="12" lg="6">
                 <v-card class="mx-auto" prepend-icon="mdi-home">
