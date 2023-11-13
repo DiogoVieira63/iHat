@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mx-auto" color="#f7f4fe" prepend-icon="mdi-hard-hat" height="80vh">
+    <v-card class="mx-auto" color="#f6f6f6" prepend-icon="mdi-hard-hat" height="auto">
       <template v-slot:title>
         <h2>Capacete {{ routeId }} - Live Data</h2>
       </template>
