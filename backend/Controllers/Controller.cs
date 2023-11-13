@@ -124,6 +124,18 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
+
+    [HttpDelete("construction/{id}")]
+    public async Task<IActionResult> RemoveObraById(string id){
+        await _facade.RemoveObraById(id);
+
+        return NoContent(); // Returns 204 No Content -> sucesso
+    }
+
+    /*[HttpGet("construction\{id}")]
+    public void GetConstruction(string id){
+    
+    }*/
 //funcionar
     [HttpGet("helmet/{id}")]
     public async Task<ActionResult<Capacete>> GetHelmet(string id){

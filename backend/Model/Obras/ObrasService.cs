@@ -82,6 +82,16 @@ public class ObrasService: IObrasService{
         return obras;
     }
 
+
+
+    public async Task RemoveObraByIdAsync(string obraId)
+    {
+        var filter = Builders<Obra>.Filter.Eq(o => o.Id, obraId);
+
+        await _obraCollection.DeleteOneAsync(filter);
+    }
+
+
     public void AlteraEstadoObra(string id, string estado)
     {
         var obra = _obraCollection.Find(x => x.Id == id).FirstOrDefault();

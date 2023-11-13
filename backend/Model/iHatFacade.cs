@@ -41,6 +41,10 @@ public class iHatFacade: IiHatFacade{
 
         return obras;
     }
+    public async Task RemoveObraById(string obraId){
+
+        await iobras.RemoveObraByIdAsync(obraId);
+    }
 
     public async Task<Obra> GetConstructionById(string idObra){
         return await iobras.GetConstructionById(idObra);

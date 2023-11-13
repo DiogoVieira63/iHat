@@ -6,6 +6,11 @@ public interface IiHatFacade{
 
     Task<List<Obra>?> GetObras(int idResponsavel);
 
+
+    Task<List<Obra>> GetObras(int idResponsavel);
+
+    Task RemoveObraById(string obraId);
+
     Task<Obra> GetConstructionById(string id);
 
     Task AddHelmet(Capacete capacete);
@@ -23,4 +28,5 @@ public interface IiHatFacade{
     void AlteraEstadoObra(string id, string estado);
 
     void UpdateNomeObra(string idObra, string nome);
+
 }
