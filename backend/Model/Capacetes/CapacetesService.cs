@@ -35,7 +35,7 @@
         }
 
 //mudar: dividir em duas, buscar a obra pelo id e buscar a lista de capacetes dessa obra
-        public async Task<List<Capacete?>> GetAllCapacetesdaObra(string idObra){
+        public async Task<List<Capacete>> GetAllCapacetesdaObra(string idObra){
             //duvidas
             var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
             var lista = new List<Capacete?>();

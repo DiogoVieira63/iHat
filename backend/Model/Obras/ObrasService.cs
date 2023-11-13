@@ -104,4 +104,26 @@ public class ObrasService: IObrasService{
         }
     }
 
+    public void UpdateNomeObra(string idObra, string nome){
+        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+
+        if (obra == null)
+        {
+            Console.WriteLine("[iHatFacade] Obra não existe.");
+            return;
+        }   
+
+        obra.Name = nome;
+
+        try{
+            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
+        }
+    }       
+
+
 }

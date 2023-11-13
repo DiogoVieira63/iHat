@@ -81,6 +81,14 @@ public class IHatController : ControllerBase{
         _facade.AlteraEstadoObra(obraId, "Tó");
     }
 
+//rever
+    [HttpPatch("atualizarNome/{obraId}/{novoNome}")]
+    public void UpdateNomeObra(string obraId, string novoNome) {
+        Console.WriteLine("New NameObra PATCH Request");
+        // _facade.UpdateNomeObra(obraId, novoNome);
+        _facade.UpdateNomeObra(obraId, novoNome);
+    }
+
 
 
 
@@ -181,8 +189,5 @@ public class IHatController : ControllerBase{
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
         }
     }
-
-
-
    
 }
