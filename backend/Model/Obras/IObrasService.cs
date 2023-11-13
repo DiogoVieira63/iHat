@@ -8,5 +8,7 @@ public interface IObrasService{
     Task AddObra(string name, int idResponsavel, string mapa, string status);
     
     Task<Obra> GetConstructionById(string idObra);
+
+    void UpdateNomeObra(string idObra, string nome);
 }
     

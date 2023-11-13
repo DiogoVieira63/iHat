@@ -12,7 +12,7 @@ builder.Services.Configure<DatabaseSettings>(
 
 builder.Services.AddSingleton<IObrasService, ObrasService>();
 
-builder.Services.AddSingleton<ICapacetesFacade, CapacetesFacade>();
+builder.Services.AddSingleton<ICapacetesService, CapacetesService>();
 
 builder.Services.AddSingleton<IiHatFacade, iHatFacade>();
 
