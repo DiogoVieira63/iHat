@@ -24,7 +24,6 @@ const { handleSubmit, handleReset } = useForm({
 })
 
 const message = "Campo obrigatório."
-
 const nomeObra = useField('nomeObra')
 const estado = useField('estado')
 
@@ -42,8 +41,8 @@ const submit = handleSubmit(values => {
         width="1024"
       >
         <template v-slot:activator="{ props }">
-          <v-btn icon color="primary" v-bind="props">
-            <v-icon  color="black">mdi-plus</v-icon>
+          <v-btn icon variant="flat" color="primary"  v-bind="props">
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
         <v-card>

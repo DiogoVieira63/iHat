@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 // import HomeView from "../views/HomeView.vue";
-import PageLayout from "../components/PageLayout.vue";
 import Home from "../views/HomeView.vue";
+import Obra from "../views/ObraView.vue";
 
 const routes = [
   {
@@ -13,6 +13,10 @@ const routes = [
       // Add more routes as needed
     ],
   },
+  {
+    path: "/obras/:id",
+    component: Obra,
+  }
   // {
   //   path: "/",
   //   name: "home",
