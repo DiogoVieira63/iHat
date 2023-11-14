@@ -30,9 +30,9 @@ const series = [{
                 <LiveData/>
             </v-col>
             <v-col cols="12" lg="6">
-                <v-card class="mx-auto" prepend-icon="mdi-home">
+                <v-card class="mx-auto" prepend-icon="mdi-chart-line">
                     <template v-slot:title>
-                        This is a title
+                        Charts
                     </template>
                     <v-card-text>
                         <ExampleGraph/> 

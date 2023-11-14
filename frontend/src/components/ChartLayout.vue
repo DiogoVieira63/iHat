@@ -1,40 +1,73 @@
 <script setup>
-import { useSlots, computed} from 'vue'
-const items = ['item1', 'item2','item3']
-
+import { ref } from 'vue';
+import { useSlots, computed, onMounted } from 'vue'
 const slots = useSlots()
+const titles = ref([]);
+const toggle = ref([]);
+const colors = ["red", "blue", "green", "yellow", "orange", "purple", "pink", "brown", "grey", "black"]
 
-const slotsLength = () => {
-    return Object.keys(slots).map(key => slots[key]).length
-}
+onMounted(() => {
+    // iterate slots
+    let keys = Object.keys(slots)
+    for (let slot of keys) {
+        titles.value.push(slot)
+        toggle.value.push(slot)
+    }
+})
 
 const columns = computed(() => {
-    let columns = []
-    for (let i = 0; i < slotsLength(); i++) {
-        columns.push(6)
+    let columns = {}
+    //iterate titles dict
+    let last = ""
+    for (let key of titles.value) {
+        if (isActive(key)) {
+            columns[key] = 12
+            columns[key] = 6
+            last = key
+        }
     }
-    if (slotsLength() % 2 != 0){
-        columns[slotsLength()] = 12
+    let length = Object.keys(columns).length
+    if (length % 2 != 0) {
+        columns[last] = 12
     }
     return columns
 })
 
 
-const elemName = (index) => {
-    return "item" + (index)
+const getColumn = (name) => {
+    return columns.value[name]
 }
 
+const isActive = (name) => {
+    return toggle.value.includes(name)
+}
 
 </script>
 
 
 
 <template>
-    {{ slotsLength() }}
+    <v-row justify="center" class="ma-3">
+        <v-btn-toggle multiple rounded="xl" v-model="toggle" background-color="primary">
+            <v-tooltip v-for="(key, index) in titles" :text="key" location="top">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props"  :value="key">
+                        <v-icon :color="colors[index]" :active="isActive(key)">mdi-checkbox-blank-circle</v-icon>
+                    </v-btn>
+                </template>
+            </v-tooltip>
+        </v-btn-toggle>
+    </v-row>
     <v-row>
-    <template v-for="i in slotsLength()">
-            <v-col cols="12" :lg="columns[i-1]">
-                <slot :name="elemName(i)">Slot</slot>
+        <template v-for="(key, index) in titles">
+            <v-col v-if="isActive(key)" cols="12" :lg="getColumn(key)">
+                <v-card>
+                    <v-card-title>
+                        <v-icon :color="colors[index]">mdi-checkbox-blank-circle</v-icon>
+                        {{ key }}
+                    </v-card-title>
+                    <slot :name="key"></slot>
+                </v-card>
             </v-col>
         </template>
     </v-row>
@@ -42,8 +75,7 @@ const elemName = (index) => {
 
 
 
-<style scoped>
-</style>
+<style scoped></style>
 
 
 

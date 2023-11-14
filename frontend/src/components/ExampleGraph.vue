@@ -1,6 +1,8 @@
 <script setup>
 import ChartLayout from "@/components/ChartLayout.vue";
+import { ref, defineEmits} from "vue";
 
+const show = ref([true,true,true,true]);
 
 const options = {
     chart: {
@@ -17,16 +19,17 @@ const series = [{
     name: 'series-1',
     data: [30, 40, 45, 50, 49, 60, 70, 91]
 }]
-const types =["line","area","bar","pie","donut","radialBar","scatter","bubble","heatmap","candlestick","boxPlot","radar","polarArea","rangeBar","rangeArea","treemap"]
+const types = ref(["line","area","bar","heatmap","line","area","bar","heatmap"])//,"area","bar","pie","donut","radialBar","scatter","bubble","heatmap","candlestick","boxPlot","radar","polarArea","rangeBar","rangeArea","treemap"]
 const slotName = (index) => {
-    return "item" + (index)
+    return types.value[index] + index
 }
+
 
 </script>
 
 <template>
     <ChartLayout>
-        <template v-for="(type,index) in types" v-slot:[slotName(index)] >
+        <template v-for="(type,index) in types" v-slot:[slotName(index)]>
             <apexchart :type="type" :options="options" :series="series"></apexchart>
         </template>
     </ChartLayout>
