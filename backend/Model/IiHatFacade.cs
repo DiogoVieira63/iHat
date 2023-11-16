@@ -5,6 +5,8 @@ public interface IiHatFacade{
     Task NewConstruction(string name, string mapa, string status);
 
     Task<List<Obra>?> GetObras(int idResponsavel);
+    
+    Task RemoveObraById(string obraId);
 
     Task<Obra> GetConstructionById(string id);
 
@@ -21,4 +23,7 @@ public interface IiHatFacade{
     Task AddCapaceteToObra(string idCapacete, string idObra);
 
     void AlteraEstadoObra(string id, string estado);
+
+    void UpdateNomeObra(string idObra, string nome);
+
 }

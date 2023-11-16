@@ -9,11 +9,11 @@ namespace iHat.Model.iHatFacade;
 public class iHatFacade: IiHatFacade{
 
     private readonly IObrasService iobras;
-    private readonly ICapacetesFacade icapacetes;
+    private readonly ICapacetesService icapacetes;
 
-    public iHatFacade(IObrasService obrasService, ICapacetesFacade capacetesFacades){
+    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService){
         iobras = obrasService;
-        icapacetes = capacetesFacades;
+        icapacetes = capacetesService;
     }
 
     public async Task NewConstruction(string name, string mapa, string status){
@@ -40,6 +40,10 @@ public class iHatFacade: IiHatFacade{
         }
 
         return obras;
+    }
+    public async Task RemoveObraById(string obraId){
+
+        await iobras.RemoveObraByIdAsync(obraId);
     }
 
     public async Task<Obra> GetConstructionById(string idObra){
@@ -72,5 +76,9 @@ public class iHatFacade: IiHatFacade{
 
     public async void AlteraEstadoObra(string id, string estado){
         iobras.AlteraEstadoObra(id, estado);
+    }
+
+    public async void UpdateNomeObra(string idObra, string nome){
+        iobras.UpdateNomeObra(idObra, nome);
     }
 }
