@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
+using iHat.Model.Logs;
 using MongoDB.Bson.Serialization.Conventions;
 
 namespace iHat.Model.iHatFacade;
@@ -10,10 +11,12 @@ public class iHatFacade: IiHatFacade{
 
     private readonly IObrasService iobras;
     private readonly ICapacetesService icapacetes;
+    private readonly ILogsService ilogs;
 
-    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService){
+    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService){
         iobras = obrasService;
         icapacetes = capacetesService;
+        ilogs = logsService;
     }
 
     public async Task NewConstruction(string name, string mapa, string status){
@@ -80,5 +83,13 @@ public class iHatFacade: IiHatFacade{
 
     public async void UpdateNomeObra(string idObra, string nome){
         iobras.UpdateNomeObra(idObra, nome);
+    }
+
+    public async Task<List<Log>>  GetLogs(string idObra){
+        return await ilogs.GetLogsOfObra(idObra);
+    }
+
+    public async Task AddLogs(Log logs){
+        await ilogs.Add(logs);
     }
 }

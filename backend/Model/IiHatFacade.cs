@@ -1,13 +1,11 @@
 using iHat.Model.Capacetes;
+using iHat.Model.Logs;
 using iHat.Model.Obras;
 
 public interface IiHatFacade{
     Task NewConstruction(string name, string mapa, string status);
 
     Task<List<Obra>?> GetObras(int idResponsavel);
-
-
-    Task<List<Obra>> GetObras(int idResponsavel);
 
     Task RemoveObraById(string obraId);
 
@@ -28,5 +26,9 @@ public interface IiHatFacade{
     void AlteraEstadoObra(string id, string estado);
 
     void UpdateNomeObra(string idObra, string nome);
+
+    Task <List<Log>> GetLogs(string idObra);
+
+    Task AddLogs(Log logs);
 
 }
