@@ -1,6 +1,5 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using iHat.Model.Obras;
 
 namespace iHat.Model.Capacetes;
 
