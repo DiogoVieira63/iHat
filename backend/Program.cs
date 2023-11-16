@@ -12,9 +12,12 @@ builder.Services.Configure<DatabaseSettings>(
 
 builder.Services.AddSingleton<IObrasService, ObrasService>();
 
-builder.Services.AddSingleton<ICapacetesFacade, CapacetesFacade>();
+builder.Services.AddSingleton<ICapacetesService, CapacetesService>();
 
 builder.Services.AddSingleton<IiHatFacade, iHatFacade>();
+
+builder.Services.AddSingleton<MQTTService>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
