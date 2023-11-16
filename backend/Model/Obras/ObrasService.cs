@@ -18,7 +18,7 @@ public class ObrasService: IObrasService{
             iHatDatabaseSettings.Value.DatabaseName);
 
         _obraCollection = mongoDatabase.GetCollection<Obra>(
-            iHatDatabaseSettings.Value.BooksCollectionName);
+            iHatDatabaseSettings.Value.ObrasCollectionName);
 
         _logger = logger;
     }
@@ -82,6 +82,16 @@ public class ObrasService: IObrasService{
         return obras;
     }
 
+
+
+    public async Task RemoveObraByIdAsync(string obraId)
+    {
+        var filter = Builders<Obra>.Filter.Eq(o => o.Id, obraId);
+
+        await _obraCollection.DeleteOneAsync(filter);
+    }
+
+
     public void AlteraEstadoObra(string id, string estado)
     {
         var obra = _obraCollection.Find(x => x.Id == id).FirstOrDefault();
@@ -103,5 +113,27 @@ public class ObrasService: IObrasService{
             Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
         }
     }
+
+    public void UpdateNomeObra(string idObra, string nome){
+        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+
+        if (obra == null)
+        {
+            Console.WriteLine("[iHatFacade] Obra não existe.");
+            return;
+        }   
+
+        obra.Name = nome;
+
+        try{
+            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
+        }
+    }       
+
 
 }

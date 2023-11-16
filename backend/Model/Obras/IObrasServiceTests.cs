@@ -1,9 +1,6 @@
 using Xunit;
 using Moq;
 using Microsoft.Extensions.Options;
-using System.Security.AccessControl;
-
-using iHat.Model;
 
 namespace iHat.Model.Obras;
 

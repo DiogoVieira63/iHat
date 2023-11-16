@@ -5,9 +5,16 @@ public interface IObrasService{
 
     void AddObra(string name);
 
+    Task RemoveObraByIdAsync(string obraId);
+
+
     void AlteraEstadoObra(string id, string estado);
 
     Task AddObra(string name, int idResponsavel, string mapa, string status);
+    
     Task<Obra> GetConstructionById(string idObra);
+
+    void UpdateNomeObra(string idObra, string nome);
+
 }
     
