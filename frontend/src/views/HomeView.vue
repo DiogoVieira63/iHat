@@ -1,14 +1,14 @@
-<script setup>
-import FormObra from "../components/FormObra.vue"
-import FormCapacete from "../components/FormCapacete.vue"
-import Lista from "../components/Lista.vue"
-import PageLayout from "../components/PageLayout.vue"
-import { computed, ref, watch, onMounted} from "vue"
+<script setup lang="ts">
+import FormObra from '@/components/FormObra.vue'
+import FormCapacete from '@/components/FormCapacete.vue'
+import Lista from '@/components/Lista.vue'
+import PageLayout from '@/components/PageLayout.vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const obras = ref([])
 const capacetes = ref([])
-const tab = ref("obras")
+const tab = ref('obras')
 const formObra = ref(true)
 const list = ref([])
 const router = useRouter()
@@ -16,40 +16,40 @@ const router = useRouter()
 onMounted(() => {
   for (let i = 0; i < 30; i++) {
     const randomEstado = Math.floor(Math.random() * 3)
-    let estado = ""
+    let estado = ''
     if (randomEstado === 0) {
-      estado = "Livre"
+      estado = 'Livre'
     } else if (randomEstado === 1) {
-      estado = "Em uso"
+      estado = 'Em uso'
     } else {
-      estado = "Não Operacional"
+      estado = 'Não Operacional'
     }
     let randomObra = Math.floor(Math.random() * 5)
-    let obra = randomObra === 0 ? "" : "Obra" + randomObra
+    let obra = randomObra === 0 ? '' : 'Obra' + randomObra
     let randomEstadoObra = Math.floor(Math.random() * 5)
-    let estadoObra = ""
+    let estadoObra = ''
     if (randomEstadoObra === 0) {
-      estadoObra = "Pendente"
+      estadoObra = 'Pendente'
     } else if (randomEstadoObra === 1) {
-      estadoObra = "Em Curso"
+      estadoObra = 'Em Curso'
     } else if (randomEstadoObra === 2) {
-      estadoObra = "Concluída"
+      estadoObra = 'Concluída'
     } else if (randomEstadoObra === 3) {
-      estadoObra = "Cancelada"
+      estadoObra = 'Cancelada'
     } else {
-      estadoObra = "Planeada"
+      estadoObra = 'Planeada'
     }
-    obras.value.push({ 'id': i, 'Nome da obra': 'Obra' + i, 'Estado': estadoObra })
-    capacetes.value.push({ 'id': i, 'Estado': estado, 'Obra': obra})
+    obras.value.push({ id: i, 'Nome da obra': 'Obra' + i, Estado: estadoObra })
+    capacetes.value.push({ id: i, Estado: estado, Obra: obra })
   }
   list.value = obras.value
 })
 
 const headers = computed(() => {
-  if (tab.value === "obras") {
-    return {"Nome da obra":['sort'], "Estado":["filter",'sort']}
-  } else if (tab.value === "capacetes") {
-    return {"id":['sort'],"Estado":['filter','sort'],'Obra':['filter','sort']}
+  if (tab.value === 'obras') {
+    return { 'Nome da obra': ['sort'], Estado: ['filter', 'sort'] }
+  } else if (tab.value === 'capacetes') {
+    return { id: ['sort'], Estado: ['filter', 'sort'], Obra: ['filter', 'sort'] }
   }
 })
 
@@ -65,22 +65,20 @@ const headers = computed(() => {
 */
 
 const changeTab = (newValue) => {
-  if (newValue === "obras") {
+  if (newValue === 'obras') {
     list.value = obras.value
     formObra.value = true
-    console.log("obras", obras.value, list.value)
-  } else if (newValue === "capacetes") {
+    console.log('obras', obras.value, list.value)
+  } else if (newValue === 'capacetes') {
     list.value = capacetes.value
     formObra.value = false
-    console.log("capacetes", capacetes.value)
+    console.log('capacetes', capacetes.value)
   }
 }
 
-
 function changePage(id) {
-    router.push({ path: `/${tab.value}/${id}` })
+  router.push({ path: `/${tab.value}/${id}` })
 }
-
 </script>
 
 <template>
@@ -89,8 +87,14 @@ function changePage(id) {
       <v-sheet class="mx-auto" max-width="1500px">
         <Lista v-if="list.length > 0" :list="list" :headers="headers">
           <template v-slot:tabs>
-            <v-tabs  v-model="tab" class="rounded-t-xl align-start" bg-color="grey lighten-3" color="black"
-              align-tabs="center" @update:model-value="changeTab">
+            <v-tabs
+              v-model="tab"
+              class="rounded-t-xl align-start"
+              bg-color="grey lighten-3"
+              color="black"
+              align-tabs="center"
+              @update:model-value="changeTab"
+            >
               <v-tab value="obras" color="black">Obras</v-tab>
               <v-tab value="capacetes" color="black">capacetes</v-tab>
             </v-tabs>
@@ -99,8 +103,8 @@ function changePage(id) {
             <FormObra v-if="formObra" />
             <FormCapacete v-else />
           </template>
-          <template #row="{row, headers}">
-            <td v-for="(_,key) in headers" :key="row.id"  @click="changePage(row.id)">
+          <template #row="{ row, headers }">
+            <td v-for="(_, key) in headers" :key="row.id" @click="changePage(row.id)">
               {{ row[key] }}
             </td>
           </template>
@@ -110,4 +114,3 @@ function changePage(id) {
     </v-container>
   </PageLayout>
 </template>
-

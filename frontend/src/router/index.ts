@@ -1,22 +1,25 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router'
 // import HomeView from "../views/HomeView.vue";
-import Home from "../views/HomeView.vue";
-import Obra from "../views/ObraView.vue";
+import Home from '@/views/HomeView.vue'
+import Obra from '@/views/ObraView.vue'
+import NotFound from '@/views/NotFoundView.vue'
+
 
 const routes = [
   {
-    path: "/",
+    path: '/',
     component: Home, // Set the layout component for all routes
     children: [
       // { path: '/home', component: Home },
       // { path: 'about', component: About },
       // Add more routes as needed
-    ],
+    ]
   },
   {
-    path: "/obras/:id",
-    component: Obra,
-  }
+    path: '/obras/:id',
+    component: Obra
+  },
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
   // {
   //   path: "/",
   //   name: "home",
@@ -31,11 +34,12 @@ const routes = [
   //   component: () =>
   //     import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
   // },
-];
+]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
-});
+  history: createWebHistory(),
+  routes
+})
 
-export default router;
+
+export default router

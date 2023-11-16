@@ -1,5 +1,5 @@
-<script setup>
-const links = ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'];
+<script setup lang="ts">
+const links = ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us']
 </script>
 
 <style scoped>
@@ -18,7 +18,6 @@ const links = ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'];
 }
 </style>
 
-
 <template>
   <v-app>
     <v-app-bar :elevation="3" color="primary" rounded height="80">
@@ -35,7 +34,7 @@ const links = ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'];
     <v-main>
       <slot></slot>
     </v-main>
-    <v-footer rounded w-auto color="primary" >
+    <v-footer rounded w-auto color="primary">
       <v-row justify="center" no-gutters>
         <v-btn
           v-for="link in links"
@@ -53,10 +52,4 @@ const links = ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'];
       </v-row>
     </v-footer>
   </v-app>
-</template> 
-
-
-
-
-
-
+</template>
