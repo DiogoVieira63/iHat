@@ -10,4 +10,6 @@ public class DatabaseSettings
 
     public string CapacetesCollectionName { get; set; } = null!;
 
+    public string LogsCollectionName { get; set;} = null!;
+
 }

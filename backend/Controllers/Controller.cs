@@ -2,6 +2,7 @@ using FormEncode.Models;
 using iHat.Model.iHatFacade;
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
+using iHat.Model.Logs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iHat.Controllers;
@@ -82,7 +83,7 @@ public class IHatController : ControllerBase{
     }
 
 //rever
-    [HttpPatch("atualizarNome/{obraId}/{novoNome}")]
+    [HttpPatch("constructions/{obraId}/{novoNome}")]
     public void UpdateNomeObra(string obraId, string novoNome) {
         Console.WriteLine("New NameObra PATCH Request");
         // _facade.UpdateNomeObra(obraId, novoNome);
@@ -194,6 +195,34 @@ public class IHatController : ControllerBase{
         try
         {
             await _facade.AddCapaceteToObra(idCapacete, idObra);
+            return Ok(); // Retorna uma resposta de sucesso
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
+        }
+    }
+
+    [HttpGet("logs/{idObra}")]
+    public async Task<ActionResult<List<Log>>> GetLogs(string idObra){
+        Console.WriteLine("Get Logs GET Request");
+
+        var lista = await _facade.GetLogs(idObra);
+
+        if(lista == null){
+            return NotFound();
+        }
+
+        return lista;
+    }
+
+    [HttpPost("logs")]
+    public async Task<IActionResult> AddLogs(Log logs){
+        Console.WriteLine("Add Logs POST Request");
+
+        try
+        {
+            await _facade.AddLogs(logs);
             return Ok(); // Retorna uma resposta de sucesso
         }
         catch (Exception e)
