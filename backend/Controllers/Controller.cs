@@ -83,7 +83,7 @@ public class IHatController : ControllerBase{
     }
 
 //rever
-    [HttpPatch("atualizarNome/{obraId}/{novoNome}")]
+    [HttpPatch("constructions/{obraId}/{novoNome}")]
     public void UpdateNomeObra(string obraId, string novoNome) {
         Console.WriteLine("New NameObra PATCH Request");
         // _facade.UpdateNomeObra(obraId, novoNome);
