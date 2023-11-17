@@ -14,7 +14,7 @@ const props = defineProps({
 
 const dialog = ref(false)
 
-function callFunction(value) {
+function callFunction(value: boolean) {
   dialog.value = false
   props.function(value)
 }

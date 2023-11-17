@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import { computed } from 'vue'
 import { ref, watch, nextTick, onUpdated } from 'vue'
+import type { Ref } from 'vue'
 import { useDisplay } from 'vuetify'
 
 let id = 0
@@ -21,6 +22,19 @@ const props = defineProps({
   }
 })
 
+interface Point {
+  x: number
+  y: number
+  coef?: number
+}
+
+interface Polygon {
+  points: string
+  id: number
+  stroke: string
+  coef?: number
+}
+
 const coef = 0.6
 const baseWidth = 1052 * coef
 const baseHeight = 1488 * coef
@@ -31,19 +45,19 @@ const svgWidth = ref(baseWidth)
 const svgHeight = ref(baseHeight)
 const { width, height } = useDisplay()
 
-const polygons = ref({})
-const drawPoints = ref([])
-const polygonPoints = ref([])
-const randomPoints = ref([])
-const zones = ref([])
-const selectedZone = ref(null)
+const polygons = ref<Record<number,Polygon>>({})
+const drawPoints = ref<Array<Point>>([])
+const polygonPoints = ref<Array<Point>>([])
+const randomPoints = ref<Array<Point>>([])
+const zones = ref<Array<Polygon>>([])
+const selectedZone = ref<number | null>(null)
 const toggle = ref(null)
 const intersected = ref({})
 
 const svg = ref(null)
 const polygonsDom = ref(null)
 
-const updateEditButton = (newValue) => {
+const updateEditButton = (newValue : string | null) => {
   if (newValue === 'startDraw') {
     startDrawing()
   } else if (newValue === 'endDraw') {
@@ -77,12 +91,13 @@ const endDrawing = () => {
   polygonPoints.value = []
 }
 
-const svgClick = (e) => {
+const svgClick = (e : MouseEvent) => {
   if (toggle.value === 'startDraw' || toggle.value === 'addMark') {
     const x = e.offsetX
     const y = e.offsetY
     if (toggle.value === 'startDraw') {
-      polygonPoints.value.push({ x, y })
+      let point : Point = { x, y }
+      polygonPoints.value.push(point)
       createPoint(drawPoints, x, y)
     } else if (toggle.value === 'addMark') {
       createPoint(randomPoints, x, y)
@@ -90,18 +105,19 @@ const svgClick = (e) => {
     }
   }
 }
-const createPoint = (array, x, y) => {
-  const point = {}
-  point['x'] = x
-  point['y'] = y
-  point['coef'] = coefSvg.value
+const createPoint = (array:Ref<Array<Point>>,x : number, y : number) => {
+  const point :Point = {
+    x: x,
+    y: y,
+    coef: coefSvg.value
+  }
   array.value.push(point)
 }
 
-const createPolygon = (points) => {
+const createPolygon = (points: Array<Point>) => {
   if (points.length >= 3) {
     const pointString = points.map((point) => `${point.x},${point.y}`).join(' ')
-    let polygon = { points: pointString, id: id, stroke: 'none', coef: coefSvg.value }
+    let polygon: Polygon = { points: pointString, id: id, stroke: 'none', coef: coefSvg.value }
     polygons.value[id] = polygon
     zones.value.push(polygon)
     selectZone(id)
@@ -110,12 +126,13 @@ const createPolygon = (points) => {
 }
 
 const unselectZones = () => {
-  for (const [key, value] of Object.entries(polygons.value)) {
+
+  for (const [key , value] of Object.entries(polygons.value)) {
     polygons.value[key].stroke = 'none'
   }
 }
 
-const selectZone = (id) => {
+const selectZone = (id : number) => {
   if (toggle.value === 'startDraw' || toggle.value === 'addMark') {
     return
   }

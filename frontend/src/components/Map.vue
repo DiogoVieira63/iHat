@@ -17,12 +17,9 @@ const getCurrentImage = computed(() => {
   return imageUrls[validIndex]
 })
 
-const saveEdit = (confirmation) => {
-  if (confirmation) {
-    console.log('Save')
-  } else {
-    console.log('Cancel')
-  }
+const saveEdit = (confirmation:boolean) => {
+  if (confirmation) console.log('Save')
+  else console.log('Cancel')
   edit.value = false
 }
 </script>

@@ -6,12 +6,10 @@ const { handleSubmit, handleReset } = useForm({
   validationSchema: {
     id(value) {
       if (value?.length >= 2) return true
-
       return 'Id needs to be at least 2 characters.'
     },
     estado(value) {
       if (value) return true
-
       return 'Select an item.'
     }
   }
