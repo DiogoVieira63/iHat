@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // import HomeView from "../views/HomeView.vue";
 import Home from '@/views/HomeView.vue'
 import Obra from '@/views/ObraView.vue'
+import Capacete from '@/views/CapaceteView.vue'
 import NotFound from '@/views/NotFoundView.vue'
 
 import type { RouteRecordRaw } from 'vue-router'
@@ -15,6 +16,10 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/obras/:id',
         component: Obra
+    },
+    {
+        path: '/capacetes/:id',
+        component: Capacete
     },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }
 ]
