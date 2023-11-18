@@ -69,6 +69,8 @@ const rowsFilter = computed(() => {
     }
 })
 
+// Sorting
+
 const rowsSorted = computed(() => {
     if (sort.value.column) {
         const column = sort.value.column as string
@@ -84,6 +86,8 @@ const rowsSorted = computed(() => {
     }
     return rowsFilter.value
 })
+
+// Pagination
 
 const rowsPage = computed(() => {
     const startIndex = (page.value - 1) * maxPerPage.value
