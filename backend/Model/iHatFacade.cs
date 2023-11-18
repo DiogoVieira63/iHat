@@ -1,22 +1,40 @@
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using iHat.Model.Obras;
+using iHat.Model.Capacetes;
+using iHat.Model.Logs;
+using MongoDB.Bson.Serialization.Conventions;
 
 namespace iHat.Model.iHatFacade;
 
 public class iHatFacade: IiHatFacade{
 
     private readonly IObrasService iobras;
+    private readonly ICapacetesService icapacetes;
+    private readonly ILogsService ilogs;
 
-    public iHatFacade(IObrasService obrasService){
+    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService){
         iobras = obrasService;
+        icapacetes = capacetesService;
+        ilogs = logsService;
     }
 
-    public void NewConstruction(string name){
+    public async Task NewConstruction(string name, string mapa, string status){
+
+        // TO DO:
+        // Obter o id do responsável que realizou o pedido do post
+        var idResponsavel = 1;
+
         // Guarda na Base
-        iobras.AddObra(name);
+        try{
+            await iobras.AddObra(name, idResponsavel, mapa, status); 
+        }
+        catch(Exception e){
+            throw new Exception(e.Message);
+        }
     }
 
-
-    public async Task<List<Obra>> GetObras(int idResponsavel){
+    public async Task<List<Obra>?> GetObras(int idResponsavel){
 
         var obras = await iobras.GetObrasOfResponsavel(idResponsavel);
 
@@ -26,6 +44,52 @@ public class iHatFacade: IiHatFacade{
 
         return obras;
     }
+    public async Task RemoveObraById(string obraId){
 
+        await iobras.RemoveObraByIdAsync(obraId);
+    }
 
+    public async Task<Obra> GetConstructionById(string idObra){
+        return await iobras.GetConstructionById(idObra);
+    }
+
+    public async Task AddHelmet(Capacete capacete){
+        await icapacetes.Add(capacete);
+    }
+
+    public async Task<List<Capacete>> GetAll(){
+        return await icapacetes.GetAll();
+    }
+
+    public async Task<Capacete> GetCapacete(string id){
+        return await icapacetes.GetById(id);
+    }
+
+    public async Task<List<Capacete>> GetAllCapacetesdaObra(string idObra){
+        return await icapacetes.GetAllCapacetesdaObra(idObra);
+    }
+
+    public async Task DeleteCapaceteToObra(string id, string idObra){
+        await icapacetes.DeleteCapaceteToObra(id, idObra);
+    }
+
+    public async Task AddCapaceteToObra(string idCapacete, string idObra){
+        await icapacetes.AddCapaceteToObra(idCapacete, idObra);
+    }
+
+    public async void AlteraEstadoObra(string id, string estado){
+        iobras.AlteraEstadoObra(id, estado);
+    }
+
+    public async void UpdateNomeObra(string idObra, string nome){
+        iobras.UpdateNomeObra(idObra, nome);
+    }
+
+    public async Task<List<Log>>  GetLogs(string idObra){
+        return await ilogs.GetLogsOfObra(idObra);
+    }
+
+    public async Task AddLogs(Log logs){
+        await ilogs.Add(logs);
+    }
 }

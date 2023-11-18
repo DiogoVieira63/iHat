@@ -12,10 +12,17 @@ public class Obra
     // [BsonElement("Name")]: Nome na "tabela" do mongoDB
     public int IdResponsavel { get; set; }
     public string Name { get; set; }
-    public List<string> Zonas { get; set; } //GeoJSON
+    public List<string> Zonas { get; set; } //GeoJSON 
     public string Mapa { get; set; }
-    public List<int> Capacetes { get; set; }
-    public List<string> Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
+    public List<string> Capacetes { get; set; }
+    public string Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
 
-
+    public Obra(string name, int idResponsavel, string mapa, string status){
+        this.IdResponsavel = idResponsavel;
+        this.Name = name;
+        this.Zonas = new List<string>();
+        this.Mapa = mapa;
+        this.Capacetes = new List<string>();
+        this.Status = status;
+    }
 }

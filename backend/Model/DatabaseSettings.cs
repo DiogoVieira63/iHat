@@ -6,6 +6,10 @@ public class DatabaseSettings
 
     public string DatabaseName { get; set; } = null!;
 
-    public string BooksCollectionName { get; set; } = null!;
+    public string ObrasCollectionName { get; set; } = null!;
+
+    public string CapacetesCollectionName { get; set; } = null!;
+
+    public string LogsCollectionName { get; set;} = null!;
 
 }
