@@ -12,29 +12,26 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-
 // make v-focus usable in all components
 
-
-
 const vuetify = createVuetify({
-  components,
-  directives,
-  theme: {
-    themes: {
-      light: {
-        dark: false,
-        colors: {
-          primary: '#B38DF7'
+    components,
+    directives,
+    theme: {
+        themes: {
+            light: {
+                dark: false,
+                colors: {
+                    primary: '#B38DF7'
+                }
+            }
         }
-      }
     }
-  }
 })
 
-const app = createApp(App);
-app.use(vuetify);
-app.use(router);
-app.mount('#app');
+const app = createApp(App)
+app.use(vuetify)
+app.use(router)
+app.mount('#app')
 
 //createApp(App).use(vuetify).use(router).mount('#app')
