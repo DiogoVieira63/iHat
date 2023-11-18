@@ -12,8 +12,13 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
+import { VInfiniteScroll } from "vuetify/labs/VInfiniteScroll";
+
 const vuetify = createVuetify({
-  components,
+  components:{
+    VInfiniteScroll,
+    ...components
+  },
   directives,
   theme: {
     themes: {
