@@ -12,7 +12,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-// make v-focus usable in all components
+
 
 const vuetify = createVuetify({
     components,
