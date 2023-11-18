@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 import RowObra from "@/components/RowObra.vue"
 import Map from "@/components/Map.vue"
 import Confirmation from "@/components/Confirmation.vue"
+import Logs from "@/components/LogsObra.vue"
 //import MapEditor from "@/components/MapEditor.vue"
 
 const route = useRoute()
@@ -119,6 +120,13 @@ const filtersHeaders = ["Estado"]
           </template>
         </Lista>
       </v-col>
+    </v-row>
+    <v-row align="center" class="my-16"> 
+      <v-spacer></v-spacer> 
+      <v-col cols="8">
+        <Logs/>
+      </v-col>
+      <v-spacer></v-spacer> 
     </v-row>
   </PageLayout>
 </template>

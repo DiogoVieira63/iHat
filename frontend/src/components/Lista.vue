@@ -149,7 +149,7 @@ watch(
             <slot name="add"></slot>
         </div>
     </v-toolbar>
-    <v-table hover v-if="rowsPage.length > 0" height="55vh" fixed-header>
+    <v-table hover v-if="rowsPage.length > 0" height="70vh" fixed-header>
         <thead>
             <tr>
                 <th v-for="(params, header) in headers" :key="header" class="text-center bg-grey-lighten-2">
