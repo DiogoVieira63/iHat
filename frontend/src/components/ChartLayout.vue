@@ -51,7 +51,7 @@ const isActive = (name) => {
         <v-btn-toggle multiple rounded="xl" v-model="toggle" background-color="primary">
             <v-tooltip v-for="(key, index) in titles" :text="key" location="top">
                 <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props"  :value="key">
+                    <v-btn v-bind="props" :value="key">
                         <v-icon :color="colors[index]" :active="isActive(key)">mdi-checkbox-blank-circle</v-icon>
                     </v-btn>
                 </template>
@@ -60,22 +60,36 @@ const isActive = (name) => {
     </v-row>
     <v-row>
         <template v-for="(key, index) in titles">
-            <v-col v-if="isActive(key)" cols="12" :lg="getColumn(key)">
-                <v-card>
-                    <v-card-title>
-                        <v-icon :color="colors[index]">mdi-checkbox-blank-circle</v-icon>
-                        {{ key }}
-                    </v-card-title>
-                    <slot :name="key"></slot>
-                </v-card>
-            </v-col>
+            <Transition>
+                <v-col v-if="isActive(key)" cols="12" :lg="getColumn(key)">
+                    <v-card>
+                        <v-card-title>
+                            <v-icon :color="colors[index]">mdi-checkbox-blank-circle</v-icon>
+                            {{ key }}
+                        </v-card-title>
+                        <slot :name="key"></slot>
+                    </v-card>
+                </v-col>
+            </Transition>
         </template>
     </v-row>
 </template> 
 
 
 
-<style scoped></style>
+<style>
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 1s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+
+
+</style>
 
 
 
