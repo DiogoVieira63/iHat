@@ -6,9 +6,6 @@ public interface IiHatFacade{
 
     Task<List<Obra>?> GetObras(int idResponsavel);
 
-
-    Task<List<Obra>> GetObras(int idResponsavel);
-
     Task RemoveObraById(string obraId);
 
     Task<Obra> GetConstructionById(string id);
