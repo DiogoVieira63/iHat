@@ -84,10 +84,10 @@ public class IHatController : ControllerBase{
 
 //rever
     [HttpPatch("constructions/{obraId}/{novoNome}")]
-    public void UpdateNomeObra(string obraId, string novoNome) {
+    public async Task<IActionResult> UpdateNomeObra(string obraId, string novoNome) {
         Console.WriteLine("New NameObra PATCH Request");
-        // _facade.UpdateNomeObra(obraId, novoNome);
-        _facade.UpdateNomeObra(obraId, novoNome);
+        await _facade.UpdateNomeObra(obraId, novoNome);
+        return Ok(); // Return a success response
     }
 
 
@@ -96,13 +96,13 @@ public class IHatController : ControllerBase{
     //funcionar
     [HttpPost("helmet")]
     //    public async Task<IActionResult> NewHelmet(Capacete capacete){
-    public async Task<IActionResult> NewHelmet(){
+    public async Task<IActionResult> NewHelmet(NewHelmetForm form){
         Console.WriteLine("New Helmet POST Request");
-        var capacete = new Capacete("Em uso", "Sem Informação", "", "");
+        // var capacete = new Capacete("Em uso", "Sem Informação", "", "");
         
         try
         {   
-            await _facade.AddHelmet(capacete);
+            await _facade.AddHelmet(form.NCapacete);
             return Ok(); // Retorna uma resposta de sucesso
         }
         catch (Exception e)

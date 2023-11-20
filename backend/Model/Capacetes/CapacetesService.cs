@@ -45,8 +45,16 @@
             return lista;            
         }
 
-        public async Task Add(Capacete capacete){
-            await _capaceteCollection.InsertOneAsync(capacete);
+        public async Task Add(int nCapacete){
+            //verificar se na _capaceteCollection nao existe nenhum capacete com esse nCapacete
+            var c = await _capaceteCollection.Find(x => x.NCapacete == nCapacete).FirstOrDefaultAsync();
+            if(c == null){
+                var capacete = new Capacete(nCapacete,"Livre", "", "");
+                await _capaceteCollection.InsertOneAsync(capacete);
+            }
+            else{
+                throw new Exception("Capacete já existe na base de dados.");
+            }
         }
 
         public async Task DeleteCapaceteToObra(string id, string idObra){
@@ -60,7 +68,6 @@
                     if (obra != null)
                     {
                         obra.Capacetes.Remove(id);
-                        capacete.Obra = null;
 
                         // Atualize a coleção de obras
                         var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, idObra);

@@ -12,7 +12,7 @@ public interface IObrasService{
     
     Task<Obra> GetConstructionById(string idObra);
 
-    void UpdateNomeObra(string idObra, string nome);
+    Task UpdateNomeObra(string idObra, string nome);
 
 }
     
