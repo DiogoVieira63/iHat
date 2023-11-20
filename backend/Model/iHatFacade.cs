@@ -53,8 +53,8 @@ public class iHatFacade: IiHatFacade{
         return await iobras.GetConstructionById(idObra);
     }
 
-    public async Task AddHelmet(Capacete capacete){
-        await icapacetes.Add(capacete);
+    public async Task AddHelmet(int nCapacete){
+        await icapacetes.Add(nCapacete);
     }
 
     public async Task<List<Capacete>> GetAll(){
@@ -81,8 +81,8 @@ public class iHatFacade: IiHatFacade{
         iobras.AlteraEstadoObra(id, estado);
     }
 
-    public async void UpdateNomeObra(string idObra, string nome){
-        iobras.UpdateNomeObra(idObra, nome);
+    public async Task UpdateNomeObra(string idObra, string nome){
+        await iobras.UpdateNomeObra(idObra, nome);
     }
 
     public async Task<List<Log>>  GetLogs(string idObra){

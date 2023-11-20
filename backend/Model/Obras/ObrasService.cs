@@ -114,7 +114,7 @@ public class ObrasService: IObrasService{
         }
     }
 
-    public void UpdateNomeObra(string idObra, string nome){
+    public async Task UpdateNomeObra(string idObra, string nome){
         var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
 
         if (obra == null)

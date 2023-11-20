@@ -11,7 +11,7 @@ public interface IiHatFacade{
 
     Task<Obra> GetConstructionById(string id);
 
-    Task AddHelmet(Capacete capacete);
+    Task AddHelmet(int nCapacete );
 
     Task<List<Capacete>> GetAll();
 
@@ -25,7 +25,7 @@ public interface IiHatFacade{
 
     void AlteraEstadoObra(string id, string estado);
 
-    void UpdateNomeObra(string idObra, string nome);
+    Task UpdateNomeObra(string idObra, string nome);
 
     Task <List<Log>> GetLogs(string idObra);
 
