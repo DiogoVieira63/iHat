@@ -80,8 +80,28 @@ module.exports.getCapacetesFromObra = (idObra) => {
       });
 }
 
+module.exports.deleteCapaceteFromObra = (idObra, idCapacete) => {
+  return axios.delete(`${url}/constructions/${idObra}/helmets/${idCapacete}`)
+      .then(response => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch(error => {
+        console.error('Error: ', error);
+      });
+}
+
+module.exports.addCapaceteToObra = (idObra, idCapacete) => {
+  return axios.post(`${url}/constructions/${idObra}/helmets/${idCapacete}`)
+      .then(response => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch(error => {
+        console.error('Error: ', error);
+      });
+}
+
 /* Falta patchs, 
    POST helmets
-   [HttpDelete("helmet/{idCapacete}/{idObra}")], 
-   [HttpPost("helmet/obra/{idObra}/{idCapacete}")]
 */
