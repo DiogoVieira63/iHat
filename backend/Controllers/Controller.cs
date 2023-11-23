@@ -160,7 +160,7 @@ public class IHatController : ControllerBase{
     }
 
 //funciona
-    [HttpDelete("helmet/{idCapacete}/{idObra}")]
+    [HttpDelete("constructions/{idObra}/helmets/{idCapacete}")]
     public async Task<IActionResult> DeleteHelmet(string idCapacete, string idObra){
         Console.WriteLine("Delete Helmet DELETE Request");
 
@@ -178,7 +178,7 @@ public class IHatController : ControllerBase{
     }
 
 // funciona
-    [HttpPost("helmet/obra/{idObra}/{idCapacete}")]
+    [HttpPost("constructions/{idObra}/helmets/{idCapacete}")]
     public async Task<IActionResult> AddHelmetToObra(string idCapacete, string idObra){
         Console.WriteLine("Add Helmet To Obra POST Request");
 
