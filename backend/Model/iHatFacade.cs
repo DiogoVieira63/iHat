@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
+using iHat.Model.Logs;
 using MongoDB.Bson.Serialization.Conventions;
 
 namespace iHat.Model.iHatFacade;
@@ -10,10 +11,12 @@ public class iHatFacade: IiHatFacade{
 
     private readonly IObrasService iobras;
     private readonly ICapacetesService icapacetes;
+    private readonly ILogsService ilogs;
 
-    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService){
+    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService){
         iobras = obrasService;
         icapacetes = capacetesService;
+        ilogs = logsService;
     }
 
     public async Task NewConstruction(string name, string mapa, string status){
@@ -50,8 +53,8 @@ public class iHatFacade: IiHatFacade{
         return await iobras.GetConstructionById(idObra);
     }
 
-    public async Task AddHelmet(Capacete capacete){
-        await icapacetes.Add(capacete);
+    public async Task AddHelmet(int nCapacete){
+        await icapacetes.Add(nCapacete);
     }
 
     public async Task<List<Capacete>> GetAll(){
@@ -78,7 +81,15 @@ public class iHatFacade: IiHatFacade{
         iobras.AlteraEstadoObra(id, estado);
     }
 
-    public async void UpdateNomeObra(string idObra, string nome){
-        iobras.UpdateNomeObra(idObra, nome);
+    public async Task UpdateNomeObra(string idObra, string nome){
+        await iobras.UpdateNomeObra(idObra, nome);
+    }
+
+    public async Task<List<Log>>  GetLogs(string idObra){
+        return await ilogs.GetLogsOfObra(idObra);
+    }
+
+    public async Task AddLogs(Log logs){
+        await ilogs.Add(logs);
     }
 }

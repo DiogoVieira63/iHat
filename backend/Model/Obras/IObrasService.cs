@@ -12,7 +12,15 @@ public interface IObrasService{
     
     Task<Obra> GetConstructionById(string idObra);
 
-    void UpdateNomeObra(string idObra, string nome);
+    Task UpdateNomeObra(string idObra, string nome);
+
+    Task AddZonasPerigo(string idObra, List<double> lista);
+
+    Task RemoveZonasPerigo(string idObra);
+
+    Task RemoveAllZonasPerigo(string idObra);
+
+    Task UpdateZonasPerigo(string idObra, List<double> lista);
 
 }
     

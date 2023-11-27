@@ -8,16 +8,17 @@ public class Capacete
     [BsonId] // Primary key
     [BsonRepresentation(BsonType.ObjectId)] // permite passar uma variável do tipo ObjectId como string
     public string? Id { get; set; }
+
+    public int NCapacete { get; set; }
     public string Status { get; set; }
     public string Info { get; set; }
-    public string Obra { get; set; } //id da obra 
     public string Trabalhador { get; set; } // verificar isto se é string ou uma classe
 
-    public Capacete(string status, string info, string obra, string trabalhador)
+    public Capacete(int nCapacete, string status, string info, string trabalhador)
     {
+        NCapacete = nCapacete;
         Status = status;
         Info = info;
-        Obra = obra;
         Trabalhador = trabalhador;
     }
 }

@@ -45,8 +45,16 @@
             return lista;            
         }
 
-        public async Task Add(Capacete capacete){
-            await _capaceteCollection.InsertOneAsync(capacete);
+        public async Task Add(int nCapacete){
+            //verificar se na _capaceteCollection nao existe nenhum capacete com esse nCapacete
+            var c = await _capaceteCollection.Find(x => x.NCapacete == nCapacete).FirstOrDefaultAsync();
+            if(c == null){
+                var capacete = new Capacete(nCapacete,"Livre", "", "");
+                await _capaceteCollection.InsertOneAsync(capacete);
+            }
+            else{
+                throw new Exception("Capacete já existe na base de dados.");
+            }
         }
 
         public async Task DeleteCapaceteToObra(string id, string idObra){
@@ -60,7 +68,6 @@
                     if (obra != null)
                     {
                         obra.Capacetes.Remove(id);
-                        capacete.Obra = null;
 
                         // Atualize a coleção de obras
                         var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, idObra);
@@ -96,6 +103,20 @@
 
             if (obra != null)
             {
+                //buscar o capacete e alterar o Estado para "Em uso"
+                var capacete = await _capaceteCollection.Find(x => x.Id == idCapacete).FirstOrDefaultAsync();
+                if (capacete != null)
+                {
+                    capacete.Status = "Associado a obra";
+
+                    var capaceteFilter = Builders<Capacete>.Filter.Eq(x => x.Id, idCapacete);
+                    var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, capacete.Status);
+                    await _capaceteCollection.UpdateOneAsync(capaceteFilter, capaceteUpdate);
+                }
+                else
+                {
+                    throw new Exception("Capacete não encontrado.");
+                }
                 obra.Capacetes.Add(idCapacete);
                 var filter = Builders<Obra>.Filter.Eq(x => x.Id, idObra);
                 var update = Builders<Obra>.Update.Set(x => x.Capacetes, obra.Capacetes);

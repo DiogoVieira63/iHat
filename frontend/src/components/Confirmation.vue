@@ -1,5 +1,5 @@
-<script setup>
-import { ref } from "vue"
+<script setup lang="ts">
+import { ref } from 'vue'
 
 const props = defineProps({
     title: {
@@ -14,7 +14,7 @@ const props = defineProps({
 
 const dialog = ref(false)
 
-function callFunction(value) {
+function callFunction(value: boolean) {
     dialog.value = false
     props.function(value)
 }
@@ -22,12 +22,11 @@ function callFunction(value) {
 function openDialog() {
     dialog.value = true
 }
-
 </script>
 <template>
     <v-dialog v-model="dialog" persistent width="auto">
         <template v-slot:activator="{ props }">
-            <slot name="button" :prop="props" :open="openDialog" ></slot>
+            <slot name="button" :prop="props" :open="openDialog"></slot>
         </template>
         <v-card>
             <v-card-title class="text-h5">
@@ -38,9 +37,7 @@ function openDialog() {
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="red" variant="text" @click="callFunction(false)">
-                    Cancelar
-                </v-btn>
+                <v-btn color="red" variant="text" @click="callFunction(false)"> Cancelar </v-btn>
                 <v-btn color="green" variant="elevated" @click="callFunction(true)">
                     Confirmar
                 </v-btn>
@@ -48,4 +45,3 @@ function openDialog() {
         </v-card>
     </v-dialog>
 </template>
-

@@ -2,6 +2,7 @@ using FormEncode.Models;
 using iHat.Model.iHatFacade;
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
+using iHat.Model.Logs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iHat.Controllers;
@@ -82,11 +83,11 @@ public class IHatController : ControllerBase{
     }
 
 //rever
-    [HttpPatch("atualizarNome/{obraId}/{novoNome}")]
-    public void UpdateNomeObra(string obraId, string novoNome) {
+    [HttpPatch("constructions/{obraId}/{novoNome}")]
+    public async Task<IActionResult> UpdateNomeObra(string obraId, string novoNome) {
         Console.WriteLine("New NameObra PATCH Request");
-        // _facade.UpdateNomeObra(obraId, novoNome);
-        _facade.UpdateNomeObra(obraId, novoNome);
+        await _facade.UpdateNomeObra(obraId, novoNome);
+        return Ok(); // Return a success response
     }
 
 
@@ -95,13 +96,13 @@ public class IHatController : ControllerBase{
     //funcionar
     [HttpPost("helmet")]
     //    public async Task<IActionResult> NewHelmet(Capacete capacete){
-    public async Task<IActionResult> NewHelmet(){
+    public async Task<IActionResult> NewHelmet(NewHelmetForm form){
         Console.WriteLine("New Helmet POST Request");
-        var capacete = new Capacete("Em uso", "Sem Informação", "", "");
+        // var capacete = new Capacete("Em uso", "Sem Informação", "", "");
         
         try
         {   
-            await _facade.AddHelmet(capacete);
+            await _facade.AddHelmet(form.NCapacete);
             return Ok(); // Retorna uma resposta de sucesso
         }
         catch (Exception e)
@@ -194,6 +195,35 @@ public class IHatController : ControllerBase{
         try
         {
             await _facade.AddCapaceteToObra(idCapacete, idObra);
+            return Ok(); // Retorna uma resposta de sucesso
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Erro: {e.Message}");
+            return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
+        }
+    }
+
+    [HttpGet("logs/{idObra}")]
+    public async Task<ActionResult<List<Log>>> GetLogs(string idObra){
+        Console.WriteLine("Get Logs GET Request");
+
+        var lista = await _facade.GetLogs(idObra);
+
+        if(lista == null){
+            return NotFound();
+        }
+
+        return lista;
+    }
+
+    [HttpPost("logs")]
+    public async Task<IActionResult> AddLogs(Log logs){
+        Console.WriteLine("Add Logs POST Request");
+
+        try
+        {
+            await _facade.AddLogs(logs);
             return Ok(); // Retorna uma resposta de sucesso
         }
         catch (Exception e)
