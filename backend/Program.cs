@@ -17,6 +17,7 @@ builder.Services.AddSingleton<ICapacetesService, CapacetesService>();
 builder.Services.AddSingleton<IiHatFacade, iHatFacade>();
 
 builder.Services.AddSingleton<MQTTService>();
+builder.Services.AddHostedService<MQTTBackgroundService>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
