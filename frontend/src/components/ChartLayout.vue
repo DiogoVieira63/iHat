@@ -1,10 +1,21 @@
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue'
 import { useSlots, computed, onMounted } from 'vue'
 const slots = useSlots()
-const titles = ref([]);
-const toggle = ref([]);
-const colors = ["red", "blue", "green", "yellow", "orange", "purple", "pink", "brown", "grey", "black"]
+const titles = ref<Array<string>>([])
+const toggle = ref<Array<string>>([])
+const colors = [
+    'red',
+    'blue',
+    'green',
+    'yellow',
+    'orange',
+    'purple',
+    'pink',
+    'brown',
+    'grey',
+    'black'
+]
 
 onMounted(() => {
     // iterate slots
@@ -16,9 +27,9 @@ onMounted(() => {
 })
 
 const columns = computed(() => {
-    let columns = {}
+    let columns: { [key: string]: number } = {}
     //iterate titles dict
-    let last = ""
+    let last = ''
     for (let key of titles.value) {
         if (isActive(key)) {
             columns[key] = 12
@@ -33,49 +44,54 @@ const columns = computed(() => {
     return columns
 })
 
-
-const getColumn = (name) => {
+const getColumn = (name: string) => {
     return columns.value[name]
 }
 
-const isActive = (name) => {
+const isActive = (name: string) => {
     return toggle.value.includes(name)
 }
-
 </script>
-
-
 
 <template>
     <v-row justify="center" class="ma-3">
         <v-btn-toggle multiple rounded="xl" v-model="toggle" background-color="primary">
-            <v-tooltip v-for="(key, index) in titles" :text="key" location="top">
+            <v-tooltip v-for="(key, index) in titles" :text="key" location="top" :key="key">
                 <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props"  :value="key">
-                        <v-icon :color="colors[index]" :active="isActive(key)">mdi-checkbox-blank-circle</v-icon>
+                    <v-btn v-bind="props" :value="key">
+                        <v-icon :color="colors[index]" :active="isActive(key)"
+                            >mdi-checkbox-blank-circle</v-icon
+                        >
                     </v-btn>
                 </template>
             </v-tooltip>
         </v-btn-toggle>
     </v-row>
     <v-row>
-        <template v-for="(key, index) in titles">
-            <v-col v-if="isActive(key)" cols="12" :lg="getColumn(key)">
-                <v-card>
-                    <v-card-title>
-                        <v-icon :color="colors[index]">mdi-checkbox-blank-circle</v-icon>
-                        {{ key }}
-                    </v-card-title>
-                    <slot :name="key"></slot>
-                </v-card>
-            </v-col>
+        <template v-for="(key, index) in titles" :key="key">
+            <Transition>
+                <v-col v-if="isActive(key)" cols="12" :lg="getColumn(key)">
+                    <v-card>
+                        <v-card-title>
+                            <v-icon :color="colors[index]">mdi-checkbox-blank-circle</v-icon>
+                            {{ key }}
+                        </v-card-title>
+                        <slot :name="key"></slot>
+                    </v-card>
+                </v-col>
+            </Transition>
         </template>
     </v-row>
-</template> 
+</template>
 
+<style>
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 1s ease;
+}
 
-
-<style scoped></style>
-
-
-
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+</style>

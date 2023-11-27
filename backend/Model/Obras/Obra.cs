@@ -12,7 +12,7 @@ public class Obra
     // [BsonElement("Name")]: Nome na "tabela" do mongoDB
     public int IdResponsavel { get; set; }
     public string Name { get; set; }
-    public List<string> Zonas { get; set; } //GeoJSON
+    public List<string> Zonas { get; set; } //GeoJSON 
     public string Mapa { get; set; }
     public List<string> Capacetes { get; set; }
     public string Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada

@@ -1,8 +1,6 @@
-<script setup>
-import ChartLayout from "@/components/ChartLayout.vue";
-import { ref, defineEmits} from "vue";
-
-const show = ref([true,true,true,true]);
+<script setup lang="ts">
+import ChartLayout from '@/components/ChartLayout.vue'
+import { ref } from 'vue'
 
 const options = {
     chart: {
@@ -13,25 +11,24 @@ const options = {
     },
     stroke: {
         curve: 'smooth'
-    },
+    }
 }
-const series = [{
-    name: 'series-1',
-    data: [30, 40, 45, 50, 49, 60, 70, 91]
-}]
-const types = ref(["line","area","bar","heatmap","line","area","bar","heatmap"])//,"area","bar","pie","donut","radialBar","scatter","bubble","heatmap","candlestick","boxPlot","radar","polarArea","rangeBar","rangeArea","treemap"]
-const slotName = (index) => {
+const series = [
+    {
+        name: 'series-1',
+        data: [30, 40, 45, 50, 49, 60, 70, 91]
+    }
+]
+const types = ref(['line', 'area', 'bar', 'heatmap', 'line', 'area', 'bar', 'heatmap']) //,"area","bar","pie","donut","radialBar","scatter","bubble","heatmap","candlestick","boxPlot","radar","polarArea","rangeBar","rangeArea","treemap"]
+const slotName = (index: number) => {
     return types.value[index] + index
 }
-
-
 </script>
 
 <template>
     <ChartLayout>
-        <template v-for="(type,index) in types" v-slot:[slotName(index)]>
+        <template v-for="(type, index) in types" v-slot:[slotName(index)] :key="index">
             <apexchart :type="type" :options="options" :series="series"></apexchart>
         </template>
     </ChartLayout>
 </template>
-
