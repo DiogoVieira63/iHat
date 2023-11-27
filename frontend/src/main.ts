@@ -22,7 +22,15 @@ const vuetify = createVuetify({
             light: {
                 dark: false,
                 colors: {
-                    primary: '#B38DF7'
+                    primary: '#B38DF7',
+                    secondary: '#AAC4FF',
+                }
+            },
+            dark: {
+                dark: true,
+                colors: {
+                    primary: '#B38DF7',
+                    secondary: '#AAC4FF',
                 }
             }
         }
