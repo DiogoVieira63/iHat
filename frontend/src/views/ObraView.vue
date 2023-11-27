@@ -96,7 +96,8 @@ const filtersHeaders = ['Estado']
                     <v-col cols="12" lg="6" xl="4">
                         <confirmation title="Confirmação" :function="changeEstado">
                             <template #button="{ open }">
-                                <v-select
+                                <v-select 
+                                    rounded="t-xl"
                                     label="Estado da Obra"
                                     :items="[
                                         'Planeada',
