@@ -133,7 +133,91 @@ public class ObrasService: IObrasService{
 
             Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
         }
-    }       
+    }      
+
+    public async Task AddZonasPerigo(string idObra, List<double> lista){
+        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+
+        if (obra == null)
+        {
+            Console.WriteLine("[iHatFacade] Obra não existe.");
+            return;
+        }   
+
+        obra.Zonas = lista;
+
+        try{
+            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
+        }
+    }
+
+    public async Task RemoveZonasPerigo(string idObra){
+        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+
+        if (obra == null)
+        {
+            Console.WriteLine("[iHatFacade] Obra não existe.");
+            return;
+        }   
+
+        obra.Zonas = new List<double>();
+
+        try{
+            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
+        }
+    } 
+
+    public async Task RemoveAllZonasPerigo(string idObra){
+        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+
+        if (obra == null)
+        {
+            Console.WriteLine("[iHatFacade] Obra não existe.");
+            return;
+        }   
+
+        obra.Zonas = new List<double>();
+
+        try{
+            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
+        }
+    }
+
+    public async Task UpdateZonasPerigo(string idObra, List<double> lista){
+        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+
+        if (obra == null)
+        {
+            Console.WriteLine("[iHatFacade] Obra não existe.");
+            return;
+        }   
+
+        obra.Zonas = lista;
+
+        try{
+            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
+        }
+    }
 
 
 }
