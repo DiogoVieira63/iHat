@@ -14,5 +14,13 @@ public interface IObrasService{
 
     Task UpdateNomeObra(string idObra, string nome);
 
+    Task AddZonasPerigo(string idObra, List<double> lista);
+
+    Task RemoveZonasPerigo(string idObra);
+
+    Task RemoveAllZonasPerigo(string idObra);
+
+    Task UpdateZonasPerigo(string idObra, List<double> lista);
+
 }
     

@@ -103,6 +103,20 @@
 
             if (obra != null)
             {
+                //buscar o capacete e alterar o Estado para "Em uso"
+                var capacete = await _capaceteCollection.Find(x => x.Id == idCapacete).FirstOrDefaultAsync();
+                if (capacete != null)
+                {
+                    capacete.Status = "Associado a obra";
+
+                    var capaceteFilter = Builders<Capacete>.Filter.Eq(x => x.Id, idCapacete);
+                    var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, capacete.Status);
+                    await _capaceteCollection.UpdateOneAsync(capaceteFilter, capaceteUpdate);
+                }
+                else
+                {
+                    throw new Exception("Capacete não encontrado.");
+                }
                 obra.Capacetes.Add(idCapacete);
                 var filter = Builders<Obra>.Filter.Eq(x => x.Id, idObra);
                 var update = Builders<Obra>.Update.Set(x => x.Capacetes, obra.Capacetes);
