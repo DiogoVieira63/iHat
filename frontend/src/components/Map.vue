@@ -9,7 +9,7 @@ const { mdAndDown } = useDisplay()
 
 const page = ref(1)
 const edit = ref(false)
-const imageUrls: Array<string> = ['/Duplex1.svg','/Duplex2.svg'] 
+const imageUrls: Array<string> = ['/Duplex1.svg', '/Duplex2.svg']
 const addMapa = ref(false)
 
 const getCurrentImage = computed(() => {
@@ -27,7 +27,11 @@ const saveEdit = (confirmation: boolean) => {
 <template>
     <template v-if="imageUrls.length > 0">
         <template v-for="image in imageUrls" :key="image">
-            <map-editor :active="image === getCurrentImage" :edit="edit" :svg-src="image"></map-editor>
+            <map-editor
+                :active="image === getCurrentImage"
+                :edit="edit"
+                :svg-src="image"
+            ></map-editor>
         </template>
         <v-container>
             <v-row>
@@ -37,7 +41,13 @@ const saveEdit = (confirmation: boolean) => {
                     </v-pagination>
                 </v-col>
                 <v-col cols="2" md="4" class="mt-3">
-                    <v-btn v-if="!edit" prepend-icon="$edit" variant="tonal" color="primary" @click="edit = !edit">
+                    <v-btn
+                        v-if="!edit"
+                        prepend-icon="$edit"
+                        variant="tonal"
+                        color="primary"
+                        @click="edit = !edit"
+                    >
                         {{ mdAndDown ? '' : 'Editar' }}
                     </v-btn>
                     <confirmation v-else title="Confirmação" :function="saveEdit">
@@ -60,12 +70,22 @@ const saveEdit = (confirmation: boolean) => {
                     <p class="text-center text-h6">Não existem mapas para esta obra.</p>
                     <v-row>
                         <v-col>
-                            <v-btn block color="primary" @click="addMapa = true" class="text-center mt-5">
+                            <v-btn
+                                block
+                                color="primary"
+                                @click="addMapa = true"
+                                class="text-center mt-5"
+                            >
                                 Adicionar Mapa
                             </v-btn>
                         </v-col>
                         <v-col v-if="addMapa">
-                            <v-btn block color="primary" @click="addMapa = false" class="text-center mt-5">
+                            <v-btn
+                                block
+                                color="primary"
+                                @click="addMapa = false"
+                                class="text-center mt-5"
+                            >
                                 Cancelar
                             </v-btn>
                         </v-col>
