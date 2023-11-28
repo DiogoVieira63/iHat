@@ -7,14 +7,10 @@ import { useRouter } from 'vue-router'
 const theme = useTheme()
 const router = useRouter()
 
-function toggleTheme () {
-  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+function toggleTheme() {
+    theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
-
-
 </script>
-
-
 
 <template>
     <v-app>
@@ -30,7 +26,7 @@ function toggleTheme () {
                 <v-btn icon="mdi-dots-vertical"></v-btn>
             </template>
         </v-app-bar>
-        <v-main >
+        <v-main>
             <slot></slot>
         </v-main>
         <v-footer rounded w-auto color="primary">
