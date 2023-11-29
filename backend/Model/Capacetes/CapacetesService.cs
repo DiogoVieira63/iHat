@@ -35,14 +35,19 @@
         }
 
 //mudar: dividir em duas, buscar a obra pelo id e buscar a lista de capacetes dessa obra
-        public async Task<List<Capacete>> GetAllCapacetesdaObra(string idObra){
-            //duvidas
+        public async Task<List<Capacete>> GetAllCapacetesdaObra(string idObra)
+        {
             var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
-            var lista = new List<Capacete?>();
-            foreach(var capacete in obra.Capacetes){
-                lista.Add(await _capaceteCollection.Find(x => x.Id == capacete).FirstOrDefaultAsync());
+            var lista = new List<Capacete>();
+            foreach (var capaceteId in obra.Capacetes)
+            {
+                var capacete = await _capaceteCollection.Find(x => x.Id == capaceteId).FirstOrDefaultAsync();
+                if (capacete != null)
+                {
+                    lista.Add(capacete);
+                }
             }
-            return lista;            
+            return lista;
         }
 
         public async Task Add(int nCapacete){
@@ -103,7 +108,6 @@
 
             if (obra != null)
             {
-                //buscar o capacete e alterar o Estado para "Em uso"
                 var capacete = await _capaceteCollection.Find(x => x.Id == idCapacete).FirstOrDefaultAsync();
                 if (capacete != null)
                 {
