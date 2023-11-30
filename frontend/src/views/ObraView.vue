@@ -6,6 +6,7 @@ import { useRoute } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import Map from '@/components/Map.vue'
 import Confirmation from '@/components/Confirmation.vue'
+import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 
 const route = useRoute()
 const list = ref<Array<{ [id: string]: string }>>([])
@@ -74,7 +75,9 @@ const filtersHeaders = ['Estado']
             <v-col cols="12" lg="6" class="px-16">
                 <v-row align="center" justify="start">
                     <v-col cols="auto" v-bind:offset-lg="4">
-                        <div class="text-h4 text-lg-h3" v-if="!isEditing">{{ title }}</div>
+                        <div class="text-h4 text-lg-h3" v-if="!isEditing">
+                            {{ title }}
+                        </div>
                         <v-text-field
                             v-else
                             v-model="title"
@@ -96,7 +99,7 @@ const filtersHeaders = ['Estado']
                     <v-col cols="12" lg="6" xl="4">
                         <confirmation title="Confirmação" :function="changeEstado">
                             <template #button="{ open }">
-                                <v-select 
+                                <v-select
                                     rounded="t-xl"
                                     label="Estado da Obra"
                                     :items="[
@@ -132,7 +135,7 @@ const filtersHeaders = ['Estado']
                     :filterHeaders="filtersHeaders"
                 >
                     <template v-slot:tabs>
-                        <v-toolbar-title>Lista de Capacetes</v-toolbar-title>
+                        <p class="text-md-h6 ml-2 text-subtitle-1">Lista de Capacetes</p>
                     </template>
                     <template #row="{ row }">
                         <RowObra
@@ -142,14 +145,7 @@ const filtersHeaders = ['Estado']
                         />
                     </template>
                     <template v-slot:add>
-                        <v-btn
-                            color="primary"
-                            variant="flat"
-                            icon="mdi-plus"
-                            rounded="xl"
-                            class="ma-1"
-                        >
-                        </v-btn>
+                        <FormCapaceteObra />
                     </template>
                 </Lista>
             </v-col>
