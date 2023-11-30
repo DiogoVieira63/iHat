@@ -46,7 +46,7 @@ const submit = handleSubmit((values) => {
                             <v-row>
                                 <v-col cols="12" md="6">
                                     <v-text-field
-                                        v-model="nomeObra.value"
+                                        v-model="nomeObra.value.value"
                                         :error-messages="nomeObra.errorMessage.value"
                                         label="Nome da Obra*"
                                     ></v-text-field>

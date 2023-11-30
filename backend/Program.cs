@@ -6,6 +6,19 @@ using iHat.Model.Logs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy",
+    builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
+
 builder.Services.AddControllers();
 
 builder.Services.Configure<DatabaseSettings>(
@@ -35,6 +48,7 @@ var app = builder.Build();
 }
 
 app.UseHttpsRedirection();*/
+app.UseCors("MyPolicy");
 
 app.MapControllers();
 
