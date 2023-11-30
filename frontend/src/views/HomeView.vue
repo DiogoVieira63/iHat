@@ -75,7 +75,7 @@ function changePage(id: string) {
 <template>
     <PageLayout>
         <v-container>
-            <v-sheet class="mx-auto" max-width="1500px">
+            <v-sheet class="mx-auto" max-width="1500px" color="background">
                 <Lista v-if="list.length > 0" :list="list" :headers="headers">
                     <template v-slot:tabs>
                         <v-tabs
