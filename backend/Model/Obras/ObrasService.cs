@@ -114,29 +114,31 @@ public class ObrasService: IObrasService{
         }
     }
 
-    public async Task UpdateNomeObra(string idObra, string nome){
-        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+    public async Task UpdateNomeObra(string idObra, string nome)
+    {
+        var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
 
         if (obra == null)
         {
             Console.WriteLine("[iHatFacade] Obra não existe.");
             return;
-        }   
+        }
 
         obra.Name = nome;
 
-        try{
-            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        try
+        {
+            await _obraCollection.ReplaceOneAsync(x => x.Id == idObra, obra);
         }
         catch (Exception ex)
         {
-
             Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
         }
-    }      
+    }
 
-    public async Task AddZonasPerigo(string idObra, List<double> lista){
-        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+    public async Task AddZonasPerigo(string idObra, List<Tuple<double,double>> lista)
+    {
+        var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
 
         if (obra == null)
         {
@@ -146,60 +148,63 @@ public class ObrasService: IObrasService{
 
         obra.Zonas = lista;
 
-        try{
-            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        try
+        {
+            await _obraCollection.ReplaceOneAsync(x => x.Id == idObra, obra);
         }
         catch (Exception ex)
         {
-
             Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
         }
     }
 
-    public async Task RemoveZonasPerigo(string idObra){
-        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+    public async Task RemoveZonasPerigo(string idObra)
+    {
+        var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
 
         if (obra == null)
         {
             Console.WriteLine("[iHatFacade] Obra não existe.");
             return;
-        }   
+        }
 
-        obra.Zonas = new List<double>();
+        obra.Zonas = new List<Tuple<double, double>>();
 
-        try{
-            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        try
+        {
+            await _obraCollection.ReplaceOneAsync(x => x.Id == idObra, obra);
         }
         catch (Exception ex)
         {
-
             Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
         }
-    } 
+    }
 
-    public async Task RemoveAllZonasPerigo(string idObra){
-        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+    public async Task RemoveAllZonasPerigo(string idObra)
+    {
+        var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
 
         if (obra == null)
         {
             Console.WriteLine("[iHatFacade] Obra não existe.");
             return;
-        }   
+        }
 
-        obra.Zonas = new List<double>();
+        obra.Zonas = new List<Tuple<double, double>>();
 
-        try{
-            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        try
+        {
+            await _obraCollection.ReplaceOneAsync(x => x.Id == idObra, obra);
         }
         catch (Exception ex)
         {
-
             Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
         }
     }
 
-    public async Task UpdateZonasPerigo(string idObra, List<double> lista){
-        var obra = _obraCollection.Find(x => x.Id == idObra).FirstOrDefault();
+    public async Task UpdateZonasPerigo(string idObra, List<Tuple<double,double>> lista)
+    {
+        var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
 
         if (obra == null)
         {
@@ -209,12 +214,12 @@ public class ObrasService: IObrasService{
 
         obra.Zonas = lista;
 
-        try{
-            _obraCollection.ReplaceOne(x => x.Id == idObra, obra);
+        try
+        {
+            await _obraCollection.ReplaceOneAsync(x => x.Id == idObra, obra);
         }
         catch (Exception ex)
         {
-
             Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
         }
     }
