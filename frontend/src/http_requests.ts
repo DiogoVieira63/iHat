@@ -69,7 +69,6 @@ export class CapaceteService {
   static getCapacetes(): Promise<Capacete[]> {
     return axios.get(`${url}/helmets`)
       .then((response) => {
-        console.log(response.data)
         return response.data
       })
       .catch((error) => console.error('Error:', error));
@@ -84,11 +83,16 @@ export class CapaceteService {
       .catch((error) => console.error('Error:', error));
   }
 
-  static addOneCapacete(body: CapacetePost): Promise<Capacete> {
+  static addOneCapacete(body: CapacetePost): Promise<boolean> {
     return axios.post(`${url}/helmets`, body)
       .then((response) => {
-          return response.data
+        if (response.status === 200){// mudar para 201
+          return true
+        }
+        else return false
       })
-      .catch((error) => console.error('Error:', error));
+      .catch((_) => {
+        return false
+      });
   }
 }

@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate'
 import { object, string } from 'yup'
-
+import type { Capacete } from '@/interfaces';
+import { CapaceteService } from '@/http_requests';
 interface Form {
     id: string
 }
@@ -13,11 +14,33 @@ const { handleSubmit } = useForm<Form>({
     })
 })
 
+
 const id = useField<string>('id')
 const dialogCapacete = ref(false)
 
-const submit = handleSubmit((values) => {
-    alert(JSON.stringify(values, null, 2))
+
+const submit = handleSubmit(async (values, actions) => {
+    const Capacete : Capacete = {
+        NCapacete: Number(values.id),
+        Status: "Disponivel",
+        Info: "",
+        Trabalhador: ""
+    }
+
+    CapaceteService.addOneCapacete(Capacete).then((success) => {
+        console.log("Success",success)
+        if (success){
+            dialogCapacete.value = false
+            id.value.value = ""
+            id.errorMessage.value = ""
+        }
+        else{
+            actions.setFieldError('id', 'Capacete já existe');
+        }
+    }).catch((error) => {
+        console.log(error)
+    })
+
 })
 </script>
 

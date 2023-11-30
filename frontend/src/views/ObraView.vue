@@ -6,16 +6,23 @@ import { useRoute } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import Map from '@/components/Map.vue'
 import Confirmation from '@/components/Confirmation.vue'
+import type { Header } from '@/interfaces'
 
 const route = useRoute()
 const list = ref<Array<{ [id: string]: string }>>([])
-const headers = { id: ['sort'], Estado: ['filter', 'sort'], Actions: [] } //[{'name': 'Id', 'sort': true,'filter'} , "Estado", "Actions"]
+
+const headers : Array<Header>= [
+    {'key' : 'id', name: 'ID', params: ['sort']},
+    {'key' : 'Estado', name: 'Estado', params: ['filter', 'sort']}
+]
+    
+    
 const title = ref('Nome da Obra ' + route.params.id)
 const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('Planeada')
 const newEstado = ref('')
-
+ 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
     if (isEditing.value) {
@@ -66,7 +73,6 @@ const changeEstado = (value: boolean) => {
     newEstado.value = ''
 }
 
-const filtersHeaders = ['Estado']
 </script>
 <template>
     <PageLayout>
@@ -128,7 +134,6 @@ const filtersHeaders = ['Estado']
                     v-if="list.length > 0"
                     :list="list"
                     :headers="headers"
-                    :filterHeaders="filtersHeaders"
                 >
                     <template v-slot:tabs>
                         <v-toolbar-title>Lista de Capacetes</v-toolbar-title>
