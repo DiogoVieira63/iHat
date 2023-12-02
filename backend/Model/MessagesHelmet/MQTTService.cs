@@ -1,14 +1,12 @@
-using System;
-using System.Collections;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging.Abstractions;
+using iHat.MensagensCapacete;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Extensions.ManagedClient;
 using MQTTnet.Formatter;
-using MQTTnet.Protocol;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace iHat.MQTTService;
 
 public class MQTTService {
 
@@ -87,6 +85,33 @@ public class MQTTService {
         var payload = Encoding.UTF8.GetString(eventArgs.ApplicationMessage.PayloadSegment);
         _logger.LogInformation("Received application message. {0}. {1}", payload, eventArgs.ApplicationMessage.Topic);
     
+        try {
+            var messageJson = JsonConvert.DeserializeObject<MensagensCapacetes>(payload);
+
+            if(messageJson is null){
+                _logger.LogInformation("Message received could not be parsed.");
+                return Task.CompletedTask;
+            }
+
+            // existe messageJson.NCapacete ?
+            // 
+            _logger.LogInformation(messageJson.NCapacete);
+            _logger.LogInformation(messageJson.Location.ToString());
+            _logger.LogInformation(messageJson.Gases.ToString());
+
+            /*if(messageJson.Type.Equals("Update")){
+                // verifica se todos os parametros tem valores válidos (?)
+                //      se tem um valor inválido, gera uma notificação
+                
+
+                // guarda o valor na base de dados
+
+            }*/
+
+        }catch(Exception e){
+            Console.WriteLine(e.Message);
+        }
+
         return Task.CompletedTask;
     }
 

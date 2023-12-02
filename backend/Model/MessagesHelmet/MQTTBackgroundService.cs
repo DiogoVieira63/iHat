@@ -1,3 +1,5 @@
+namespace iHat.MQTTService;
+
 public class MQTTBackgroundService: BackgroundService
 {
     private readonly MQTTService _mqttService;

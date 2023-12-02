@@ -3,6 +3,7 @@ using iHat.Model.iHatFacade;
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
+using iHat.MQTTService;
 
 var builder = WebApplication.CreateBuilder(args);
 
