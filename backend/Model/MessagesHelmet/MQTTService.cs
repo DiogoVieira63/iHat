@@ -93,11 +93,13 @@ public class MQTTService {
                 return Task.CompletedTask;
             }
 
-            // existe messageJson.NCapacete ?
-            // 
             _logger.LogInformation(messageJson.NCapacete);
             _logger.LogInformation(messageJson.Location.ToString());
             _logger.LogInformation(messageJson.Gases.ToString());
+
+
+            // existe messageJson.NCapacete ?
+            // 
 
             /*if(messageJson.Type.Equals("Update")){
                 // verifica se todos os parametros tem valores válidos (?)
