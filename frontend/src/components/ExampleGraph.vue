@@ -2,17 +2,23 @@
 import ChartLayout from '@/components/ChartLayout.vue'
 import { ref } from 'vue'
 
-const options = {
-    chart: {
-        id: 'vuechart-example'
-    },
-    xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-    },
-    stroke: {
-        curve: 'smooth'
+
+const options = (id: number) => {
+    const options = {
+        chart: {
+            id: id,
+        },
+        xaxis: {
+            categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+        },
+        stroke: {
+            curve: 'smooth'
+        }
     }
+    return options
 }
+
+
 const series = [
     {
         name: 'series-1',
@@ -23,12 +29,14 @@ const types = ref(['line', 'area', 'bar', 'heatmap', 'line', 'area', 'bar', 'hea
 const slotName = (index: number) => {
     return types.value[index] + index
 }
+
+
 </script>
 
 <template>
     <ChartLayout>
-        <template v-for="(type, index) in types" v-slot:[slotName(index)] :key="index">
-            <apexchart :type="type" :options="options" :series="series"></apexchart>
+        <template v-for="(type, index) in types" #[slotName(index)] :key="index">
+            <apexchart :type="type" :options="options(index)" :series="series"></apexchart>
         </template>
     </ChartLayout>
 </template>
