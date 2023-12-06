@@ -1,29 +1,29 @@
 export interface Obra {
     _id: string,
-    IdResponsavel: number,
-    Name: string,
-    Zonas?: Array<string>, // temporario
-    Mapa?: string, // temporário
-    Capacetes?: Array<string>, //temporario
-    Status: string
+    idResponsavel: number,
+    name: string,
+    zonas?: Array<string>, // temporario
+    mapa?: string, // temporário
+    capacetes?: Array<string>, //temporario
+    status: string
 }
   
 export interface Capacete {
   _id?: string 
-  NCapacete: number,
-  Status: string,
-  Info: string,
-  Trabalhador: string
+  nCapacete: number,
+  status: string,
+  info: string,
+  trabalhador: string
 }
 
 export interface CapacetePost {
-    NCapacete: number;
+    nCapacete: number;
 }
 
 export interface ObraPost {
-    Name: string,
-    Mapa: string,
-    Status: string
+    name: string,
+    mapa: string,
+    status: string
 }
 
 export interface Header {

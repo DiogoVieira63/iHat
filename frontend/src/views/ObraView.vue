@@ -8,16 +8,14 @@ import Map from '@/components/Map.vue'
 import Confirmation from '@/components/Confirmation.vue'
 import type { Header } from '@/interfaces'
 
-const route = useRoute()
-const list = ref<Array<{ [id: string]: string }>>([])
+import type { Capacete, Obra } from '@/interfaces'
+import { CapaceteService, ObraService } from '@/http_requests'
 
-const headers : Array<Header>= [
-    {'key' : 'id', name: 'ID', params: ['sort']},
-    {'key' : 'Estado', name: 'Estado', params: ['filter', 'sort']}
-]
-    
-    
-const title = ref('Nome da Obra ' + route.params.id)
+const route = useRoute()
+const capacetes = ref<Array<Capacete>>([])
+const list = ref<Array<Capacete>>([])
+
+const title = ref('') 
 const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('Planeada')
@@ -39,27 +37,30 @@ const saveTitle = () => {
 }
 
 onMounted(() => {
-    for (let i = 0; i < 30; i++) {
-        // random Estado between "Livre" and "Em uso" and "Não Operacional"
-        const randomEstado = Math.floor(Math.random() * 3)
-        let estado = ''
-        if (randomEstado === 0) {
-            estado = 'Livre'
-        } else if (randomEstado === 1) {
-            estado = 'Em uso'
-        } else {
-            estado = 'Não Operacional'
-        }
-        list.value.push({ id: String(i), Estado: estado })
-    }
+    ObraService.getOneObra(route.params.id.toString()).then((answer) => {
+        console.log(answer)
+       title.value = answer.name
+    })
+    ObraService.getCapacetesFromObra(route.params.id.toString()).then((answer) => {
+        answer.forEach((capacete) => {
+            capacetes.value.push(capacete)
+        })
+    })
+    list.value = capacetes.value
 })
 
+const headers : Array<Header>= [
+    { key: 'nCapacete', name: 'Id', params: ['sort'] },
+    { key: 'status', name: 'Estado', params: ['filter', 'sort'] },
+    { key: 'Actions', name: 'Actions', params: []}
+]
+
 function removeCapacete(id: number) {
-    list.value = list.value.filter((item) => item.id !== String(id))
+    list.value = list.value.filter((item) => item.nCapacete !== id)
 }
 
 const changeEstadoCapacete = (row: { [key: string]: string }, value: string) => {
-    row['Estado'] = value
+    row['status'] = value
 }
 
 const newEstadoPossible = (value: string) => {
@@ -141,7 +142,7 @@ const changeEstado = (value: boolean) => {
                     <template #row="{ row }">
                         <RowObra
                             :row="row"
-                            @removeCapacete="(id) => removeCapacete(id)"
+                            @removeCapacete="(nCapacete) => removeCapacete(nCapacete)"
                             @changeEstado="(value) => changeEstadoCapacete(row, value)"
                         />
                     </template>

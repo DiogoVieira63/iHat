@@ -39,9 +39,9 @@ onMounted(() => {
         }
         let obra: Obra = {
             _id: String(i),
-            Name: 'Obra' + i,
-            IdResponsavel: 0,
-            Status: estadoObra,
+            name: 'Obra' + i,
+            idResponsavel: 0,
+            status: estadoObra,
         }
         obras.value.push(obra)
     }
@@ -52,8 +52,8 @@ const headers: ComputedRef<Array<Header>> = computed(() => {
     let value: Array<Header> = []
     if (tab.value === 'obras') {
         value = [
-            { key: 'Name', name: 'Nome', params: ['sort'] },
-            { key: 'Status', name: 'Estado', params: ['filter', 'sort'] },
+            { key: 'name', name: 'Nome', params: ['sort'] },
+            { key: 'status', name: 'Estado', params: ['filter', 'sort'] },
 
         ]
     } else if (tab.value === 'capacetes') {
