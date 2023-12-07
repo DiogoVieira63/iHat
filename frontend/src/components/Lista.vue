@@ -157,9 +157,38 @@ watch(
 )
 </script>
 <template>
-    <v-toolbar color="white">
+    <v-toolbar class="rounded-t-xl pr-2">
         <slot name="tabs"></slot>
         <v-spacer></v-spacer>
+        <v-menu
+            v-if="hasFilters"
+            v-model="filterMenu"
+            :close-on-content-click="false"
+            location="end"
+        >
+            <template v-slot:activator="{ props }">
+                <v-btn variant="flat" color="primary" v-bind="props" icon="mdi-filter"></v-btn>
+            </template>
+            <v-card max-width="200" class="mx-auto">
+                <v-card-text>
+                    <div v-for="(value, key) in filterOptions" :key="key">
+                        <h2 class="text-h6">{{ key }}</h2>
+                        <v-chip-group v-model="filter[key]" column multiple color="info">
+                            <v-chip
+                                v-for="option in value"
+                                filter
+                                variant="outlined"
+                                :value="option"
+                                :key="option"
+                            >
+                                {{ option }}
+                            </v-chip>
+                        </v-chip-group>
+                        <v-divider />
+                    </div>
+                </v-card-text>
+            </v-card>
+        </v-menu>
         <v-responsive max-width="400">
             <v-text-field
                 variant="outlined"
@@ -176,6 +205,7 @@ watch(
             <slot name="add"></slot>
         </div>
     </v-toolbar>
+
     <v-table hover v-if="rowsPage.length > 0" height="55vh" fixed-header>
         <thead>
             <tr>
@@ -233,10 +263,11 @@ watch(
                 </v-card>
             </v-menu>
         </v-col>
+        <v-spacer />
         <v-col cols="5" md="7">
             <v-pagination
                 variant="flat"
-                active-color="info"
+                active-color="primary"
                 v-if="numPages !== 1"
                 v-model="page"
                 :length="numPages"
@@ -248,6 +279,7 @@ watch(
                 dense
                 v-model="maxPerPage"
                 label="Elements per Page"
+                rounded="t-xl"
                 :items="[10, 20, 30, 40, 50]"
             ></v-select>
         </v-col>

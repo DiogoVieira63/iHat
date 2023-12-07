@@ -82,8 +82,13 @@ function changePage(id: string) {
 <template>
     <PageLayout>
         <v-container>
+<<<<<<< HEAD
             <v-sheet class="mx-auto" max-width="1500px">
                 <Lista :list="tab=='capacetes'? capacetes: obras" :headers="headers">
+=======
+            <v-sheet class="mx-auto" max-width="1500px" color="background">
+                <Lista v-if="list.length > 0" :list="list" :headers="headers">
+>>>>>>> e1fb2e96c989551ddf546cadf716feececf950aa
                     <template v-slot:tabs>
                         <v-tabs v-model="tab" class="rounded-t-xl align-start" bg-color="grey lighten-3" color="black"
                             align-tabs="center">
