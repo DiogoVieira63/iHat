@@ -1,5 +1,6 @@
 using System.Reflection.Metadata;
 using iHat.MensagensCapacete.Values;
+using iHat.Model.Logs;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,7 +10,7 @@ namespace iHat.MensagensCapacete;
 
 public class MensagensCapacetes{
 
-    public string NCapacete { get; set; }
+    public int NCapacete { get; set; }
     public string Type { get; set; }
     public bool Fall { get; set; }
     public BodyTemperature BodyTemperature {get; set;}
@@ -21,7 +22,7 @@ public class MensagensCapacetes{
 
     [JsonConstructor]
     public MensagensCapacetes ( 
-        string helmetNB,
+        int helmetNB,
         string typeMessage,
         bool fall,
         double bodyTemperature,
@@ -42,13 +43,21 @@ public class MensagensCapacetes{
         Gases = gases;
     }
 
-    public bool SearchForAnormalValues(){
+    public Tuple<bool, string> SearchForAnormalValues(){
         if (Fall) // Se detetou que houve uma queda notifica
-            return Fall;
-
+        {
+            return new Tuple<bool, string>(true, "Fall");
+        }
         if (BodyTemperature.isAbnormalValue())
-            return true;
+            return new Tuple<bool, string>(true, "Temperature");
 
-        return false;
+        if (Heartrate.isAbnormalValue())
+            return new Tuple<bool, string>(true, "Heartrate");
+
+        if (Gases.isAbnormalValue())
+            return new Tuple<bool, string>(true, "Gases");
+
+        return new Tuple<bool, string>(false, "");
+        // localização com as zonas de perigo
     }
 }

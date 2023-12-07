@@ -1,9 +1,6 @@
-using System.Globalization;
-using System.Runtime.CompilerServices;
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
-using MongoDB.Bson.Serialization.Conventions;
 
 namespace iHat.Model.iHatFacade;
 
@@ -25,13 +22,7 @@ public class iHatFacade: IiHatFacade{
         // Obter o id do responsável que realizou o pedido do post
         var idResponsavel = 1;
 
-        // Guarda na Base
-        try{
-            await iobras.AddObra(name, idResponsavel, mapa, status); 
-        }
-        catch(Exception e){
-            throw new Exception(e.Message);
-        }
+        await iobras.AddObra(name, idResponsavel, mapa, status); 
     }
 
     public async Task<List<Obra>?> GetObras(int idResponsavel){
@@ -53,28 +44,35 @@ public class iHatFacade: IiHatFacade{
         return await iobras.GetConstructionById(idObra);
     }
 
-    public async Task AddHelmet(int nCapacete){
-        await icapacetes.Add(nCapacete);
-    }
-
-    public async Task<List<Capacete>> GetAll(){
-        return await icapacetes.GetAll();
-    }
-
-    public async Task<Capacete> GetCapacete(string id){
-        return await icapacetes.GetById(id);
-    }
 
     public async Task<List<Capacete>> GetAllCapacetesdaObra(string idObra){
-        return await icapacetes.GetAllCapacetesdaObra(idObra);
+        var listaNCapacetes = await iobras.GetAllCapacetesOfObra(idObra);
+        return await icapacetes.GetAllHelmetsFromList(listaNCapacetes);
     }
 
-    public async Task DeleteCapaceteToObra(string id, string idObra){
-        await icapacetes.DeleteCapaceteToObra(id, idObra);
+    public async Task DeleteCapaceteToObra(int nCapacete, string idObra){
+        var existsCapacete = await icapacetes.CheckIfCapaceteExists(nCapacete);
+        if(!existsCapacete)
+            throw new Exception("Capacete não encontrado.");
+
+        var capaceteIsBeingUsed = await icapacetes.CheckIfHelmetIfBeingUsed(nCapacete);
+        if(!capaceteIsBeingUsed)
+            throw new Exception("Capacete não pode ser removido da obra, pois não está em uso.");
+
+        await iobras.DeleteCapaceteToObra(nCapacete, idObra);
+
+        await icapacetes.UpdateCapaceteStatusToLivre(nCapacete);
+
     }
 
-    public async Task AddCapaceteToObra(string idCapacete, string idObra){
-        await icapacetes.AddCapaceteToObra(idCapacete, idObra);
+    // Talvez esta função devesse ser considerada uma zona critica, uma vez que estas funções deveriam ser realizadas uma a seguir às outras
+    public async Task AddCapaceteToObra(int nCapacete, string idObra){
+        var existsObra = await iobras.CheckIfObraExists(idObra);
+        if(existsObra){
+            // if the helmet doesn't exist, this function will return and exception and stop
+            await icapacetes.AddCapaceteToObra(nCapacete);
+            await iobras.AddCapaceteToObra(nCapacete, idObra);
+        }
     }
 
     public async void AlteraEstadoObra(string id, string estado){
@@ -92,4 +90,33 @@ public class iHatFacade: IiHatFacade{
     public async Task AddLogs(Log logs){
         await ilogs.Add(logs);
     }
+
+
+    public async Task ChangeStatusCapacete(int nCapacete, string newStatus){
+        icapacetes.UpdateCapaceteStatus(nCapacete, newStatus);
+    }
+
+
+
+    // VERIFICADAS CAPACETES
+
+    public async Task<List<Capacete>> GetAllCapacetes(){
+        return await icapacetes.GetAll();
+    }
+
+    public async Task<Capacete?> GetCapacete(int nCapacete){
+        return await icapacetes.GetById(nCapacete);
+    }
+
+    public async Task AddCapacete(int nCapacete){
+        await icapacetes.Add(nCapacete);
+    }
+
+
+
+    // VERIFICAS OBRAS
+
+
+
+
 }

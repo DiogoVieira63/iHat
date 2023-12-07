@@ -6,8 +6,8 @@ public class BodyTemperature : IDefaultValueHelmetMessage{
 
     public double Value {get; set;}
 
-    private double _minValue;
-    private double _maxValue;
+    private double _minValue=34.5;
+    private double _maxValue=37.4;
 
     [JsonConstructor]
     public BodyTemperature(double bodyTemperature){
@@ -16,7 +16,8 @@ public class BodyTemperature : IDefaultValueHelmetMessage{
 
 
     public bool isAbnormalValue(){
-        return false;
+        return Value < _minValue || Value > _maxValue;
+        
     }
 
 

@@ -19,7 +19,7 @@ public class Gases : IDefaultValueHelmetMessage{
     }
 
     public bool isAbnormalValue(){
-        return false;
+        return Metano > _maxMetano && MonoxidoCarbono > _maxMonoxidoCarbono;
     }
 
     public override string ToString()

@@ -5,7 +5,6 @@ public interface IObrasService{
 
     Task RemoveObraByIdAsync(string obraId);
 
-
     void AlteraEstadoObra(string id, string estado);
 
     Task AddObra(string name, int idResponsavel, string mapa, string status);
@@ -22,5 +21,14 @@ public interface IObrasService{
 
     Task UpdateZonasPerigo(string idObra, List<Tuple<double,double>> lista);
 
+    Task<string?> GetIdObraWithCapaceteId(int nCapaceteToFind);
+
+    Task<List<int>> GetAllCapacetesOfObra(string idObra);
+
+    Task<bool> CheckIfObraExists(string idObra);
+
+    Task AddCapaceteToObra(int idCapacete, string idObra);
+    
+    Task DeleteCapaceteToObra(int id, string idObra);
 }
     

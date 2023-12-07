@@ -1,5 +1,8 @@
 using System.Text;
 using iHat.MensagensCapacete;
+using iHat.Model.Capacetes;
+using iHat.Model.Logs;
+using iHat.Model.Obras;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Formatter;
@@ -21,11 +24,16 @@ public class MQTTService {
     private IMqttClient _mqttClient;
     private MqttFactory _mqttFactory; 
     private CancellationTokenSource _timeoutToken;
-    
 
-    public MQTTService(ILogger<MQTTService> logger){
+    private ICapacetesService _capacetesService;
+    private IObrasService _obrasService;
+    private ILogsService _logsService;
+
+    public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService, ILogsService logsService){
 
         _logger = logger;
+        _obrasService = obrasService;
+        _capacetesService = capacetesService;
 
         _mqttFactory = new MqttFactory();
         _mqttClient = _mqttFactory.CreateMqttClient();
@@ -80,7 +88,7 @@ public class MQTTService {
         }
     }
 
-    private Task HandleReceivedMessage(MqttApplicationMessageReceivedEventArgs eventArgs)
+    private async Task HandleReceivedMessage(MqttApplicationMessageReceivedEventArgs eventArgs)
     {
         var payload = Encoding.UTF8.GetString(eventArgs.ApplicationMessage.PayloadSegment);
         _logger.LogInformation("Received application message. {0}. {1}", payload, eventArgs.ApplicationMessage.Topic);
@@ -90,31 +98,57 @@ public class MQTTService {
 
             if(messageJson is null){
                 _logger.LogInformation("Message received could not be parsed.");
-                return Task.CompletedTask;
             }
 
-            _logger.LogInformation(messageJson.NCapacete);
+            _logger.LogInformation(messageJson.NCapacete.ToString());
             _logger.LogInformation(messageJson.Location.ToString());
             _logger.LogInformation(messageJson.Gases.ToString());
 
+            Tuple<bool, string> messageRe = messageJson.SearchForAnormalValues();
 
-            // existe messageJson.NCapacete ?
-            // 
+            if (messageRe.Item1 == true){
+                var message = "";
+                switch(messageRe.Item2){
+                    case "Fall":
+                        message = "Warning: Fall detected!";
+                        break;
 
-            /*if(messageJson.Type.Equals("Update")){
-                // verifica se todos os parametros tem valores válidos (?)
-                //      se tem um valor inválido, gera uma notificação
+                    case "Temperature":
+                        message = "Warning: Unusual body temperature detected!";
+                        break;
+
+                    case "Heartrate":
+                        message = "Warning: Unusual heartrate detected!";
+                        break;
+
+                    case "Gases":
+                        message = "Warning: High concentration of harmful gases detected!";
+                        break;
+
+                    default:
+                        break;
+                }
+
+                // get helmet by NCapacete 
+                var capacete = await  _capacetesService.GetById(messageJson.NCapacete);
+                        
+                // get idObra
+                var obra = await _obrasService.GetIdObraWithCapaceteId(capacete.NCapacete);
+
+                // (DateTime timestap, string idObra, string idCapacete, string idTrabalhador, string mensagem )
+                var log = new Log(DateTime.Now, obra, messageJson.NCapacete, capacete.Trabalhador, message);
                 
+                // Save Log in DB
+                await _logsService.Add(log);
+                // Notify Helmet
+                        
+                // Notify FrontEnd
 
-                // guarda o valor na base de dados
-
-            }*/
-
+            }
+               
         }catch(Exception e){
             Console.WriteLine(e.Message);
         }
-
-        return Task.CompletedTask;
     }
 
 
