@@ -12,16 +12,24 @@ import type { Header } from '@/interfaces'
 
 const obras = ref<Array<Obra>>([])
 const capacetes = ref<Array<Capacete>>([])
-const list = ref<Array<Capacete | Obra>>([])
 const tab = ref('capacetes')
 const router = useRouter()
 
-onMounted(() => {
+
+const getCapacetes = () => {
+    console.log("getCapacetes")
+    capacetes.value = []
     CapaceteService.getCapacetes().then((answer) => {
+        console.log(answer)
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
         })
     })
+}
+
+
+onMounted(() => {
+    getCapacetes()
     for (let i = 0; i < 30; i++) {
         let randomObra = Math.floor(Math.random() * 5)
         let randomEstadoObra = Math.floor(Math.random() * 5)
@@ -45,7 +53,6 @@ onMounted(() => {
         }
         obras.value.push(obra)
     }
-    list.value = capacetes.value
 })
 
 const headers: ComputedRef<Array<Header>> = computed(() => {
@@ -65,13 +72,7 @@ const headers: ComputedRef<Array<Header>> = computed(() => {
     return value
 })
 
-const changeTab = (newValue: string | null | unknown) => {
-    if (newValue === 'obras') {
-        list.value = obras.value
-    } else if (newValue === 'capacetes') {
-        list.value = capacetes.value
-    }
-}
+
 
 function changePage(id: string) {
     router.push({ path: `/${tab.value}/${id}` })
@@ -82,17 +83,17 @@ function changePage(id: string) {
     <PageLayout>
         <v-container>
             <v-sheet class="mx-auto" max-width="1500px">
-                <Lista :list="list" :headers="headers">
+                <Lista :list="tab=='capacetes'? capacetes: obras" :headers="headers">
                     <template v-slot:tabs>
                         <v-tabs v-model="tab" class="rounded-t-xl align-start" bg-color="grey lighten-3" color="black"
-                            align-tabs="center" @update:model-value="changeTab">
+                            align-tabs="center">
                             <v-tab value="obras" color="black">Obras</v-tab>
                             <v-tab value="capacetes" color="black">capacetes</v-tab>
                         </v-tabs>
                     </template>
                     <template v-slot:add>
-                        <FormObra v-if="tab == 'obras'" />
-                        <FormCapacete v-else />
+                        <FormObra v-if="tab == 'obras'"   />
+                        <FormCapacete v-else  @update="getCapacetes"/>
                     </template>
                     <template #row="{ row, headers }">
                         <td v-for="{ key } in headers" :key="key" @click="changePage(row['id'])">
