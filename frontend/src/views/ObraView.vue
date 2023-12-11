@@ -12,18 +12,18 @@ import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 const route = useRoute()
 const list = ref<Array<{ [id: string]: string }>>([])
 
-const headers : Array<Header>= [
-    {'key' : 'id', name: 'ID', params: ['sort']},
-    {'key' : 'Estado', name: 'Estado', params: ['filter', 'sort']}
+const headers: Array<Header> = [
+    { key: 'id', name: 'ID', params: ['sort'] },
+    { key: 'Estado', name: 'Estado', params: ['filter', 'sort'] },
+    { name: 'Actions', params: [], key: 'actions' }
 ]
-    
-    
+
 const title = ref('Nome da Obra ' + route.params.id)
 const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('Planeada')
 const newEstado = ref('')
- 
+
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
     if (isEditing.value) {
@@ -73,15 +73,24 @@ const changeEstado = (value: boolean) => {
     }
     newEstado.value = ''
 }
-
 </script>
 <template>
     <PageLayout>
         <v-row class="mt-2">
-            <v-col cols="12" lg="6" class="px-16">
-                <v-row align="center" justify="start">
-                    <v-col cols="auto" v-bind:offset-lg="4">
-                        <div class="text-h4 text-lg-h3" v-if="!isEditing">
+            <v-col
+                cols="12"
+                lg="6"
+            >
+                <v-row class="d-flex justify-center"
+            >
+                    <v-col
+                        cols="auto"
+                        v-bind:offset-lg="4"
+                    >
+                        <div
+                            class="text-h4 text-lg-h3"
+                            v-if="!isEditing"
+                        >
                             {{ title }}
                         </div>
                         <v-text-field
@@ -94,16 +103,31 @@ const changeEstado = (value: boolean) => {
                         ></v-text-field>
                     </v-col>
                     <v-col cols="auto">
-                        <v-btn density="compact" icon="mdi-pencil" @click="toggleEditing"></v-btn>
+                        <v-btn
+                            density="compact"
+                            icon="mdi-pencil"
+                            @click="toggleEditing"
+                        ></v-btn>
                     </v-col>
                     <Map></Map>
                 </v-row>
             </v-col>
-            <v-col cols="12" lg="6" class="px-16">
+            <v-col
+                cols="12"
+                lg="6"
+                class="px-16"
+            >
                 <v-row>
                     <v-spacer></v-spacer>
-                    <v-col cols="12" lg="6" xl="4">
-                        <confirmation title="Confirmação" :function="changeEstado">
+                    <v-col
+                        cols="12"
+                        lg="6"
+                        xl="4"
+                    >
+                        <confirmation
+                            title="Confirmação"
+                            :function="changeEstado"
+                        >
                             <template #button="{ open }">
                                 <v-select
                                     rounded="t-xl"

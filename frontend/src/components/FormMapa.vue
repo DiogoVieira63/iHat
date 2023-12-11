@@ -20,9 +20,19 @@ const submit = (values: any) => {
 
 <template>
     <v-form @submit.prevent="submit">
-        <v-radio-group v-model="tipo" inline class="d-flex justify-center my-5">
-            <v-radio label="IFC" value="ifc"></v-radio>
-            <v-radio label="DXF" value="dxf"></v-radio>
+        <v-radio-group
+            v-model="tipo"
+            inline
+            class="d-flex justify-center my-5"
+        >
+            <v-radio
+                label="IFC"
+                value="ifc"
+            ></v-radio>
+            <v-radio
+                label="DXF"
+                value="dxf"
+            ></v-radio>
         </v-radio-group>
         <v-file-input
             v-model="filesIfc"
@@ -39,6 +49,12 @@ const submit = (values: any) => {
             accept=".dxf"
             density="compact"
         />
-        <v-btn type="submit" block class="mt-2" color="primary">Submit</v-btn>
+        <v-btn
+            type="submit"
+            block
+            class="mt-2"
+            color="primary"
+            >Submit</v-btn
+        >
     </v-form>
 </template>
