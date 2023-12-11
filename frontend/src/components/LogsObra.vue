@@ -17,7 +17,10 @@ const items = ref([
 </script>
 
 <template>
-    <v-infinite-scroll :height="200" side="both">
+    <v-infinite-scroll
+        :height="200"
+        side="both"
+    >
         <v-timeline align="start">
             <v-timeline-item
                 v-for="(item, index) in items"
