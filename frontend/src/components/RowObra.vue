@@ -42,7 +42,10 @@ function isInUso() {
 <template>
     <td @click="changePage(props.row.id)">{{ props.row['id'] }}</td>
     <td>
-        <confirmation title="Confirmação" :function="changeEstado">
+        <confirmation
+            title="Confirmação"
+            :function="changeEstado"
+        >
             <template #button="{ open }">
                 <v-select
                     :disabled="isInUso()"
@@ -68,9 +71,17 @@ function isInUso() {
         </confirmation>
     </td>
     <td>
-        <confirmation title="Confirmação" :function="removeCapacete">
+        <confirmation
+            title="Confirmação"
+            :function="removeCapacete"
+        >
             <template #button="{ prop }">
-                <v-btn v-bind="prop" color="grey" variant="text" :disabled="isInUso()">
+                <v-btn
+                    v-bind="prop"
+                    color="grey"
+                    variant="text"
+                    :disabled="isInUso()"
+                >
                     <v-icon>mdi-delete</v-icon>
                 </v-btn>
             </template>
