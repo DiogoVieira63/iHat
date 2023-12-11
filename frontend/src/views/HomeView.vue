@@ -27,32 +27,21 @@ const getCapacetes = () => {
     })
 }
 
+const getObras = () => {
+    console.log("getObras")
+    obras.value = []
+    ObraService.getObras().then((answer) => {
+        console.log(answer)
+        answer.forEach((obra) => {
+            obras.value.push(obra)
+        })
+    })
+}
+
 
 onMounted(() => {
     getCapacetes()
-    for (let i = 0; i < 30; i++) {
-        let randomObra = Math.floor(Math.random() * 5)
-        let randomEstadoObra = Math.floor(Math.random() * 5)
-        let estadoObra = ''
-        if (randomEstadoObra === 0) {
-            estadoObra = 'Pendente'
-        } else if (randomEstadoObra === 1) {
-            estadoObra = 'Em Curso'
-        } else if (randomEstadoObra === 2) {
-            estadoObra = 'Concluída'
-        } else if (randomEstadoObra === 3) {
-            estadoObra = 'Cancelada'
-        } else {
-            estadoObra = 'Planeada'
-        }
-        let obra: Obra = {
-            _id: String(i),
-            Name: 'Obra' + i,
-            IdResponsavel: 0,
-            Status: estadoObra,
-        }
-        obras.value.push(obra)
-    }
+    getObras()
 })
 
 const headers: ComputedRef<Array<Header>> = computed(() => {
