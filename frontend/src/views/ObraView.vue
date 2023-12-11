@@ -6,11 +6,12 @@ import { useRoute } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import Map from '@/components/Map.vue'
 import Confirmation from '@/components/Confirmation.vue'
-import type { Header } from '@/interfaces'
+import type { Header, Capacete } from '@/interfaces'
+import { ObraService } from '@/http_requests'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 
 const route = useRoute()
-const list = ref<Array<{ [id: string]: string }>>([])
+const list = ref<Array<Capacete>>([])
 
 const headers: Array<Header> = [
     { key: 'id', name: 'ID', params: ['sort'] },
@@ -39,21 +40,22 @@ const saveTitle = () => {
     isEditing.value = false
 }
 
+const getCapacetesFromObra = (id: string) => {
+  console.log("getCapacetesFromObra")
+  list.value = []
+  ObraService.getCapacetesFromObra(id).then((answer) => {
+    console.log(answer)
+    answer.forEach((capacete) => {
+      list.value.push(capacete)
+    })
+  })
+}
+
 onMounted(() => {
-    for (let i = 0; i < 30; i++) {
-        // random Estado between "Livre" and "Em uso" and "Não Operacional"
-        const randomEstado = Math.floor(Math.random() * 3)
-        let estado = ''
-        if (randomEstado === 0) {
-            estado = 'Livre'
-        } else if (randomEstado === 1) {
-            estado = 'Em uso'
-        } else {
-            estado = 'Não Operacional'
-        }
-        list.value.push({ id: String(i), Estado: estado })
-    }
+  const id = route.params.id
+    getCapacetesFromObra(id);  
 })
+
 
 function removeCapacete(id: number) {
     list.value = list.value.filter((item) => item.id !== String(id))

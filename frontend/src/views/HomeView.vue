@@ -26,8 +26,21 @@ const getCapacetes = () => {
     })
 }
 
+const getObras = () => {
+    console.log("getObras")
+    obras.value = []
+    ObraService.getObras().then((answer) => {
+        console.log(answer)
+        answer.forEach((obra) => {
+            obras.value.push(obra)
+        })
+    })
+}
+
+
 onMounted(() => {
     getCapacetes()
+    getObras()
 })
 
 const headers: ComputedRef<Array<Header>> = computed(() => {
