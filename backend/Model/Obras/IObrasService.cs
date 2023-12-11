@@ -13,13 +13,13 @@ public interface IObrasService{
 
     Task UpdateNomeObra(string idObra, string nome);
 
-    Task AddZonasPerigo(string idObra, List<Tuple<double,double>> lista);
+    // Task AddZonasPerigo(string idObra, List<Tuple<double,double>> lista);
 
-    Task RemoveZonasPerigo(string idObra);
+    // Task RemoveZonasPerigo(string idObra);
 
-    Task RemoveAllZonasPerigo(string idObra);
+    // Task RemoveAllZonasPerigo(string idObra);
 
-    Task UpdateZonasPerigo(string idObra, List<Tuple<double,double>> lista);
+    // Task UpdateZonasPerigo(string idObra, List<Tuple<double,double>> lista);
 
     Task<string?> GetIdObraWithCapaceteId(int nCapaceteToFind);
 
