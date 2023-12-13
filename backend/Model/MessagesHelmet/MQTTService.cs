@@ -108,21 +108,31 @@ public class MQTTService {
             // Verifica se há um capacete ao qual associar a mensagem
             var capacete = await _capacetesService.GetById(messageJson.NCapacete);
             if(capacete == null){
-                _logger.LogInformation("Mensagem MQTT recebida não tem um Capacete associado.");
+                _logger.LogWarning("Mensagem MQTT recebida não tem um Capacete associado.");
                 return;
             }
 
+            if(capacete.Trabalhador == null){
+                _logger.LogWarning("Mensagem recebida de um capacete que não está associado a nenhum trabalhador");
+                return;
+            }
 
-            _mensagemCapaceteService.Add(messageJson);
+            if(capacete.Status != Capacete.EmUso){
+                _logger.LogWarning("Mensagem recebida de um capacete que não está a ser utilizado");
+                return;
+            }
 
+            await _mensagemCapaceteService.Add(messageJson);
 
             Tuple<bool, string> messageRe = messageJson.SearchForAnormalValues();
-            if (messageRe.Item1 == true){              
+            if (messageRe.Item1 == true){
+                _logger.LogInformation("Abnormal Value Detected.");              
                 var obra = await _obrasService.GetIdObraWithCapaceteId(capacete.NCapacete);
                 var log = new Log(DateTime.Now, obra, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
                 await _logsService.Add(log);
                 
                 // Notify Helmet
+                await NotifyCapacete(messageJson.NCapacete);
                         
                 // Notify FrontEnd
             }
@@ -139,5 +149,26 @@ public class MQTTService {
                 .Build()
         );
     }  
+
+
+    public async Task NotifyCapacete(int nCapacete){
+        var messagePayload = new JObject
+        {
+            { "Notify", true }
+        };
+
+        string json = JsonConvert.SerializeObject(messagePayload);
+        byte[] serializedResult = Encoding.UTF8.GetBytes(json);
+    
+        // Create and publish a message
+        var message = new MqttApplicationMessageBuilder()
+            .WithTopic("my/topic/"+nCapacete) // Replace with your desired topic
+            .WithPayload(serializedResult)
+            .WithRetainFlag()
+            .Build();
+
+        await _mqttClient.PublishAsync(message);
+    
+    }
 
 }
