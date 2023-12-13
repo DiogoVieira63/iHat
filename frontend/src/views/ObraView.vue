@@ -14,12 +14,12 @@ const route = useRoute()
 const list = ref<Array<Capacete>>([])
 
 const headers: Array<Header> = [
-    { key: 'id', name: 'ID', params: ['sort'] },
-    { key: 'Estado', name: 'Estado', params: ['filter', 'sort'] },
+    { key: 'NCapacete', name: 'Id', params: ['sort'] },
+    { key: 'Status', name: 'Estado', params: ['filter', 'sort'] },
     { name: 'Actions', params: [], key: 'actions' }
 ]
 
-const title = ref('Nome da Obra ' + route.params.id)
+const title = ref('Nome da Obra')
 const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('Planeada')
@@ -52,13 +52,29 @@ const getCapacetesFromObra = (id: string) => {
 }
 
 onMounted(() => {
-  const id = route.params.id
-    getCapacetesFromObra(id);  
+    for (let i = 0; i < 30; i++) {
+        // random Estado between "Livre" and "Em uso" and "Não Operacional"
+        const randomEstado = Math.floor(Math.random() * 3)
+        let estado = ''
+        if (randomEstado === 0) {
+            estado = 'Livre'
+        } else if (randomEstado === 1) {
+            estado = 'Em uso'
+        } else {
+            estado = 'Não Operacional'
+        }
+        list.value.push({ NCapacete: i, Status: estado })
+    }
 })
+
+// onMounted(() => {
+//   const id = route.params.id
+//     getCapacetesFromObra(id);  
+// })
 
 
 function removeCapacete(id: number) {
-    list.value = list.value.filter((item) => item.id !== String(id))
+    list.value = list.value.filter((item) => item.NCapacete !== id)
 }
 
 const changeEstadoCapacete = (row: { [key: string]: string }, value: string) => {

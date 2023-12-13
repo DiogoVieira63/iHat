@@ -29,8 +29,8 @@ export interface Capacete {
     _id?: string
     NCapacete: number
     Status: string
-    Info: string
-    Trabalhador: string
+    Info?: string
+    Trabalhador?: string
 }
 
 export interface CapacetePost {

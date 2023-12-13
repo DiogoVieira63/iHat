@@ -4,47 +4,47 @@ import { ref } from 'vue'
 import Confirmation from './Confirmation.vue'
 
 interface Props {
-    row: { [id: string]: string }
+    row: { [NCapacete: string]: string }
 }
 
 const props = defineProps<Props>()
 
-const emit = defineEmits(['removeCapacete', 'changeEstado'])
+const emit = defineEmits(['removeCapacete', 'changeStatus'])
 
 const router = useRouter()
 const dialog = ref(false)
 const removeDialog = ref(false)
 
-function changePage(id: string) {
-    router.push({ path: `/capacete/${id}` })
+function changePage(NCapacete: string) {
+    router.push({ path: `/capacete/${NCapacete}` })
 }
 
-function changeEstado(confirmation: boolean) {
+function changeStatus(confirmation: boolean) {
     if (confirmation) {
-        emit('changeEstado', newEstado(props.row.Estado))
+        emit('changeStatus', newStatus(props.row.Status))
     }
     dialog.value = false
 }
 
-function newEstado(estado: string) {
-    return estado === 'Livre' ? 'Não Operacional' : 'Livre'
+function newStatus(Status: string) {
+    return Status === 'Livre' ? 'Não Operacional' : 'Livre'
 }
 
 function removeCapacete(confirmation: boolean) {
     removeDialog.value = false
-    if (confirmation) emit('removeCapacete', props.row.id)
+    if (confirmation) emit('removeCapacete', props.row.NCapacete)
 }
 
 function isInUso() {
-    return props.row.Estado === 'Em uso'
+    return props.row.Status === 'Em uso'
 }
 </script>
 <template>
-    <td @click="changePage(props.row.id)">{{ props.row['id'] }}</td>
+    <td @click="changePage(props.row.NCapacete)">{{ props.row['NCapacete'] }}</td>
     <td>
         <confirmation
             title="Confirmação"
-            :function="changeEstado"
+            :function="changeStatus"
         >
             <template #button="{ open }">
                 <v-select
@@ -52,20 +52,20 @@ function isInUso() {
                     class="mt-5 pa-0"
                     density="compact"
                     :items="['Livre', 'Não Operacional']"
-                    :model-value="props.row['Estado']"
+                    :model-value="props.row['Status']"
                     @update:model-value="
                         (value) => {
-                            if (value !== props.row['Estado']) open()
+                            if (value !== props.row['Status']) open()
                         }
                     "
                 >
                 </v-select>
             </template>
             <template v-slot:message>
-                Tem a certeza que pretende alterar o estado do
-                <strong> Capacete {{ props.row.id }}</strong> de
-                <span class="font-weight-bold text-red">{{ props.row['Estado'] }}</span> para
-                <span class="font-weight-bold text-green">{{ newEstado(props.row['Estado']) }}</span
+                Tem a certeza que pretende alterar o Status do
+                <strong> Capacete {{ props.row.NCapacete }}</strong> de
+                <span class="font-weight-bold text-red">{{ props.row['Status'] }}</span> para
+                <span class="font-weight-bold text-green">{{ newStatus(props.row['Status']) }}</span
                 >?
             </template>
         </confirmation>
@@ -87,7 +87,7 @@ function isInUso() {
             </template>
             <template v-slot:message>
                 Tem a certeza que pretende remover o
-                <strong> Capacete {{ props.row.id }}</strong> da obra?
+                <strong> Capacete {{ props.row.NCapacete }}</strong> da obra?
             </template>
         </confirmation>
     </td>
