@@ -12,4 +12,6 @@ public class DatabaseSettings
 
     public string LogsCollectionName { get; set;} = null!;
 
+    public string MensagensCapaceteCollectionName { get; set; } = null!;
+
 }

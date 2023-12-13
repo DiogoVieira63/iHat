@@ -3,6 +3,7 @@ using iHat.Model.iHatFacade;
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
+using iHat.Model.MensagensCapacete;
 using iHat.MQTTService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,10 +19,12 @@ builder.Services.AddSingleton<ICapacetesService, CapacetesService>();
 
 builder.Services.AddSingleton<ILogsService, LogsService>();
 
+builder.Services.AddSingleton<MensagemCapaceteService>();
+
 builder.Services.AddSingleton<IiHatFacade, iHatFacade>();
 
-// builder.Services.AddSingleton<MQTTService>();
-// builder.Services.AddHostedService<MQTTBackgroundService>();
+builder.Services.AddSingleton<MQTTService>();
+builder.Services.AddHostedService<MQTTBackgroundService>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

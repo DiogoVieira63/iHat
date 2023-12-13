@@ -83,7 +83,7 @@ public class iHatFacade: IiHatFacade{
         await iobras.UpdateNomeObra(idObra, nome);
     }
 
-    public async Task<List<Log>>  GetLogs(string idObra){
+    public async Task<List<Log>> GetLogs(string idObra){
         return await ilogs.GetLogsOfObra(idObra);
     }
 

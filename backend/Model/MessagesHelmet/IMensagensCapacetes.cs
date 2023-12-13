@@ -1,2 +1,0 @@
-namespace iHat.Model.Capacetes;
-
