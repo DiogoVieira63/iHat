@@ -49,7 +49,6 @@ public class IHatController : ControllerBase{
     public async Task<ActionResult<Obra>> GetConstruction(string id){
         if (id != null){
             return await _facade.GetConstructionById(id);
-            // return Ok(id);
         }
         else{
             return NotFound();
@@ -92,17 +91,24 @@ public class IHatController : ControllerBase{
 
 
 
+    [HttpDelete("construction/{id}")]
+    public async Task<IActionResult> RemoveObraById(string id){
+        await _facade.RemoveObraById(id);
 
-    //funcionar
+        return NoContent(); // Returns 204 No Content -> sucesso
+    }
+
+
+
+
+
+
     [HttpPost("helmet")]
-    //    public async Task<IActionResult> NewHelmet(Capacete capacete){
     public async Task<IActionResult> NewHelmet(NewHelmetForm form){
-        Console.WriteLine("New Helmet POST Request");
-        // var capacete = new Capacete("Em uso", "Sem Informação", "", "");
-        
+        Console.WriteLine("New Helmet POST Request");       
         try
         {   
-            await _facade.AddHelmet(form.NCapacete);
+            await _facade.AddCapacete(form.NCapacete);
             return Ok(); // Retorna uma resposta de sucesso
         }
         catch (Exception e)
@@ -111,38 +117,20 @@ public class IHatController : ControllerBase{
         }
     }
     
-//funcionar
+
     [HttpGet("helmet")]
     public async Task<ActionResult<List<Capacete>>> GetAllHelmets(){
-        Console.WriteLine("Get All Helmets GET Request");
-
-        var lista = await _facade.GetAll();
-
-        if(lista == null){
-            return NotFound();
-        }
-
+        var lista = await _facade.GetAllCapacetes();
         return lista;
     }
 
 
-    [HttpDelete("construction/{id}")]
-    public async Task<IActionResult> RemoveObraById(string id){
-        await _facade.RemoveObraById(id);
-
-        return NoContent(); // Returns 204 No Content -> sucesso
-    }
-
-    /*[HttpGet("construction\{id}")]
-    public void GetConstruction(string id){
-    
-    }*/
-//funcionar
     [HttpGet("helmet/{id}")]
     public async Task<ActionResult<Capacete>> GetHelmet(string id){
-        Console.WriteLine("Get Helmet GET Request");
+        int nCapacete = Int32.Parse(id);
+        Console.WriteLine("Get Helmet GET Request {0}", nCapacete);
 
-        var capacete = await _facade.GetCapacete(id);
+        var capacete = await _facade.GetCapacete(nCapacete);
 
         if(capacete == null){
             return NotFound();
@@ -157,7 +145,6 @@ public class IHatController : ControllerBase{
         Console.WriteLine("Get All Helmets From Obra GET Request");
 
         var lista = await _facade.GetAllCapacetesdaObra(idObra);
-        // var lista = null;
 
         if(lista == null){
             return NotFound();
@@ -168,7 +155,7 @@ public class IHatController : ControllerBase{
 
 //funciona
     [HttpDelete("helmet/{idCapacete}/{idObra}")]
-    public async Task<IActionResult> DeleteHelmet(string idCapacete, string idObra){
+    public async Task<IActionResult> DeleteHelmet(int idCapacete, string idObra){
         Console.WriteLine("Delete Helmet DELETE Request");
 
         // string idObra = "6543c109e272c87c6b5f3d33";
@@ -186,7 +173,7 @@ public class IHatController : ControllerBase{
 
 // funciona
     [HttpPost("helmet/obra/{idObra}/{idCapacete}")]
-    public async Task<IActionResult> AddHelmetToObra(string idCapacete, string idObra){
+    public async Task<IActionResult> AddHelmetToObra(int idCapacete, string idObra){
         Console.WriteLine("Add Helmet To Obra POST Request");
 
         // string idCapacete = "6543c272e272c87c6b5f3d34";
@@ -203,6 +190,12 @@ public class IHatController : ControllerBase{
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
         }
     }
+
+
+
+
+
+
 
     [HttpGet("logs/{idObra}")]
     public async Task<ActionResult<List<Log>>> GetLogs(string idObra){
@@ -232,4 +225,6 @@ public class IHatController : ControllerBase{
         }
     }
    
+
+    
 }
