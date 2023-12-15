@@ -11,6 +11,9 @@ CAPACETES_COLLECTION="Capacetes"
 LOGS_COLLECTION="Logs"
 MENSAGENS_CAPACETE_COLLECTION="MensagensCapacete"
 
+ZONAS_RISCO_COLLECTION="ZonasRisco"
+MAPAS_COLLECTION="Mapas"
+
 # Connect to MongoDB
 mongosh --host ${MONGO_HOST}:${MONGO_PORT} <<EOF
 
@@ -70,5 +73,8 @@ db.${MENSAGENS_CAPACETE_COLLECTION}.insertMany( [
   }
 ] )
 
+db.createCollection("${ZONAS_RISCO_COLLECTION}")
+
+db.createCollection("${MAPAS_COLLECTION}")
 
 EOF

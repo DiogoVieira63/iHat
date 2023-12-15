@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-
+using iHat.Model.Mapas;
 namespace iHat.Model.Obras;
 
 public class Obra
@@ -10,8 +11,9 @@ public class Obra
     public string? Id { get; set; }
     public int IdResponsavel { get; set; }
     public string Name { get; set; }
-    public List<Tuple<double, double>> Zonas { get; set; } //GeoJSON 
-    public string Mapa { get; set; }
+    // public List<Tuple<double, double>> Zonas { get; set; } //GeoJSON 
+
+    public List<Mapa> Mapa { get; set; }
     public List<int> Capacetes { get; set; }
     public string Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
 
@@ -21,12 +23,11 @@ public class Obra
     public static readonly string Cancelada = "Cancelada";
     public static readonly string Finalizada = "Finalizada";
 
-    public Obra(string name, int idResponsavel, string mapa, string status)
+    public Obra(string name, int idResponsavel, string status)
     {
         this.IdResponsavel = idResponsavel;
         this.Name = name;
-        this.Zonas = new List<Tuple<double, double>>();
-        this.Mapa = mapa;
+        this.Mapa = new List<Mapa>();
         this.Capacetes = new List<int>();
         this.Status = status;
     }
