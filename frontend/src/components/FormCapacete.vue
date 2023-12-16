@@ -18,6 +18,7 @@ const { handleSubmit } = useForm<Form>({
 const id = useField<string>('id')
 const dialogCapacete = ref(false)
 
+const emit = defineEmits(['update'])
 
 const submit = handleSubmit(async (values, actions) => {
     const Capacete : Capacete = {
@@ -33,6 +34,7 @@ const submit = handleSubmit(async (values, actions) => {
             dialogCapacete.value = false
             id.value.value = ""
             id.errorMessage.value = ""
+            emit('update')
         }
         else{
             actions.setFieldError('id', 'Capacete já existe');
