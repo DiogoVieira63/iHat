@@ -6,6 +6,7 @@ using iHat.Model.Logs;
 using iHat.Model.MensagensCapacete;
 using iHat.MQTTService;
 using iHat.Model.Zonas;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,13 @@ builder.Services.AddControllers();
 
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("Database"));
+
+builder.Services.Configure<FormOptions>(options => {
+    options.ValueCountLimit = 100 * 1024 * 1024;
+    options.ValueLengthLimit = 100 * 1024 * 1024;
+    options.MultipartBodyLengthLimit = 100 * 1024 * 1024;
+    options.MultipartHeadersLengthLimit = 100 * 1024 * 1024;
+});
 
 builder.Services.AddSingleton<IObrasService, ObrasService>();
 

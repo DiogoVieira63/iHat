@@ -7,7 +7,7 @@ public interface IObrasService{
 
     void AlteraEstadoObra(string id, string estado);
 
-    Task AddObra(string name, int idResponsavel, string mapa, string status);
+    Task AddObra(string name, int idResponsavel, string mapa);
     
     Task<Obra> GetConstructionById(string idObra);
 

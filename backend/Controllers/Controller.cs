@@ -57,15 +57,18 @@ public class IHatController : ControllerBase{
 
 
     // Input: name, mapa, estado
+
     [HttpPost("construction")]
-    public async Task<IActionResult> NewConstruction(NewConstructionForm form){
-
-        _logger.LogWarning(form.Mapa);
-
-
+    [DisableRequestSizeLimit]
+    public async Task<IActionResult> NewConstruction([FromForm]NewConstructionForm form){
         if(form != null){
             try{
-                await _facade.NewConstruction(form.Name, form.Mapa, form.Status);
+                // TO DO:
+                // Obter o id do responsável que realizou o pedido do post
+                var idResponsavel = 1;
+                _logger.LogWarning(form.Name);
+                _logger.LogWarning(form.Mapa.Name);
+                await _facade.NewConstruction(form.Name, form.Mapa, idResponsavel);
             }
             catch (Exception e){
                 return BadRequest(e.Message);

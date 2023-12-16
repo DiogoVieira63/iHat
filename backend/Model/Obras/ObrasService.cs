@@ -34,13 +34,13 @@ public class ObrasService: IObrasService{
         return obras;
     }
 
-    public async Task AddObra(string name, int idResponsavel, string mapa, string status){
+    public async Task AddObra(string name, int idResponsavel, string mapa){
 
         /*if (status != "Planeada"){
             _logger.LogInformation("Status of the new Construction is different from \"Planeada\".");
         }*/
 
-        var newObra = new Obra(name, idResponsavel, status);
+        var newObra = new Obra(name, idResponsavel);
 
         var checkIfConstructionSameName = 
             await _obraCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
