@@ -63,6 +63,22 @@ export class ObraService {
       })
       .catch((error) => console.error('Error:', error));
    }
+
+   static updateNomeObra(idObra: string, name: string): Promise<void> {
+    return axios.patch(`${url}/constructions/${idObra}`, name, {headers: {'Content-Type': 'application/json',}})
+      .then((response) => {
+          return response.data
+      })
+      .catch((error) => console.error('Error:', error));
+   }
+
+   static changeEstadoObra(idObra: string, state: string): Promise<void> {
+    return axios.patch(`${url}/constructions/${idObra}/state`, state, {headers: {'Content-Type': 'application/json',}})
+      .then((response) => {
+          return response.data
+      })
+      .catch((error) => console.error('Error:', error));
+   }
 }
 
 export class CapaceteService {

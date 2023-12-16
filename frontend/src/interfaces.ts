@@ -1,15 +1,15 @@
 export interface Obra {
-    _id: string,
-    idResponsavel: number,
-    name: string,
+    id?: string,
+    idResponsavel?: number,
+    name?: string,
     zonas?: Array<string>, // temporario
     mapa?: string, // temporário
     capacetes?: Array<string>, //temporario
-    status: string
+    status?: string
 }
   
 export interface Capacete {
-  _id?: string 
+  id?: string 
   nCapacete: number,
   status: string,
   info: string,

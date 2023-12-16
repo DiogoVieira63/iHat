@@ -32,7 +32,7 @@ function newEstado(estado: string) {
 
 function removeCapacete(confirmation: boolean) {
     removeDialog.value = false
-    if (confirmation) emit('removeCapacete', props.row.nCapacete)
+    if (confirmation) emit('removeCapacete', props.row.id)
 }
 
 function isInUso() {

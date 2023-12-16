@@ -18,7 +18,7 @@ const list = ref<Array<Capacete>>([])
 const title = ref('') 
 const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
-const estadoObra = ref('Planeada')
+const estadoObra = ref('')
 const newEstado = ref('')
  
 const toggleEditing = () => {
@@ -33,20 +33,37 @@ const toggleEditing = () => {
 }
 
 const saveTitle = () => {
-    isEditing.value = false
-}
+    isEditing.value = false;
+    const id: string = route.params.id.toString();
+    ObraService.updateNomeObra(id, title.value)
+        .then(() => {
+            getObra()
+        })
+        .catch((error) => {
+            console.error('Error updating title:', error);
+        });
+};
 
-onMounted(() => {
+const getObra = () => {
     ObraService.getOneObra(route.params.id.toString()).then((answer) => {
         console.log(answer)
-       title.value = answer.name
+        if(answer.name) title.value = answer.name
+        if(answer.status) estadoObra.value = answer.status
     })
+}
+
+const getCapacetesObra = () => {
     ObraService.getCapacetesFromObra(route.params.id.toString()).then((answer) => {
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
         })
     })
     list.value = capacetes.value
+}
+
+onMounted(() => {
+    getObra()
+    getCapacetesObra()
 })
 
 const headers : Array<Header>= [
@@ -55,8 +72,15 @@ const headers : Array<Header>= [
     { key: 'Actions', name: 'Actions', params: []}
 ]
 
-function removeCapacete(id: number) {
-    list.value = list.value.filter((item) => item.nCapacete !== id)
+function removeCapacete(id: string) {
+    const idObra: string = route.params.id.toString();
+    ObraService.deleteCapaceteFromObra(idObra, id)
+        .then(() => {
+            getCapacetesObra()
+        })
+        .catch((error) => {
+            console.error('Error updating title:', error);
+        });
 }
 
 const changeEstadoCapacete = (row: { [key: string]: string }, value: string) => {
@@ -68,8 +92,17 @@ const newEstadoPossible = (value: string) => {
 }
 
 const changeEstado = (value: boolean) => {
+    const id: string = route.params.id.toString();
+
     if (value) {
         estadoObra.value = newEstado.value
+        ObraService.changeEstadoObra(id, estadoObra.value)
+        .then(() => {
+            getObra()
+        })
+        .catch((error) => {
+            console.error('Error changing state:', error);
+        });
     }
     newEstado.value = ''
 }
@@ -142,7 +175,7 @@ const changeEstado = (value: boolean) => {
                     <template #row="{ row }">
                         <RowObra
                             :row="row"
-                            @removeCapacete="(nCapacete) => removeCapacete(nCapacete)"
+                            @removeCapacete="(id) => removeCapacete(id)"
                             @changeEstado="(value) => changeEstadoCapacete(row, value)"
                         />
                     </template>
