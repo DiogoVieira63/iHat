@@ -6,7 +6,7 @@ public interface IObrasService{
     Task RemoveObraByIdAsync(string obraId);
 
 
-    void AlteraEstadoObra(string id, string estado);
+    Task AlteraEstadoObra(string id, string estado);
 
     Task AddObra(string name, int idResponsavel, string mapa, string status);
     

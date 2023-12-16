@@ -23,7 +23,7 @@ public interface IiHatFacade{
 
     Task AddCapaceteToObra(string idCapacete, string idObra);
 
-    void AlteraEstadoObra(string id, string estado);
+    Task AlteraEstadoObra(string id, string estado);
 
     Task UpdateNomeObra(string idObra, string nome);
 

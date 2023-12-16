@@ -28,6 +28,25 @@ public class IHatController : ControllerBase{
     public void LoginUser(){
 
     }
+
+    //rever
+    [HttpPatch("constructions/{obraId}")]
+    public async Task<IActionResult> UpdateNomeObra(string obraId, [FromBody] string name ) {
+        Console.WriteLine("New NameObra PATCH Request");
+
+        if (string.IsNullOrEmpty(name)) {
+            return BadRequest("New name cannot be empty");
+        }
+
+        try{
+            await _facade.UpdateNomeObra(obraId, name);
+        }
+        catch (Exception e){
+            return BadRequest(e.Message);
+        }
+
+        return Ok(); // Return a success response
+    }
     
 
 // verificar
@@ -90,21 +109,26 @@ public class IHatController : ControllerBase{
             return BadRequest();
     }
 
-    [HttpPost("atualizarEstado")]
-    public void AlteraEstadoObra(string obraId, string novoEstado) {
-        _facade.AlteraEstadoObra(obraId, "Tó");
-    }
+    [HttpPatch("constructions/{obraId}/state")]
+    public async Task<IActionResult> AlteraEstadoObra(string obraId, [FromBody] string state) {
+        Console.WriteLine("New Construction State");
 
-//rever
-    [HttpPatch("constructions/{obraId}/{novoNome}")]
-    public async Task<IActionResult> UpdateNomeObra(string obraId, string novoNome) {
-        Console.WriteLine("New NameObra PATCH Request");
-        await _facade.UpdateNomeObra(obraId, novoNome);
+        // Fazer verificação do estado !!!!!!!!!!!!!!!!!!
+
+        if (string.IsNullOrEmpty(state)) {
+            return BadRequest("Cannot change to empty state");
+        }
+
+        try{
+            await _facade.AlteraEstadoObra(obraId, state);
+
+        }
+        catch (Exception e){
+            return BadRequest(e.Message);
+        }
+
         return Ok(); // Return a success response
     }
-
-
-
 
     //funcionar
     [HttpPost("helmets")]
@@ -163,7 +187,7 @@ public class IHatController : ControllerBase{
 //funciona
     [HttpDelete("constructions/{idObra}/helmets/{idCapacete}")]
     public async Task<IActionResult> DeleteHelmet(string idCapacete, string idObra){
-        Console.WriteLine("Delete Helmet DELETE Request");
+        Console.WriteLine($"Delete Helmet DELETE Request | Obra: {idObra} | Capacete: {idCapacete}");
 
         // string idObra = "6543c109e272c87c6b5f3d33";
 

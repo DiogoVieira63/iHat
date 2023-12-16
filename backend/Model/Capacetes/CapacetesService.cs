@@ -62,7 +62,7 @@
 
             if (capacete != null)
             {
-                if (capacete.Status == "Em uso")
+                if (capacete.Status == "Associado à obra")
                 {
                     var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
                     if (obra != null)

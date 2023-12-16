@@ -77,8 +77,8 @@ public class iHatFacade: IiHatFacade{
         await icapacetes.AddCapaceteToObra(idCapacete, idObra);
     }
 
-    public async void AlteraEstadoObra(string id, string estado){
-        iobras.AlteraEstadoObra(id, estado);
+    public async Task AlteraEstadoObra(string id, string estado){
+        await iobras.AlteraEstadoObra(id, estado);
     }
 
     public async Task UpdateNomeObra(string idObra, string nome){
