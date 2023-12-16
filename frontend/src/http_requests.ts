@@ -70,6 +70,19 @@ export class ObraService {
             })
             .catch((error) => console.error('Error:', error))
     }
+
+    static addMapaToObra(idObra: string, file : File): Promise<void> {
+        const formData = new FormData();
+        formData.append('file', file);
+        return axios
+            .post(`${url}/constructions/${idObra}/map`, formData, {headers : {
+                'Content-Type': 'multipart/form-data'
+            }})
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => console.error('Error:', error))
+    }
 }
 
 export class CapaceteService {

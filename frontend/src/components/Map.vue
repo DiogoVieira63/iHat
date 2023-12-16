@@ -7,12 +7,15 @@ import FormMapa from './FormMapa.vue'
 import type { Mapa } from '@/interfaces'
 import { onMounted } from 'vue'
 import mapa from '@/data/map.json'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const { mdAndDown } = useDisplay()
 
 const page = ref(1)
 const edit = ref(false)
 const addMapa = ref(false)
+const id : string = route.params.id as string
 
 
 
@@ -83,7 +86,7 @@ const saveEdit = async (confirmation: boolean) => {
                             </v-btn>
                         </v-col>
                     </v-row>
-                    <FormMapa v-if="addMapa" class="mt-2" />
+                    <FormMapa v-if="addMapa" class="mt-2"  :idObra="id" />
                 </v-sheet>
             </div>
         </v-sheet>

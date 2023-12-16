@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { ObraService } from '@/http_requests';
+
+const props = defineProps({
+    idObra: {
+        type: String,
+        required: true
+    }
+})
 
 const tipo = ref('ifc')
 
@@ -7,13 +15,22 @@ const filesIfc = ref<File[] | undefined>(undefined)
 const filesDxf = ref<File[] | undefined>(undefined)
 
 const submit = (values: any) => {
-    if (tipo.value == 'ifc') {
-        console.log(filesIfc.value)
-        console.log(typeof filesIfc.value)
-    } else {
-        console.log(filesDxf.value)
-        console.log(typeof filesDxf.value)
-    }
+    // post to backend  
+    let file : File = new File([], '')
+    if (tipo.value == 'ifc' && filesIfc.value) {
+        file = filesIfc.value[0]
+    } 
+
+    const promise = ObraService.addMapaToObra(props.idObra,file);
+
+    promise.then(()=>{
+        console.log("Mapa adicionado com sucesso")
+    }).catch((error)=>{
+        console.log(error)
+    })
+
+
+
     console.log(JSON.stringify(values, null, 2))
 }
 </script>
@@ -32,6 +49,7 @@ const submit = (values: any) => {
             <v-radio
                 label="DXF"
                 value="dxf"
+                disabled
             ></v-radio>
         </v-radio-group>
         <v-file-input

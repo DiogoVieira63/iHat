@@ -24,6 +24,7 @@ const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('Planeada')
 const newEstado = ref('')
+const id = route.params.id
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
@@ -188,7 +189,7 @@ const changeEstado = (value: boolean) => {
                         <RowObra
                             :row="row"
                             @removeCapacete="(id) => removeCapacete(id)"
-                            @changeEstado="(value) => changeEstadoCapacete(row, value)"
+                            @changeStatus="(value) => changeEstadoCapacete(row, value)"
                         />
                     </template>
                     <template v-slot:add>
