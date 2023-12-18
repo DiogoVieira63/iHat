@@ -21,6 +21,15 @@ public class MapaService: IMapaService{
             iHatDatabaseSettings.Value.MapasCollectionName);
     }
 
+    public async Task<string?> Add(string name, string svg){
+        var mapa = new Mapa(name, svg);
+        Console.WriteLine(mapa.Id);
+        await _mapaCollection.InsertOneAsync(mapa);
+        Console.WriteLine(mapa.Id);
+        return mapa.Id;
+    }
+
+
     public async Task AddZoneRiscotoMapa(string name, List<ZonasRisco> lista){
         var mapa = await _mapaCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
 

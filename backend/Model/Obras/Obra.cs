@@ -21,11 +21,11 @@ public class Obra
     public static readonly string Cancelada = "Cancelada";
     public static readonly string Finalizada = "Finalizada";
 
-    public Obra(string name, int idResponsavel)
+    public Obra(string name, int idResponsavel, List<string> mapas)
     {
         IdResponsavel = idResponsavel;
         Name = name;
-        Mapa = new List<string>();
+        Mapa = mapas;
         Capacetes = new List<int>();
         Status = Planeada;
     }

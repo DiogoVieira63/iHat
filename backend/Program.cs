@@ -7,6 +7,7 @@ using iHat.Model.MensagensCapacete;
 using iHat.MQTTService;
 using iHat.Model.Zonas;
 using Microsoft.AspNetCore.Http.Features;
+using iHat.Model.Mapas;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,8 @@ builder.Services.AddSingleton<IObrasService, ObrasService>();
 builder.Services.AddSingleton<ICapacetesService, CapacetesService>();
 
 builder.Services.AddSingleton<ILogsService, LogsService>();
+
+builder.Services.AddSingleton<IMapaService, MapaService>();
 
 builder.Services.AddSingleton<MensagemCapaceteService>();
 

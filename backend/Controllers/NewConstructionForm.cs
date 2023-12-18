@@ -9,6 +9,11 @@ public class NewConstructionForm{
         Name = name;
         Mapa = mapa;
     }
+    
+    public NewConstructionForm(string name){
+        Name = name;
+        Mapa = null;
+    }
 
     public NewConstructionForm(){
         
