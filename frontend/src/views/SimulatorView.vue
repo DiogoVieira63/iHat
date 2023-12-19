@@ -10,14 +10,28 @@ import SimuladorInput from '@/components/SimuladorInput.vue'
 export interface Capacete {
     position : {x: number, y: number},
     key: number,
+    inputs: Array<Input>
 }
+
+interface Input {
+    title: string,
+    value: [number, number],
+    range: [number, number]
+    tipo: string
+}
+
 const router = useRouter()
 const page = ref(1)
-const edit = ref(false)
 const imageUrls: Array<string> = ['/Duplex1.svg', '/Duplex2.svg']
-const range = ref([-10, 10])
-const selected = ref(0)
-const tipo = ref('Variável')
+const selected = ref<Array<number>>([])
+const tipoInput = ref('Variável')
+const tipoEnvio = ref('Unidade')
+const tempo = ref(1)
+const capacetes = ref<Array<Capacete>>([])
+
+const rules = [
+    (v: number) => v >= 0.1|| 'Inválido (min: 0.1)',
+]
 
 const getCurrentImage = computed(() => {
     const currentIndex = page.value - 1
@@ -25,7 +39,6 @@ const getCurrentImage = computed(() => {
     return imageUrls[validIndex]
 })
 
-const capacetes = ref<Array<Capacete>>([])
 
 const updateCapacete = (capacete: Capacete) => {
     capacetes.value = capacetes.value.map((item) => {
@@ -36,64 +49,110 @@ const updateCapacete = (capacete: Capacete) => {
     })
 }
 
+const addCapacete = (capacete: Capacete) => {
+    capacete.inputs = [...inputs]
+    capacetes.value.push(capacete)
+}
+
 const goToObraPage = () => {
     router.push("/obras/" + router.currentRoute.value.params.id)
 }
 
-const inputs = ref([
+const selectedCapacete = (id : number) => {
+
+    if (selected.value.includes(id)) {
+        selected.value = selected.value.filter((item) => item !== id)
+        if(selected.value.length == 0) {
+            inputSelected.value = []
+        } 
+    } else {
+        if(selected.value.length == 0) {
+            inputSelected.value = capacetes.value.find((item) => item.key === id)?.inputs || []
+        }
+        else{
+            const capacete = capacetes.value.find((item) => item.key === id)
+            if (capacete) capacete.inputs = inputSelected.value
+        }
+        selected.value.push(id)
+    }
+}
+
+const applyEnvio = () => {
+    let envio = {
+        inputs: inputSelected.value,
+        capacetes: selected.value,
+        tipoEnvio: tipoEnvio.value,
+        tempo: tempo.value
+    }
+    alert(JSON.stringify(envio, null, 2))
+}
+
+const inputSelected = ref<Array<Input>>([])
+
+
+const inputs : Array<Input>  = [
     {
         title: "Temperatura Corpural",
         range: [35, 42],
-        value: [36.5, 37.5]
+        value: [36.5, 37.5],
+        tipo: 'Variável'
     },
     {
         title: "Ritmo Cardíaco",
         range: [80, 200],
-        value: [80, 100]
+        value: [80, 100],
+        tipo: 'Variável'
     },
     {
         title: "Probabilidade de Queda",
         range: [0, 1],
-        value: [0.5, 0.5]
+        value: [0.5, 0.5],
+        tipo: 'Variável'
     },
     {
         title: "Proximidade",
         range: [0, 200],
-        value: [0, 0]
+        value: [0, 0],
+        tipo: 'Variável'
     },
     {
         title: "Gases Tóxicos (Monóxido de Carbono)",
         range: [0, 1],
-        value: [0, 0]
+        value: [0, 0],
+        tipo: 'Variável'
     },
     {
-        title: "Gases Tóxicos (Dióxido de Carbono)",
+        title: "Gases Tóxicos (Metano)",
         range: [0, 1],
-        value: [0, 0]
+        value: [0, 0],
+        tipo: 'Variável'
     },
     {
         title: "Posição do Capacete (X)",
         range: [0, 1],
-        value: [0, 0]
+        value: [0, 0],
+        tipo: 'Variável'
     },
     {
         title: "Posição do Capacete (Y)",
         range: [0, 1],
-        value: [0, 0]
+        value: [0, 0],
+        tipo: 'Variável'
     }
-])
+]
 
 </script>
 <template>
     <page-layout>
         <ObraLayout>
             <template #map>
+                <h1 class="text-center text-h3">Nome da Obra</h1>
                 <template v-for="image in imageUrls" :key="image">
                     <map-editor :active="image === getCurrentImage" :edit="true" :svg-src="image"
                         :capacetes-position="capacetes"
                         :capacete-selected="selected"
-                        @addCapacete="capacetes.push($event)"   
-                        @selectCapacete="selected = $event"
+                        @addCapacete="addCapacete"   
+                        @selectCapacete="selectedCapacete"
                         @update::capacete="updateCapacete($event)"
                         options="Simulador"></map-editor>
                 </template>
@@ -113,39 +172,119 @@ const inputs = ref([
                     </v-btn>
                 </v-row>
                 <v-container>
-                    <v-card height="65vh" style="overflow: auto;">
+                    <v-card height="65vh" style="overflow: auto;" elevation="1" rounded="xl" color="grey-lighten-5">
                         <v-card-title class="text-center text-h4 my-4">
                             Simulador
                         </v-card-title>
                         <v-card-text>
                             <v-row>
-                                <v-col cols="12" md="6">
+                                <template v-if="selected.length == 0">
+                                    <v-col cols="12" class="text-center"> 
+                                        <p class="text-h6 mt-16">
+                                            <v-icon color="info">mdi-information-outline</v-icon>
+                                            Selecione ou adicione um capacete para editar os valores
+                                        </p>
+                                    </v-col>
+                                </template>
+                                <template v-else>
+                                    <v-col cols="12" md="6">
+                                        <v-btn 
+                                            block 
+                                            value="Unidade" 
+                                            :color="tipoEnvio=='Unidade' ? 'primary' : 'defualt'"
+                                            @click="tipoEnvio = 'Unidade'"
+                                            rounded="xl"
+                                        >
+                                            Unidade
+                                        </v-btn>
+                                    </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-btn 
+                                            block 
+                                            value="Tempo" 
+                                            :color="tipoEnvio=='Tempo' ? 'primary' : 'value'"
+                                            @click="tipoEnvio = 'Tempo'"
+                                            rounded="xl"
+                                        >
+                                            Período de Tempo
+                                        </v-btn>
+                                        <v-text-field
+                                            v-if="tipoEnvio=='Tempo'"
+                                            v-model="tempo"
+                                            class="mt-2"
+                                            :rules="rules"
+                                            single-line
+                                            step="0.01"
+                                            type="number"
+                                            variant="outlined"
+                                            density="compact"
+                                            label="Tempo"
+                                            hint="Tempo em segundos"
+                                            persistent-hint
+                                        ></v-text-field>
+                                    </v-col>
+                                </template>
+                                <template v-for="input in inputSelected" :key="input.title">
+                                        <v-col cols="12" md="6">
+                                            <v-card elevation="4" rounded="lg">
+                                                <v-card-title>
+                                                    <v-row class="mb-2">
+                                                        <v-col cols="6">
+                                                            <v-btn 
+                                                                block
+                                                                value="Constante" 
+                                                                :color="input.tipo=='Constante' ? 'primary' : 'defualt'"
+                                                                @click="input.tipo = 'Constante'"
+                                                                rounded="lg"
+                                                                >
+                                                                Constante
+                                                            </v-btn>
+                                                        </v-col>
+                                                        <v-col cols="6">
+                                                            <v-btn 
+                                                                block
+                                                                value="Variável" 
+                                                                :color="input.tipo=='Variável' ? 'primary' : 'value'"
+                                                                @click="input.tipo = 'Variável'"
+                                                                rounded="lg"
+                                                            >
+                                                                Variável
+                                                            </v-btn>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-card-title>
+                                                <v-card-text>
+                                                    <SimuladorInput 
+                                                    @updateValue="input.value = $event"
+                                                    :tipo= "input.tipo"
+                                                    :title="input.title" 
+                                                    :range="input.range" 
+                                                    :value="input.value"
+                                                    />
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-col>
+                                </template>
+                            </v-row>
+                        </v-card-text>
+                    </v-card>
+                </v-container>
+                <v-container>
+                    <v-card>
+                        <v-card-text >
+                            <v-row>
+                                <v-col cols="8" class="text-h6">
+                                    Número de Capacetes Selecionados: <strong>{{selected.length}}</strong> 
+                                </v-col>
+                                <v-col>
                                     <v-btn 
                                         block 
-                                        value="Constante" 
-                                        :color="tipo=='Constante' ? 'primary' : 'defualt'"
-                                        @click="tipo = 'Constante'"
+                                        color="primary"
+                                        rounded="xl"
+                                        @click="applyEnvio"
                                     >
-                                        Constante
+                                        Aplicar
                                     </v-btn>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                    <v-btn 
-                                        block 
-                                        value="Variável" 
-                                        :color="tipo=='Variável' ? 'primary' : 'value'"
-                                        @click="tipo = 'Variável'"
-                                    >
-                                        Variável
-                                    </v-btn>
-                                </v-col>
-                                <v-col cols="12" md="6" v-for="input in inputs" :key="input.title"  >
-                                    <SimuladorInput 
-                                        @updateValue="input.value = $event"
-                                        :title="input.title" 
-                                        :range="input.range" 
-                                        :value="input.value"
-                                    />
                                 </v-col>
                             </v-row>
                         </v-card-text>

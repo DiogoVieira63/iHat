@@ -33,7 +33,7 @@ const props = defineProps({
         required: false
     },
     capaceteSelected: {
-        type: Number,
+        type: Array as PropType<Array<number>> ,
         required: false
     }
 })
@@ -276,11 +276,7 @@ const svgClick = (e: MouseEvent) => {
         simulador('addCapacete', {position: { x: x, y: y} , key: key})
         simulador('selectCapacete', key)
         return
-    }else if (props.capaceteSelected != null){
-        simulador('update::capacete', {position: { x: x, y: y} , key: props.capaceteSelected})
-        return
     }
-
     if (drag.value) {
         drag.value = false
         return
@@ -400,7 +396,7 @@ const optionsTooltip = computed(() => {
                         :key="key"
                         @click="simulador('selectCapacete', key)"
                         :x="position['x'] -15" :y="position['y'] -15" width="30" height="30" 
-                        :href="capaceteSelected == key ?  'helmet_selected.svg' : 'helmet.svg'" />
+                        :href="props.capaceteSelected?.includes(key) ?  '/helmet_selected.svg' : '/helmet.svg'" />
 
                 </svg>
 
