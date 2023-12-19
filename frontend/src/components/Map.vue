@@ -31,6 +31,7 @@ const saveEdit = (confirmation: boolean) => {
                 :active="image === getCurrentImage"
                 :edit="edit"
                 :svg-src="image"
+                options="Edit"
             ></map-editor>
         </template>
         <v-container>

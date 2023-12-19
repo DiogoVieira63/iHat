@@ -2,7 +2,7 @@
 import FormObra from '@/components/FormObra.vue'
 import FormCapacete from '@/components/FormCapacete.vue'
 import Lista from '@/components/Lista.vue'
-import PageLayout from '@/components/PageLayout.vue'
+import PageLayout from '@/components/Layouts/PageLayout.vue'
 import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { ComputedRef } from 'vue'

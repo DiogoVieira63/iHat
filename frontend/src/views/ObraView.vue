@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import Lista from '../components/Lista.vue'
-import PageLayout from '../components/PageLayout.vue'
+import Lista from '@/components/Lista.vue'
+import PageLayout from '@/components/Layouts/PageLayout.vue'
 import { ref, onMounted, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import Map from '@/components/Map.vue'
 import Confirmation from '@/components/Confirmation.vue'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
+import ObraLayout from '@/components/Layouts/ObraLayout.vue'
 
 const route = useRoute()
+const router = useRouter()
 const list = ref<Array<{ [id: string]: string }>>([])
 const headers = { id: ['sort'], Estado: ['filter', 'sort'], Actions: [] } //[{'name': 'Id', 'sort': true,'filter'} , "Estado", "Actions"]
 const title = ref('Nome da Obra ' + route.params.id)
@@ -67,12 +69,19 @@ const changeEstado = (value: boolean) => {
     newEstado.value = ''
 }
 
+const goToSimulador = () => {
+    //router.push({ name: 'simulador', params: { id: route.params.id } })
+    const currentRoute = router.currentRoute.value
+
+    router.push(currentRoute.fullPath + '/simulador')
+}
+
 const filtersHeaders = ['Estado']
 </script>
 <template>
     <PageLayout>
-        <v-row class="mt-2">
-            <v-col cols="12" lg="6" class="px-16">
+        <ObraLayout>
+            <template #map>
                 <v-row align="center" justify="start">
                     <v-col cols="auto" v-bind:offset-lg="4">
                         <div class="text-h4 text-lg-h3" v-if="!isEditing">
@@ -92,10 +101,9 @@ const filtersHeaders = ['Estado']
                     </v-col>
                     <Map></Map>
                 </v-row>
-            </v-col>
-            <v-col cols="12" lg="6" class="px-16">
-                <v-row>
-                    <v-spacer></v-spacer>
+            </template>
+            <template #content>
+                <v-row class="d-flex align-center">
                     <v-col cols="12" lg="6" xl="4">
                         <confirmation title="Confirmação" :function="changeEstado">
                             <template #button="{ open }">
@@ -127,6 +135,15 @@ const filtersHeaders = ['Estado']
                             </template>
                         </confirmation>
                     </v-col>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        rounded="xl"
+                        size="large"
+                        variant="flat"
+                        color="primary"
+                        @click="goToSimulador" >
+                        Simulador
+                    </v-btn>
                 </v-row>
                 <Lista
                     v-if="list.length > 0"
@@ -148,7 +165,7 @@ const filtersHeaders = ['Estado']
                         <FormCapaceteObra />
                     </template>
                 </Lista>
-            </v-col>
-        </v-row>
+            </template>
+        </ObraLayout>
     </PageLayout>
 </template>

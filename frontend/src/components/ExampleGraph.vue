@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ChartLayout from '@/components/ChartLayout.vue'
+import ChartLayout from '@/components/Layouts/ChartLayout.vue'
 import { ref } from 'vue'
 
 
