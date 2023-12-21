@@ -6,7 +6,7 @@ import { useRoute } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import Map from '@/components/Map.vue'
 import Confirmation from '@/components/Confirmation.vue'
-import type { Header } from '@/interfaces'
+import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 
 import type { Capacete, Obra } from '@/interfaces'
 import { CapaceteService, ObraService } from '@/http_requests'
@@ -20,7 +20,8 @@ const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('')
 const newEstado = ref('')
- 
+const id = route.params.id
+
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
     if (isEditing.value) {
@@ -61,6 +62,17 @@ const getCapacetesObra = () => {
     list.value = capacetes.value
 }
 
+const getCapacetesFromObra = (id: string) => {
+  console.log("getCapacetesFromObra")
+  list.value = []
+  ObraService.getCapacetesFromObra(id).then((answer) => {
+    console.log(answer)
+    answer.forEach((capacete) => {
+      list.value.push(capacete)
+    })
+  })
+}
+
 onMounted(() => {
     getObra()
     getCapacetesObra()
@@ -82,6 +94,16 @@ function removeCapacete(id: string) {
             console.error('Error updating title:', error);
         });
 }
+
+// onMounted(() => {
+//   const id = route.params.id
+//     getCapacetesFromObra(id);  
+// })
+
+
+// function removeCapacete(id: number) {
+//     list.value = list.value.filter((item) => item.NCapacete !== id)
+// }
 
 const changeEstadoCapacete = (row: { [key: string]: string }, value: string) => {
     row['status'] = value
@@ -106,15 +128,26 @@ const changeEstado = (value: boolean) => {
     }
     newEstado.value = ''
 }
-
 </script>
 <template>
     <PageLayout>
         <v-row class="mt-2">
-            <v-col cols="12" lg="6" class="px-16">
-                <v-row align="center" justify="start">
-                    <v-col cols="auto" v-bind:offset-lg="4">
-                        <div class="text-h4 text-lg-h3" v-if="!isEditing">{{ title }}</div>
+            <v-col
+                cols="12"
+                lg="6"
+            >
+                <v-row class="d-flex justify-center"
+            >
+                    <v-col
+                        cols="auto"
+                        v-bind:offset-lg="4"
+                    >
+                        <div
+                            class="text-h4 text-lg-h3"
+                            v-if="!isEditing"
+                        >
+                            {{ title }}
+                        </div>
                         <v-text-field
                             v-else
                             v-model="title"
@@ -125,18 +158,34 @@ const changeEstado = (value: boolean) => {
                         ></v-text-field>
                     </v-col>
                     <v-col cols="auto">
-                        <v-btn density="compact" icon="mdi-pencil" @click="toggleEditing"></v-btn>
+                        <v-btn
+                            density="compact"
+                            icon="mdi-pencil"
+                            @click="toggleEditing"
+                        ></v-btn>
                     </v-col>
                     <Map></Map>
                 </v-row>
             </v-col>
-            <v-col cols="12" lg="6" class="px-16">
+            <v-col
+                cols="12"
+                lg="6"
+                class="px-16"
+            >
                 <v-row>
                     <v-spacer></v-spacer>
-                    <v-col cols="12" lg="6" xl="4">
-                        <confirmation title="Confirmação" :function="changeEstado">
+                    <v-col
+                        cols="12"
+                        lg="6"
+                        xl="4"
+                    >
+                        <confirmation
+                            title="Confirmação"
+                            :function="changeEstado"
+                        >
                             <template #button="{ open }">
                                 <v-select
+                                    rounded="t-xl"
                                     label="Estado da Obra"
                                     :items="[
                                         'Planeada',
@@ -170,24 +219,17 @@ const changeEstado = (value: boolean) => {
                     :headers="headers"
                 >
                     <template v-slot:tabs>
-                        <v-toolbar-title>Lista de Capacetes</v-toolbar-title>
+                        <p class="text-md-h6 ml-2 text-subtitle-1">Lista de Capacetes</p>
                     </template>
                     <template #row="{ row }">
                         <RowObra
                             :row="row"
                             @removeCapacete="(id) => removeCapacete(id)"
-                            @changeEstado="(value) => changeEstadoCapacete(row, value)"
+                            @changeStatus="(value) => changeEstadoCapacete(row, value)"
                         />
                     </template>
                     <template v-slot:add>
-                        <v-btn
-                            color="primary"
-                            variant="flat"
-                            icon="mdi-plus"
-                            rounded="xl"
-                            class="ma-1"
-                        >
-                        </v-btn>
+                        <FormCapaceteObra />
                     </template>
                 </Lista>
             </v-col>

@@ -1,25 +1,19 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 import { computed, ref } from 'vue'
-import type { Header } from '@/interfaces';
+import type { Header } from '@/interfaces'
 import type { PropType } from 'vue'
 
-
-
-
-
-const props = defineProps(
-    {
-        list: {
-            type: Array as PropType<Array<{ [id: string]: any  }>>,
-            required: true
-        },
-        headers: {
-            type: Array as PropType<Array<Header>>,
-            required: true,
-        }
+const props = defineProps({
+    list: {
+        type: Array as PropType<Array<{ [id: string]: any }>>,
+        required: true
+    },
+    headers: {
+        type: Array as PropType<Array<Header>>,
+        required: true
     }
-)
+})
 
 interface Sort {
     column: string | null
@@ -32,7 +26,6 @@ const page = ref<number>(1)
 const search = ref<string>('')
 const filterMenu = ref<boolean>(false)
 
-
 // Filtering
 
 const filterName = (key: string) => {
@@ -40,10 +33,9 @@ const filterName = (key: string) => {
     return header ? header.name : ''
 }
 
-
 const filterOptions = computed<{ [id: string]: Set<any> }>(() => {
     let options: { [id: string]: Set<any> } = {}
-    props.headers.forEach((header : Header) => {
+    props.headers.forEach((header: Header) => {
         if (header.params.includes('filter')) {
             options[header.key] = new Set(props.list.map((item) => item[header.key]))
         }
@@ -56,8 +48,6 @@ const resetFilter = () => {
 }
 
 const filter = ref<{ [key: string]: string[] }>(resetFilter())
-
-
 
 const filterFunc = (row: { [id: string]: string }) => {
     let result = true
@@ -157,26 +147,69 @@ watch(
 )
 </script>
 <template>
-    <v-toolbar color="white">
+    <v-toolbar class="rounded-t-xl pr-2">
         <slot name="tabs"></slot>
         <v-spacer></v-spacer>
+        <v-menu
+            v-if="hasFilters"
+            v-model="filterMenu"
+            :close-on-content-click="false"
+            location="end"
+        >
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    variant="flat"
+                    color="primary"
+                    v-bind="props"
+                    icon="mdi-filter"
+                ></v-btn>
+            </template>
+            <v-card
+                max-width="200"
+                class="mx-auto"
+            >
+                <v-card-text>
+                    <div
+                        v-for="(value, key) in filterOptions"
+                        :key="key"
+                    >
+                        <h2 class="text-h6">{{ key }}</h2>
+                        <v-chip-group
+                            v-model="filter[key]"
+                            column
+                            multiple
+                            color="info"
+                        >
+                            <v-chip
+                                v-for="option in value"
+                                filter
+                                variant="outlined"
+                                :value="option"
+                                :key="option"
+                            >
+                                {{ option }}
+                            </v-chip>
+                        </v-chip-group>
+                        <v-divider />
+                    </div>
+                </v-card-text>
+            </v-card>
+        </v-menu>
         <v-responsive max-width="400">
-            <v-text-field
-                variant="outlined"
-                label="Search"
-                v-model="search"
-                append-inner-icon="mdi-magnify"
-                single-line
-                hide-details
-                class="mx-5"
-                rounded="xl"
-            ></v-text-field>
+            <v-text-field variant="outlined" label="Search" v-model="search" append-inner-icon="mdi-magnify" single-line
+                hide-details class="mx-5" rounded="xl"></v-text-field>
         </v-responsive>
         <div style="flex-basis: 5%">
             <slot name="add"></slot>
         </div>
     </v-toolbar>
-    <v-table hover v-if="rowsPage.length > 0" height="55vh" fixed-header>
+
+    <v-table
+        hover
+        v-if="rowsPage.length > 0"
+        height="60vh"
+        fixed-header
+    >
         <thead>
             <tr>
                 <th
@@ -195,59 +228,49 @@ watch(
             </tr>
         </thead>
         <tbody>
-            <tr class="text-center" v-for="(row, rowIndex) in rowsPage" :key="rowIndex">
-                <slot name="row" :row="row" :headers="props.headers"></slot>
+            <tr
+                class="text-center"
+                v-for="(row, rowIndex) in rowsPage"
+                :key="rowIndex"
+            >
+                <slot
+                    name="row"
+                    :row="row"
+                    :headers="props.headers"
+                ></slot>
             </tr>
         </tbody>
     </v-table>
-    <v-alert v-else dense type="info">No results found</v-alert>
+    <v-alert
+        v-else
+        dense
+        type="info"
+        >No results found</v-alert
+    >
     <v-row class="mt-5">
-        <v-col cols="3" md="2">
-            <v-menu
-                v-if="hasFilters"
-                v-model="filterMenu"
-                :close-on-content-click="false"
-                location="end"
-            >
-                <template v-slot:activator="{ props }">
-                    <v-btn color="info" v-bind="props" icon="mdi-filter"></v-btn>
-                </template>
-                <v-card max-width="200" class="mx-auto">
-                    <v-card-text>
-                        <div v-for="(value, key) in filterOptions" :key="key">
-                            <h2 class="text-h6">{{ filterName(String(key)) }}</h2>
-                            <v-chip-group v-model="filter[key]" column multiple color="info">
-                                <v-chip
-                                    v-for="option in value"
-                                    filter
-                                    variant="outlined"
-                                    :value="option"
-                                    :key="option"
-                                >
-                                    {{ option }}
-                                </v-chip>
-                            </v-chip-group>
-                            <v-divider />
-                        </div>
-                    </v-card-text>
-                </v-card>
-            </v-menu>
-        </v-col>
-        <v-col cols="5" md="7">
+        <v-spacer />
+        <v-col
+            cols="5"
+            md="7"
+        >
             <v-pagination
                 variant="flat"
-                active-color="info"
+                active-color="primary"
                 v-if="numPages !== 1"
                 v-model="page"
                 :length="numPages"
             ></v-pagination>
         </v-col>
-        <v-col cols="4" md="3">
+        <v-col
+            cols="4"
+            md="3"
+        >
             <v-select
                 v-if="list.length > 10"
                 dense
                 v-model="maxPerPage"
                 label="Elements per Page"
+                rounded="t-xl"
                 :items="[10, 20, 30, 40, 50]"
             ></v-select>
         </v-col>

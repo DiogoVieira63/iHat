@@ -217,6 +217,7 @@ public class IHatController : ControllerBase{
         }
         catch (Exception e)
         {
+            Console.WriteLine($"Erro: {e.Message}");
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
         }
     }

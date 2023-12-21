@@ -1,0 +1,3524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="265.95432mm"
+   viewBox="0 0 93.129997 265.95432"
+   width="93.129997mm"
+   version="1.1"
+   id="svg1060"
+   sodipodi:docname="Level 1.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:ifc="http://www.ifcopenshell.org/ns">
+  <sodipodi:namedview
+     id="namedview1060"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm" />
+  <defs
+     id="defs2">
+    <marker
+       id="arrowend"
+       markerHeight="7"
+       markerWidth="10"
+       orient="auto"
+       refX="10"
+       refY="3.5">
+      <polygon
+         points="10,3.5 0,7 0,0 "
+         id="polygon1" />
+    </marker>
+    <marker
+       id="arrowstart"
+       markerHeight="7"
+       markerWidth="10"
+       orient="auto"
+       refX="0"
+       refY="3.5">
+      <polygon
+         points="0,3.5 10,7 10,0 "
+         id="polygon2" />
+    </marker>
+  </defs>
+  <style
+     type="text/css"
+     id="style2">&#10;  .cut path {&#10;            stroke: #222222;&#10;            fill: #444444;&#10;            fill-rule: evenodd;&#10;        }&#10;        .projection path {&#10;            stroke: #222222;&#10;            fill: none;&#10;            stroke-opacity: 0.6;&#10;        }&#10;        .IfcDoor path,&#10;        .Symbol path {&#10;            fill: none;&#10;        }&#10;        .Symbol path {&#10;            stroke-width: 0.5px;&#10;        }&#10;        .IfcSpace path {&#10;            fill-opacity: .2;&#10;        }&#10;        .Dimension path {&#10;            marker-end: url(#arrowend);&#10;            marker-start: url(#arrowstart);&#10;        }&#10;        text {&#10;            font-size: 2;&#10;        }&#10;        path {&#10;            stroke-width: 0.3;&#10;        }&#10; </style>
+  <g
+     class="IfcBuildingStorey"
+     id="storey-7b7032cc-b822-417b-9aea-6429f95d6512"
+     ifc:guid="1xS3BCk291UvhgP2dvNMKI"
+     ifc:matrix3="[[10.000000,0.000000,104.500000],[0.000000,10.000000,121.000000],[0.000000,0.000000,1.000000]]"
+     ifc:name="Level 1"
+     ifc:plane="[[1.000000,0.000000,0.000000,0.000000],[0.000000,1.000000,0.000000,0.000000],[0.000000,0.000000,1.000000,1.200000],[0.000000,0.000000,0.000000,1.000000]]"
+     transform="translate(-101.935,-77.0227)">
+    <g
+       class="IfcSpace"
+       id="product-0b74b3fa-1a92-405e-9ac9-d59067be1d42-body"
+       ifc:guid="0BTBFw6f90Nfh9rP1dlXr2"
+       ifc:name="A102">
+      <path
+         d="M 166.5,294.83 V 247 h -57.83 v 47.83 h 57.83"
+         id="path2" />
+    </g>
+    <g
+       class="IfcSpace"
+       id="product-0b74b3fa-1a92-405e-9ac9-d59067be1d7f-body"
+       ifc:guid="0BTBFw6f90Nfh9rP1dlXr$"
+       ifc:name="A103">
+      <path
+         d="m 108.67,247 h 58.09 V 224.7 H 108.67 V 247"
+         id="path3" />
+    </g>
+    <g
+       class="IfcSpace"
+       id="product-0b74b3fa-1a92-405e-9ac9-d59067be1d78-body"
+       ifc:guid="0BTBFw6f90Nfh9rP1dlXru"
+       ifc:name="A104">
+      <path
+         d="m 152.2,201.75 v 21.71 h 14.56 V 201.75 H 152.2"
+         id="path4" />
+    </g>
+    <g
+       class="IfcSpace"
+       id="product-0b74b3fa-1a92-405e-9ac9-d59067be1d75-body"
+       ifc:guid="0BTBFw6f90Nfh9rP1dlXrr"
+       ifc:name="A101">
+      <path
+         d="m 188.33,239.25 v 55.58 H 167.74 V 259 h -1.24 v -12 h 0.26 V 230.95 H 168 v -29.2 h 10.186 v 37.5 h 10.144"
+         id="path5" />
+    </g>
+    <g
+       class="IfcSpace"
+       id="product-0b74b3fa-1a92-405e-9ac9-d59067bfe323-body"
+       ifc:guid="0BTBFw6f90Nfh9rP1dl_CZ"
+       ifc:name="B102">
+      <path
+         d="M 130.5,125.17 V 173 h 57.83 V 125.17 H 130.5"
+         id="path6" />
+    </g>
+    <g
+       class="IfcSpace"
+       id="product-0b74b3fa-1a92-405e-9ac9-d59067bfe0dc-body"
+       ifc:guid="0BTBFw6f90Nfh9rP1dl_3S"
+       ifc:name="B103">
+      <path
+         d="m 188.33,173 h -58.09 v 22.3 h 58.09 V 173"
+         id="path7" />
+    </g>
+    <g
+       class="IfcSpace"
+       id="product-0b74b3fa-1a92-405e-9ac9-d59067bfe0d9-body"
+       ifc:guid="0BTBFw6f90Nfh9rP1dl_3P"
+       ifc:name="B104">
+      <path
+         d="m 144.8,218.25 v -21.71 h -14.56 v 21.71 h 14.56"
+         id="path8" />
+    </g>
+    <g
+       class="IfcSpace"
+       id="product-0b74b3fa-1a92-405e-9ac9-d59067bfe0da-body"
+       ifc:guid="0BTBFw6f90Nfh9rP1dl_3Q"
+       ifc:name="B101">
+      <path
+         d="m 108.67,125.17 v 55.58 h 10.144 v 37.5 H 129 v -29.2 h 1.24 V 173 h 0.26 v -12 h -1.24 v -35.83 h -20.59"
+         id="path9" />
+    </g>
+    <g
+       class="IfcSpace"
+       id="product-40c2d70d-8d3b-49a9-9702-6756a4ee40fd-body"
+       ifc:guid="10mjSDZJj9gPS2PrQaxa3z"
+       ifc:name="A105">
+      <path
+         d="m 178.186,239.25 h 10.144 v -37.5 h -10.144 v 37.5"
+         id="path10" />
+    </g>
+    <g
+       class="IfcSpace"
+       id="product-40c2d70d-8d3b-49a9-9702-6756a4ee4132-body"
+       ifc:guid="10mjSDZJj9gPS2PrQaxa4o"
+       ifc:name="B105">
+      <path
+         d="m 108.67,218.25 h 10.144 v -37.5 H 108.67 v 37.5"
+         id="path11" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d7df1-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FNtn"
+       ifc:name="Basic Wall:Exterior - Brick on Block:138062">
+      <path
+         d="m 130.85,121 v 4.17 H 104.5 V 121 h 26.35 m 8.13,4.17 V 121 h 1 v 4.17 h -1 M 192.5,121 v 4.17 h -4.17 V 121 h 4.17"
+         id="path12" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d7d12-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FNqI"
+       ifc:name="Basic Wall:Exterior - Brick on Block:138157">
+      <path
+         d="m 192.5,276.53 h -4.17 v -96.08 h 4.17 v 96.08 m -4.17,12.5 h 4.17 V 299 h -4.17 v -9.97 m 4.17,-163.86 h -4.17 v 47.78 h 4.17 v -47.78"
+         id="path13" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d7d42-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FNr2"
+       ifc:name="Basic Wall:Exterior - Brick on Block:138237">
+      <path
+         d="m 166.15,299 v -4.17 h 22.18 V 299 h -22.18 m -8.13,-4.17 V 299 h -1 v -4.17 h 1 M 104.5,299 v -4.17 h 4.17 V 299 h -4.17"
+         id="path14" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d7af9-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FNhv"
+       ifc:name="Basic Wall:Exterior - Brick on Block:138310">
+      <path
+         d="m 104.5,143.47 h 4.17 v 96.08 h -4.17 v -96.08 m 4.17,-12.5 h -4.17 v -5.8 h 4.17 v 5.8 m -4.17,163.86 h 4.17 v -47.78 h -4.17 v 47.78"
+         id="path15" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d7be7-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FNld"
+       ifc:name="Basic Wall:Interior - Partition (92mm Stud):138584">
+      <path
+         d="m 130.5,161 v -35.83 h -1.24 V 161 h 1.24"
+         id="path16" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d7938-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FNau"
+       ifc:name="Basic Wall:Interior - Partition (92mm Stud):139143">
+      <path
+         d="M 130.24,198.49 H 129 v -9.44 h 1.24 v 9.44 m -1.24,7.62 h 1.24 v 12.14 H 129 v -12.14"
+         id="path17" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d795d-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FNbT"
+       ifc:name="Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139234">
+      <path
+         d="m 146.32,201.75 h 42.01 v -4.93 h -42.01 v 4.93"
+         id="path18" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d46ec-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FKRi"
+       ifc:name="Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139347">
+      <path
+         d="m 150.68,218.25 h -42.01 v 4.93 h 42.01 v -4.93"
+         id="path19" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d46d1-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FKRH"
+       ifc:name="Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139374">
+      <path
+         d="m 145.75,199 v 2.75 h 0.57 v 16.5 h -0.57 V 221 h 5.5 v -2.75 h -0.57 v -16.5 h 0.57 V 199 h -5.5"
+         id="path20" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d471d-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FKST"
+       ifc:name="Basic Wall:Interior - Partition (92mm Stud):139682">
+      <path
+         d="M 166.76,221.53 H 168 v 9.42 h -1.24 v -9.42 m 1.24,-7.62 h -1.24 V 201.75 H 168 v 12.16"
+         id="path21" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d44b8-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FKIu"
+       ifc:name="Basic Wall:Interior - Partition (92mm Stud):139783">
+      <path
+         d="M 166.76,223.46 H 152.2 v 1.24 h 14.56 v -1.24"
+         id="path22" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-9808fd7f-dc48-478e-9217-628e833d441c-body"
+       ifc:guid="2O2Fr$t4X7Zf8NOew3FKGS"
+       ifc:name="Basic Wall:Interior - Partition (92mm Stud):139939">
+      <path
+         d="M 167.74,294.83 V 259 h -1.24 v 35.83 h 1.24"
+         id="path23" />
+    </g>
+    <g
+       class="cut IfcWindow"
+       id="product-6b61ce71-1a7a-473c-8f87-4262e0bdb1c2-body"
+       ifc:guid="1hOSvn6df7F8_7GcBWlR72"
+       ifc:name="M_Fixed:4835mm x 2420mm:4835mm x 2420mm:145788">
+      <path
+         d="m 140.61,121.35 v 0.12 h 47.09 v -0.12 h -47.09"
+         id="path24" />
+      <path
+         d="m 188.14,121.63 v -0.44 h -0.44 v 0.44 h 0.44 m -47.97,-0.44 v 0.44 h 0.44 v -0.44 h -0.44"
+         id="path25" />
+      <path
+         d="M 188.33,121.63 V 121 h -0.19 v 0.63 h 0.19 M 139.98,121 v 0.63 h 0.19 V 121 h -0.19"
+         id="path26" />
+      <path
+         d="m 188.33,125.17 v -3.54 h -0.32 v 3.54 h 0.32 m -48.35,-3.54 v 3.54 h 0.32 v -3.54 h -0.32"
+         id="path27" />
+    </g>
+    <g
+       class="cut IfcWindow"
+       id="product-6b61ce71-1a7a-473c-8f87-4262e0bdb2de-body"
+       ifc:guid="1hOSvn6df7F8_7GcBWlRBU"
+       ifc:name="M_Fixed:4835mm x 2420mm:4835mm x 2420mm:146016">
+      <path
+         d="m 156.39,298.65 v -0.12 H 109.3 v 0.12 h 47.09"
+         id="path28" />
+      <path
+         d="m 108.86,298.37 v 0.44 h 0.44 v -0.44 h -0.44 m 47.97,0.44 v -0.44 h -0.44 v 0.44 h 0.44"
+         id="path29" />
+      <path
+         d="M 108.67,298.37 V 299 h 0.19 v -0.63 h -0.19 m 48.35,0.63 v -0.63 h -0.19 V 299 h 0.19"
+         id="path30" />
+      <path
+         d="m 108.67,294.83 v 3.54 h 0.32 v -3.54 h -0.32 m 48.35,3.54 v -3.54 h -0.32 v 3.54 h 0.32"
+         id="path31" />
+    </g>
+    <g
+       class="cut IfcDoor"
+       id="product-6b61ce71-1a7a-473c-8f87-4262e0bdb41a-body"
+       ifc:guid="1hOSvn6df7F8_7GcBWlRGQ"
+       ifc:name="M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146596">
+      <path
+         d="m 192.5,289.79 h 0.25 v -0.76 h -0.25 v 0.76 m 0,-13.26 h 0.25 v -0.76 h -0.25 v 0.76"
+         id="path32" />
+      <path
+         d="m 188.08,289.79 h 0.25 v -0.76 h -0.25 v 0.76 m 0,-13.26 h 0.25 v -0.76 h -0.25 v 0.76"
+         id="path33" />
+      <path
+         d="m 191.99,289.03 h 0.51 v -12.5 h -0.51 v 12.5"
+         id="path34" />
+    </g>
+    <g
+       class="cut IfcDoor"
+       id="product-6b61ce71-1a7a-473c-8f87-4262e0bdb448-body"
+       ifc:guid="1hOSvn6df7F8_7GcBWlRH8"
+       ifc:name="M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146678">
+      <path
+         d="m 104.5,130.21 h -0.25 v 0.76 h 0.25 v -0.76 m 0,13.26 h -0.25 v 0.76 h 0.25 v -0.76"
+         id="path35" />
+      <path
+         d="m 108.92,130.21 h -0.25 v 0.76 h 0.25 v -0.76 m 0,13.26 h -0.25 v 0.76 h 0.25 v -0.76"
+         id="path36" />
+      <path
+         d="m 105.01,130.97 h -0.51 v 12.5 h 0.51 v -12.5"
+         id="path37" />
+    </g>
+    <g
+       class="cut IfcWindow"
+       id="product-6b61ce71-1a7a-473c-8f87-4262e0bdb57b-body"
+       ifc:guid="1hOSvn6df7F8_7GcBWlRLx"
+       ifc:name="M_Fixed:750mm x 2200mm:750mm x 2200mm:146885">
+      <path
+         d="m 192.15,173.58 h -0.12 v 6.24 h 0.12 v -6.24"
+         id="path38" />
+      <path
+         d="m 191.87,180.26 h 0.44 v -0.44 h -0.44 v 0.44 m 0.44,-7.12 h -0.44 v 0.44 h 0.44 v -0.44"
+         id="path39" />
+      <path
+         d="m 191.87,180.45 h 0.63 v -0.19 h -0.63 v 0.19 m 0.63,-7.5 h -0.63 v 0.19 h 0.63 v -0.19"
+         id="path40" />
+      <path
+         d="m 188.33,180.45 h 3.54 v -0.32 h -3.54 v 0.32 m 3.54,-7.5 h -3.54 v 0.32 h 3.54 v -0.32"
+         id="path41" />
+    </g>
+    <g
+       class="cut IfcWindow"
+       id="product-6b61ce71-1a7a-473c-8f87-4262e0bdb6d5-body"
+       ifc:guid="1hOSvn6df7F8_7GcBWlRRL"
+       ifc:name="M_Fixed:750mm x 2200mm:750mm x 2200mm:147051">
+      <path
+         d="m 104.85,246.42 h 0.12 v -6.24 h -0.12 v 6.24"
+         id="path42" />
+      <path
+         d="m 105.13,239.74 h -0.44 v 0.44 h 0.44 v -0.44 m -0.44,7.12 h 0.44 v -0.44 h -0.44 v 0.44"
+         id="path43" />
+      <path
+         d="m 105.13,239.55 h -0.63 v 0.19 h 0.63 v -0.19 m -0.63,7.5 h 0.63 v -0.19 h -0.63 v 0.19"
+         id="path44" />
+      <path
+         d="m 108.67,239.55 h -3.54 v 0.32 h 3.54 v -0.32 m -3.54,7.5 h 3.54 v -0.32 h -3.54 v 0.32"
+         id="path45" />
+    </g>
+    <g
+       class="cut IfcDoor"
+       id="product-6b61ce71-1a7a-473c-8f87-4262e0bdc223-body"
+       ifc:guid="1hOSvn6df7F8_7GcBWlS8Z"
+       ifc:name="M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150173">
+      <path
+         d="m 166.51,222.29 h 0.25 v -0.76 h -0.25 v 0.76 m 0,-8.38 h 0.25 v -0.76 h -0.25 v 0.76"
+         id="path46" />
+      <path
+         d="m 168,222.29 h 0.25 v -0.76 H 168 v 0.76 m 0,-8.38 h 0.25 v -0.76 H 168 v 0.76"
+         id="path47" />
+      <path
+         d="m 167.27,221.53 v -7.62 h -0.51 v 7.62 h 0.51"
+         id="path48" />
+    </g>
+    <g
+       class="cut IfcDoor"
+       id="product-6b61ce71-1a7a-473c-8f87-4262e0bdc24f-body"
+       ifc:guid="1hOSvn6df7F8_7GcBWlS9F"
+       ifc:name="M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150257">
+      <path
+         d="m 130.49,197.73 h -0.25 v 0.76 h 0.25 v -0.76 m 0,8.38 h -0.25 v 0.76 h 0.25 v -0.76"
+         id="path49" />
+      <path
+         d="m 129,197.73 h -0.25 v 0.76 H 129 v -0.76 m 0,8.38 h -0.25 v 0.76 H 129 v -0.76"
+         id="path50" />
+      <path
+         d="m 129.73,198.49 v 7.62 h 0.51 v -7.62 h -0.51"
+         id="path51" />
+    </g>
+    <g
+       class="cut IfcStairFlight"
+       id="product-7252d52a-2593-43a5-906c-4ba855ac3bd4-body"
+       ifc:guid="1oKjKg9PD3fP1iIwXLh3lK"
+       ifc:name="Stair:Residential - 200mm Max Riser 250mm Tread:151086:1">
+      <path
+         d="m 187.83,224.025 h -9.144 v 0.125 h 9.144 v -0.125"
+         id="path52" />
+    </g>
+    <g
+       class="cut IfcMember"
+       id="product-6adf5714-15ac-4de3-b37a-f2a9c038d418-body"
+       ifc:guid="1gtrSK5QnDuxDwygd0EDGO"
+       ifc:name="Stair:Residential - 200mm Max Riser 250mm Tread:151086:1">
+      <path
+         d="m 188.33,220.415 h -0.5 v 6.529 h 0.5 v -6.529"
+         id="path53" />
+    </g>
+    <g
+       class="cut IfcMember"
+       id="product-c4d1e3d0-b53f-4f53-a7e0-ce1a029dd677-body"
+       ifc:guid="34qUFGjJzFKwVWpXe2dTPt"
+       ifc:name="Stair:Residential - 200mm Max Riser 250mm Tread:151086:2">
+      <path
+         d="m 178.686,220.415 h -0.5 v 6.529 h 0.5 v -6.529"
+         id="path54" />
+    </g>
+    <g
+       class="cut IfcRailing"
+       id="product-3ab8ee1d-07ad-41b9-8f24-a55884e7e655-body"
+       ifc:guid="0wkEuT1wr1kOyafLY4v_PL"
+       ifc:name="Railing:900mm Handrail Only:151162">
+      <path
+         d="m 187.887,237.468 0.02,-0.079 0.032,-0.067 0.041,-0.052 0.048,-0.033 0.052,-0.011 0.052,0.011 0.048,0.033 0.041,0.052 0.032,0.067 0.02,0.079 0.007,0.085 -0.007,0.084 -0.02,0.079 -0.032,0.067 -0.041,0.052 -0.048,0.033 -0.052,0.011 -0.052,-0.011 -0.048,-0.033 -0.041,-0.052 -0.032,-0.067 -0.02,-0.079 -0.007,-0.084 0.007,-0.085"
+         id="path55" />
+    </g>
+    <g
+       class="cut IfcRailing"
+       id="product-3ab8ee1d-07ad-41b9-8f24-a55884e7e651-body"
+       ifc:guid="0wkEuT1wr1kOyafLY4v_PH"
+       ifc:name="Railing:1100mm Guard Rail:151166">
+      <path
+         d="m 178.311,227.5 h 0.25 v -0.25 h -0.25 v 0.25"
+         id="path56" />
+      <path
+         d="m 178.311,228.75 h 0.25 v -0.25 h -0.25 v 0.25"
+         id="path57" />
+      <path
+         d="m 178.311,230 h 0.25 v -0.25 h -0.25 V 230"
+         id="path58" />
+      <path
+         d="m 178.311,231.25 h 0.25 V 231 h -0.25 v 0.25"
+         id="path59" />
+      <path
+         d="m 178.311,232.5 h 0.25 v -0.25 h -0.25 v 0.25"
+         id="path60" />
+      <path
+         d="m 178.311,233.75 h 0.25 v -0.25 h -0.25 v 0.25"
+         id="path61" />
+      <path
+         d="m 178.311,235 h 0.25 v -0.25 h -0.25 V 235"
+         id="path62" />
+      <path
+         d="m 178.311,236.25 h 0.25 V 236 h -0.25 v 0.25"
+         id="path63" />
+      <path
+         d="m 178.311,237.5 h 0.25 v -0.25 h -0.25 v 0.25"
+         id="path64" />
+      <path
+         d="m 178.311,238.75 h 0.25 v -0.25 h -0.25 v 0.25"
+         id="path65" />
+      <path
+         d="m 178.336,239.125 0.01,-0.043 0.028,-0.035 0.04,-0.019 h 0.044 l 0.04,0.019 0.028,0.035 0.01,0.043 -0.01,0.043 -0.028,0.035 -0.04,0.019 h -0.044 l -0.04,-0.019 -0.028,-0.035 -0.01,-0.043"
+         id="path66" />
+    </g>
+    <g
+       class="cut IfcDoor"
+       id="product-7606d7eb-508f-40ce-a522-9b526ddc7201-body"
+       ifc:guid="1s1jVhK8z0pgKYcr9jt781"
+       ifc:name="M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171853">
+      <path
+         d="m 130.85,125.17 v 0.25 h -0.76 v -0.25 h 0.76 m 8.89,0 v 0.25 h -0.76 v -0.25 h 0.76"
+         id="path67" />
+      <path
+         d="M 130.85,120.75 V 121 h -0.76 v -0.25 h 0.76 m 8.89,0 V 121 h -0.76 v -0.25 h 0.76"
+         id="path68" />
+      <path
+         d="m 131.87,121.286 h 6.09 v -0.064 h -6.09 v 0.064"
+         id="path69" />
+      <path
+         d="m 130.85,121 v 0.51 h 1.02 V 121 h -1.02 m 8.13,0.51 V 121 h -1.02 v 0.51 h 1.02"
+         id="path70" />
+    </g>
+    <g
+       class="cut IfcDoor"
+       id="product-7606d7eb-508f-40ce-a522-9b526ddc728b-body"
+       ifc:guid="1s1jVhK8z0pgKYcr9jt7AB"
+       ifc:name="M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171975">
+      <path
+         d="m 166.15,294.83 v -0.25 h 0.76 v 0.25 h -0.76 m -8.89,0 v -0.25 h 0.76 v 0.25 h -0.76"
+         id="path71" />
+      <path
+         d="M 166.15,299.25 V 299 h 0.76 v 0.25 h -0.76 m -8.89,0 V 299 h 0.76 v 0.25 h -0.76"
+         id="path72" />
+      <path
+         d="m 165.13,298.714 h -6.09 v 0.064 h 6.09 v -0.064"
+         id="path73" />
+      <path
+         d="m 166.15,299 v -0.51 h -1.02 V 299 h 1.02 m -8.13,-0.51 V 299 h 1.02 v -0.51 h -1.02"
+         id="path74" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-2c391822-07f8-4a22-86a8-a1e57412d8c1-body"
+       ifc:guid="0iEHWY1$XA8eQeeULq4jZ1"
+       ifc:name="Basic Wall:Interior - Furring (152 mm Stud):189074">
+      <path
+         d="m 144.8,196.82 h 43.53 V 195.3 H 144.8 v 1.52"
+         id="path75" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-2c391822-07f8-4a22-86a8-a1e57412df9e-body"
+       ifc:guid="0iEHWY1$XA8eQeeULq4j_U"
+       ifc:name="Basic Wall:Interior - Furring (152 mm Stud):189901">
+      <path
+         d="m 144.8,196.82 v 21.43 h 1.52 v -21.43 h -1.52"
+         id="path76" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-2c391822-07f8-4a22-86a8-a1e57412dcef-body"
+       ifc:guid="0iEHWY1$XA8eQeeULq4jpl"
+       ifc:name="Basic Wall:Interior - Partition (92mm Stud):190140">
+      <path
+         d="m 130.24,196.54 h 14.56 v -1.24 h -14.56 v 1.24"
+         id="path77" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-2c391822-07f8-4a22-86a8-a1e57412d365-body"
+       ifc:guid="0iEHWY1$XA8eQeeULq4jDb"
+       ifc:name="Basic Wall:Interior - Furring (152 mm Stud):190774">
+      <path
+         d="m 152.2,224.7 v -22.95 h -1.52 v 22.95 h 1.52"
+         id="path78" />
+    </g>
+    <g
+       class="cut IfcWallStandardCase"
+       id="product-2c391822-07f8-4a22-86a8-a1e57412d386-body"
+       ifc:guid="0iEHWY1$XA8eQeeULq4jE6"
+       ifc:name="Basic Wall:Interior - Furring (152 mm Stud):190933">
+      <path
+         d="m 150.68,223.18 h -42.01 v 1.52 h 42.01 v -1.52"
+         id="path79" />
+    </g>
+    <g
+       class="cut IfcStairFlight"
+       id="product-d45937bc-7a82-4da5-a08f-60c9c58f2b17-body"
+       ifc:guid="3KMJUyUe9DfQ2FOCd5ZoiN"
+       ifc:name="Stair:Residential - 200mm Max Riser 250mm Tread:198878:1">
+      <path
+         d="m 109.17,195.975 h 9.144 v -0.125 h -9.144 v 0.125"
+         id="path80" />
+    </g>
+    <g
+       class="cut IfcMember"
+       id="product-0153d284-719c-4549-860d-e953a515b5e2-body"
+       ifc:guid="01KzA4SPn5IOODwLEb5RNY"
+       ifc:name="Stair:Residential - 200mm Max Riser 250mm Tread:198878:1">
+      <path
+         d="m 118.814,193.056 h -0.5 v 6.529 h 0.5 v -6.529"
+         id="path81" />
+    </g>
+    <g
+       class="cut IfcMember"
+       id="product-c73fc240-b9c3-4267-9e6c-b3df161ce52f-body"
+       ifc:guid="37Fy90kSD2PvviizyM7EKl"
+       ifc:name="Stair:Residential - 200mm Max Riser 250mm Tread:198878:2">
+      <path
+         d="m 109.17,193.056 h -0.5 v 6.529 h 0.5 v -6.529"
+         id="path82" />
+    </g>
+    <g
+       class="cut IfcRailing"
+       id="product-81be7c96-ce56-447e-9d93-021422f83119-body"
+       ifc:guid="21ldoMpbP4VfsJ0XGY_34P"
+       ifc:name="Railing:900mm Handrail Only:198880">
+      <path
+         d="m 109.113,182.532 -0.02,0.079 -0.032,0.067 -0.041,0.052 -0.048,0.033 -0.052,0.011 -0.052,-0.011 -0.048,-0.033 -0.041,-0.052 -0.032,-0.067 -0.02,-0.079 -0.007,-0.085 0.007,-0.084 0.02,-0.079 0.032,-0.067 0.041,-0.052 0.048,-0.033 0.052,-0.011 0.052,0.011 0.048,0.033 0.041,0.052 0.032,0.067 0.02,0.079 0.007,0.084 -0.007,0.085"
+         id="path83" />
+    </g>
+    <g
+       class="cut IfcRailing"
+       id="product-81be7c96-ce56-447e-9d93-021422f830c5-body"
+       ifc:guid="21ldoMpbP4VfsJ0XGY_335"
+       ifc:name="Railing:1100mm Guard Rail:198972">
+      <path
+         d="m 118.439,192.5 h 0.25 v 0.25 h -0.25 v -0.25"
+         id="path84" />
+      <path
+         d="m 118.439,191.25 h 0.25 v 0.25 h -0.25 v -0.25"
+         id="path85" />
+      <path
+         d="m 118.439,190 h 0.25 v 0.25 h -0.25 V 190"
+         id="path86" />
+      <path
+         d="m 118.439,188.75 h 0.25 V 189 h -0.25 v -0.25"
+         id="path87" />
+      <path
+         d="m 118.439,187.5 h 0.25 v 0.25 h -0.25 v -0.25"
+         id="path88" />
+      <path
+         d="m 118.439,186.25 h 0.25 v 0.25 h -0.25 v -0.25"
+         id="path89" />
+      <path
+         d="m 118.439,185 h 0.25 v 0.25 h -0.25 V 185"
+         id="path90" />
+      <path
+         d="m 118.439,183.75 h 0.25 V 184 h -0.25 v -0.25"
+         id="path91" />
+      <path
+         d="m 118.439,182.5 h 0.25 v 0.25 h -0.25 v -0.25"
+         id="path92" />
+      <path
+         d="m 118.439,181.25 h 0.25 v 0.25 h -0.25 v -0.25"
+         id="path93" />
+      <path
+         d="m 118.664,180.875 -0.01,0.043 -0.028,0.035 -0.04,0.019 h -0.044 l -0.04,-0.019 -0.028,-0.035 -0.01,-0.043 0.01,-0.043 0.028,-0.035 0.04,-0.019 h 0.044 l 0.04,0.019 0.028,0.035 0.01,0.043"
+         id="path94" />
+    </g>
+    <g
+       class="projection"
+       id="g1060">
+      <path
+         d="m 187.83,239.25 h -9.144"
+         id="path95" />
+      <path
+         d="m 187.83,236.75 h -9.144"
+         id="path96" />
+      <path
+         d="m 187.83,234.25 h -9.144"
+         id="path97" />
+      <path
+         d="m 187.83,231.75 h -9.144"
+         id="path98" />
+      <path
+         d="m 187.83,229.25 h -9.144"
+         id="path99" />
+      <path
+         d="m 187.83,226.75 h -9.144"
+         id="path100" />
+      <path
+         d="m 187.83,224.25 h -9.144"
+         id="path101" />
+      <path
+         d="m 187.83,221.75 h -9.144"
+         id="path102" />
+      <path
+         d="m 187.83,219.25 h -9.144"
+         id="path103" />
+      <path
+         d="m 187.83,216.75 h -9.144"
+         id="path104" />
+      <path
+         d="m 187.83,214.25 h -9.144"
+         id="path105" />
+      <path
+         d="m 187.83,211.75 h -9.144"
+         id="path106" />
+      <path
+         d="m 187.83,209.25 h -9.144"
+         id="path107" />
+      <path
+         d="m 187.83,206.75 h -9.144"
+         id="path108" />
+      <path
+         d="m 187.83,204.25 h -9.144"
+         id="path109" />
+      <path
+         d="M 118.314,180.75 H 109.17"
+         id="path110" />
+      <path
+         d="M 118.314,183.25 H 109.17"
+         id="path111" />
+      <path
+         d="M 118.314,185.75 H 109.17"
+         id="path112" />
+      <path
+         d="M 118.314,188.25 H 109.17"
+         id="path113" />
+      <path
+         d="M 118.314,190.75 H 109.17"
+         id="path114" />
+      <path
+         d="M 118.314,193.25 H 109.17"
+         id="path115" />
+      <path
+         d="M 118.314,195.75 H 109.17"
+         id="path116" />
+      <path
+         d="M 118.314,198.25 H 109.17"
+         id="path117" />
+      <path
+         d="M 118.314,200.75 H 109.17"
+         id="path118" />
+      <path
+         d="M 118.314,203.25 H 109.17"
+         id="path119" />
+      <path
+         d="M 118.314,205.75 H 109.17"
+         id="path120" />
+      <path
+         d="M 118.314,208.25 H 109.17"
+         id="path121" />
+      <path
+         d="M 118.314,210.75 H 109.17"
+         id="path122" />
+      <path
+         d="M 118.314,213.25 H 109.17"
+         id="path123" />
+      <path
+         d="M 118.314,215.75 H 109.17"
+         id="path124" />
+      <path
+         d="M 104.5,125.17 V 121"
+         id="path125" />
+      <path
+         d="M 192.5,125.17 V 121"
+         id="path126" />
+      <path
+         d="m 104.5,125.17 h 88"
+         id="path127" />
+      <path
+         d="m 104.5,121 h 88"
+         id="path128" />
+      <path
+         d="m 188.33,125.17 h 4.17"
+         id="path129" />
+      <path
+         d="m 188.33,299 h 4.17"
+         id="path130" />
+      <path
+         d="M 188.33,125.17 V 299"
+         id="path131" />
+      <path
+         d="M 192.5,125.17 V 299"
+         id="path132" />
+      <path
+         d="M 188.33,294.83 V 299"
+         id="path133" />
+      <path
+         d="M 104.5,294.83 V 299"
+         id="path134" />
+      <path
+         d="M 188.33,294.83 H 104.5"
+         id="path135" />
+      <path
+         d="M 188.33,299 H 104.5"
+         id="path136" />
+      <path
+         d="M 108.67,294.83 H 104.5"
+         id="path137" />
+      <path
+         d="M 108.67,125.17 H 104.5"
+         id="path138" />
+      <path
+         d="M 108.67,294.83 V 125.17"
+         id="path139" />
+      <path
+         d="M 104.5,294.83 V 125.17"
+         id="path140" />
+      <path
+         d="M 130.5,161 V 125.17"
+         id="path141" />
+      <path
+         d="M 129.26,125.17 V 161"
+         id="path142" />
+      <path
+         d="m 129.26,161 h 1.24"
+         id="path143" />
+      <path
+         d="m 129,189.05 h 1.24"
+         id="path144" />
+      <path
+         d="m 129,218.25 h 1.24"
+         id="path145" />
+      <path
+         d="m 129,189.05 v 29.2"
+         id="path146" />
+      <path
+         d="m 130.24,189.05 v 29.2"
+         id="path147" />
+      <path
+         d="m 146.32,196.82 h 42.01"
+         id="path148" />
+      <path
+         d="m 146.32,201.75 h 31.416"
+         id="path149" />
+      <path
+         d="m 178.136,201.75 h 0.05"
+         id="path150" />
+      <path
+         d="m 150.68,223.18 v -4.93"
+         id="path151" />
+      <path
+         d="M 150.68,223.18 H 108.67"
+         id="path152" />
+      <path
+         d="m 150.68,218.25 h -4.36"
+         id="path153" />
+      <path
+         d="M 144.8,218.25 H 119.264"
+         id="path154" />
+      <path
+         d="m 118.864,218.25 h -0.05"
+         id="path155" />
+      <path
+         d="m 151.25,199 h -4.93"
+         id="path156" />
+      <path
+         d="M 151.25,201.75 V 199"
+         id="path157" />
+      <path
+         d="m 151.25,201.75 h -0.57"
+         id="path158" />
+      <path
+         d="m 150.68,201.75 v 16.5"
+         id="path159" />
+      <path
+         d="m 151.25,218.25 h -0.57"
+         id="path160" />
+      <path
+         d="m 151.25,221 v -2.75"
+         id="path161" />
+      <path
+         d="m 145.75,221 h 5.5"
+         id="path162" />
+      <path
+         d="M 145.75,218.25 V 221"
+         id="path163" />
+      <path
+         d="m 168,230.95 h -1.24"
+         id="path164" />
+      <path
+         d="m 168,201.75 h -1.24"
+         id="path165" />
+      <path
+         d="m 168,230.95 v -29.2"
+         id="path166" />
+      <path
+         d="m 166.76,230.95 v -29.2"
+         id="path167" />
+      <path
+         d="M 166.76,223.46 H 152.2"
+         id="path168" />
+      <path
+         d="m 152.2,223.46 v 1.24"
+         id="path169" />
+      <path
+         d="m 152.2,224.7 h 14.56"
+         id="path170" />
+      <path
+         d="m 166.76,224.7 v -1.24"
+         id="path171" />
+      <path
+         d="M 167.74,294.83 V 259"
+         id="path172" />
+      <path
+         d="M 167.74,259 H 166.5"
+         id="path173" />
+      <path
+         d="m 166.5,259 v 35.83"
+         id="path174" />
+      <path
+         d="m 192.5,275.77 h 0.25"
+         id="path175" />
+      <path
+         d="m 192.5,289.79 h 0.25"
+         id="path176" />
+      <path
+         d="m 192.75,275.77 v 14.02"
+         id="path177" />
+      <path
+         d="m 188.08,275.77 h 0.25"
+         id="path178" />
+      <path
+         d="m 188.08,289.79 h 0.25"
+         id="path179" />
+      <path
+         d="m 188.08,275.77 v 14.02"
+         id="path180" />
+      <path
+         d="m 104.5,144.23 h -0.25"
+         id="path181" />
+      <path
+         d="m 104.5,130.21 h -0.25"
+         id="path182" />
+      <path
+         d="M 104.25,144.23 V 130.21"
+         id="path183" />
+      <path
+         d="m 108.92,144.23 h -0.25"
+         id="path184" />
+      <path
+         d="m 108.92,130.21 h -0.25"
+         id="path185" />
+      <path
+         d="M 108.92,144.23 V 130.21"
+         id="path186" />
+      <path
+         d="m 166.51,213.15 h 0.25"
+         id="path187" />
+      <path
+         d="m 166.51,222.29 h 0.25"
+         id="path188" />
+      <path
+         d="m 166.51,213.15 v 9.14"
+         id="path189" />
+      <path
+         d="m 168,213.15 h 0.25"
+         id="path190" />
+      <path
+         d="m 168,222.29 h 0.25"
+         id="path191" />
+      <path
+         d="m 168.25,213.15 v 9.14"
+         id="path192" />
+      <path
+         d="m 130.49,206.87 h -0.25"
+         id="path193" />
+      <path
+         d="m 130.49,197.73 h -0.25"
+         id="path194" />
+      <path
+         d="m 130.49,206.87 v -9.14"
+         id="path195" />
+      <path
+         d="m 129,206.87 h -0.25"
+         id="path196" />
+      <path
+         d="m 129,197.73 h -0.25"
+         id="path197" />
+      <path
+         d="m 128.75,206.87 v -9.14"
+         id="path198" />
+      <path
+         d="m 178.686,201.65 v 0.1"
+         id="path199" />
+      <path
+         d="m 187.83,201.65 v 0.1"
+         id="path200" />
+      <path
+         d="m 187.83,201.525 h -9.144"
+         id="path201" />
+      <path
+         d="m 178.686,201.525 v 0.125"
+         id="path202" />
+      <path
+         d="m 178.686,201.65 h 9.144"
+         id="path203" />
+      <path
+         d="m 187.83,201.65 v -0.125"
+         id="path204" />
+      <path
+         d="m 187.83,201.75 h 0.05"
+         id="path205" />
+      <path
+         d="m 187.887,201.75 h 0.386"
+         id="path206" />
+      <path
+         d="m 188.28,201.75 h 0.05"
+         id="path207" />
+      <path
+         d="m 187.83,202.428 h 0.05"
+         id="path208" />
+      <path
+         d="m 188.28,202.428 h 0.05"
+         id="path209" />
+      <path
+         d="m 187.83,201.75 v 0.678"
+         id="path210" />
+      <path
+         d="m 188.33,201.75 v 0.678"
+         id="path211" />
+      <path
+         d="m 187.83,239.25 h 0.05"
+         id="path212" />
+      <path
+         d="m 188.28,239.25 h 0.05"
+         id="path213" />
+      <path
+         d="M 187.83,202.428 V 239.25"
+         id="path214" />
+      <path
+         d="m 178.186,201.75 h 0.05"
+         id="path215" />
+      <path
+         d="m 178.636,201.75 h 0.05"
+         id="path216" />
+      <path
+         d="m 178.186,202.428 h 0.05"
+         id="path217" />
+      <path
+         d="m 178.636,202.428 h 0.05"
+         id="path218" />
+      <path
+         d="m 178.186,201.75 v 0.678"
+         id="path219" />
+      <path
+         d="m 178.686,201.75 v 0.678"
+         id="path220" />
+      <path
+         d="m 178.186,239.25 h 0.05"
+         id="path221" />
+      <path
+         d="m 178.629,239.25 h 0.057"
+         id="path222" />
+      <path
+         d="M 178.186,202.428 V 239.25"
+         id="path223" />
+      <path
+         d="M 178.686,202.428 V 239.25"
+         id="path224" />
+      <path
+         d="m 188.28,239.25 h -0.007"
+         id="path225" />
+      <path
+         d="m 187.88,239.25 h 0.007"
+         id="path226" />
+      <path
+         d="m 188.28,201.75 h -0.007"
+         id="path227" />
+      <path
+         d="m 188.273,201.75 h -0.052"
+         id="path228" />
+      <path
+         d="m 188.221,201.75 h -0.089"
+         id="path229" />
+      <path
+         d="m 188.132,201.75 h -0.104"
+         id="path230" />
+      <path
+         d="m 188.028,201.75 h -0.089"
+         id="path231" />
+      <path
+         d="m 187.939,201.75 h -0.052"
+         id="path232" />
+      <path
+         d="m 187.88,201.75 h 0.007"
+         id="path233" />
+      <path
+         d="m 187.887,201.75 h 0.052"
+         id="path234" />
+      <path
+         d="m 187.939,201.75 h 0.089"
+         id="path235" />
+      <path
+         d="m 188.028,201.75 h 0.104"
+         id="path236" />
+      <path
+         d="m 188.132,201.75 h 0.089"
+         id="path237" />
+      <path
+         d="m 188.221,201.75 h 0.052"
+         id="path238" />
+      <path
+         d="m 187.88,239.25 v -37.5"
+         id="path239" />
+      <path
+         d="m 188.028,201.75 h 0.052"
+         id="path240" />
+      <path
+         d="m 188.08,201.75 v 37.5"
+         id="path241" />
+      <path
+         d="m 188.28,239.25 v -37.5"
+         id="path242" />
+      <path
+         d="M 188.132,201.75 H 188.08"
+         id="path243" />
+      <path
+         d="m 188.273,239.25 v -37.5"
+         id="path244" />
+      <path
+         d="m 188.273,201.75 h -0.02"
+         id="path245" />
+      <path
+         d="m 188.253,201.75 v 37.5"
+         id="path246" />
+      <path
+         d="m 188.273,239.25 h -0.02"
+         id="path247" />
+      <path
+         d="m 188.18,239.25 v -37.5"
+         id="path248" />
+      <path
+         d="M 188.221,239.25 H 188.18"
+         id="path249" />
+      <path
+         d="m 188.221,239.25 v -37.5"
+         id="path250" />
+      <path
+         d="M 188.221,201.75 H 188.18"
+         id="path251" />
+      <path
+         d="m 188.221,201.75 h 0.032"
+         id="path252" />
+      <path
+         d="m 188.221,239.25 h 0.032"
+         id="path253" />
+      <path
+         d="m 188.132,201.75 h 0.048"
+         id="path254" />
+      <path
+         d="m 188.132,239.25 v -37.5"
+         id="path255" />
+      <path
+         d="m 188.132,239.25 h 0.048"
+         id="path256" />
+      <path
+         d="M 188.132,239.25 H 188.08"
+         id="path257" />
+      <path
+         d="m 188.08,239.25 v -37.5"
+         id="path258" />
+      <path
+         d="M 188.132,201.75 H 188.08"
+         id="path259" />
+      <path
+         d="m 188.028,239.25 h 0.052"
+         id="path260" />
+      <path
+         d="m 188.028,239.25 v -37.5"
+         id="path261" />
+      <path
+         d="m 188.028,201.75 h 0.052"
+         id="path262" />
+      <path
+         d="M 188.028,239.25 H 187.98"
+         id="path263" />
+      <path
+         d="M 188.028,201.75 H 187.98"
+         id="path264" />
+      <path
+         d="m 187.98,201.75 v 37.5"
+         id="path265" />
+      <path
+         d="m 187.939,239.25 v -37.5"
+         id="path266" />
+      <path
+         d="m 187.939,239.25 h -0.032"
+         id="path267" />
+      <path
+         d="m 187.907,201.75 v 37.5"
+         id="path268" />
+      <path
+         d="m 187.939,201.75 h -0.032"
+         id="path269" />
+      <path
+         d="m 187.939,201.75 h 0.041"
+         id="path270" />
+      <path
+         d="m 187.939,239.25 h 0.041"
+         id="path271" />
+      <path
+         d="m 187.887,239.25 h 0.02"
+         id="path272" />
+      <path
+         d="m 187.887,239.25 v -37.5"
+         id="path273" />
+      <path
+         d="m 187.887,201.75 h 0.02"
+         id="path274" />
+      <path
+         d="m 178.236,239.25 h 0.007"
+         id="path275" />
+      <path
+         d="m 178.629,239.25 h 0.007"
+         id="path276" />
+      <path
+         d="m 178.636,239.25 h -0.007"
+         id="path277" />
+      <path
+         d="m 178.629,201.699 0.007,-0.017"
+         id="path278" />
+      <path
+         d="M 178.629,239.25 V 201.699"
+         id="path279" />
+      <path
+         d="M 178.636,239.25 V 201.682"
+         id="path280" />
+      <path
+         d="m 178.629,201.699 -0.02,0.017"
+         id="path281" />
+      <path
+         d="M 178.609,201.716 V 239.25"
+         id="path282" />
+      <path
+         d="m 178.629,239.25 h -0.02"
+         id="path283" />
+      <path
+         d="M 178.536,239.25 V 201.741"
+         id="path284" />
+      <path
+         d="m 178.577,201.73 -0.041,0.011"
+         id="path285" />
+      <path
+         d="M 178.577,239.25 V 201.73"
+         id="path286" />
+      <path
+         d="m 178.577,239.25 h -0.041"
+         id="path287" />
+      <path
+         d="m 178.609,201.716 -0.032,0.014"
+         id="path288" />
+      <path
+         d="m 178.577,239.25 h 0.032"
+         id="path289" />
+      <path
+         d="M 178.488,239.25 V 201.748"
+         id="path290" />
+      <path
+         d="m 178.536,201.741 -0.048,0.007"
+         id="path291" />
+      <path
+         d="m 178.488,239.25 h 0.048"
+         id="path292" />
+      <path
+         d="m 178.488,239.25 h -0.052"
+         id="path293" />
+      <path
+         d="m 178.436,239.25 v -37.5"
+         id="path294" />
+      <path
+         d="m 178.488,201.748 -0.052,0.002"
+         id="path295" />
+      <path
+         d="m 178.384,239.25 h 0.052"
+         id="path296" />
+      <path
+         d="m 178.436,201.75 -0.052,-0.002"
+         id="path297" />
+      <path
+         d="M 178.384,239.25 V 201.748"
+         id="path298" />
+      <path
+         d="m 178.384,201.748 -0.048,-0.007"
+         id="path299" />
+      <path
+         d="m 178.384,239.25 h -0.048"
+         id="path300" />
+      <path
+         d="M 178.336,201.741 V 239.25"
+         id="path301" />
+      <path
+         d="M 178.295,239.25 V 201.73"
+         id="path302" />
+      <path
+         d="m 178.295,239.25 h -0.032"
+         id="path303" />
+      <path
+         d="M 178.263,201.716 V 239.25"
+         id="path304" />
+      <path
+         d="m 178.295,201.73 -0.032,-0.014"
+         id="path305" />
+      <path
+         d="m 178.295,239.25 h 0.041"
+         id="path306" />
+      <path
+         d="m 178.336,201.741 -0.041,-0.011"
+         id="path307" />
+      <path
+         d="m 178.263,201.716 -0.02,-0.017"
+         id="path308" />
+      <path
+         d="M 178.243,239.25 V 201.699"
+         id="path309" />
+      <path
+         d="m 178.243,239.25 h 0.02"
+         id="path310" />
+      <path
+         d="M 178.236,239.25 V 201.682"
+         id="path311" />
+      <path
+         d="m 178.243,201.699 -0.007,-0.017"
+         id="path312" />
+      <path
+         d="m 178.384,239.25 h -0.048"
+         id="path313" />
+      <path
+         d="m 178.295,239.25 h -0.032"
+         id="path314" />
+      <path
+         d="m 178.488,239.25 h 0.048"
+         id="path315" />
+      <path
+         d="m 177.736,201.2 h 0.9"
+         id="path316" />
+      <path
+         d="m 177.736,201.2 0.007,0.007"
+         id="path317" />
+      <path
+         d="m 177.743,201.207 h 0.886"
+         id="path318" />
+      <path
+         d="m 178.629,201.207 0.007,-0.007"
+         id="path319" />
+      <path
+         d="m 177.743,201.207 0.02,0.02"
+         id="path320" />
+      <path
+         d="m 177.763,201.227 h 0.846"
+         id="path321" />
+      <path
+         d="m 178.629,201.207 -0.02,0.02"
+         id="path322" />
+      <path
+         d="m 177.795,201.259 h 0.782"
+         id="path323" />
+      <path
+         d="m 177.795,201.259 0.041,0.041"
+         id="path324" />
+      <path
+         d="m 177.836,201.3 h 0.7"
+         id="path325" />
+      <path
+         d="m 178.536,201.3 0.041,-0.041"
+         id="path326" />
+      <path
+         d="m 177.763,201.227 0.032,0.032"
+         id="path327" />
+      <path
+         d="m 178.609,201.227 -0.032,0.032"
+         id="path328" />
+      <path
+         d="m 177.836,201.3 0.048,0.048"
+         id="path329" />
+      <path
+         d="m 177.884,201.348 h 0.604"
+         id="path330" />
+      <path
+         d="m 178.536,201.3 -0.048,0.048"
+         id="path331" />
+      <path
+         d="m 178.436,201.4 h -0.5"
+         id="path332" />
+      <path
+         d="m 178.488,201.348 -0.052,0.052"
+         id="path333" />
+      <path
+         d="m 177.884,201.348 0.052,0.052"
+         id="path334" />
+      <path
+         d="m 177.988,201.452 h 0.396"
+         id="path335" />
+      <path
+         d="m 177.988,201.452 0.048,0.048"
+         id="path336" />
+      <path
+         d="m 178.036,201.5 h 0.3"
+         id="path337" />
+      <path
+         d="m 178.336,201.5 0.048,-0.048"
+         id="path338" />
+      <path
+         d="m 177.936,201.4 0.052,0.052"
+         id="path339" />
+      <path
+         d="m 178.436,201.4 -0.052,0.052"
+         id="path340" />
+      <path
+         d="m 178.263,201.573 h -0.154"
+         id="path341" />
+      <path
+         d="m 178.263,201.573 -0.02,0.02"
+         id="path342" />
+      <path
+         d="m 178.243,201.593 h -0.114"
+         id="path343" />
+      <path
+         d="m 178.129,201.593 -0.02,-0.02"
+         id="path344" />
+      <path
+         d="m 178.295,201.541 h -0.218"
+         id="path345" />
+      <path
+         d="m 178.263,201.573 0.032,-0.032"
+         id="path346" />
+      <path
+         d="m 178.109,201.573 -0.032,-0.032"
+         id="path347" />
+      <path
+         d="m 178.036,201.5 0.041,0.041"
+         id="path348" />
+      <path
+         d="m 178.336,201.5 -0.041,0.041"
+         id="path349" />
+      <path
+         d="m 178.136,201.6 h 0.1"
+         id="path350" />
+      <path
+         d="m 178.129,201.593 0.007,0.007"
+         id="path351" />
+      <path
+         d="m 178.243,201.593 -0.007,0.007"
+         id="path352" />
+      <path
+         d="m 178.136,236.45 h -0.007"
+         id="path353" />
+      <path
+         d="m 177.736,236.45 h 0.007"
+         id="path354" />
+      <path
+         d="m 177.743,236.45 h 0.02"
+         id="path355" />
+      <path
+         d="m 177.763,236.45 h 0.032"
+         id="path356" />
+      <path
+         d="m 177.795,236.45 h 0.041"
+         id="path357" />
+      <path
+         d="m 177.836,236.45 h 0.048"
+         id="path358" />
+      <path
+         d="m 177.884,236.45 h 0.052"
+         id="path359" />
+      <path
+         d="m 177.936,236.45 h 0.052"
+         id="path360" />
+      <path
+         d="m 177.988,236.45 h 0.048"
+         id="path361" />
+      <path
+         d="m 178.036,236.45 h 0.041"
+         id="path362" />
+      <path
+         d="m 178.077,236.45 h 0.032"
+         id="path363" />
+      <path
+         d="m 178.109,236.45 h 0.02"
+         id="path364" />
+      <path
+         d="m 177.736,201.2 v 35.25"
+         id="path365" />
+      <path
+         d="M 177.743,201.207 V 236.45"
+         id="path366" />
+      <path
+         d="M 177.763,201.227 V 236.45"
+         id="path367" />
+      <path
+         d="M 177.795,201.259 V 236.45"
+         id="path368" />
+      <path
+         d="m 177.836,201.3 v 35.15"
+         id="path369" />
+      <path
+         d="M 177.884,201.348 V 236.45"
+         id="path370" />
+      <path
+         d="m 177.936,201.4 v 35.05"
+         id="path371" />
+      <path
+         d="M 177.988,201.452 V 236.45"
+         id="path372" />
+      <path
+         d="m 178.036,201.5 v 34.95"
+         id="path373" />
+      <path
+         d="M 178.077,201.541 V 236.45"
+         id="path374" />
+      <path
+         d="M 178.109,201.573 V 236.45"
+         id="path375" />
+      <path
+         d="M 178.129,201.593 V 236.45"
+         id="path376" />
+      <path
+         d="m 178.136,201.6 v 34.85"
+         id="path377" />
+      <path
+         d="M 178.636,201.682 V 201.2"
+         id="path378" />
+      <path
+         d="m 178.629,201.699 v -0.492"
+         id="path379" />
+      <path
+         d="m 178.609,201.716 v -0.489"
+         id="path380" />
+      <path
+         d="m 178.577,201.73 v -0.471"
+         id="path381" />
+      <path
+         d="M 178.536,201.741 V 201.3"
+         id="path382" />
+      <path
+         d="m 178.488,201.748 v -0.4"
+         id="path383" />
+      <path
+         d="M 178.436,201.75 V 201.4"
+         id="path384" />
+      <path
+         d="m 178.384,201.748 v -0.296"
+         id="path385" />
+      <path
+         d="M 178.336,201.741 V 201.5"
+         id="path386" />
+      <path
+         d="m 178.263,201.716 v -0.143"
+         id="path387" />
+      <path
+         d="m 178.243,201.699 v -0.106"
+         id="path388" />
+      <path
+         d="m 178.295,201.73 v -0.189"
+         id="path389" />
+      <path
+         d="M 178.236,201.682 V 201.6"
+         id="path390" />
+      <path
+         d="m 164.737,189.046 h 1.016"
+         id="path391" />
+      <path
+         d="m 159.927,189.046 h 1.016"
+         id="path392" />
+      <path
+         d="m 163.189,189.046 h 0.127"
+         id="path393" />
+      <path
+         d="m 162.364,189.046 h 0.127"
+         id="path394" />
+      <path
+         d="m 165.753,189.046 v 0.004"
+         id="path395" />
+      <path
+         d="m 164.737,189.046 v 0.004"
+         id="path396" />
+      <path
+         d="m 160.943,189.046 v 0.004"
+         id="path397" />
+      <path
+         d="m 159.927,189.046 v 0.004"
+         id="path398" />
+      <path
+         d="m 163.316,189.046 v 0.004"
+         id="path399" />
+      <path
+         d="m 163.189,189.046 v 0.004"
+         id="path400" />
+      <path
+         d="m 162.491,189.046 v 0.004"
+         id="path401" />
+      <path
+         d="m 162.364,189.046 v 0.004"
+         id="path402" />
+      <path
+         d="m 154.737,189.046 h 1.016"
+         id="path403" />
+      <path
+         d="m 149.927,189.046 h 1.016"
+         id="path404" />
+      <path
+         d="m 153.189,189.046 h 0.127"
+         id="path405" />
+      <path
+         d="m 152.364,189.046 h 0.127"
+         id="path406" />
+      <path
+         d="m 155.753,189.046 v 0.004"
+         id="path407" />
+      <path
+         d="m 154.737,189.046 v 0.004"
+         id="path408" />
+      <path
+         d="m 150.943,189.046 v 0.004"
+         id="path409" />
+      <path
+         d="m 149.927,189.046 v 0.004"
+         id="path410" />
+      <path
+         d="m 153.316,189.046 v 0.004"
+         id="path411" />
+      <path
+         d="m 153.189,189.046 v 0.004"
+         id="path412" />
+      <path
+         d="m 152.491,189.046 v 0.004"
+         id="path413" />
+      <path
+         d="m 152.364,189.046 v 0.004"
+         id="path414" />
+      <path
+         d="m 137.137,189.046 h 1.016"
+         id="path415" />
+      <path
+         d="m 132.327,189.046 h 1.016"
+         id="path416" />
+      <path
+         d="m 135.589,189.046 h 0.127"
+         id="path417" />
+      <path
+         d="m 134.764,189.046 h 0.127"
+         id="path418" />
+      <path
+         d="m 138.153,189.046 v 0.004"
+         id="path419" />
+      <path
+         d="m 137.137,189.046 v 0.004"
+         id="path420" />
+      <path
+         d="m 133.343,189.046 v 0.004"
+         id="path421" />
+      <path
+         d="m 132.327,189.046 v 0.004"
+         id="path422" />
+      <path
+         d="m 135.716,189.046 v 0.004"
+         id="path423" />
+      <path
+         d="m 135.589,189.046 v 0.004"
+         id="path424" />
+      <path
+         d="m 134.891,189.046 v 0.004"
+         id="path425" />
+      <path
+         d="m 134.764,189.046 v 0.004"
+         id="path426" />
+      <path
+         d="m 133.343,179.254 h -1.016"
+         id="path427" />
+      <path
+         d="m 138.153,179.254 h -1.016"
+         id="path428" />
+      <path
+         d="m 134.891,179.254 h -0.127"
+         id="path429" />
+      <path
+         d="m 135.716,179.254 h -0.127"
+         id="path430" />
+      <path
+         d="M 132.327,179.254 V 179.13"
+         id="path431" />
+      <path
+         d="M 133.343,179.254 V 179.13"
+         id="path432" />
+      <path
+         d="M 137.137,179.254 V 179.13"
+         id="path433" />
+      <path
+         d="M 138.153,179.254 V 179.13"
+         id="path434" />
+      <path
+         d="M 134.764,179.254 V 179.13"
+         id="path435" />
+      <path
+         d="M 134.891,179.254 V 179.13"
+         id="path436" />
+      <path
+         d="M 135.589,179.254 V 179.13"
+         id="path437" />
+      <path
+         d="M 135.716,179.254 V 179.13"
+         id="path438" />
+      <path
+         d="m 143.343,179.254 h -1.016"
+         id="path439" />
+      <path
+         d="m 148.153,179.254 h -1.016"
+         id="path440" />
+      <path
+         d="m 144.891,179.254 h -0.127"
+         id="path441" />
+      <path
+         d="m 145.716,179.254 h -0.127"
+         id="path442" />
+      <path
+         d="M 142.327,179.254 V 179.13"
+         id="path443" />
+      <path
+         d="M 143.343,179.254 V 179.13"
+         id="path444" />
+      <path
+         d="M 147.137,179.254 V 179.13"
+         id="path445" />
+      <path
+         d="M 148.153,179.254 V 179.13"
+         id="path446" />
+      <path
+         d="M 144.764,179.254 V 179.13"
+         id="path447" />
+      <path
+         d="M 144.891,179.254 V 179.13"
+         id="path448" />
+      <path
+         d="M 145.589,179.254 V 179.13"
+         id="path449" />
+      <path
+         d="M 145.716,179.254 V 179.13"
+         id="path450" />
+      <path
+         d="m 153.343,179.254 h -1.016"
+         id="path451" />
+      <path
+         d="m 158.153,179.254 h -1.016"
+         id="path452" />
+      <path
+         d="m 154.891,179.254 h -0.127"
+         id="path453" />
+      <path
+         d="m 155.716,179.254 h -0.127"
+         id="path454" />
+      <path
+         d="M 152.327,179.254 V 179.13"
+         id="path455" />
+      <path
+         d="M 153.343,179.254 V 179.13"
+         id="path456" />
+      <path
+         d="M 157.137,179.254 V 179.13"
+         id="path457" />
+      <path
+         d="M 158.153,179.254 V 179.13"
+         id="path458" />
+      <path
+         d="M 154.764,179.254 V 179.13"
+         id="path459" />
+      <path
+         d="M 154.891,179.254 V 179.13"
+         id="path460" />
+      <path
+         d="M 155.589,179.254 V 179.13"
+         id="path461" />
+      <path
+         d="M 155.716,179.254 V 179.13"
+         id="path462" />
+      <path
+         d="m 163.343,179.254 h -1.016"
+         id="path463" />
+      <path
+         d="m 168.153,179.254 h -1.016"
+         id="path464" />
+      <path
+         d="m 164.891,179.254 h -0.127"
+         id="path465" />
+      <path
+         d="m 165.716,179.254 h -0.127"
+         id="path466" />
+      <path
+         d="M 162.327,179.254 V 179.13"
+         id="path467" />
+      <path
+         d="M 163.343,179.254 V 179.13"
+         id="path468" />
+      <path
+         d="M 167.137,179.254 V 179.13"
+         id="path469" />
+      <path
+         d="M 168.153,179.254 V 179.13"
+         id="path470" />
+      <path
+         d="M 164.764,179.254 V 179.13"
+         id="path471" />
+      <path
+         d="M 164.891,179.254 V 179.13"
+         id="path472" />
+      <path
+         d="M 165.589,179.254 V 179.13"
+         id="path473" />
+      <path
+         d="M 165.716,179.254 V 179.13"
+         id="path474" />
+      <path
+         d="m 132.263,230.954 h -1.016"
+         id="path475" />
+      <path
+         d="m 137.073,230.954 h -1.016"
+         id="path476" />
+      <path
+         d="m 133.811,230.954 h -0.127"
+         id="path477" />
+      <path
+         d="m 134.636,230.954 h -0.127"
+         id="path478" />
+      <path
+         d="M 131.247,230.954 V 230.95"
+         id="path479" />
+      <path
+         d="M 132.263,230.954 V 230.95"
+         id="path480" />
+      <path
+         d="M 136.057,230.954 V 230.95"
+         id="path481" />
+      <path
+         d="M 137.073,230.954 V 230.95"
+         id="path482" />
+      <path
+         d="M 133.684,230.954 V 230.95"
+         id="path483" />
+      <path
+         d="M 133.811,230.954 V 230.95"
+         id="path484" />
+      <path
+         d="M 134.509,230.954 V 230.95"
+         id="path485" />
+      <path
+         d="M 134.636,230.954 V 230.95"
+         id="path486" />
+      <path
+         d="m 142.263,230.954 h -1.016"
+         id="path487" />
+      <path
+         d="m 147.073,230.954 h -1.016"
+         id="path488" />
+      <path
+         d="m 143.811,230.954 h -0.127"
+         id="path489" />
+      <path
+         d="m 144.636,230.954 h -0.127"
+         id="path490" />
+      <path
+         d="M 141.247,230.954 V 230.95"
+         id="path491" />
+      <path
+         d="M 142.263,230.954 V 230.95"
+         id="path492" />
+      <path
+         d="M 146.057,230.954 V 230.95"
+         id="path493" />
+      <path
+         d="M 147.073,230.954 V 230.95"
+         id="path494" />
+      <path
+         d="M 143.684,230.954 V 230.95"
+         id="path495" />
+      <path
+         d="M 143.811,230.954 V 230.95"
+         id="path496" />
+      <path
+         d="M 144.509,230.954 V 230.95"
+         id="path497" />
+      <path
+         d="M 144.636,230.954 V 230.95"
+         id="path498" />
+      <path
+         d="m 159.863,230.954 h -1.016"
+         id="path499" />
+      <path
+         d="m 164.673,230.954 h -1.016"
+         id="path500" />
+      <path
+         d="m 161.411,230.954 h -0.127"
+         id="path501" />
+      <path
+         d="m 162.236,230.954 h -0.127"
+         id="path502" />
+      <path
+         d="M 158.847,230.954 V 230.95"
+         id="path503" />
+      <path
+         d="M 159.863,230.954 V 230.95"
+         id="path504" />
+      <path
+         d="M 163.657,230.954 V 230.95"
+         id="path505" />
+      <path
+         d="M 164.673,230.954 V 230.95"
+         id="path506" />
+      <path
+         d="M 161.284,230.954 V 230.95"
+         id="path507" />
+      <path
+         d="M 161.411,230.954 V 230.95"
+         id="path508" />
+      <path
+         d="M 162.109,230.954 V 230.95"
+         id="path509" />
+      <path
+         d="M 162.236,230.954 V 230.95"
+         id="path510" />
+      <path
+         d="m 163.657,240.746 h 1.016"
+         id="path511" />
+      <path
+         d="m 158.847,240.746 h 1.016"
+         id="path512" />
+      <path
+         d="m 162.109,240.746 h 0.127"
+         id="path513" />
+      <path
+         d="m 161.284,240.746 h 0.127"
+         id="path514" />
+      <path
+         d="m 164.673,240.746 v 0.124"
+         id="path515" />
+      <path
+         d="m 163.657,240.746 v 0.124"
+         id="path516" />
+      <path
+         d="m 159.863,240.746 v 0.124"
+         id="path517" />
+      <path
+         d="m 158.847,240.746 v 0.124"
+         id="path518" />
+      <path
+         d="m 162.236,240.746 v 0.124"
+         id="path519" />
+      <path
+         d="m 162.109,240.746 v 0.124"
+         id="path520" />
+      <path
+         d="m 161.411,240.746 v 0.124"
+         id="path521" />
+      <path
+         d="m 161.284,240.746 v 0.124"
+         id="path522" />
+      <path
+         d="m 153.657,240.746 h 1.016"
+         id="path523" />
+      <path
+         d="m 148.847,240.746 h 1.016"
+         id="path524" />
+      <path
+         d="m 152.109,240.746 h 0.127"
+         id="path525" />
+      <path
+         d="m 151.284,240.746 h 0.127"
+         id="path526" />
+      <path
+         d="m 154.673,240.746 v 0.124"
+         id="path527" />
+      <path
+         d="m 153.657,240.746 v 0.124"
+         id="path528" />
+      <path
+         d="m 149.863,240.746 v 0.124"
+         id="path529" />
+      <path
+         d="m 148.847,240.746 v 0.124"
+         id="path530" />
+      <path
+         d="m 152.236,240.746 v 0.124"
+         id="path531" />
+      <path
+         d="m 152.109,240.746 v 0.124"
+         id="path532" />
+      <path
+         d="m 151.411,240.746 v 0.124"
+         id="path533" />
+      <path
+         d="m 151.284,240.746 v 0.124"
+         id="path534" />
+      <path
+         d="m 143.657,240.746 h 1.016"
+         id="path535" />
+      <path
+         d="m 138.847,240.746 h 1.016"
+         id="path536" />
+      <path
+         d="m 142.109,240.746 h 0.127"
+         id="path537" />
+      <path
+         d="m 141.284,240.746 h 0.127"
+         id="path538" />
+      <path
+         d="m 144.673,240.746 v 0.124"
+         id="path539" />
+      <path
+         d="m 143.657,240.746 v 0.124"
+         id="path540" />
+      <path
+         d="m 139.863,240.746 v 0.124"
+         id="path541" />
+      <path
+         d="m 138.847,240.746 v 0.124"
+         id="path542" />
+      <path
+         d="m 142.236,240.746 v 0.124"
+         id="path543" />
+      <path
+         d="m 142.109,240.746 v 0.124"
+         id="path544" />
+      <path
+         d="m 141.411,240.746 v 0.124"
+         id="path545" />
+      <path
+         d="m 141.284,240.746 v 0.124"
+         id="path546" />
+      <path
+         d="m 133.657,240.746 h 1.016"
+         id="path547" />
+      <path
+         d="m 128.847,240.746 h 1.016"
+         id="path548" />
+      <path
+         d="m 132.109,240.746 h 0.127"
+         id="path549" />
+      <path
+         d="m 131.284,240.746 h 0.127"
+         id="path550" />
+      <path
+         d="m 134.673,240.746 v 0.124"
+         id="path551" />
+      <path
+         d="m 133.657,240.746 v 0.124"
+         id="path552" />
+      <path
+         d="m 129.863,240.746 v 0.124"
+         id="path553" />
+      <path
+         d="m 128.847,240.746 v 0.124"
+         id="path554" />
+      <path
+         d="m 132.236,240.746 v 0.124"
+         id="path555" />
+      <path
+         d="m 132.109,240.746 v 0.124"
+         id="path556" />
+      <path
+         d="m 131.411,240.746 v 0.124"
+         id="path557" />
+      <path
+         d="m 131.284,240.746 v 0.124"
+         id="path558" />
+      <path
+         d="m 177.839,189.304 h 0.001"
+         id="path559" />
+      <path
+         d="M 177.84,189.304 V 195.3"
+         id="path560" />
+      <path
+         d="M 119.161,230.7 H 119.16"
+         id="path561" />
+      <path
+         d="m 119.16,230.7 v -6"
+         id="path562" />
+      <path
+         d="m 126.057,230.954 h 1.016"
+         id="path563" />
+      <path
+         d="m 121.247,230.954 h 1.016"
+         id="path564" />
+      <path
+         d="m 124.509,230.954 h 0.127"
+         id="path565" />
+      <path
+         d="m 123.684,230.954 h 0.127"
+         id="path566" />
+      <path
+         d="M 127.073,230.954 V 230.95"
+         id="path567" />
+      <path
+         d="M 126.057,230.954 V 230.95"
+         id="path568" />
+      <path
+         d="M 122.263,230.954 V 230.95"
+         id="path569" />
+      <path
+         d="M 121.247,230.954 V 230.95"
+         id="path570" />
+      <path
+         d="M 124.636,230.954 V 230.95"
+         id="path571" />
+      <path
+         d="M 124.509,230.954 V 230.95"
+         id="path572" />
+      <path
+         d="M 123.811,230.954 V 230.95"
+         id="path573" />
+      <path
+         d="M 123.684,230.954 V 230.95"
+         id="path574" />
+      <path
+         d="m 177.839,195.11 h -30"
+         id="path575" />
+      <path
+         d="m 177.839,195.3 v -0.19"
+         id="path576" />
+      <path
+         d="m 147.839,195.3 v -0.19"
+         id="path577" />
+      <path
+         d="m 177.839,189.05 h -30"
+         id="path578" />
+      <path
+         d="m 177.839,195.11 v -6.06"
+         id="path579" />
+      <path
+         d="m 147.839,195.11 v -6.06"
+         id="path580" />
+      <path
+         d="m 140.24,195.3 v -0.191"
+         id="path581" />
+      <path
+         d="m 140.24,195.109 h -10"
+         id="path582" />
+      <path
+         d="M 140.24,195.109 V 189.05"
+         id="path583" />
+      <path
+         d="m 140.24,189.05 h -10"
+         id="path584" />
+      <path
+         d="m 156.76,224.7 v 0.191"
+         id="path585" />
+      <path
+         d="m 156.76,224.891 h 10"
+         id="path586" />
+      <path
+         d="m 156.76,224.891 v 6.059"
+         id="path587" />
+      <path
+         d="m 156.76,230.95 h 10"
+         id="path588" />
+      <path
+         d="m 130.12,172.88 v 0.191"
+         id="path589" />
+      <path
+         d="m 130.12,173.071 h 40.24"
+         id="path590" />
+      <path
+         d="M 170.36,173.071 V 172.88"
+         id="path591" />
+      <path
+         d="M 170.36,172.88 H 130.12"
+         id="path592" />
+      <path
+         d="m 130.12,173.071 v 6.059"
+         id="path593" />
+      <path
+         d="m 130.12,179.13 h 40.24"
+         id="path594" />
+      <path
+         d="m 170.36,179.13 v -6.059"
+         id="path595" />
+      <path
+         d="m 166.88,247.12 v -0.19"
+         id="path596" />
+      <path
+         d="M 166.88,246.93 H 126.64"
+         id="path597" />
+      <path
+         d="m 126.64,246.93 v 0.19"
+         id="path598" />
+      <path
+         d="m 126.64,247.12 h 40.24"
+         id="path599" />
+      <path
+         d="m 166.88,246.93 v -6.06"
+         id="path600" />
+      <path
+         d="M 166.88,240.87 H 126.64"
+         id="path601" />
+      <path
+         d="m 126.64,240.87 v 6.06"
+         id="path602" />
+      <path
+         d="m 149.161,224.7 v 0.191"
+         id="path603" />
+      <path
+         d="m 119.161,224.891 h 30"
+         id="path604" />
+      <path
+         d="m 119.161,224.7 v 0.191"
+         id="path605" />
+      <path
+         d="m 132.638,225.573 -0.194,0.039 -0.165,0.11 -0.11,0.165 -0.039,0.194"
+         id="path606" />
+      <path
+         d="m 132.13,229.099 0.039,0.194 0.11,0.165 0.165,0.11 0.194,0.039"
+         id="path607" />
+      <path
+         d="m 135.684,229.607 0.194,-0.039 0.165,-0.11 0.11,-0.165 0.039,-0.194"
+         id="path608" />
+      <path
+         d="m 136.192,226.081 -0.039,-0.194 -0.11,-0.165 -0.165,-0.11 -0.194,-0.039"
+         id="path609" />
+      <path
+         d="m 119.161,224.891 v 6.059"
+         id="path610" />
+      <path
+         d="m 149.161,224.891 v 6.059"
+         id="path611" />
+      <path
+         d="m 119.161,230.95 h 30"
+         id="path612" />
+      <path
+         d="m 136.192,229.099 v -3.018"
+         id="path613" />
+      <path
+         d="m 132.638,229.607 h 3.046"
+         id="path614" />
+      <path
+         d="m 132.13,226.081 v 3.018"
+         id="path615" />
+      <path
+         d="m 135.684,225.573 h -3.046"
+         id="path616" />
+      <path
+         d="m 187.632,135.358 v 17.284"
+         id="path617" />
+      <path
+         d="m 185.531,135.358 h 0.077"
+         id="path618" />
+      <path
+         d="m 185.608,135.358 h 0.193"
+         id="path619" />
+      <path
+         d="m 185.801,135.358 h 0.307"
+         id="path620" />
+      <path
+         d="m 186.108,135.358 h 1.016"
+         id="path621" />
+      <path
+         d="m 187.124,152.642 h -1.016"
+         id="path622" />
+      <path
+         d="m 186.108,152.642 h -0.307"
+         id="path623" />
+      <path
+         d="m 185.801,152.642 h -0.193"
+         id="path624" />
+      <path
+         d="m 185.608,152.642 h -0.077"
+         id="path625" />
+      <path
+         d="m 185.531,135.358 v 17.284"
+         id="path626" />
+      <path
+         d="m 185.608,135.358 v 17.284"
+         id="path627" />
+      <path
+         d="m 185.801,135.358 v 17.284"
+         id="path628" />
+      <path
+         d="m 186.108,135.358 v 17.284"
+         id="path629" />
+      <path
+         d="m 187.124,135.358 v 17.284"
+         id="path630" />
+      <path
+         d="m 181.548,135.358 v 17.284"
+         id="path631" />
+      <path
+         d="m 181.581,135.358 v 17.284"
+         id="path632" />
+      <path
+         d="m 181.554,135.358 v 17.284"
+         id="path633" />
+      <path
+         d="m 181.675,135.358 v 17.284"
+         id="path634" />
+      <path
+         d="m 181.623,135.358 v 17.284"
+         id="path635" />
+      <path
+         d="M 187.632,135.358 V 134.85"
+         id="path636" />
+      <path
+         d="m 187.632,135.358 h -0.508"
+         id="path637" />
+      <path
+         d="m 185.608,135.358 h -4.58"
+         id="path638" />
+      <path
+         d="M 181.028,135.358 V 134.85"
+         id="path639" />
+      <path
+         d="m 181.028,134.85 h 6.604"
+         id="path640" />
+      <path
+         d="m 187.632,153.15 v -0.508"
+         id="path641" />
+      <path
+         d="m 187.632,153.15 h -6.604"
+         id="path642" />
+      <path
+         d="m 181.028,153.15 v -0.508"
+         id="path643" />
+      <path
+         d="m 181.028,152.642 h 4.58"
+         id="path644" />
+      <path
+         d="m 187.124,152.642 h 0.508"
+         id="path645" />
+      <path
+         d="M 175.972,160.302 H 158.688"
+         id="path646" />
+      <path
+         d="m 175.972,158.201 v 0.077"
+         id="path647" />
+      <path
+         d="m 175.972,158.278 v 0.193"
+         id="path648" />
+      <path
+         d="m 175.972,158.471 v 0.307"
+         id="path649" />
+      <path
+         d="m 175.972,158.778 v 1.016"
+         id="path650" />
+      <path
+         d="m 158.688,159.794 v -1.016"
+         id="path651" />
+      <path
+         d="m 158.688,158.778 v -0.307"
+         id="path652" />
+      <path
+         d="m 158.688,158.471 v -0.193"
+         id="path653" />
+      <path
+         d="m 158.688,158.278 v -0.077"
+         id="path654" />
+      <path
+         d="M 175.972,158.201 H 158.688"
+         id="path655" />
+      <path
+         d="M 175.972,158.278 H 158.688"
+         id="path656" />
+      <path
+         d="M 175.972,158.471 H 158.688"
+         id="path657" />
+      <path
+         d="M 175.972,158.778 H 158.688"
+         id="path658" />
+      <path
+         d="M 175.972,159.794 H 158.688"
+         id="path659" />
+      <path
+         d="M 175.972,154.218 H 158.688"
+         id="path660" />
+      <path
+         d="M 175.972,154.251 H 158.688"
+         id="path661" />
+      <path
+         d="M 175.972,154.224 H 158.688"
+         id="path662" />
+      <path
+         d="M 175.972,154.345 H 158.688"
+         id="path663" />
+      <path
+         d="M 175.972,154.293 H 158.688"
+         id="path664" />
+      <path
+         d="m 175.972,160.302 h 0.508"
+         id="path665" />
+      <path
+         d="m 175.972,160.302 v -0.508"
+         id="path666" />
+      <path
+         d="m 175.972,158.278 v -4.58"
+         id="path667" />
+      <path
+         d="m 175.972,153.698 h 0.508"
+         id="path668" />
+      <path
+         d="m 176.48,153.698 v 6.604"
+         id="path669" />
+      <path
+         d="m 158.18,160.302 h 0.508"
+         id="path670" />
+      <path
+         d="m 158.18,160.302 v -6.604"
+         id="path671" />
+      <path
+         d="m 158.18,153.698 h 0.508"
+         id="path672" />
+      <path
+         d="m 158.688,153.698 v 4.58"
+         id="path673" />
+      <path
+         d="m 158.688,159.794 v 0.508"
+         id="path674" />
+      <path
+         d="M 110.207,283.196 V 265.912"
+         id="path675" />
+      <path
+         d="m 112.308,283.196 h -0.077"
+         id="path676" />
+      <path
+         d="m 112.231,283.196 h -0.193"
+         id="path677" />
+      <path
+         d="m 112.038,283.196 h -0.307"
+         id="path678" />
+      <path
+         d="m 111.731,283.196 h -1.016"
+         id="path679" />
+      <path
+         d="m 110.715,265.912 h 1.016"
+         id="path680" />
+      <path
+         d="m 111.731,265.912 h 0.307"
+         id="path681" />
+      <path
+         d="m 112.038,265.912 h 0.193"
+         id="path682" />
+      <path
+         d="m 112.231,265.912 h 0.077"
+         id="path683" />
+      <path
+         d="M 112.308,283.196 V 265.912"
+         id="path684" />
+      <path
+         d="M 112.231,283.196 V 265.912"
+         id="path685" />
+      <path
+         d="M 112.038,283.196 V 265.912"
+         id="path686" />
+      <path
+         d="M 111.731,283.196 V 265.912"
+         id="path687" />
+      <path
+         d="M 110.715,283.196 V 265.912"
+         id="path688" />
+      <path
+         d="M 116.291,283.196 V 265.912"
+         id="path689" />
+      <path
+         d="M 116.258,283.196 V 265.912"
+         id="path690" />
+      <path
+         d="M 116.285,283.196 V 265.912"
+         id="path691" />
+      <path
+         d="M 116.164,283.196 V 265.912"
+         id="path692" />
+      <path
+         d="M 116.216,283.196 V 265.912"
+         id="path693" />
+      <path
+         d="m 110.207,283.196 v 0.508"
+         id="path694" />
+      <path
+         d="m 110.207,283.196 h 0.508"
+         id="path695" />
+      <path
+         d="m 112.231,283.196 h 4.58"
+         id="path696" />
+      <path
+         d="m 116.811,283.196 v 0.508"
+         id="path697" />
+      <path
+         d="m 116.811,283.704 h -6.604"
+         id="path698" />
+      <path
+         d="m 110.207,265.404 v 0.508"
+         id="path699" />
+      <path
+         d="m 110.207,265.404 h 6.604"
+         id="path700" />
+      <path
+         d="m 116.811,265.404 v 0.508"
+         id="path701" />
+      <path
+         d="m 116.811,265.912 h -4.58"
+         id="path702" />
+      <path
+         d="m 110.715,265.912 h -0.508"
+         id="path703" />
+      <path
+         d="m 121.867,258.252 h 17.284"
+         id="path704" />
+      <path
+         d="m 121.867,260.353 v -0.077"
+         id="path705" />
+      <path
+         d="m 121.867,260.276 v -0.194"
+         id="path706" />
+      <path
+         d="m 121.867,260.082 v -0.306"
+         id="path707" />
+      <path
+         d="M 121.867,259.776 V 258.76"
+         id="path708" />
+      <path
+         d="m 139.151,258.76 v 1.016"
+         id="path709" />
+      <path
+         d="m 139.151,259.776 v 0.306"
+         id="path710" />
+      <path
+         d="m 139.151,260.082 v 0.194"
+         id="path711" />
+      <path
+         d="m 139.151,260.276 v 0.077"
+         id="path712" />
+      <path
+         d="m 121.867,260.353 h 17.284"
+         id="path713" />
+      <path
+         d="m 121.867,260.276 h 17.284"
+         id="path714" />
+      <path
+         d="m 121.867,260.082 h 17.284"
+         id="path715" />
+      <path
+         d="m 121.867,259.776 h 17.284"
+         id="path716" />
+      <path
+         d="m 121.867,258.76 h 17.284"
+         id="path717" />
+      <path
+         d="m 121.867,264.336 h 17.284"
+         id="path718" />
+      <path
+         d="m 121.867,264.303 h 17.284"
+         id="path719" />
+      <path
+         d="m 121.867,264.329 h 17.284"
+         id="path720" />
+      <path
+         d="m 121.867,264.209 h 17.284"
+         id="path721" />
+      <path
+         d="m 121.867,264.26 h 17.284"
+         id="path722" />
+      <path
+         d="m 121.867,258.252 h -0.508"
+         id="path723" />
+      <path
+         d="m 121.867,258.252 v 0.508"
+         id="path724" />
+      <path
+         d="m 121.867,260.276 v 4.58"
+         id="path725" />
+      <path
+         d="m 121.867,264.856 h -0.508"
+         id="path726" />
+      <path
+         d="m 121.359,264.856 v -6.604"
+         id="path727" />
+      <path
+         d="m 139.659,258.252 h -0.508"
+         id="path728" />
+      <path
+         d="m 139.659,258.252 v 6.604"
+         id="path729" />
+      <path
+         d="m 139.659,264.856 h -0.508"
+         id="path730" />
+      <path
+         d="m 139.151,264.856 v -4.58"
+         id="path731" />
+      <path
+         d="m 139.151,258.76 v -0.508"
+         id="path732" />
+      <path
+         d="m 183.364,154.966 h -4.068"
+         id="path733" />
+      <path
+         d="m 179.296,154.966 v 4.068"
+         id="path734" />
+      <path
+         d="m 179.296,159.034 h 4.068"
+         id="path735" />
+      <path
+         d="m 183.364,159.034 v -4.068"
+         id="path736" />
+      <path
+         d="m 184.38,153.95 h -6.1"
+         id="path737" />
+      <path
+         d="m 178.28,153.95 v 6.1"
+         id="path738" />
+      <path
+         d="m 178.28,160.05 h 6.1"
+         id="path739" />
+      <path
+         d="m 184.38,160.05 v -6.1"
+         id="path740" />
+      <path
+         d="m 183.364,154.966 v 4.068"
+         id="path741" />
+      <path
+         d="m 183.364,159.034 h -4.068"
+         id="path742" />
+      <path
+         d="m 179.296,159.034 v -4.068"
+         id="path743" />
+      <path
+         d="m 179.296,154.966 h 4.068"
+         id="path744" />
+      <path
+         d="m 186.364,128.136 h -4.068"
+         id="path745" />
+      <path
+         d="m 182.296,128.136 v 4.068"
+         id="path746" />
+      <path
+         d="m 182.296,132.204 h 4.068"
+         id="path747" />
+      <path
+         d="m 186.364,132.204 v -4.068"
+         id="path748" />
+      <path
+         d="m 187.38,127.12 h -6.1"
+         id="path749" />
+      <path
+         d="m 181.28,127.12 v 6.1"
+         id="path750" />
+      <path
+         d="m 181.28,133.22 h 6.1"
+         id="path751" />
+      <path
+         d="m 187.38,133.22 v -6.1"
+         id="path752" />
+      <path
+         d="m 186.364,128.136 v 4.068"
+         id="path753" />
+      <path
+         d="m 186.364,132.204 h -4.068"
+         id="path754" />
+      <path
+         d="m 182.296,132.204 v -4.068"
+         id="path755" />
+      <path
+         d="m 182.296,128.136 h 4.068"
+         id="path756" />
+      <path
+         d="m 114.475,263.588 h 4.068"
+         id="path757" />
+      <path
+         d="M 118.543,263.588 V 259.52"
+         id="path758" />
+      <path
+         d="m 118.543,259.52 h -4.068"
+         id="path759" />
+      <path
+         d="m 114.475,259.52 v 4.068"
+         id="path760" />
+      <path
+         d="m 113.459,264.604 h 6.1"
+         id="path761" />
+      <path
+         d="m 119.559,264.604 v -6.1"
+         id="path762" />
+      <path
+         d="m 119.559,258.504 h -6.1"
+         id="path763" />
+      <path
+         d="m 113.459,258.504 v 6.1"
+         id="path764" />
+      <path
+         d="M 114.475,263.588 V 259.52"
+         id="path765" />
+      <path
+         d="m 114.475,259.52 h 4.068"
+         id="path766" />
+      <path
+         d="m 118.543,259.52 v 4.068"
+         id="path767" />
+      <path
+         d="m 118.543,263.588 h -4.068"
+         id="path768" />
+      <path
+         d="m 111.475,290.418 h 4.068"
+         id="path769" />
+      <path
+         d="M 115.543,290.418 V 286.35"
+         id="path770" />
+      <path
+         d="m 115.543,286.35 h -4.068"
+         id="path771" />
+      <path
+         d="m 111.475,286.35 v 4.068"
+         id="path772" />
+      <path
+         d="m 110.459,291.434 h 6.1"
+         id="path773" />
+      <path
+         d="m 116.559,291.434 v -6.1"
+         id="path774" />
+      <path
+         d="m 116.559,285.334 h -6.1"
+         id="path775" />
+      <path
+         d="m 110.459,285.334 v 6.1"
+         id="path776" />
+      <path
+         d="M 111.475,290.418 V 286.35"
+         id="path777" />
+      <path
+         d="m 111.475,286.35 h 4.068"
+         id="path778" />
+      <path
+         d="m 115.543,286.35 v 4.068"
+         id="path779" />
+      <path
+         d="m 115.543,290.418 h -4.068"
+         id="path780" />
+      <path
+         d="M 175.464,139.611 H 159.196"
+         id="path781" />
+      <path
+         d="m 159.196,139.611 v 7.118"
+         id="path782" />
+      <path
+         d="m 159.196,146.729 h 16.268"
+         id="path783" />
+      <path
+         d="m 175.464,146.729 v -7.118"
+         id="path784" />
+      <path
+         d="m 176.48,138.595 h -18.3"
+         id="path785" />
+      <path
+         d="m 158.18,138.595 v 9.15"
+         id="path786" />
+      <path
+         d="m 158.18,147.745 h 18.3"
+         id="path787" />
+      <path
+         d="m 176.48,147.745 v -9.15"
+         id="path788" />
+      <path
+         d="m 175.464,139.611 v 7.118"
+         id="path789" />
+      <path
+         d="M 175.464,146.729 H 159.196"
+         id="path790" />
+      <path
+         d="m 159.196,146.729 v -7.118"
+         id="path791" />
+      <path
+         d="m 159.196,139.611 h 16.268"
+         id="path792" />
+      <path
+         d="m 122.375,278.943 h 16.268"
+         id="path793" />
+      <path
+         d="m 138.643,278.943 v -7.118"
+         id="path794" />
+      <path
+         d="M 138.643,271.825 H 122.375"
+         id="path795" />
+      <path
+         d="m 122.375,271.825 v 7.118"
+         id="path796" />
+      <path
+         d="m 121.359,279.959 h 18.3"
+         id="path797" />
+      <path
+         d="m 139.659,279.959 v -9.15"
+         id="path798" />
+      <path
+         d="m 139.659,270.809 h -18.3"
+         id="path799" />
+      <path
+         d="m 121.359,270.809 v 9.15"
+         id="path800" />
+      <path
+         d="m 122.375,278.943 v -7.118"
+         id="path801" />
+      <path
+         d="m 122.375,271.825 h 16.268"
+         id="path802" />
+      <path
+         d="m 138.643,271.825 v 7.118"
+         id="path803" />
+      <path
+         d="M 138.643,278.943 H 122.375"
+         id="path804" />
+      <path
+         d="m 108.67,247 h 17.97"
+         id="path805" />
+      <path
+         d="m 166.76,240.87 v -9.92"
+         id="path806" />
+      <path
+         d="M 188.33,173 H 170.36"
+         id="path807" />
+      <path
+         d="m 130.24,179.13 v 9.92"
+         id="path808" />
+      <path
+         d="m 139.74,125.17 v 0.25"
+         id="path809" />
+      <path
+         d="m 130.5,125.42 h 9.24"
+         id="path810" />
+      <path
+         d="M 130.09,120.75 V 121"
+         id="path811" />
+      <path
+         d="M 139.74,120.75 V 121"
+         id="path812" />
+      <path
+         d="m 130.09,120.75 h 9.65"
+         id="path813" />
+      <path
+         d="m 157.26,294.83 v -0.25"
+         id="path814" />
+      <path
+         d="m 166.5,294.58 h -9.24"
+         id="path815" />
+      <path
+         d="M 166.91,299.25 V 299"
+         id="path816" />
+      <path
+         d="M 157.26,299.25 V 299"
+         id="path817" />
+      <path
+         d="m 166.91,299.25 h -9.65"
+         id="path818" />
+      <path
+         d="m 185.915,299 v 2.415"
+         id="path819" />
+      <path
+         d="m 185.915,301.415 h 9"
+         id="path820" />
+      <path
+         d="M 194.915,301.415 V 118.585"
+         id="path821" />
+      <path
+         d="M 194.915,118.585 H 188.5"
+         id="path822" />
+      <path
+         d="M 102.085,301.415 H 108.5"
+         id="path823" />
+      <path
+         d="m 166.5,301.415 h 19.415"
+         id="path824" />
+      <path
+         d="M 185.915,301.415 V 299"
+         id="path825" />
+      <path
+         d="m 104.5,292.415 h -2.415"
+         id="path826" />
+      <path
+         d="m 102.085,292.415 v 9"
+         id="path827" />
+      <path
+         d="m 102.085,118.585 v 173.83"
+         id="path828" />
+      <path
+         d="M 102.085,292.415 H 104.5"
+         id="path829" />
+      <path
+         d="m 111.085,121 v -2.415"
+         id="path830" />
+      <path
+         d="m 111.085,118.585 h -9"
+         id="path831" />
+      <path
+         d="M 130.5,118.585 H 111.085"
+         id="path832" />
+      <path
+         d="M 111.085,118.585 V 121"
+         id="path833" />
+      <path
+         d="m 146.32,196.82 h 42.01"
+         id="path834" />
+      <path
+         d="M 188.33,195.3 H 144.8"
+         id="path835" />
+      <path
+         d="m 144.8,195.3 v 1.52"
+         id="path836" />
+      <path
+         d="m 144.8,196.82 v 21.43"
+         id="path837" />
+      <path
+         d="m 144.8,218.25 h 1.52"
+         id="path838" />
+      <path
+         d="M 146.32,218.25 V 196.82"
+         id="path839" />
+      <path
+         d="M 146.32,196.82 H 144.8"
+         id="path840" />
+      <path
+         d="M 130.24,196.54 H 144.8"
+         id="path841" />
+      <path
+         d="M 144.8,196.54 V 195.3"
+         id="path842" />
+      <path
+         d="M 144.8,195.3 H 130.24"
+         id="path843" />
+      <path
+         d="m 130.24,195.3 v 1.24"
+         id="path844" />
+      <path
+         d="M 152.2,224.7 V 201.75"
+         id="path845" />
+      <path
+         d="m 152.2,201.75 h -1.52"
+         id="path846" />
+      <path
+         d="M 150.68,201.75 V 224.7"
+         id="path847" />
+      <path
+         d="m 150.68,224.7 h 1.52"
+         id="path848" />
+      <path
+         d="M 150.68,223.18 H 108.67"
+         id="path849" />
+      <path
+         d="m 108.67,224.7 h 42.01"
+         id="path850" />
+      <path
+         d="m 150.68,224.7 v -1.52"
+         id="path851" />
+      <path
+         d="m 109.17,218.25 v 0.1"
+         id="path852" />
+      <path
+         d="m 118.314,218.25 v 0.1"
+         id="path853" />
+      <path
+         d="m 109.17,218.475 h 9.144"
+         id="path854" />
+      <path
+         d="M 118.314,218.475 V 218.35"
+         id="path855" />
+      <path
+         d="M 118.314,218.35 H 109.17"
+         id="path856" />
+      <path
+         d="m 109.17,218.35 v 0.125"
+         id="path857" />
+      <path
+         d="m 118.314,180.75 h 0.05"
+         id="path858" />
+      <path
+         d="m 118.764,180.75 h 0.05"
+         id="path859" />
+      <path
+         d="m 118.314,217.572 h 0.05"
+         id="path860" />
+      <path
+         d="m 118.764,217.572 h 0.05"
+         id="path861" />
+      <path
+         d="m 118.314,180.75 v 36.822"
+         id="path862" />
+      <path
+         d="m 118.814,180.75 v 36.822"
+         id="path863" />
+      <path
+         d="m 118.314,218.25 h 0.05"
+         id="path864" />
+      <path
+         d="m 118.764,218.25 h 0.05"
+         id="path865" />
+      <path
+         d="m 118.314,217.572 v 0.678"
+         id="path866" />
+      <path
+         d="m 118.814,217.572 v 0.678"
+         id="path867" />
+      <path
+         d="m 108.67,180.75 h 0.05"
+         id="path868" />
+      <path
+         d="m 109.12,180.75 h 0.05"
+         id="path869" />
+      <path
+         d="m 108.67,217.572 h 0.05"
+         id="path870" />
+      <path
+         d="m 109.12,217.572 h 0.05"
+         id="path871" />
+      <path
+         d="m 109.17,180.75 v 36.822"
+         id="path872" />
+      <path
+         d="m 108.67,218.25 h 0.05"
+         id="path873" />
+      <path
+         d="m 109.12,218.25 h 0.05"
+         id="path874" />
+      <path
+         d="m 108.67,217.572 v 0.678"
+         id="path875" />
+      <path
+         d="m 109.17,217.572 v 0.678"
+         id="path876" />
+      <path
+         d="m 108.72,180.75 h 0.007"
+         id="path877" />
+      <path
+         d="m 109.113,180.75 h 0.007"
+         id="path878" />
+      <path
+         d="m 108.72,218.25 h 0.007"
+         id="path879" />
+      <path
+         d="m 108.868,218.25 h 0.104"
+         id="path880" />
+      <path
+         d="m 109.113,218.25 h 0.007"
+         id="path881" />
+      <path
+         d="m 108.972,218.25 h -0.104"
+         id="path882" />
+      <path
+         d="m 109.12,180.75 v 37.5"
+         id="path883" />
+      <path
+         d="m 109.061,180.75 h 0.032"
+         id="path884" />
+      <path
+         d="M 108.972,218.25 H 108.92"
+         id="path885" />
+      <path
+         d="m 108.92,218.25 v -37.5"
+         id="path886" />
+      <path
+         d="m 108.72,180.75 v 37.5"
+         id="path887" />
+      <path
+         d="m 108.779,180.75 h -0.032"
+         id="path888" />
+      <path
+         d="m 108.868,218.25 h 0.052"
+         id="path889" />
+      <path
+         d="m 108.727,180.75 v 37.5"
+         id="path890" />
+      <path
+         d="m 108.727,218.25 h 0.02"
+         id="path891" />
+      <path
+         d="m 108.747,218.25 v -37.5"
+         id="path892" />
+      <path
+         d="m 108.727,180.75 h 0.02"
+         id="path893" />
+      <path
+         d="m 108.82,180.75 v 37.5"
+         id="path894" />
+      <path
+         d="m 108.779,180.75 h 0.041"
+         id="path895" />
+      <path
+         d="m 108.779,180.75 v 37.5"
+         id="path896" />
+      <path
+         d="m 108.779,218.25 h 0.041"
+         id="path897" />
+      <path
+         d="m 108.779,218.25 h -0.032"
+         id="path898" />
+      <path
+         d="m 108.779,180.75 h -0.032"
+         id="path899" />
+      <path
+         d="M 108.868,218.25 H 108.82"
+         id="path900" />
+      <path
+         d="m 108.868,180.75 v 37.5"
+         id="path901" />
+      <path
+         d="M 108.868,180.75 H 108.82"
+         id="path902" />
+      <path
+         d="m 108.868,180.75 h 0.052"
+         id="path903" />
+      <path
+         d="m 108.92,180.75 v 37.5"
+         id="path904" />
+      <path
+         d="m 108.868,218.25 h 0.052"
+         id="path905" />
+      <path
+         d="M 108.972,180.75 H 108.92"
+         id="path906" />
+      <path
+         d="m 108.972,180.75 v 37.5"
+         id="path907" />
+      <path
+         d="M 108.972,218.25 H 108.92"
+         id="path908" />
+      <path
+         d="m 108.972,180.75 h 0.048"
+         id="path909" />
+      <path
+         d="m 108.972,218.25 h 0.048"
+         id="path910" />
+      <path
+         d="m 109.02,218.25 v -37.5"
+         id="path911" />
+      <path
+         d="m 109.061,180.75 v 37.5"
+         id="path912" />
+      <path
+         d="m 109.061,180.75 h 0.032"
+         id="path913" />
+      <path
+         d="m 109.093,218.25 v -37.5"
+         id="path914" />
+      <path
+         d="m 109.061,218.25 h 0.032"
+         id="path915" />
+      <path
+         d="M 109.061,218.25 H 109.02"
+         id="path916" />
+      <path
+         d="M 109.061,180.75 H 109.02"
+         id="path917" />
+      <path
+         d="m 109.113,180.75 h -0.02"
+         id="path918" />
+      <path
+         d="m 109.113,180.75 v 37.5"
+         id="path919" />
+      <path
+         d="m 109.113,218.25 h -0.02"
+         id="path920" />
+      <path
+         d="m 118.764,180.75 h -0.007"
+         id="path921" />
+      <path
+         d="m 118.364,180.75 h 0.007"
+         id="path922" />
+      <path
+         d="m 118.371,218.301 -0.007,0.017"
+         id="path923" />
+      <path
+         d="m 118.371,180.75 v 37.551"
+         id="path924" />
+      <path
+         d="m 118.364,180.75 v 37.568"
+         id="path925" />
+      <path
+         d="m 118.371,218.301 0.02,-0.017"
+         id="path926" />
+      <path
+         d="M 118.391,218.284 V 180.75"
+         id="path927" />
+      <path
+         d="m 118.371,180.75 h 0.02"
+         id="path928" />
+      <path
+         d="m 118.464,180.75 v 37.509"
+         id="path929" />
+      <path
+         d="m 118.423,218.27 0.041,-0.011"
+         id="path930" />
+      <path
+         d="m 118.423,180.75 v 37.52"
+         id="path931" />
+      <path
+         d="m 118.423,180.75 h 0.041"
+         id="path932" />
+      <path
+         d="m 118.391,218.284 0.032,-0.014"
+         id="path933" />
+      <path
+         d="m 118.423,180.75 h -0.032"
+         id="path934" />
+      <path
+         d="m 118.512,180.75 v 37.502"
+         id="path935" />
+      <path
+         d="m 118.464,218.259 0.048,-0.007"
+         id="path936" />
+      <path
+         d="m 118.512,180.75 h -0.048"
+         id="path937" />
+      <path
+         d="m 118.512,180.75 h 0.052"
+         id="path938" />
+      <path
+         d="m 118.564,180.75 v 37.5"
+         id="path939" />
+      <path
+         d="m 118.512,218.252 0.052,-0.002"
+         id="path940" />
+      <path
+         d="m 118.616,180.75 h -0.052"
+         id="path941" />
+      <path
+         d="m 118.564,218.25 0.052,0.002"
+         id="path942" />
+      <path
+         d="m 118.616,180.75 v 37.502"
+         id="path943" />
+      <path
+         d="m 118.616,218.252 0.048,0.007"
+         id="path944" />
+      <path
+         d="m 118.616,180.75 h 0.048"
+         id="path945" />
+      <path
+         d="M 118.664,218.259 V 180.75"
+         id="path946" />
+      <path
+         d="m 118.705,180.75 v 37.52"
+         id="path947" />
+      <path
+         d="m 118.705,180.75 h 0.032"
+         id="path948" />
+      <path
+         d="M 118.737,218.284 V 180.75"
+         id="path949" />
+      <path
+         d="m 118.705,218.27 0.032,0.014"
+         id="path950" />
+      <path
+         d="m 118.705,180.75 h -0.041"
+         id="path951" />
+      <path
+         d="m 118.664,218.259 0.041,0.011"
+         id="path952" />
+      <path
+         d="m 118.737,218.284 0.02,0.017"
+         id="path953" />
+      <path
+         d="m 118.757,180.75 v 37.551"
+         id="path954" />
+      <path
+         d="m 118.757,180.75 h -0.02"
+         id="path955" />
+      <path
+         d="m 118.764,180.75 v 37.568"
+         id="path956" />
+      <path
+         d="m 118.757,218.301 0.007,0.017"
+         id="path957" />
+      <path
+         d="m 118.705,180.75 h 0.032"
+         id="path958" />
+      <path
+         d="m 118.423,180.75 h -0.032"
+         id="path959" />
+      <path
+         d="m 119.264,218.8 h -0.9"
+         id="path960" />
+      <path
+         d="m 119.264,218.8 -0.007,-0.007"
+         id="path961" />
+      <path
+         d="m 119.257,218.793 h -0.886"
+         id="path962" />
+      <path
+         d="m 118.371,218.793 -0.007,0.007"
+         id="path963" />
+      <path
+         d="m 119.257,218.793 -0.02,-0.02"
+         id="path964" />
+      <path
+         d="m 119.237,218.773 h -0.846"
+         id="path965" />
+      <path
+         d="m 118.371,218.793 0.02,-0.02"
+         id="path966" />
+      <path
+         d="m 119.205,218.741 h -0.782"
+         id="path967" />
+      <path
+         d="M 119.205,218.741 119.164,218.7"
+         id="path968" />
+      <path
+         d="m 119.164,218.7 h -0.7"
+         id="path969" />
+      <path
+         d="m 118.464,218.7 -0.041,0.041"
+         id="path970" />
+      <path
+         d="m 119.237,218.773 -0.032,-0.032"
+         id="path971" />
+      <path
+         d="m 118.391,218.773 0.032,-0.032"
+         id="path972" />
+      <path
+         d="m 119.164,218.7 -0.048,-0.048"
+         id="path973" />
+      <path
+         d="m 119.116,218.652 h -0.604"
+         id="path974" />
+      <path
+         d="m 118.464,218.7 0.048,-0.048"
+         id="path975" />
+      <path
+         d="m 118.564,218.6 h 0.5"
+         id="path976" />
+      <path
+         d="m 118.512,218.652 0.052,-0.052"
+         id="path977" />
+      <path
+         d="M 119.116,218.652 119.064,218.6"
+         id="path978" />
+      <path
+         d="m 119.012,218.548 h -0.396"
+         id="path979" />
+      <path
+         d="M 119.012,218.548 118.964,218.5"
+         id="path980" />
+      <path
+         d="m 118.964,218.5 h -0.3"
+         id="path981" />
+      <path
+         d="m 118.664,218.5 -0.048,0.048"
+         id="path982" />
+      <path
+         d="m 119.064,218.6 -0.052,-0.052"
+         id="path983" />
+      <path
+         d="m 118.564,218.6 0.052,-0.052"
+         id="path984" />
+      <path
+         d="m 118.737,218.427 h 0.154"
+         id="path985" />
+      <path
+         d="m 118.737,218.427 0.02,-0.02"
+         id="path986" />
+      <path
+         d="m 118.757,218.407 h 0.114"
+         id="path987" />
+      <path
+         d="m 118.871,218.407 0.02,0.02"
+         id="path988" />
+      <path
+         d="m 118.705,218.459 h 0.218"
+         id="path989" />
+      <path
+         d="m 118.737,218.427 -0.032,0.032"
+         id="path990" />
+      <path
+         d="m 118.891,218.427 0.032,0.032"
+         id="path991" />
+      <path
+         d="m 118.964,218.5 -0.041,-0.041"
+         id="path992" />
+      <path
+         d="m 118.664,218.5 0.041,-0.041"
+         id="path993" />
+      <path
+         d="m 118.864,218.4 h -0.1"
+         id="path994" />
+      <path
+         d="M 118.871,218.407 118.864,218.4"
+         id="path995" />
+      <path
+         d="m 118.757,218.407 0.007,-0.007"
+         id="path996" />
+      <path
+         d="m 118.864,183.55 h 0.007"
+         id="path997" />
+      <path
+         d="m 118.871,183.55 h 0.02"
+         id="path998" />
+      <path
+         d="m 118.891,183.55 h 0.032"
+         id="path999" />
+      <path
+         d="m 118.923,183.55 h 0.041"
+         id="path1000" />
+      <path
+         d="m 118.964,183.55 h 0.048"
+         id="path1001" />
+      <path
+         d="m 119.012,183.55 h 0.052"
+         id="path1002" />
+      <path
+         d="m 119.064,183.55 h 0.052"
+         id="path1003" />
+      <path
+         d="m 119.116,183.55 h 0.048"
+         id="path1004" />
+      <path
+         d="m 119.164,183.55 h 0.041"
+         id="path1005" />
+      <path
+         d="m 119.205,183.55 h 0.032"
+         id="path1006" />
+      <path
+         d="m 119.237,183.55 h 0.02"
+         id="path1007" />
+      <path
+         d="m 119.257,183.55 h 0.007"
+         id="path1008" />
+      <path
+         d="M 119.264,218.8 V 183.55"
+         id="path1009" />
+      <path
+         d="M 119.257,218.793 V 183.55"
+         id="path1010" />
+      <path
+         d="M 119.237,218.773 V 183.55"
+         id="path1011" />
+      <path
+         d="M 119.205,218.741 V 183.55"
+         id="path1012" />
+      <path
+         d="M 119.164,218.7 V 183.55"
+         id="path1013" />
+      <path
+         d="M 119.116,218.652 V 183.55"
+         id="path1014" />
+      <path
+         d="M 119.064,218.6 V 183.55"
+         id="path1015" />
+      <path
+         d="M 119.012,218.548 V 183.55"
+         id="path1016" />
+      <path
+         d="M 118.964,218.5 V 183.55"
+         id="path1017" />
+      <path
+         d="M 118.923,218.459 V 183.55"
+         id="path1018" />
+      <path
+         d="M 118.891,218.427 V 183.55"
+         id="path1019" />
+      <path
+         d="M 118.871,218.407 V 183.55"
+         id="path1020" />
+      <path
+         d="M 118.864,218.4 V 183.55"
+         id="path1021" />
+      <path
+         d="M 118.364,218.318 V 218.8"
+         id="path1022" />
+      <path
+         d="m 118.371,218.301 v 0.492"
+         id="path1023" />
+      <path
+         d="m 118.391,218.284 v 0.489"
+         id="path1024" />
+      <path
+         d="m 118.423,218.27 v 0.471"
+         id="path1025" />
+      <path
+         d="M 118.464,218.259 V 218.7"
+         id="path1026" />
+      <path
+         d="m 118.512,218.252 v 0.4"
+         id="path1027" />
+      <path
+         d="m 118.564,218.25 v 0.35"
+         id="path1028" />
+      <path
+         d="m 118.616,218.252 v 0.296"
+         id="path1029" />
+      <path
+         d="M 118.664,218.259 V 218.5"
+         id="path1030" />
+      <path
+         d="m 118.737,218.284 v 0.143"
+         id="path1031" />
+      <path
+         d="m 118.757,218.301 v 0.106"
+         id="path1032" />
+      <path
+         d="m 118.705,218.27 v 0.189"
+         id="path1033" />
+      <path
+         d="M 118.764,218.318 V 218.4"
+         id="path1034" />
+      <path
+         d="m 156.51,210.516 v 4.119"
+         id="path1035" />
+      <path
+         d="m 156.51,210.516 h -4.119"
+         id="path1036" />
+      <path
+         d="m 152.391,214.635 v -4.119"
+         id="path1037" />
+      <path
+         d="m 156.51,214.635 h -4.119"
+         id="path1038" />
+      <path
+         d="m 156.7,210.325 v 4.5"
+         id="path1039" />
+      <path
+         d="m 156.7,214.825 h -4.5"
+         id="path1040" />
+      <path
+         d="m 156.7,210.325 h -4.5"
+         id="path1041" />
+      <path
+         d="m 156.954,212.924 v 0.127"
+         id="path1042" />
+      <path
+         d="m 156.954,212.099 v 0.127"
+         id="path1043" />
+      <path
+         d="m 156.954,213.051 h -0.127"
+         id="path1044" />
+      <path
+         d="m 156.954,212.924 h -0.127"
+         id="path1045" />
+      <path
+         d="m 156.954,212.226 h -0.127"
+         id="path1046" />
+      <path
+         d="m 156.954,212.099 h -0.127"
+         id="path1047" />
+      <path
+         d="m 156.827,210.515 v 4.119"
+         id="path1048" />
+      <path
+         d="M 156.827,214.634 H 156.7"
+         id="path1049" />
+      <path
+         d="M 156.827,210.515 H 156.7"
+         id="path1050" />
+      <path
+         d="m 152.391,210.516 v 4.119"
+         id="path1051" />
+      <path
+         d="m 152.391,210.516 h 4.119"
+         id="path1052" />
+      <path
+         d="m 156.51,210.516 v 4.119"
+         id="path1053" />
+      <path
+         d="m 156.51,214.635 h -4.119"
+         id="path1054" />
+      <path
+         d="m 130.5,77.1727 h 58"
+         id="path1055" />
+      <path
+         d="M 188.5,77.1727 V 121"
+         id="path1056" />
+      <path
+         d="M 130.5,120.75 V 77.1727"
+         id="path1057" />
+      <path
+         d="m 166.5,342.827 h -58"
+         id="path1058" />
+      <path
+         d="M 108.5,342.827 V 299"
+         id="path1059" />
+      <path
+         d="m 166.5,299.25 v 43.577"
+         id="path1060" />
+    </g>
+  </g>
+</svg>

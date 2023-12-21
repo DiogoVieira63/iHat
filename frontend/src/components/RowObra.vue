@@ -9,7 +9,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const emit = defineEmits(['removeCapacete', 'changeEstado'])
+const emit = defineEmits(['removeCapacete', 'changeStatus'])
 
 const router = useRouter()
 const dialog = ref(false)
@@ -19,20 +19,20 @@ function changePage(nCapacete: string) {
     router.push({ path: `/capacetes/${nCapacete}` })
 }
 
-function changeEstado(confirmation: boolean) {
+function changeStatus(confirmation: boolean) {
     if (confirmation) {
-        emit('changeEstado', newEstado(props.row.status))
+        emit('changeStatus', newStatus(props.row.Status))
     }
     dialog.value = false
 }
 
-function newEstado(estado: string) {
-    return estado === 'Livre' ? 'Não Operacional' : 'Livre'
+function newStatus(Status: string) {
+    return Status === 'Livre' ? 'Não Operacional' : 'Livre'
 }
 
 function removeCapacete(confirmation: boolean) {
     removeDialog.value = false
-    if (confirmation) emit('removeCapacete', props.row.id)
+    if (confirmation) emit('removeCapacete', props.row.NCapacete)
 }
 
 function isInUso() {
@@ -42,7 +42,10 @@ function isInUso() {
 <template>
     <td @click="changePage(props.row.nCapacete)">{{ props.row['nCapacete'] }}</td>
     <td>
-        <confirmation title="Confirmação" :function="changeEstado">
+        <confirmation
+            title="Confirmação"
+            :function="changeStatus"
+        >
             <template #button="{ open }">
                 <v-select
                     :disabled="isInUso()"
@@ -59,18 +62,26 @@ function isInUso() {
                 </v-select>
             </template>
             <template v-slot:message>
-                Tem a certeza que pretende alterar o estado do
-                <strong> Capacete {{ props.row.nCapacete }}</strong> de
+                Tem a certeza que pretende alterar o Status do
+                <strong> Capacete {{ props.row.NCapacete }}</strong> de
                 <span class="font-weight-bold text-red">{{ props.row['status'] }}</span> para
-                <span class="font-weight-bold text-green">{{ newEstado(props.row['status']) }}</span
+                <span class="font-weight-bold text-green">{{ newStatus(props.row['status']) }}</span
                 >?
             </template>
         </confirmation>
     </td>
     <td>
-        <confirmation title="Confirmação" :function="removeCapacete">
+        <confirmation
+            title="Confirmação"
+            :function="removeCapacete"
+        >
             <template #button="{ prop }">
-                <v-btn v-bind="prop" color="grey" variant="text" :disabled="isInUso()">
+                <v-btn
+                    v-bind="prop"
+                    color="grey"
+                    variant="text"
+                    :disabled="isInUso()"
+                >
                     <v-icon>mdi-delete</v-icon>
                 </v-btn>
             </template>

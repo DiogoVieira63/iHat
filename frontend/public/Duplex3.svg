@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="265.95432mm"
+   viewBox="0 0 93.129997 265.95432"
+   width="93.129997mm"
+   version="1.1"
+   id="svg91"
+   sodipodi:docname="Roof.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:ifc="http://www.ifcopenshell.org/ns">
+  <sodipodi:namedview
+     id="namedview91"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm" />
+  <defs
+     id="defs2">
+    <marker
+       id="arrowend"
+       markerHeight="7"
+       markerWidth="10"
+       orient="auto"
+       refX="10"
+       refY="3.5">
+      <polygon
+         points="10,3.5 0,7 0,0 "
+         id="polygon1" />
+    </marker>
+    <marker
+       id="arrowstart"
+       markerHeight="7"
+       markerWidth="10"
+       orient="auto"
+       refX="0"
+       refY="3.5">
+      <polygon
+         points="0,3.5 10,7 10,0 "
+         id="polygon2" />
+    </marker>
+  </defs>
+  <style
+     type="text/css"
+     id="style2">&#10;  .cut path {&#10;            stroke: #222222;&#10;            fill: #444444;&#10;            fill-rule: evenodd;&#10;        }&#10;        .projection path {&#10;            stroke: #222222;&#10;            fill: none;&#10;            stroke-opacity: 0.6;&#10;        }&#10;        .IfcDoor path,&#10;        .Symbol path {&#10;            fill: none;&#10;        }&#10;        .Symbol path {&#10;            stroke-width: 0.5px;&#10;        }&#10;        .IfcSpace path {&#10;            fill-opacity: .2;&#10;        }&#10;        .Dimension path {&#10;            marker-end: url(#arrowend);&#10;            marker-start: url(#arrowstart);&#10;        }&#10;        text {&#10;            font-size: 2;&#10;        }&#10;        path {&#10;            stroke-width: 0.3;&#10;        }&#10; </style>
+  <g
+     class="IfcBuildingStorey"
+     id="storey-7b7032cc-b822-417b-9aea-6429f95f770e"
+     ifc:guid="1xS3BCk291UvhgP2dvNtSE"
+     ifc:matrix3="[[10.000000,0.000000,104.500000],[0.000000,10.000000,121.000000],[0.000000,0.000000,1.000000]]"
+     ifc:name="Roof"
+     ifc:plane="[[1.000000,0.000000,0.000000,0.000000],[0.000000,1.000000,0.000000,0.000000],[0.000000,0.000000,1.000000,7.200000],[0.000000,0.000000,0.000000,1.000000]]"
+     transform="translate(-101.935,-77.0227)">
+    <g
+       class="IfcSpace"
+       id="product-335fc1b3-63ca-474d-9c21-6d5abbd83da0-body"
+       ifc:guid="0pNy6pOyf7JPmXRLgxs3sW"
+       ifc:name="R301">
+      <path
+         d="m 188.33,125.17 h -79.66 v 169.66 h 79.66 V 125.17"
+         id="path2" />
+    </g>
+    <g
+       class="projection"
+       id="g91">
+      <path
+         d="m 192.5,275.77 h 0.25"
+         id="path3" />
+      <path
+         d="m 192.5,289.79 h 0.25"
+         id="path4" />
+      <path
+         d="m 192.75,275.77 v 14.02"
+         id="path5" />
+      <path
+         d="m 104.5,144.23 h -0.25"
+         id="path6" />
+      <path
+         d="m 104.5,130.21 h -0.25"
+         id="path7" />
+      <path
+         d="M 104.25,144.23 V 130.21"
+         id="path8" />
+      <path
+         d="M 130.09,120.75 V 121"
+         id="path9" />
+      <path
+         d="M 139.74,120.75 V 121"
+         id="path10" />
+      <path
+         d="m 130.09,120.75 h 9.65"
+         id="path11" />
+      <path
+         d="M 166.91,299.25 V 299"
+         id="path12" />
+      <path
+         d="M 157.26,299.25 V 299"
+         id="path13" />
+      <path
+         d="m 166.91,299.25 h -9.65"
+         id="path14" />
+      <path
+         d="m 192.5,121 h -88"
+         id="path15" />
+      <path
+         d="m 104.5,121 v 4.17"
+         id="path16" />
+      <path
+         d="m 104.5,125.17 h 88"
+         id="path17" />
+      <path
+         d="M 192.5,125.17 V 121"
+         id="path18" />
+      <path
+         d="M 192.5,299 V 125.17"
+         id="path19" />
+      <path
+         d="m 192.5,125.17 h -4.17"
+         id="path20" />
+      <path
+         d="M 188.33,125.17 V 299"
+         id="path21" />
+      <path
+         d="m 188.33,299 h 4.17"
+         id="path22" />
+      <path
+         d="m 104.5,299 h 83.83"
+         id="path23" />
+      <path
+         d="m 188.33,299 v -4.17"
+         id="path24" />
+      <path
+         d="M 188.33,294.83 H 104.5"
+         id="path25" />
+      <path
+         d="M 104.5,294.83 V 299"
+         id="path26" />
+      <path
+         d="M 104.5,125.17 V 294.83"
+         id="path27" />
+      <path
+         d="m 104.5,294.83 h 4.17"
+         id="path28" />
+      <path
+         d="M 108.67,294.83 V 125.17"
+         id="path29" />
+      <path
+         d="M 108.67,125.17 H 104.5"
+         id="path30" />
+      <path
+         d="m 123.596,222.054 v 11.192"
+         id="path31" />
+      <path
+         d="m 123.977,221.673 v 11.954"
+         id="path32" />
+      <path
+         d="M 123.977,233.627 H 112.543"
+         id="path33" />
+      <path
+         d="M 112.543,233.627 V 221.673"
+         id="path34" />
+      <path
+         d="M 123.977,221.673 H 112.543"
+         id="path35" />
+      <path
+         d="M 123.596,222.054 H 112.924"
+         id="path36" />
+      <path
+         d="M 112.924,233.246 V 222.054"
+         id="path37" />
+      <path
+         d="M 123.596,233.246 H 112.924"
+         id="path38" />
+      <path
+         d="m 123.977,221.673 0.146,-0.146"
+         id="path39" />
+      <path
+         d="m 124.123,221.527 v 12.246"
+         id="path40" />
+      <path
+         d="m 123.977,233.627 0.146,0.146"
+         id="path41" />
+      <path
+         d="M 124.123,233.773 H 112.397"
+         id="path42" />
+      <path
+         d="m 112.543,233.627 -0.146,0.146"
+         id="path43" />
+      <path
+         d="M 112.397,233.773 V 221.527"
+         id="path44" />
+      <path
+         d="m 112.543,221.673 -0.146,-0.146"
+         id="path45" />
+      <path
+         d="M 124.123,221.527 H 112.397"
+         id="path46" />
+      <path
+         d="M 123.596,233.246 V 222.054"
+         id="path47" />
+      <path
+         d="M 123.596,233.246 H 112.924"
+         id="path48" />
+      <path
+         d="M 112.924,233.246 V 222.054"
+         id="path49" />
+      <path
+         d="m 112.924,222.054 h 10.672"
+         id="path50" />
+      <path
+         d="m 183.926,186.754 v 11.192"
+         id="path51" />
+      <path
+         d="m 184.307,186.373 v 11.954"
+         id="path52" />
+      <path
+         d="M 184.307,198.327 H 172.873"
+         id="path53" />
+      <path
+         d="M 172.873,198.327 V 186.373"
+         id="path54" />
+      <path
+         d="M 184.307,186.373 H 172.873"
+         id="path55" />
+      <path
+         d="M 183.926,186.754 H 173.254"
+         id="path56" />
+      <path
+         d="M 173.254,197.946 V 186.754"
+         id="path57" />
+      <path
+         d="M 183.926,197.946 H 173.254"
+         id="path58" />
+      <path
+         d="m 184.307,186.373 0.146,-0.146"
+         id="path59" />
+      <path
+         d="m 184.453,186.227 v 12.246"
+         id="path60" />
+      <path
+         d="m 184.307,198.327 0.146,0.146"
+         id="path61" />
+      <path
+         d="M 184.453,198.473 H 172.727"
+         id="path62" />
+      <path
+         d="m 172.873,198.327 -0.146,0.146"
+         id="path63" />
+      <path
+         d="M 172.727,198.473 V 186.227"
+         id="path64" />
+      <path
+         d="m 172.873,186.373 -0.146,-0.146"
+         id="path65" />
+      <path
+         d="M 184.453,186.227 H 172.727"
+         id="path66" />
+      <path
+         d="M 183.926,197.946 V 186.754"
+         id="path67" />
+      <path
+         d="M 183.926,197.946 H 173.254"
+         id="path68" />
+      <path
+         d="M 173.254,197.946 V 186.754"
+         id="path69" />
+      <path
+         d="m 173.254,186.754 h 10.672"
+         id="path70" />
+      <path
+         d="m 185.915,299 v 2.415"
+         id="path71" />
+      <path
+         d="m 185.915,301.415 h 9"
+         id="path72" />
+      <path
+         d="M 194.915,301.415 V 118.585"
+         id="path73" />
+      <path
+         d="M 194.915,118.585 H 188.5"
+         id="path74" />
+      <path
+         d="M 102.085,301.415 H 108.5"
+         id="path75" />
+      <path
+         d="m 166.5,301.415 h 19.415"
+         id="path76" />
+      <path
+         d="M 185.915,301.415 V 299"
+         id="path77" />
+      <path
+         d="m 104.5,292.415 h -2.415"
+         id="path78" />
+      <path
+         d="m 102.085,292.415 v 9"
+         id="path79" />
+      <path
+         d="m 102.085,118.585 v 173.83"
+         id="path80" />
+      <path
+         d="M 102.085,292.415 H 104.5"
+         id="path81" />
+      <path
+         d="m 111.085,121 v -2.415"
+         id="path82" />
+      <path
+         d="m 111.085,118.585 h -9"
+         id="path83" />
+      <path
+         d="M 130.5,118.585 H 111.085"
+         id="path84" />
+      <path
+         d="M 111.085,118.585 V 121"
+         id="path85" />
+      <path
+         d="m 130.5,77.1727 h 58"
+         id="path86" />
+      <path
+         d="M 188.5,77.1727 V 121"
+         id="path87" />
+      <path
+         d="M 130.5,120.75 V 77.1727"
+         id="path88" />
+      <path
+         d="m 166.5,342.827 h -58"
+         id="path89" />
+      <path
+         d="M 108.5,342.827 V 299"
+         id="path90" />
+      <path
+         d="m 166.5,299.25 v 43.577"
+         id="path91" />
+    </g>
+  </g>
+</svg>

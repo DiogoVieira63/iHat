@@ -60,13 +60,23 @@ const getColor = (severity: string) => {
 }
 </script>
 <template>
-    <v-card class="mx-auto" color="#f6f6f6" prepend-icon="mdi-hard-hat" height="auto">
+    <v-card
+        class="mx-auto"
+        color="#f6f6f6"
+        prepend-icon="mdi-hard-hat"
+        height="auto"
+    >
         <template v-slot:title>
             <h2>Capacete {{ routeId }} - Live Data</h2>
         </template>
 
         <v-row class="px-16 py-8">
-            <v-col v-for="(item, index) in liveData" :key="index" cols="12" md="6">
+            <v-col
+                v-for="(item, index) in liveData"
+                :key="index"
+                cols="12"
+                md="6"
+            >
                 <!-- Ajeitar caso sejam precisos mais dados -->
                 <v-card
                     class="mx-4 my-6"
@@ -78,10 +88,16 @@ const getColor = (severity: string) => {
                         <h3>{{ getTitle(item.type) }}</h3>
                     </template>
                     <v-card-text class="text-center">
-                        <div v-if="item.type === 'temperature'" class="text-h3">
+                        <div
+                            v-if="item.type === 'temperature'"
+                            class="text-h3"
+                        >
                             <b>{{ item.value }}&deg;C</b>
                         </div>
-                        <div v-else class="text-h3">
+                        <div
+                            v-else
+                            class="text-h3"
+                        >
                             <b>{{ item.value }}</b>
                         </div>
                     </v-card-text>
