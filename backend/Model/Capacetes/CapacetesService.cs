@@ -78,4 +78,8 @@ public class CapacetesService: ICapacetesService{
     public async Task UpdateCapaceteStatusToLivre(int nCapacete){
         await UpdateCapaceteStatus(nCapacete, "Livre");
     }
+
+    public async Task<List<Capacete>> GetFreeHelmets(){
+        return await _capaceteCollection.Find(x => x.Status == "Livre").ToListAsync();
+    }
 }

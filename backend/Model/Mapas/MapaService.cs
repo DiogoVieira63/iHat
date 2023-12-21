@@ -30,8 +30,8 @@ public class MapaService: IMapaService{
     }
 
 
-    public async Task AddZoneRiscotoMapa(string name, List<ZonasRisco> lista){
-        var mapa = await _mapaCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
+    public async Task AddZoneRiscotoMapa(string id, List<ZonasRisco> lista){
+        var mapa = await _mapaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         if (mapa == null)
         {
@@ -43,7 +43,7 @@ public class MapaService: IMapaService{
 
         try
         {
-            await _mapaCollection.ReplaceOneAsync(x => x.Name == name, mapa);
+            await _mapaCollection.ReplaceOneAsync(x => x.Id == id, mapa);
         }
         catch (Exception ex)
         {
@@ -51,8 +51,8 @@ public class MapaService: IMapaService{
         }
     }
 
-    public async Task RemoveZonasPerigotoMapa(string name){
-        var mapa = await _mapaCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
+    public async Task RemoveZonasPerigotoMapa(string id){
+        var mapa = await _mapaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         if (mapa == null)
         {
@@ -64,7 +64,7 @@ public class MapaService: IMapaService{
 
         try
         {
-            await _mapaCollection.ReplaceOneAsync(x => x.Name == name, mapa);
+            await _mapaCollection.ReplaceOneAsync(x => x.Id == id, mapa);
         }
         catch (Exception ex)
         {
@@ -72,8 +72,8 @@ public class MapaService: IMapaService{
         }
     }
 
-    public async Task RemoveAllZonasPerigotoMapa( string name){
-        var mapa = await _mapaCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
+    public async Task RemoveAllZonasPerigotoMapa( string id){
+        var mapa = await _mapaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         if (mapa == null)
         {
@@ -85,7 +85,7 @@ public class MapaService: IMapaService{
 
         try
         {
-            await _mapaCollection.ReplaceOneAsync(x => x.Name == name, mapa);
+            await _mapaCollection.ReplaceOneAsync(x => x.Id == id, mapa);
         }
         catch (Exception ex)
         {
@@ -93,8 +93,8 @@ public class MapaService: IMapaService{
         }
     }
 
-    public async Task UpdateZonasPerigotoMapa(string Name, List<ZonasRisco> lista){
-        var mapa = await _mapaCollection.Find(x => x.Name == Name).FirstOrDefaultAsync();
+    public async Task UpdateZonasPerigotoMapa(string id, List<ZonasRisco> lista){
+        var mapa = await _mapaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         if (mapa == null)
         {
@@ -106,7 +106,7 @@ public class MapaService: IMapaService{
 
         try
         {
-            await _mapaCollection.ReplaceOneAsync(x => x.Name == Name, mapa);
+            await _mapaCollection.ReplaceOneAsync(x => x.Id == id, mapa);
         }
         catch (Exception ex)
         {
