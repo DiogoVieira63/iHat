@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 import { computed, ref } from 'vue'
+import type { Header } from '@/interfaces'
+import type { PropType } from 'vue'
 
-interface Props {
-    list: Array<{ [id: string]: string }>
-    headers: Array<string> | { [id: string]: Array<string> }
-}
-
-const props = defineProps<Props>()
+const props = defineProps({
+    list: {
+        type: Array as PropType<Array<{ [id: string]: any }>>,
+        required: true
+    },
+    headers: {
+        type: Array as PropType<Array<Header>>,
+        required: true
+    }
+})
 
 interface Sort {
     column: string | null
@@ -20,14 +26,20 @@ const page = ref<number>(1)
 const search = ref<string>('')
 const filterMenu = ref<boolean>(false)
 
+// Filtering
+
+const filterName = (key: string) => {
+    const header = props.headers.find((header) => header.key === key)
+    return header ? header.name : ''
+}
+
 const filterOptions = computed<{ [id: string]: Set<any> }>(() => {
     let options: { [id: string]: Set<any> } = {}
-    if (!Array.isArray(props.headers)) {
-        for (let header in props.headers) {
-            if (props.headers[header].includes('filter'))
-                options[header] = new Set(props.list.map((item) => item[header]))
+    props.headers.forEach((header: Header) => {
+        if (header.params.includes('filter')) {
+            options[header.key] = new Set(props.list.map((item) => item[header.key]))
         }
-    }
+    })
     return options
 })
 
@@ -36,14 +48,6 @@ const resetFilter = () => {
 }
 
 const filter = ref<{ [key: string]: string[] }>(resetFilter())
-
-const newHeaders = computed<Record<string, string[]>>(() => {
-    if (Array.isArray(props.headers)) {
-        // create object with headers as keys and empty array as values
-        return Object.fromEntries(props.headers.map((header) => [header, []]))
-    }
-    return props.headers
-})
 
 const filterFunc = (row: { [id: string]: string }) => {
     let result = true
@@ -143,19 +147,46 @@ watch(
 )
 </script>
 <template>
-    <v-toolbar class="rounded-t-xl">
+    <v-toolbar class="rounded-t-xl pr-2">
         <slot name="tabs"></slot>
         <v-spacer></v-spacer>
-        <v-menu v-if="hasFilters" v-model="filterMenu" :close-on-content-click="false" location="end">
+        <v-menu
+            v-if="hasFilters"
+            v-model="filterMenu"
+            :close-on-content-click="false"
+            location="end"
+        >
             <template v-slot:activator="{ props }">
-                <v-btn variant="flat" color="primary" v-bind="props" icon="mdi-filter"></v-btn>
+                <v-btn
+                    variant="flat"
+                    color="primary"
+                    v-bind="props"
+                    icon="mdi-filter"
+                ></v-btn>
             </template>
-            <v-card max-width="200" class="mx-auto">
+            <v-card
+                max-width="200"
+                class="mx-auto"
+            >
                 <v-card-text>
-                    <div v-for="(value, key) in filterOptions" :key="key">
+                    <div
+                        v-for="(value, key) in filterOptions"
+                        :key="key"
+                    >
                         <h2 class="text-h6">{{ key }}</h2>
-                        <v-chip-group v-model="filter[key]" column multiple color="info">
-                            <v-chip v-for="option in value" filter variant="outlined" :value="option" :key="option">
+                        <v-chip-group
+                            v-model="filter[key]"
+                            column
+                            multiple
+                            color="info"
+                        >
+                            <v-chip
+                                v-for="option in value"
+                                filter
+                                variant="outlined"
+                                :value="option"
+                                :key="option"
+                            >
                                 {{ option }}
                             </v-chip>
                         </v-chip-group>
@@ -173,33 +204,75 @@ watch(
         </div>
     </v-toolbar>
 
-    <v-table hover v-if="rowsPage.length > 0" height="55vh" fixed-header>
+    <v-table
+        hover
+        v-if="rowsPage.length > 0"
+        height="60vh"
+        fixed-header
+    >
         <thead>
             <tr>
-                <th v-for="(params, key) in newHeaders" :key="key" class="text-center bg-grey-lighten-2">
-                    {{ key }}
-                    <v-btn v-if="params.includes('sort')" :icon="iconSort(key)" variant="text"
-                        @click="selectSort(key)"></v-btn>
+                <th
+                    v-for="header in headers"
+                    :key="header.key"
+                    class="text-center bg-grey-lighten-2"
+                >
+                    {{ header.name }}
+                    <v-btn
+                        v-if="header.params.includes('sort')"
+                        :icon="iconSort(header.key)"
+                        variant="text"
+                        @click="selectSort(header.key)"
+                    ></v-btn>
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="text-center" v-for="(row, rowIndex) in rowsPage" :key="rowIndex" >
-                <slot name="row" :row="row" :headers="props.headers"></slot>
+            <tr
+                class="text-center"
+                v-for="(row, rowIndex) in rowsPage"
+                :key="rowIndex"
+            >
+                <slot
+                    name="row"
+                    :row="row"
+                    :headers="props.headers"
+                ></slot>
             </tr>
         </tbody>
     </v-table>
-    <v-alert v-else dense type="info">No results found</v-alert>
+    <v-alert
+        v-else
+        dense
+        type="info"
+        >No results found</v-alert
+    >
     <v-row class="mt-5">
         <v-spacer />
-        <v-col cols="5" md="7">
-            <v-pagination variant="flat" active-color="primary" v-if="numPages !== 1" v-model="page"
-                :length="numPages"></v-pagination>
+        <v-col
+            cols="5"
+            md="7"
+        >
+            <v-pagination
+                variant="flat"
+                active-color="primary"
+                v-if="numPages !== 1"
+                v-model="page"
+                :length="numPages"
+            ></v-pagination>
         </v-col>
-        <v-col cols="4" md="3">
-            <v-select v-if="list.length > 10" dense v-model="maxPerPage" label="Elements per Page"
+        <v-col
+            cols="4"
+            md="3"
+        >
+            <v-select
+                v-if="list.length > 10"
+                dense
+                v-model="maxPerPage"
+                label="Elements per Page"
                 rounded="t-xl"
-                :items="[10, 20, 30, 40, 50]"></v-select>
+                :items="[10, 20, 30, 40, 50]"
+            ></v-select>
         </v-col>
     </v-row>
 </template>

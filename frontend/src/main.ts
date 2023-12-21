@@ -11,8 +11,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import VueApexCharts from "vue3-apexcharts";
-
+import VueApexCharts from 'vue3-apexcharts'
 
 const vuetify = createVuetify({
     components,
@@ -23,14 +22,14 @@ const vuetify = createVuetify({
                 dark: false,
                 colors: {
                     primary: '#B38DF7',
-                    secondary: '#AAC4FF',
+                    secondary: '#AAC4FF'
                 }
             },
             dark: {
                 dark: true,
                 colors: {
                     primary: '#B38DF7',
-                    secondary: '#AAC4FF',
+                    secondary: '#AAC4FF'
                 }
             }
         }
@@ -38,7 +37,7 @@ const vuetify = createVuetify({
 })
 
 const app = createApp(App)
-app.use(VueApexCharts);
+app.use(VueApexCharts)
 app.use(vuetify)
 app.use(router)
 app.mount('#app')
