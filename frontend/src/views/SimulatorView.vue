@@ -5,6 +5,25 @@ import PageLayout from '@/components/Layouts/PageLayout.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
 import { useRouter } from 'vue-router'
 import SimuladorInput from '@/components/SimuladorInput.vue'
+import SimuladorInfo from '@/components/SimuladorInfo.vue'
+import { MqttService } from '@/mqttService'
+import { onMounted } from 'vue'
+import { useTaskStore } from '@/store'
+import { useMQTTStore } from '@/store'
+
+
+let mqtt : MqttService | null = null
+
+const mqttStore = useMQTTStore()
+
+onMounted(() => {
+    if (!mqttStore.mqtt) {
+        mqtt = new MqttService(undefined)
+        mqttStore.setMqtt(mqtt)
+    } else {
+        mqtt = mqttStore.mqtt as MqttService
+    }
+})
 
 
 export interface Capacete {
@@ -13,21 +32,22 @@ export interface Capacete {
     inputs: Array<Input>
 }
 
-interface Input {
+export interface Input {
     title: string,
     value: [number, number],
     range: [number, number]
     tipo: string
+    step?: number
 }
-
+const taskStore = useTaskStore()
 const router = useRouter()
 const page = ref(1)
 const imageUrls: Array<string> = ['/Duplex1.svg', '/Duplex2.svg']
 const selected = ref<Array<number>>([])
-const tipoInput = ref('Variável')
 const tipoEnvio = ref('Unidade')
 const tempo = ref(1)
 const capacetes = ref<Array<Capacete>>([])
+const showInfo = ref(false)
 
 const rules = [
     (v: number) => v >= 0.1|| 'Inválido (min: 0.1)',
@@ -77,6 +97,10 @@ const selectedCapacete = (id : number) => {
     }
 }
 
+const random = (min: number, max: number) => {
+    return Math.random() * (max - min) + min;
+}
+
 const applyEnvio = () => {
     let envio = {
         inputs: inputSelected.value,
@@ -84,7 +108,9 @@ const applyEnvio = () => {
         tipoEnvio: tipoEnvio.value,
         tempo: tempo.value
     }
-    alert(JSON.stringify(envio, null, 2))
+    
+    let time = tipoEnvio.value == 'Tempo' ? tempo.value : 0;
+    if (mqtt)taskStore.addTask(inputSelected.value, selected.value, time, mqtt)
 }
 
 const inputSelected = ref<Array<Input>>([])
@@ -138,8 +164,20 @@ const inputs : Array<Input>  = [
         range: [0, 1],
         value: [0, 0],
         tipo: 'Variável'
+    },
+    {
+        title: "Posição do Capacete (Z)",
+        range: [1, imageUrls.length],
+        value: [1, 1],
+        step: 1,
+        tipo: 'Constante'
     }
 ]
+
+const editTask = (inputs : Array<Input>, capacetes : Array<number>) => {
+    inputSelected.value = inputs
+    selected.value = capacetes
+}
 
 </script>
 <template>
@@ -171,13 +209,42 @@ const inputs : Array<Input>  = [
                         Página Obra
                     </v-btn>
                 </v-row>
-                <v-container>
-                    <v-card height="65vh" style="overflow: auto;" elevation="1" rounded="xl" color="grey-lighten-5">
-                        <v-card-title class="text-center text-h4 my-4">
-                            Simulador
+                    <v-card height="65vh" style="overflow: auto;" rounded="xl" color="grey-lighten-5">
+                        <v-card-title class=" my-4">
+                            <v-row justify="space-between">
+                                <v-col cols="auto" />
+                                <v-col cols="auto" class="text-center text-h4">
+                                    Simulador
+                                </v-col>
+                                <v-col cols="auto">
+                                  <v-btn 
+                                    v-if="!showInfo"
+                                    rounded="xl"
+                                    variant="flat"
+                                    @click="showInfo = true"
+                                    icon="mdi-information"
+                                    color="info"
+                                    density="compact"
+                                    size="large"
+                                  >
+                                  </v-btn>
+                                  <v-btn 
+                                    v-else
+                                        rounded="xl"
+                                        variant="flat"
+                                        @click="showInfo = false"
+                                        icon="mdi-close"
+                                        color="error"
+                                        density="compact"
+                                        size="large"
+                                    >
+                                    </v-btn>
+                                </v-col>
+                        </v-row>
                         </v-card-title>
                         <v-card-text>
-                            <v-row>
+                            <SimuladorInfo v-if="showInfo"/>
+                            <v-row v-else>
                                 <template v-if="selected.length == 0">
                                     <v-col cols="12" class="text-center"> 
                                         <p class="text-h6 mt-16">
@@ -260,6 +327,7 @@ const inputs : Array<Input>  = [
                                                     :title="input.title" 
                                                     :range="input.range" 
                                                     :value="input.value"
+                                                    :step="input.step"
                                                     />
                                                 </v-card-text>
                                             </v-card>
@@ -268,32 +336,72 @@ const inputs : Array<Input>  = [
                             </v-row>
                         </v-card-text>
                     </v-card>
-                </v-container>
-                <v-container>
-                    <v-card>
-                        <v-card-text >
-                            <v-row>
-                                <v-col cols="8" class="text-h6">
-                                    Número de Capacetes Selecionados: <strong>{{selected.length}}</strong> 
-                                </v-col>
-                                <v-col>
-                                    <v-btn 
-                                        block 
-                                        color="primary"
-                                        rounded="xl"
-                                        @click="applyEnvio"
+                <v-card class="my-4" rounded="xl" color="grey-lighten-5">
+                    <v-card-text >
+                        <v-row>
+                            <v-col cols="8" class="text-h6">
+                                Número de Capacetes Selecionados: <strong>{{selected.length}}</strong> 
+                            </v-col>
+                            <v-col>
+                                <v-btn 
+                                    block 
+                                    color="primary"
+                                    rounded="xl"
+                                    @click="applyEnvio"
+                                    :disabled="selected.length == 0"
+                                >
+                                    Aplicar
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                        <v-divider class="mt-4" />
+                        <v-list lines="one" v-if="taskStore.tasks.length > 0" bg-color="transparent" >
+                            <v-list-group 
+                                v-for="(task,index) in taskStore.tasks"
+                                :key="index"
+                            >
+                                <template #activator="{ props }">
+                                    <v-list-item
+                                        :key="index"
+                                        :title="'Tarefa #' + index"
+                                        :subtitle="`Envio de dados a cada ${task.intervalSeconds} segundos`"
+                                        v-bind="props"
                                     >
-                                        Aplicar
-                                    </v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-                </v-container>
+                                    <template #prepend>
+                                        <v-btn
+                                            class="mr-2"
+                                            variant="flat"
+                                            icon="mdi-close"
+                                            color="error"
+                                            density="compact"
+                                            @click="taskStore.removeTask(index)"
+                                        >
+                                        </v-btn>
+                                        <v-btn 
+                                            class="mr-2"
+                                            variant="flat"
+                                            icon="mdi-pencil"
+                                            color="grey"
+                                            density="compact"
+                                            @click="editTask(task.inputs,task.capacetes)"
+                                        >
+                                        </v-btn>
+                                    </template>
+                                </v-list-item>
+                                </template>
+                                <v-list-item 
+                                    v-for="capacete in task.capacetes"
+                                    prepend-icon="mdi-account-circle"
+                                    :key="capacete"
+                                    :title="'ID: ' + capacete"
+                                ></v-list-item>
+                            </v-list-group>
+                        </v-list>
+                    </v-card-text>
+                </v-card>
             </template>
         </ObraLayout>
     </page-layout>
 </template>
-
 <style>
 </style>

@@ -18,6 +18,10 @@ const props = defineProps({
     tipo: {
         type: String,
         default: 'Variável'
+    },
+    step: {
+        type: Number,
+        default: 0.01
     }
 })
 
@@ -48,7 +52,7 @@ const rules = [
         </v-card-title>
         <v-card-text>
             <template v-if="tipo == 'Variável'">
-                <v-range-slider :model-value="props.value" @update:model-value="updateValue" thumb-label="always" class="mt-5" step="0.01" :min="props.range[0]" :max="props.range[1]" >
+                <v-range-slider :model-value="props.value" @update:model-value="updateValue" thumb-label="always" class="mt-5" :step="props.step" :min="props.range[0]" :max="props.range[1]" >
                 </v-range-slider>
                 <v-row>
                     <v-col cols="6" >
@@ -56,7 +60,7 @@ const rules = [
                             :model-value="props.value[0]"
                             @update:model-value="updatePosition(Number($event),0)"
                             single-line
-                            step="0.01"
+                            :step="props.step"
                             type="number"
                             variant="outlined"
                             density="compact"
@@ -69,7 +73,7 @@ const rules = [
                             :model-value="props.value[1]"
                             @update:model-value="updatePosition(Number($event),1)"
                             single-line
-                            step="0.01"
+                            :step="props.step"
                             type="number"
                             variant="outlined"
                             density="compact"
@@ -84,7 +88,7 @@ const rules = [
                     :model-value="props.value[0]"
                     @update:model-value="updateValue([Number($event),Number($event)])"
                     single-line
-                    step="0.01"
+                    :step="props.step"
                     type="number"
                     variant="outlined"
                     density="compact"
