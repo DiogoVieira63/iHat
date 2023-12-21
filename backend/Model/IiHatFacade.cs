@@ -3,7 +3,7 @@ using iHat.Model.Logs;
 using iHat.Model.Obras;
 
 public interface IiHatFacade{
-    Task NewConstruction(string name, string mapa, string status);
+    Task NewConstruction(string name, IFormFile? mapa, int idResponsavel);
 
     Task<List<Obra>?> GetObras(int idResponsavel);    
 

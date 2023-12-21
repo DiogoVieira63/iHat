@@ -3,8 +3,8 @@ namespace iHat.MensagensCapacete.Values;
 public class Heartrate : IDefaultValueHelmetMessage{
 
     public double Value {get; set;}
-    public double _minValue=60;
-    public double _maxValue=180;
+    private double _minValue=60;
+    private double _maxValue=180;
 
     public Heartrate(double heartrate){
         Value = heartrate;

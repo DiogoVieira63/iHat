@@ -15,26 +15,32 @@ using Newtonsoft.Json.Linq;
 public class PublisherService{
 
     static JObject getMessageContent(){
-        var result = new JObject();
-        result.Add("HelmetNB", "1");
-        result.Add("TypeMessage","ValueUpdate");
-        result.Add("Fall", "False");
-        result.Add("BodyTemperature", 36.1);
-        result.Add("Heartrate", 100);
-        result.Add("Proximity", "10");
-        result.Add("Position", "?");
+        var result = new JObject
+        {
+            { "HelmetNB", "1" },
+            { "TypeMessage", "ValueUpdate" },
+            { "Fall", "False" },
+            { "BodyTemperature", 38 },
+            { "Heartrate", 100 },
+            { "Proximity", "10" },
+            { "Position", "?" }
+        };
 
 
 
-        JObject loc = new JObject();
-        loc.Add("X", 0);
-        loc.Add("Y", 0);
-        loc.Add("Z", 0);
+        JObject loc = new JObject
+        {
+            { "X", 0 },
+            { "Y", 0 },
+            { "Z", 0 }
+        };
         result.Add("Location", loc);
 
-        JObject gases = new JObject();
-        gases.Add("Metano", 0);
-        gases.Add("MonoxidoCarbono", 0);
+        JObject gases = new JObject
+        {
+            { "Metano", 0 },
+            { "MonoxidoCarbono", 0 }
+        };
 
         result.Add("Gases", gases);
         
