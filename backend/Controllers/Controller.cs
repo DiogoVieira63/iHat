@@ -4,6 +4,7 @@ using iHat.Model.Obras;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
 using Microsoft.AspNetCore.Mvc;
+using iHat.Model.Zonas;
 
 namespace iHat.Controllers;
 
@@ -224,7 +225,35 @@ public class IHatController : ControllerBase{
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
         }
     }
-   
+
+    [HttpGet("helmetLivres")]
+    public async Task<ActionResult<List<Capacete>>> GetFreeHelmets(){
+        Console.WriteLine("Get Free Helmets GET Request");
+
+        var lista = await _facade.GetFreeHelmets();
+
+        if(lista == null){
+            return NotFound();
+        }
+
+        return lista;
+    }
+
+    //fazer o Update Zonas de Risco (idObra, {idMapa: List[Zona]})
+    [HttpPost("updateZonasRisco")]
+    public async Task<IActionResult> UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
+        Console.WriteLine("Update Zonas de Risco POST Request");
+
+        try
+        {
+            await _facade.UpdateZonasRiscoObra(idObra, idMapa, zonas);
+            return Ok(); // Retorna uma resposta de sucesso
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
+        }
+    }
 
     
 }

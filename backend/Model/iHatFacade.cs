@@ -1,6 +1,7 @@
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
+using iHat.Model.Zonas;
 
 namespace iHat.Model.iHatFacade;
 
@@ -110,6 +111,14 @@ public class iHatFacade: IiHatFacade{
 
     public async Task AddCapacete(int nCapacete){
         await icapacetes.Add(nCapacete);
+    }
+
+    public async Task<List<Capacete>> GetFreeHelmets(){
+        return await icapacetes.GetFreeHelmets();
+    }
+
+    public async Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
+        await iobras.UpdateZonasRiscoObra(idObra, idMapa, zonas);
     }
 
 

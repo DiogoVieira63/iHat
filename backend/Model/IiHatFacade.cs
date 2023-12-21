@@ -1,6 +1,7 @@
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
 using iHat.Model.Obras;
+using iHat.Model.Zonas;
 
 public interface IiHatFacade{
     Task NewConstruction(string name, string mapa, string status);
@@ -36,4 +37,10 @@ public interface IiHatFacade{
     Task<Capacete?> GetCapacete(int nCapacete);
 
     Task AddCapacete(int nCapacete );
+
+    Task<List<Capacete>> GetFreeHelmets();
+
+    Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas);
+
+
 }
