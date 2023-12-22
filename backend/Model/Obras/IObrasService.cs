@@ -30,5 +30,7 @@ public interface IObrasService{
     Task AddCapaceteToObra(int idCapacete, string idObra);
     
     Task DeleteCapaceteToObra(int id, string idObra);
+
+    Task AddListaMapaToObra(string id, List<string> mapas);
 }
     

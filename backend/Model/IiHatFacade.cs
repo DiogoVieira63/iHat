@@ -1,5 +1,6 @@
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
+using iHat.Model.Mapas;
 using iHat.Model.Obras;
 
 public interface IiHatFacade{
@@ -36,4 +37,8 @@ public interface IiHatFacade{
     Task<Capacete?> GetCapacete(int nCapacete);
 
     Task AddCapacete(int nCapacete );
+
+    Task<List<Mapa>> GetMapasDaObra(List<string> listaMapasIds);
+
+    Task AddMapa(string idObra, IFormFile mapaFile);
 }
