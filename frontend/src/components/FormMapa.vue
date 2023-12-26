@@ -29,8 +29,13 @@ const submit = (values: any) => {
         console.log(error)
     })
 
-
-
+    /*if (tipo.value == 'ifc') {
+        console.log(filesIfc.value)
+        console.log(typeof filesIfc.value)
+    } else {
+        console.log(filesDxf.value)
+        console.log(typeof filesDxf.value)
+    }*/
     console.log(JSON.stringify(values, null, 2))
 }
 </script>

@@ -1,9 +1,10 @@
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
+using iHat.Model.Mapas;
 using iHat.Model.Obras;
 
 public interface IiHatFacade{
-    Task NewConstruction(string name, string mapa, string status);
+    Task NewConstruction(string name, IFormFile? mapa, int idResponsavel);
 
     Task<List<Obra>?> GetObras(int idResponsavel);    
 
@@ -11,24 +12,33 @@ public interface IiHatFacade{
 
     Task<Obra> GetConstructionById(string id);
 
-    Task AddHelmet(int nCapacete );
-
-    Task<List<Capacete>> GetAll();
-
-    Task<Capacete> GetCapacete(string id);
-
     Task<List<Capacete>> GetAllCapacetesdaObra(string idObra);
 
-    Task DeleteCapaceteToObra(string id, string idObra);
+    Task DeleteCapaceteToObra(int nCapacete, string idObra);
 
-    Task AddCapaceteToObra(string idCapacete, string idObra);
+    Task AddCapaceteToObra(int nCapacete, string idObra);
 
     Task AlteraEstadoObra(string id, string estado);
 
     Task UpdateNomeObra(string idObra, string nome);
 
-    Task <List<Log>> GetLogs(string idObra);
+    Task<List<Log>> GetLogs(string idObra);
 
     Task AddLogs(Log logs);
 
+    Task ChangeStatusCapacete(int nCapacete, string newStatus);
+
+
+
+
+
+    Task<List<Capacete>> GetAllCapacetes();
+
+    Task<Capacete?> GetCapacete(int nCapacete);
+
+    Task AddCapacete(int nCapacete );
+
+    Task<List<Mapa>> GetMapasDaObra(List<string> listaMapasIds);
+
+    Task AddMapa(string idObra, IFormFile mapaFile);
 }

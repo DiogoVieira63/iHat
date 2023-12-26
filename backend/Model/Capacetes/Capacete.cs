@@ -5,20 +5,22 @@ namespace iHat.Model.Capacetes;
 
 public class Capacete
 {
-    [BsonId] // Primary key
-    [BsonRepresentation(BsonType.ObjectId)] // permite passar uma variável do tipo ObjectId como string
+    [BsonId] 
+    [BsonRepresentation(BsonType.ObjectId)] 
     public string? Id { get; set; }
-
-    public int NCapacete { get; set; }
+    public int NCapacete { get; set; } 
     public string Status { get; set; }
-    public string Info { get; set; }
-    public string Trabalhador { get; set; } // verificar isto se é string ou uma classe
+    public string? Trabalhador { get; set; } 
 
-    public Capacete(int nCapacete, string status, string info, string trabalhador)
+    public static readonly string Livre = "Livre";
+    public static readonly string AssociadoObra = "Associado à Obra";
+    public static readonly string EmUso = "Em Uso";
+    public static readonly string NaoOperacional = "Não Operacional";
+
+    public Capacete(int nCapacete, string status, string? trabalhador)
     {
         NCapacete = nCapacete;
         Status = status;
-        Info = info;
         Trabalhador = trabalhador;
     }
 }

@@ -196,8 +196,16 @@ watch(
             </v-card>
         </v-menu>
         <v-responsive max-width="400">
-            <v-text-field variant="outlined" label="Search" v-model="search" append-inner-icon="mdi-magnify" single-line
-                hide-details class="mx-5" rounded="xl"></v-text-field>
+            <v-text-field
+                variant="outlined"
+                label="Search"
+                v-model="search"
+                append-inner-icon="mdi-magnify"
+                single-line
+                hide-details
+                class="mx-5"
+                rounded="xl"
+            ></v-text-field>
         </v-responsive>
         <div style="flex-basis: 5%">
             <slot name="add"></slot>
@@ -223,6 +231,16 @@ watch(
                         :icon="iconSort(header.key)"
                         variant="text"
                         @click="selectSort(header.key)"
+                   /* v-for="(params, key) in newHeaders"
+                    :key="key"
+                    class="text-center bg-grey-lighten-2"
+                >
+                    {{ key }}
+                    <v-btn
+                        v-if="params.includes('sort')"
+                        :icon="iconSort(key)"
+                        variant="text"
+                        @click="selectSort(key)" */
                     ></v-btn>
                 </th>
             </tr>

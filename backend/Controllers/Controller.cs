@@ -67,10 +67,12 @@ public class IHatController : ControllerBase{
     // Get the construction identified by the id
     // ihat/constructions/{id}
     [HttpGet("constructions/{id}")]
-    public async Task<ActionResult<Obra>> GetConstruction(string id){
+    public async Task<ActionResult<ObrasDTO>> GetConstruction(string id){
         if (id != null){
-            return await _facade.GetConstructionById(id);
-            // return Ok(id);
+            var obras = await _facade.GetConstructionById(id);
+            var mapas = await _facade.GetMapasDaObra(obras.Mapa);
+            var dto = new ObrasDTO(obras, mapas);
+            return dto;
         }
         else{
             return NotFound();
@@ -89,16 +91,18 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
-    // Input: name, mapa, estado
     [HttpPost("constructions")]
-    public async Task<IActionResult> NewConstruction(NewConstructionForm form){
-
-        _logger.LogWarning(form.Mapa);
-
-
+    [DisableRequestSizeLimit]
+    public async Task<IActionResult> NewConstruction([FromForm]NewConstructionForm form){
         if(form != null){
             try{
-                await _facade.NewConstruction(form.Name, form.Mapa, form.Status);
+                var idResponsavel = 1;
+                if(form.Name != null && form.Mapa != null)
+                    await _facade.NewConstruction(form.Name, form.Mapa, idResponsavel);
+                else if (form.Name != null)
+                    await _facade.NewConstruction(form.Name, null, idResponsavel);
+                else
+                    throw new Exception("Nome da nova Obra tem de ser indicado");
             }
             catch (Exception e){
                 return BadRequest(e.Message);
@@ -121,7 +125,6 @@ public class IHatController : ControllerBase{
 
         try{
             await _facade.AlteraEstadoObra(obraId, state);
-
         }
         catch (Exception e){
             return BadRequest(e.Message);
@@ -130,16 +133,25 @@ public class IHatController : ControllerBase{
         return Ok(); // Return a success response
     }
 
-    //funcionar
+    [HttpPost("constructions/{id}/map")]
+    [DisableRequestSizeLimit]
+    public async Task<IActionResult> AddMapaToObra(string id, [FromForm] IFormFile Mapa){
+        try{
+            _logger.LogWarning(Mapa.Name);
+            await _facade.AddMapa(id, Mapa);
+        }
+        catch(Exception e){
+            return BadRequest(e.Message);
+        }
+        return Ok();
+    }
+
     [HttpPost("helmets")]
-    //    public async Task<IActionResult> NewHelmet(Capacete capacete){
     public async Task<IActionResult> NewHelmet(NewHelmetForm form){
-        Console.WriteLine("New Helmet POST Request");
-        // var capacete = new Capacete("Em uso", "Sem Informação", "", "");
-        
+        Console.WriteLine("New Helmet POST Request");       
         try
         {   
-            await _facade.AddHelmet(form.NCapacete);
+            await _facade.AddCapacete(form.NCapacete);
             return Ok(); // Retorna uma resposta de sucesso
         }
         catch (Exception e)
@@ -151,9 +163,10 @@ public class IHatController : ControllerBase{
     //funcionar
     [HttpGet("helmets/{id}")]
     public async Task<ActionResult<Capacete>> GetHelmet(string id){
-        Console.WriteLine("Get Helmet GET Request");
+        int nCapacete = Int32.Parse(id);
+        Console.WriteLine("Get Helmet GET Request {0}", nCapacete);
 
-        var capacete = await _facade.GetCapacete(id);
+        var capacete = await _facade.GetCapacete(nCapacete);
 
         if(capacete == null){
             return NotFound();
@@ -167,7 +180,7 @@ public class IHatController : ControllerBase{
     public async Task<ActionResult<List<Capacete>>> GetAllHelmets(){
         Console.WriteLine("Get All Helmets GET Request");
 
-        var lista = await _facade.GetAll();
+        var lista = await _facade.GetAllCapacetes();
 
         if(lista == null){
             return NotFound();
@@ -208,7 +221,7 @@ public class IHatController : ControllerBase{
         Console.WriteLine("Add Helmet To Obra POST Request");
 
         // string idCapacete = "6543c272e272c87c6b5f3d34";
-        // idObra= 6543cd51e272c87c6b5f3d35
+        // idObra = 6543cd51e272c87c6b5f3d35
 
         try
         {
@@ -248,6 +261,5 @@ public class IHatController : ControllerBase{
         {
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
         }
-    }
-   
+    }    
 }

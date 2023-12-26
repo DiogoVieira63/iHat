@@ -7,9 +7,9 @@ import RowObra from '@/components/RowObra.vue'
 import Map from '@/components/Map.vue'
 import Confirmation from '@/components/Confirmation.vue'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
-
 import type { Capacete, Obra } from '@/interfaces'
 import { CapaceteService, ObraService } from '@/http_requests'
+
 
 const route = useRoute()
 const capacetes = ref<Array<Capacete>>([])
@@ -132,20 +132,10 @@ const changeEstado = (value: boolean) => {
 <template>
     <PageLayout>
         <v-row class="mt-2">
-            <v-col
-                cols="12"
-                lg="6"
-            >
-                <v-row class="d-flex justify-center"
-            >
-                    <v-col
-                        cols="auto"
-                        v-bind:offset-lg="4"
-                    >
-                        <div
-                            class="text-h4 text-lg-h3"
-                            v-if="!isEditing"
-                        >
+            <v-col cols="12" lg="6" class="px-16">
+                <v-row align="center" justify="start">
+                    <v-col cols="auto" v-bind:offset-lg="4">
+                        <div class="text-h4 text-lg-h3" v-if="!isEditing">
                             {{ title }}
                         </div>
                         <v-text-field

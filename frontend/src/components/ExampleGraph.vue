@@ -27,6 +27,8 @@ const types = ref(['line', 'area', 'bar', 'heatmap', 'line', 'area', 'bar', 'hea
 const slotName = (index: number) => {
     return types.value[index] + index
 }
+
+
 </script>
 
 <template>

@@ -38,7 +38,7 @@ function toggleTheme() {
                 <v-btn icon="mdi-dots-vertical"></v-btn>
             </template>
         </v-app-bar>
-        <v-main >
+        <v-main>
             <slot></slot>
         </v-main>
         <v-footer
