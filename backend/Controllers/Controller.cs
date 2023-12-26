@@ -206,7 +206,8 @@ public class IHatController : ControllerBase{
 
         try
         {
-            await _facade.DeleteCapaceteToObra(idCapacete, idObra);
+            int nCapacete = Int32.Parse(idCapacete);
+            await _facade.DeleteCapaceteToObra(nCapacete, idObra);
             return Ok(); // Retorna uma resposta de sucesso            
         }
         catch (Exception e)
@@ -225,7 +226,8 @@ public class IHatController : ControllerBase{
 
         try
         {
-            await _facade.AddCapaceteToObra(idCapacete, idObra);
+            int nCapacete = Int32.Parse(idCapacete);
+            await _facade.AddCapaceteToObra(nCapacete, idObra);
             return Ok(); // Retorna uma resposta de sucesso
         }
         catch (Exception e)

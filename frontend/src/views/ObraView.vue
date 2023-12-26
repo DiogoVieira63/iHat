@@ -54,6 +54,7 @@ const getObra = () => {
 }
 
 const getCapacetesObra = () => {
+    capacetes.value = []
     ObraService.getCapacetesFromObra(route.params.id.toString()).then((answer) => {
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
@@ -62,16 +63,16 @@ const getCapacetesObra = () => {
     list.value = capacetes.value
 }
 
-const getCapacetesFromObra = (id: string) => {
-  console.log("getCapacetesFromObra")
-  list.value = []
-  ObraService.getCapacetesFromObra(id).then((answer) => {
-    console.log(answer)
-    answer.forEach((capacete) => {
-      list.value.push(capacete)
-    })
-  })
-}
+// const getCapacetesFromObra = (id: string) => {
+//   console.log("getCapacetesFromObra")
+//   list.value = []
+//   ObraService.getCapacetesFromObra(id).then((answer) => {
+//     console.log(answer)
+//     answer.forEach((capacete) => {
+//       list.value.push(capacete)
+//     })
+//   })
+// }
 
 onMounted(() => {
     getObra()
@@ -214,7 +215,7 @@ const changeEstado = (value: boolean) => {
                     <template #row="{ row }">
                         <RowObra
                             :row="row"
-                            @removeCapacete="(id) => removeCapacete(id)"
+                            @removeCapacete="(nCapacete) => removeCapacete(nCapacete)"
                             @changeStatus="(value) => changeEstadoCapacete(row, value)"
                         />
                     </template>

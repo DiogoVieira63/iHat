@@ -21,7 +21,7 @@ function changePage(nCapacete: string) {
 
 function changeStatus(confirmation: boolean) {
     if (confirmation) {
-        emit('changeStatus', newStatus(props.row.Status))
+        emit('changeStatus', newStatus(props.row.status))
     }
     dialog.value = false
 }
@@ -32,11 +32,11 @@ function newStatus(Status: string) {
 
 function removeCapacete(confirmation: boolean) {
     removeDialog.value = false
-    if (confirmation) emit('removeCapacete', props.row.NCapacete)
+    if (confirmation) emit('removeCapacete', props.row.nCapacete)
 }
 
 function isInUso() {
-    return props.row.status === 'Em uso'
+    return props.row.status === 'Em Uso'
 }
 </script>
 <template>
@@ -52,7 +52,7 @@ function isInUso() {
                     class="mt-5 pa-0"
                     density="compact"
                     :items="['Livre', 'Não Operacional']"
-                    :model-value="props.row['status']"
+                    :model-value="props.row['status'] == 'Associado à Obra' ? 'Livre' : props.row['status']"
                     @update:model-value="
                         (value) => {
                             if (value !== props.row['status']) open()

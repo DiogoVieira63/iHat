@@ -231,16 +231,6 @@ watch(
                         :icon="iconSort(header.key)"
                         variant="text"
                         @click="selectSort(header.key)"
-                   /* v-for="(params, key) in newHeaders"
-                    :key="key"
-                    class="text-center bg-grey-lighten-2"
-                >
-                    {{ key }}
-                    <v-btn
-                        v-if="params.includes('sort')"
-                        :icon="iconSort(key)"
-                        variant="text"
-                        @click="selectSort(key)" */
                     ></v-btn>
                 </th>
             </tr>

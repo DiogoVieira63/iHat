@@ -29,6 +29,7 @@ const getCapacetes = () => {
 const getObras = () => {
     console.log("getObras")
     obras.value = []
+    // enviar id de responsavel no get
     ObraService.getObras().then((answer) => {
         console.log(answer)
         answer.forEach((obra) => {
@@ -106,7 +107,7 @@ function changePage(id: string) {
                         <td
                             v-for="{ key } in headers"
                             :key="key"
-                            @click="changePage(row['id'])"
+                            @click="changePage(row['nCapacete'] ? row['nCapacete'] : row['id'])"
                         >
                             {{ row[key] }}
                         </td>
