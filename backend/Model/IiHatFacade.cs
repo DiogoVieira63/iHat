@@ -18,7 +18,7 @@ public interface IiHatFacade{
 
     Task AddCapaceteToObra(int nCapacete, string idObra);
 
-    void AlteraEstadoObra(string id, string estado);
+    Task AlteraEstadoObra(string id, string estado);
 
     Task UpdateNomeObra(string idObra, string nome);
 
