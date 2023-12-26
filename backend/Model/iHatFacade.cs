@@ -20,55 +20,61 @@ public class iHatFacade: IiHatFacade{
         imapas = mapasService;
     }
 
+
+    public async Task<Dictionary<string, string>> requestHTTP(IFormFile mapaFile){
+        // Request to python service "model2SVG"
+        var listaSvg = new Dictionary<string, string>();
+
+        // POST request to http://127.0.0.1:5000/ifc2sv {"ifc_file": "FILE"}
+        using (HttpClient client = new HttpClient())
+        using (MultipartFormDataContent content = new MultipartFormDataContent())
+        {
+            byte[] fileBytes;
+            using (var ms = new MemoryStream())
+            {
+                mapaFile.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+            ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
+            content.Add(fileContent, "ifc_file", "ifc_file"); // "file" is the name of the parameter expected by the server
+
+            HttpResponseMessage response = await client.PostAsync("http://127.0.0.1:5000/ifc2svg", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                throw new Exception("Unable to connect to python server");
+            }
+
+            var zipBytes = await response.Content.ReadAsByteArrayAsync();
+
+            using (MemoryStream zipStream = new MemoryStream(zipBytes))
+            using (ZipArchive zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read))
+            {
+                // Extract each entry in the zip archive
+                foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                {
+                    // Lê os bytes do arquivo
+                    using (Stream entryStream = entry.Open())
+                    using (StreamReader reader = new StreamReader(entryStream))
+                    {
+                        string contentFile = reader.ReadToEnd();
+                        listaSvg.Add(entry.Name, contentFile);
+                    }
+                }
+            }                
+        } 
+
+        return listaSvg; 
+    }
+
+
     public async Task NewConstruction(string name, IFormFile? mapa, int idResponsavel){
 
         var listaSvgDBIds = new List<string>();
         if(mapa != null && mapa.Length != 0){
 
-            // Request to python service "model2SVG"
-            var listaSvg = new Dictionary<string, string>();
-
-            // POST request to http://127.0.0.1:5000/ifc2sv {"ifc_file": "FILE"}
-            using (HttpClient client = new HttpClient())
-            using (MultipartFormDataContent content = new MultipartFormDataContent())
-            {
-                byte[] fileBytes;
-                using (var ms = new MemoryStream())
-                {
-                    mapa.CopyTo(ms);
-                    fileBytes = ms.ToArray();
-                }
-                ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
-                content.Add(fileContent, "ifc_file", "ifc_file"); // "file" is the name of the parameter expected by the server
-
-                HttpResponseMessage response = await client.PostAsync("http://127.0.0.1:5000/ifc2svg", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                    return;
-                }
-
-                var zipBytes = await response.Content.ReadAsByteArrayAsync();
-
-                using (MemoryStream zipStream = new MemoryStream(zipBytes))
-                using (ZipArchive zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read))
-                {
-                    // Extract each entry in the zip archive
-                    foreach (ZipArchiveEntry entry in zipArchive.Entries)
-                    {
-                        // Lê os bytes do arquivo
-                        using (Stream entryStream = entry.Open())
-                        using (StreamReader reader = new StreamReader(entryStream))
-                        {
-                            string contentFile = reader.ReadToEnd();
-                            listaSvg.Add(entry.Name, contentFile);
-                        }
-                    }
-                }                
-
-            }            
-
+            var listaSvg = await requestHTTP(mapa);                   
 
             foreach(var svg in listaSvg){
                 // new mapa value added to the db
@@ -169,10 +175,29 @@ public class iHatFacade: IiHatFacade{
     }
 
 
+    public async Task<List<Mapa>> GetMapasDaObra(List<string> listaMapasIds){
+        var results = new List<Mapa>();
+        
+        foreach(string id in listaMapasIds){
+            var mapa = await imapas.GetMapaById(id);
+            if(mapa != null)
+                results.Add(mapa);
+        }
 
-    // VERIFICAS OBRAS
+        return results;
+    }
 
+    public async Task AddMapa(string idObra, IFormFile mapaFile){
+        var listaSvgDBIds = new List<string>();
+        var listaSvg = await requestHTTP(mapaFile);                   
 
-
-
+        foreach(var svg in listaSvg){
+            // new mapa value added to the db
+            var ids = await imapas.Add(svg.Key, svg.Value);
+            if(ids != null)
+                listaSvgDBIds.Add(ids);
+        }
+        
+        await iobras.AddListaMapaToObra(idObra, listaSvgDBIds);
+    }
 }

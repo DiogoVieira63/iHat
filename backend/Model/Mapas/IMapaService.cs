@@ -12,4 +12,6 @@ public interface IMapaService{
     Task RemoveAllZonasPerigotoMapa( string name);
 
     Task UpdateZonasPerigotoMapa(string Name, List<ZonasRisco> lista);
+
+    Task<Mapa?> GetMapaById(string id);
 }

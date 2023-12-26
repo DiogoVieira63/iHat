@@ -23,9 +23,7 @@ public class MapaService: IMapaService{
 
     public async Task<string?> Add(string name, string svg){
         var mapa = new Mapa(name, svg);
-        Console.WriteLine(mapa.Id);
         await _mapaCollection.InsertOneAsync(mapa);
-        Console.WriteLine(mapa.Id);
         return mapa.Id;
     }
 
@@ -115,4 +113,8 @@ public class MapaService: IMapaService{
     }
 
 
+    public async Task<Mapa?> GetMapaById(string id){
+        var mapa = await _mapaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        return mapa;
+    }
 }
