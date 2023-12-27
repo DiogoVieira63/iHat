@@ -5,9 +5,9 @@ public interface IObrasService{
 
     Task RemoveObraByIdAsync(string obraId);
 
-    void AlteraEstadoObra(string id, string estado);
+    Task AlteraEstadoObra(string id, string estado);
 
-    Task AddObra(string name, int idResponsavel, string mapa, string status);
+    Task AddObra(string name, int idResponsavel, List<string> mapa);
     
     Task<Obra> GetConstructionById(string idObra);
 
@@ -30,5 +30,7 @@ public interface IObrasService{
     Task AddCapaceteToObra(int idCapacete, string idObra);
     
     Task DeleteCapaceteToObra(int id, string idObra);
+
+    Task AddListaMapaToObra(string id, List<string> mapas);
 }
     

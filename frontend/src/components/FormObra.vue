@@ -40,9 +40,18 @@ const close = () => {
 
 <template>
     <v-row justify="center">
-        <v-dialog v-model="dialog" width="1024" persistent>
+        <v-dialog
+            v-model="dialog"
+            width="1024"
+            persistent
+        >
             <template v-slot:activator="{ props }">
-                <v-btn icon variant="flat" color="primary" v-bind="props">
+                <v-btn
+                    icon
+                    variant="flat"
+                    color="primary"
+                    v-bind="props"
+                >
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
             </template>
@@ -54,16 +63,26 @@ const close = () => {
                             {{ notSubmited ? 'Registar Obra' : 'Adicionar Mapa' }}
                         </h1>
                         <v-spacer></v-spacer>
-                        <v-btn icon @click="close" variant="text">
+                        <v-btn
+                            icon
+                            @click="close"
+                            variant="text"
+                        >
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </v-row>
                 </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <v-form @submit.prevent="submit" v-if="notSubmited">
+                        <v-form
+                            @submit.prevent="submit"
+                            v-if="notSubmited"
+                        >
                             <v-row>
-                                <v-col cols="12" md="6">
+                                <v-col
+                                    cols="12"
+                                    md="6"
+                                >
                                     <v-text-field
                                         v-model="nomeObra.value.value"
                                         :error-messages="nomeObra.errorMessage.value"
@@ -71,7 +90,10 @@ const close = () => {
                                     ></v-text-field>
                                 </v-col>
 
-                                <v-col cols="12" md="6">
+                                <v-col
+                                    cols="12"
+                                    md="6"
+                                >
                                     <v-select
                                         v-model="estado.value.value"
                                         :error-messages="estado.errorMessage.value"
@@ -80,7 +102,13 @@ const close = () => {
                                     ></v-select>
                                 </v-col>
                             </v-row>
-                            <v-btn color="primary" type="submit" block class="mt-2">Submit</v-btn>
+                            <v-btn
+                                color="primary"
+                                type="submit"
+                                block
+                                class="mt-2"
+                                >Submit</v-btn
+                            >
                         </v-form>
                         <FormMapa v-else />
                     </v-container>

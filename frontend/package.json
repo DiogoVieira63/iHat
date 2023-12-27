@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "apexcharts": "^3.44.0",
+    "axios": "^1.6.2",
     "core-js": "^3.8.3",
     "graceful-fs": "^4.2.11",
     "mqtt": "^5.3.3",

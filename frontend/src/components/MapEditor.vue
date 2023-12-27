@@ -8,11 +8,11 @@ import SvgTooltip from './SvgTooltip.vue'
 import type { Option } from './SvgTooltip.vue'
 import type { PropType } from 'vue'
 import type { Capacete } from '@/views/SimulatorView.vue'
-
-let id = 0
+import type { Zone , Point } from '@/interfaces'
+import { watch } from 'vue'
 
 const props = defineProps({
-    svgSrc: {
+    svg: {
         type: String,
         required: true
     },
@@ -35,34 +35,32 @@ const props = defineProps({
     capaceteSelected: {
         type: Array as PropType<Array<number>>,
         required: false
+    },
+    zones: {
+        type: Array as PropType<Array<Zone>>,
+        required: true
     }
 })
 
-interface Point {
-    x: number
-    y: number
-    coef?: number
-}
+// if edit change, clear selected
+watch(() => props.edit, (newValue) => {
+    if (!newValue) {
+        unselectZones()
+    }
+})
 
-interface Polygon {
-    points: string
-    pointsArray: Array<Point>
-    id: number
-    stroke: string
-    multiplier: number
-    coef?: number
-}
 
-const coef = ref(1)
 const baseWidth = ref(0)
 const baseHeight = ref(0)
-const ratio = ref(1)
 const svgWidth = ref(0)
 const svgHeight = ref(0)
-const { width, mdAndDown } = useDisplay()
+const scaleSVG = ref(1)
+const { height, width, mdAndDown } = useDisplay()
 const cursorType = ref('default')
 
-const simulador = defineEmits([
+const emit = defineEmits([
+    'update:svg', 
+    'update:zones',
     'addCapacete',
     'selectCapacete',
     'update::capacete',
@@ -74,21 +72,32 @@ const changeCursor = (value: string) => {
     if (props.edit) cursorType.value = value
     else cursorType.value = 'default'
 }
-// Scale the max to 900px
-const scale = (x: number, y: number) => {
-    const max = width.value * 0.3
-    const ratio = x / y
-    if (x > y) {
-        return [max, max / ratio]
+
+const decodeBase64 = (svg: string) => {
+    // return atob(svg.split(',')[1])
+    return atob(svg)
+}
+
+const resizeSVG = () => {
+    let coef = 1
+    const ratio = baseWidth.value / baseHeight.value
+    if (baseWidth.value > baseHeight.value) {
+        if (mdAndDown.value) coef = 0.90
+        else coef = 0.45
+        svgWidth.value = width.value * coef
+        svgHeight.value = svgWidth.value / ratio
+        scaleSVG.value = baseWidth.value / svgWidth.value
     } else {
-        return [max * ratio, max]
+        coef = 0.65
+        svgHeight.value = height.value * coef
+        svgWidth.value = svgHeight.value * ratio
+        scaleSVG.value = baseHeight.value / svgHeight.value
     }
 }
 
+
 onMounted(async () => {
-    const response = await fetch(props.svgSrc)
-    const data = await response.text()
-    const parsed = parse(data)
+    const parsed = parse(decodeBase64(props.svg))
     const node: ElementNode = parsed.children[0] as ElementNode
     const height = node.properties ? node.properties.height : 100
     const vB = node.properties ? (node.properties.viewBox as string) : '0 0 100 100'
@@ -100,90 +109,60 @@ onMounted(async () => {
     }
     const w = values[2] - values[0]
     const h = values[3] - values[1]
-    coef.value = width.value / 2 / w
-    const [newW, newH] = scale(w, h)
-    baseWidth.value = newW
-    baseHeight.value = newH
-    svgWidth.value = baseWidth.value
-    svgHeight.value = baseHeight.value
-    ratio.value = newW / newH
+    baseWidth.value = w
+    baseHeight.value = h
+    resizeSVG()
 })
 
-const coefSvg = ref<number>(1)
-const polygons = ref<{ [key: string]: Polygon }>({})
 const drawPoints = ref<Array<Point>>([])
-const selectedZone = ref<string | null>(null)
+const selectedZone = ref<number | null>(null)
 const selectedPoint = ref<number>(0)
 const toggle = ref<string | undefined>(undefined)
 const drag = ref(false)
 const dragPoint = ref<Point>({ x: 0, y: 0 })
 
-const onResize = () => {
-    let coefX = 1
-    if (mdAndDown.value) {
-        coefX = (width.value * 0.9) / baseWidth.value
-    } else {
-        coefX = (width.value * 0.5) / baseWidth.value
+const pointScale = (point : Point) => {
+    return {
+        x: point.x * scaleSVG.value,
+        y: point.y * scaleSVG.value
     }
-    svgWidth.value = coefX > 1 ? baseWidth.value : baseWidth.value * coefX
-    svgHeight.value = svgWidth.value / ratio.value
-    coefSvg.value = svgWidth.value / baseWidth.value
 }
 
-function transform(value: number | null | undefined) {
-    if (!value) {
-        return `scale(${coefSvg.value})`
-    }
-    let res = coefSvg.value / value
-    return `scale(${res})`
+
+const transform = (value: number | null | undefined) => {
+    if (value == null) return ''
+    return `scale(${1/value})`
 }
 
 const isDrawing = computed(() => {
     return toggle.value === 'startDraw'
 })
 
-const isAddingCapacete = computed(() => {
-    return toggle.value === 'addCapacete'
-})
-
 const viewBox = computed(() => {
     return `0 0 ${svgWidth.value} ${svgHeight.value}`
 })
 
-const polygonToString = (index: number) => {
-    let points = polygons.value[index].pointsArray
-    let multiplier = 1
-    return points.map((point) => `${point.x * multiplier},${point.y * multiplier}`).join(' ')
+const polygonToString = (points: Array<Point>) => {
+    return points.map((point) => `${point.x},${point.y}`).join(' ')
 }
 
 const createPoint = (array: Ref<Array<Point>>, x: number, y: number) => {
-    const point: Point = {
-        x: x,
-        y: y,
-        coef: coefSvg.value
-    }
+    const point = pointScale({ x, y })
     array.value.push(point)
 }
 
 const createPolygon = (points: Array<Point>) => {
     if (points.length >= 3) {
-        let multiplier = 1
-        if (coefSvg.value < 1) {
-            multiplier = 1 / coefSvg.value
+        let zone: Zone = {
+            id: Date.now(),
+            points: points.map((point) => {
+                return {
+                    x: point.x,
+                    y: point.y
+                }
+            })
         }
-        const pointString = points
-            .map((point) => `${point.x * multiplier},${point.y * multiplier}`)
-            .join(' ')
-        let polygon: Polygon = {
-            points: pointString,
-            pointsArray: points,
-            multiplier: multiplier,
-            id: id,
-            stroke: 'none',
-            coef: coefSvg.value * multiplier
-        }
-        polygons.value[id] = polygon
-        id += 1
+        emit('update:zones', [...props.zones, zone])
     }
 }
 
@@ -202,9 +181,11 @@ const undo = () => {
 
 const deleteZone = () => {
     if (selectedZone.value) {
-        delete polygons.value[selectedZone.value]
-        selectedZone.value = null
+        let zones = [...props.zones]
+        let index = zones.findIndex((zone) => zone.id == selectedZone.value)
+        zones.splice(index, 1)
         drawPoints.value = []
+        emit('update:zones', zones)
     }
 }
 
@@ -221,7 +202,6 @@ const updateEditButton = (newValue: string | null) => {
             break
         case 'clear':
             drawPoints.value = []
-            polygons.value = {}
             selectedZone.value = null
             toggle.value = undefined
             break
@@ -239,11 +219,11 @@ const updateEditButton = (newValue: string | null) => {
         case 'addCapacete':
             break
         case 'selectAll':
-            simulador('selectAll')
+            emit('selectAll')
             toggle.value = undefined
             break
         case 'unselectAll':
-            simulador('unselectAll')
+            emit('unselectAll')
             toggle.value = undefined
             break
         case undefined:
@@ -253,7 +233,8 @@ const updateEditButton = (newValue: string | null) => {
     }
 }
 
-const isZoneSelected = (id: string) => {
+
+const isZoneSelected = (id: number) => {
     return selectedZone.value == id
 }
 
@@ -262,11 +243,11 @@ const unselectZones = () => {
     drawPoints.value = []
 }
 
-const selectZone = (id: string) => {
+const selectZone = (id: number) => {
+    if (!props.edit || isDrawing.value ) return
     unselectZones()
     selectedZone.value = id
-    drawPoints.value = polygons.value[id].pointsArray
-    polygons.value[id].stroke = 'black'
+    drawPoints.value = props.zones.find((zone) => zone.id == id)?.points || []
 }
 
 const clearPoints = () => {
@@ -276,32 +257,28 @@ const clearPoints = () => {
 const mousePos = ref({ x: 0, y: 0 })
 
 const showPosMouse = (e: MouseEvent) => {
-    mousePos.value.x = e.offsetX
-    mousePos.value.y = e.offsetY
+    mousePos.value = pointScale({ x: e.offsetX, y: e.offsetY })
 }
 
 const svgClick = (e: MouseEvent) => {
-    const x = e.offsetX
-    const y = e.offsetY
-    if (isAddingCapacete.value) {
-        const key = Date.now()
-        simulador('addCapacete', { position: { x: x, y: y }, key: key })
-        simulador('selectCapacete', key)
-        return
-    }
+    if (!props.edit) return
     if (drag.value) {
         drag.value = false
         return
     }
-    if (isDrawing.value) {
-        createPoint(drawPoints, x, y)
+    if (toggle.value === 'startDraw') {
+        const x = e.offsetX
+        const y = e.offsetY
+        if (toggle.value === 'startDraw') {
+            createPoint(drawPoints, x, y)
+        }
     }
 }
 
 const moveDrag = (e: MouseEvent) => {
     if (drag.value) {
-        dragPoint.value.x = e.offsetX
-        dragPoint.value.y = e.offsetY
+        dragPoint.value.x = e.offsetX * scaleSVG.value
+        dragPoint.value.y = e.offsetY * scaleSVG.value 
     }
 }
 
@@ -310,10 +287,6 @@ const svgLeave = () => {
     drag.value = false
 }
 
-const polygonStrokeArray = (id: string) => {
-    if (isZoneSelected(id)) return '5 10'
-    else return '0'
-}
 const addPointToDrawPoints = (index: number, point: Point) => {
     drawPoints.value.splice(index, 0, point)
 }
@@ -321,6 +294,21 @@ const addPointToDrawPoints = (index: number, point: Point) => {
 const canDelete = computed(() => {
     return !(selectedZone.value != null)
 })
+const polygonStrokeArray = (id: number) => {
+    if (isZoneSelected(id)) return `${5 * scaleSVG.value} ${10  * scaleSVG.value}`
+    else return '0'
+}
+
+const createBlobURL = (svg: string) => {
+  // Decode the base64 SVG content
+  const decodedSVG = atob(svg);
+  
+  // Convert decoded SVG content to a Blob
+  const blob = new Blob([decodedSVG], { type: 'image/svg+xml' });
+  
+  // Create a URL for the Blob
+  return URL.createObjectURL(blob);
+}
 
 const canUndo = computed(() => {
     return !(isDrawing.value && drawPoints.value.length > 0)
@@ -352,18 +340,11 @@ const optionsTooltip = computed(() => {
 
 <template>
     <v-container v-if="active">
-        <v-sheet
-            :height="mdAndDown ? svgHeight : '65vh'"
-            class="d-flex align-center justify-center flex-wrap my-auto py-4"
-        >
+        <v-sheet height="65vh" class="d-flex align-center">
             <v-row justify="center">
                 <svg
                     @click="svgClick"
-                    @mouseenter="
-                        () =>
-                            isDrawing || isAddingCapacete ? changeCursor('crosshair') : undefined
-                    "
-                    @mouseover="moveDrag"
+                    @mouseenter="() => (isDrawing ? changeCursor('crosshair') : undefined)"
                     @mouseleave="svgLeave"
                     @mousemove="showPosMouse"
                     id="my-svg"
@@ -371,21 +352,28 @@ const optionsTooltip = computed(() => {
                     :width="svgWidth"
                     :height="svgHeight"
                     v-bind:style="{ cursor: cursorType }"
-                    v-resize="onResize"
                     class="border"
+                    v-resize="resizeSVG"
+                    @mouseover="moveDrag"
                 >
-                    <image :href="props.svgSrc" :width="svgWidth" :height="svgHeight" />
+                    <!--image :href="props.svg" :width="svgWidth" :height="svgHeight" /-->
+                    <image
+                        :xlink:href="createBlobURL(props.svg)"
+                        :width="svgWidth"
+                        :height="svgHeight"
+                    />
+
                     <polygon
-                        v-for="(polygon, id) in polygons"
+                        v-for="{ points, id } in props.zones"
                         :id="id.toString()"
-                        :points="polygonToString(Number(id))"
+                        :points="polygonToString(points)"
                         fill="red"
                         fill-opacity="0.5"
-                        @click="selectZone(String(id))"
-                        stroke="red"
-                        stroke-width="3"
-                        :stroke-dasharray="polygonStrokeArray(String(id))"
-                        :transform="transform(polygon.coef)"
+                        @click="selectZone(id)"
+                        :transform="transform(scaleSVG)"
+                        stroke="black"
+                        :stroke-width="3 * scaleSVG"
+                        :stroke-dasharray="polygonStrokeArray(id)"
                         :key="id"
                     />
                     <svg-draw
@@ -406,7 +394,7 @@ const optionsTooltip = computed(() => {
                     <image
                         v-for="{ position, key } in props.capacetesPosition"
                         :key="key"
-                        @click="simulador('selectCapacete', key)"
+                        @click="emit('selectCapacete', key)"
                         :x="position['x'] - 15"
                         :y="position['y'] - 15"
                         width="30"
@@ -423,11 +411,15 @@ const optionsTooltip = computed(() => {
         <template class="d-flex justify-center">
             <v-sheet
                 v-if="isDrawing"
-                class="my-5 d-flex justify-center border pa-3"
+                class="my-10 d-flex justify-center border pa-3"
                 width="500px"
                 rounded="xl"
             >
-                <v-icon color="info" class="mr-2">mdi-information</v-icon>
+                <v-icon
+                    color="info"
+                    class="mr-2"
+                    >mdi-information</v-icon
+                >
                 <p>Conecte com o primeiro para terminar o polígono.</p>
             </v-sheet>
         </template>

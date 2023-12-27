@@ -63,12 +63,30 @@ const selected = (name: string, index: number) => {
 </script>
 
 <template>
-    <v-row justify="center" class="ma-3">
-        <v-btn-toggle multiple rounded="xl" v-model="toggle" background-color="primary">
-            <v-tooltip v-for="(key, index) in titles" :text="key" location="top" :key="key">
+    <v-row
+        justify="center"
+        class="ma-3"
+    >
+        <v-btn-toggle
+            multiple
+            rounded="xl"
+            v-model="toggle"
+            background-color="primary"
+        >
+            <v-tooltip
+                v-for="(key, index) in titles"
+                :text="key"
+                location="top"
+                :key="key"
+            >
                 <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" :value="key">
-                        <v-icon :color="colors[index]" :active="isActive(key)"
+                    <v-btn
+                        v-bind="props"
+                        :value="key"
+                    >
+                        <v-icon
+                            :color="colors[index]"
+                            :active="isActive(key)"
                             >mdi-checkbox-blank-circle</v-icon
                         >
                     </v-btn>
@@ -77,9 +95,16 @@ const selected = (name: string, index: number) => {
         </v-btn-toggle>
     </v-row>
     <v-row>
-        <template v-for="(key, index) in titles" :key="key">
+        <template
+            v-for="(key, index) in titles"
+            :key="key"
+        >
             <Transition>
-                <v-col v-if="isActive(key)" cols="12" :lg="getColumn(key)">
+                <v-col
+                    v-if="isActive(key)"
+                    cols="12"
+                    :lg="getColumn(key)"
+                >
                     <v-card>
                         <v-card-title>
                             <v-row class="my-4">
@@ -100,7 +125,11 @@ const selected = (name: string, index: number) => {
             </Transition>
         </template>
     </v-row>
-    <v-dialog v-model="dialog" persistent fullscreen>
+    <v-dialog
+        v-model="dialog"
+        persistent
+        fullscreen
+    >
         <v-card>
             <v-card-title>
                 <v-row class="my-4">
@@ -117,7 +146,11 @@ const selected = (name: string, index: number) => {
                 </v-row>
             </v-card-title>
             <v-card-text>
-                <v-sheet class="mx-auto border-md rounded-xl" max-width="80vw" color="background">
+                <v-sheet
+                    class="mx-auto border-md rounded-xl"
+                    max-width="80vw"
+                    color="background"
+                >
                     <slot :name="selectChart"></slot>
                 </v-sheet>
             </v-card-text>

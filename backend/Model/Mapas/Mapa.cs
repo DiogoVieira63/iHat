@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System.Collections.Generic; // Adicionado para List<>
 using iHat.Model.Zonas;
 
 namespace iHat.Model.Mapas;

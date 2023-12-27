@@ -31,8 +31,16 @@ const slotName = (index: number) => {
 
 <template>
     <ChartLayout>
-        <template v-for="(type, index) in types" #[slotName(index)] :key="index">
-            <apexchart :type="type" :options="options(index)" :series="series"></apexchart>
+        <template
+            v-for="(type, index) in types"
+            #[slotName(index)]
+            :key="index"
+        >
+            <apexchart
+                :type="type"
+                :options="options(index)"
+                :series="series"
+            ></apexchart>
         </template>
     </ChartLayout>
 </template>

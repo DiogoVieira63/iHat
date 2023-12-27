@@ -9,7 +9,7 @@ public class Capacete
     [BsonRepresentation(BsonType.ObjectId)] 
     public string? Id { get; set; }
     public int NCapacete { get; set; } 
-    public string Status { get; set; } // Livre, Associado à obra, Em Uso, Não Operacional
+    public string Status { get; set; }
     public string? Trabalhador { get; set; } 
 
     public static readonly string Livre = "Livre";

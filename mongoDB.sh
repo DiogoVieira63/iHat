@@ -9,6 +9,10 @@ DB_NAME="iHatDB"
 OBRAS_COLLECTION="Obras"
 CAPACETES_COLLECTION="Capacetes"
 LOGS_COLLECTION="Logs"
+MENSAGENS_CAPACETE_COLLECTION="MensagensCapacete"
+
+ZONAS_RISCO_COLLECTION="ZonasRisco"
+MAPAS_COLLECTION="Mapas"
 
 # Connect to MongoDB
 mongosh --host ${MONGO_HOST}:${MONGO_PORT} <<EOF
@@ -17,20 +21,18 @@ use ${DB_NAME}
 
 db.createCollection("${OBRAS_COLLECTION}")
 
-db.Obras.insertMany( [
+db.${OBRAS_COLLECTION}.insertMany( [
     {
         "IdResponsavel":1,
         "Name":"Primeira Obra",
-        "Zonas":[],
-        "Mapa": "file1",
+        "Mapa": [],
         "Capacetes":[],
         "Status":"Pendente"
     },
     {
         "IdResponsavel":1,
         "Name":"Segunda Obra",
-        "Zonas":[],
-        "Mapa": "file3",
+        "Mapa": [],
         "Capacetes":[1,2],
         "Status":"Em Curso"
     }
@@ -38,7 +40,7 @@ db.Obras.insertMany( [
 
 db.createCollection("${CAPACETES_COLLECTION}")
 
-db.Capacetes.insertMany( [
+db.${CAPACETES_COLLECTION}.insertMany( [
     {
         "NCapacete":1,
         "Status":"Em Uso",
@@ -46,11 +48,31 @@ db.Capacetes.insertMany( [
     },
     {
         "NCapacete":2,
-        "Status":"Livre",
+        "Status":"Associado à Obra",
         "Trabalhador": null,
     }
 ] )
 
 db.createCollection("${LOGS_COLLECTION}")
+
+db.createCollection("${MENSAGENS_CAPACETE_COLLECTION}")
+
+db.${MENSAGENS_CAPACETE_COLLECTION}.insertMany( [
+    {
+        NCapacete: 1,
+        Type: 'ValueUpdate',
+        Fall: false,
+        BodyTemperature: { Value: 36.1 },
+        Heartrate: { Value: 100 },
+        Proximity: '10',
+        Position: '?',
+        Location: { X: 0, Y: 0, Z: 0 },
+        Gases: { Metano: 0, MonoxidoCarbono: 0 }
+  }
+] )
+
+db.createCollection("${ZONAS_RISCO_COLLECTION}")
+
+db.createCollection("${MAPAS_COLLECTION}")
 
 EOF

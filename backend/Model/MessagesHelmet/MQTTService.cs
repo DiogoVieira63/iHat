@@ -1,5 +1,5 @@
 using System.Text;
-using iHat.MensagensCapacete;
+using iHat.Model.MensagensCapacete;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
 using iHat.Model.Obras;
@@ -8,6 +8,7 @@ using MQTTnet.Client;
 using MQTTnet.Formatter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 
 namespace iHat.MQTTService;
 
@@ -28,12 +29,15 @@ public class MQTTService {
     private ICapacetesService _capacetesService;
     private IObrasService _obrasService;
     private ILogsService _logsService;
+    private MensagemCapaceteService _mensagemCapaceteService;
 
-    public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService, ILogsService logsService){
+    public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService, ILogsService logsService, MensagemCapaceteService mensagemCapaceteService){
 
         _logger = logger;
         _obrasService = obrasService;
         _capacetesService = capacetesService;
+        _logsService = logsService;
+        _mensagemCapaceteService = mensagemCapaceteService;
 
         _mqttFactory = new MqttFactory();
         _mqttClient = _mqttFactory.CreateMqttClient();
@@ -50,8 +54,6 @@ public class MQTTService {
                 await _mqttClient.ConnectAsync(_mqttClient.Options, _timeoutToken.Token);
             }
         };
-
-        
     }
 
 
@@ -91,61 +93,49 @@ public class MQTTService {
     private async Task HandleReceivedMessage(MqttApplicationMessageReceivedEventArgs eventArgs)
     {
         var payload = Encoding.UTF8.GetString(eventArgs.ApplicationMessage.PayloadSegment);
-        _logger.LogInformation("Received application message. {0}. {1}", payload, eventArgs.ApplicationMessage.Topic);
+        _logger.LogDebug("Received application message. {0}. Topic: {1}", payload, eventArgs.ApplicationMessage.Topic);
     
         try {
-            var messageJson = JsonConvert.DeserializeObject<MensagensCapacetes>(payload);
+            var messageJson = JsonConvert.DeserializeObject<MensagemCapacete>(payload);
 
             if(messageJson is null){
-                _logger.LogInformation("Message received could not be parsed.");
+                _logger.LogDebug("Message received could not be parsed.");
+                return;
             }
 
-            _logger.LogInformation(messageJson.NCapacete.ToString());
-            _logger.LogInformation(messageJson.Location.ToString());
-            _logger.LogInformation(messageJson.Gases.ToString());
+            messageJson.timestamp = DateTime.Now;
+
+            // Verifica se há um capacete ao qual associar a mensagem
+            var capacete = await _capacetesService.GetById(messageJson.NCapacete);
+            if(capacete == null){
+                _logger.LogWarning("Mensagem MQTT recebida não tem um Capacete associado.");
+                return;
+            }
+
+            if(capacete.Trabalhador == null){
+                _logger.LogWarning("Mensagem recebida de um capacete que não está associado a nenhum trabalhador");
+                return;
+            }
+
+            if(capacete.Status != Capacete.EmUso){
+                _logger.LogWarning("Mensagem recebida de um capacete que não está a ser utilizado");
+                return;
+            }
+
+            await _mensagemCapaceteService.Add(messageJson);
 
             Tuple<bool, string> messageRe = messageJson.SearchForAnormalValues();
-
             if (messageRe.Item1 == true){
-                var message = "";
-                switch(messageRe.Item2){
-                    case "Fall":
-                        message = "Warning: Fall detected!";
-                        break;
-
-                    case "Temperature":
-                        message = "Warning: Unusual body temperature detected!";
-                        break;
-
-                    case "Heartrate":
-                        message = "Warning: Unusual heartrate detected!";
-                        break;
-
-                    case "Gases":
-                        message = "Warning: High concentration of harmful gases detected!";
-                        break;
-
-                    default:
-                        break;
-                }
-
-                // get helmet by NCapacete 
-                var capacete = await  _capacetesService.GetById(messageJson.NCapacete);
-                        
-                // get idObra
+                _logger.LogInformation("Abnormal Value Detected.");              
                 var obra = await _obrasService.GetIdObraWithCapaceteId(capacete.NCapacete);
-
-                // (DateTime timestap, string idObra, string idCapacete, string idTrabalhador, string mensagem )
-                var log = new Log(DateTime.Now, obra, messageJson.NCapacete, capacete.Trabalhador, message);
-                
-                // Save Log in DB
+                var log = new Log(DateTime.Now, obra, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
                 await _logsService.Add(log);
+                
                 // Notify Helmet
+                await NotifyCapacete(messageJson.NCapacete);
                         
                 // Notify FrontEnd
-
             }
-               
         }catch(Exception e){
             Console.WriteLine(e.Message);
         }
@@ -159,5 +149,26 @@ public class MQTTService {
                 .Build()
         );
     }  
+
+
+    public async Task NotifyCapacete(int nCapacete){
+        var messagePayload = new JObject
+        {
+            { "Notify", true }
+        };
+
+        string json = JsonConvert.SerializeObject(messagePayload);
+        byte[] serializedResult = Encoding.UTF8.GetBytes(json);
+    
+        // Create and publish a message
+        var message = new MqttApplicationMessageBuilder()
+            .WithTopic("my/topic/"+nCapacete) // Replace with your desired topic
+            .WithPayload(serializedResult)
+            .WithRetainFlag()
+            .Build();
+
+        await _mqttClient.PublishAsync(message);
+    
+    }
 
 }

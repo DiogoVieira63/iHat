@@ -1,6 +1,8 @@
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
+using System.IO.Compression;
+using iHat.Model.Mapas;
 
 namespace iHat.Model.iHatFacade;
 
@@ -9,20 +11,80 @@ public class iHatFacade: IiHatFacade{
     private readonly IObrasService iobras;
     private readonly ICapacetesService icapacetes;
     private readonly ILogsService ilogs;
+    private readonly IMapaService imapas;
 
-    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService){
+    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService){
         iobras = obrasService;
         icapacetes = capacetesService;
         ilogs = logsService;
+        imapas = mapasService;
     }
 
-    public async Task NewConstruction(string name, string mapa, string status){
 
-        // TO DO:
-        // Obter o id do responsável que realizou o pedido do post
-        var idResponsavel = 1;
+    public async Task<Dictionary<string, string>> requestHTTP(IFormFile mapaFile){
+        // Request to python service "model2SVG"
+        var listaSvg = new Dictionary<string, string>();
 
-        await iobras.AddObra(name, idResponsavel, mapa, status); 
+        // POST request to http://127.0.0.1:5000/ifc2sv {"ifc_file": "FILE"}
+        using (HttpClient client = new HttpClient())
+        using (MultipartFormDataContent content = new MultipartFormDataContent())
+        {
+            byte[] fileBytes;
+            using (var ms = new MemoryStream())
+            {
+                mapaFile.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+            ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
+            content.Add(fileContent, "ifc_file", "ifc_file"); // "file" is the name of the parameter expected by the server
+
+            HttpResponseMessage response = await client.PostAsync("http://127.0.0.1:5000/ifc2svg", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                throw new Exception("Unable to connect to python server");
+            }
+
+            var zipBytes = await response.Content.ReadAsByteArrayAsync();
+
+            using (MemoryStream zipStream = new MemoryStream(zipBytes))
+            using (ZipArchive zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read))
+            {
+                // Extract each entry in the zip archive
+                foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                {
+                    // Lê os bytes do arquivo
+                    using (Stream entryStream = entry.Open())
+                    using (StreamReader reader = new StreamReader(entryStream))
+                    {
+                        string contentFile = reader.ReadToEnd();
+                        listaSvg.Add(entry.Name, contentFile);
+                    }
+                }
+            }                
+        } 
+
+        return listaSvg; 
+    }
+
+
+    public async Task NewConstruction(string name, IFormFile? mapa, int idResponsavel){
+
+        var listaSvgDBIds = new List<string>();
+        if(mapa != null && mapa.Length != 0){
+
+            var listaSvg = await requestHTTP(mapa);                   
+
+            foreach(var svg in listaSvg){
+                // new mapa value added to the db
+                var ids = await imapas.Add(svg.Key, svg.Value);
+                if(ids != null)
+                    listaSvgDBIds.Add(ids);
+            }
+
+        }
+        await iobras.AddObra(name, idResponsavel, listaSvgDBIds); 
     }
 
     public async Task<List<Obra>?> GetObras(int idResponsavel){
@@ -75,15 +137,15 @@ public class iHatFacade: IiHatFacade{
         }
     }
 
-    public async void AlteraEstadoObra(string id, string estado){
-        iobras.AlteraEstadoObra(id, estado);
+    public async Task AlteraEstadoObra(string id, string estado){
+        await iobras.AlteraEstadoObra(id, estado);
     }
 
     public async Task UpdateNomeObra(string idObra, string nome){
         await iobras.UpdateNomeObra(idObra, nome);
     }
 
-    public async Task<List<Log>>  GetLogs(string idObra){
+    public async Task<List<Log>> GetLogs(string idObra){
         return await ilogs.GetLogsOfObra(idObra);
     }
 
@@ -93,7 +155,7 @@ public class iHatFacade: IiHatFacade{
 
 
     public async Task ChangeStatusCapacete(int nCapacete, string newStatus){
-        icapacetes.UpdateCapaceteStatus(nCapacete, newStatus);
+        await icapacetes.UpdateCapaceteStatus(nCapacete, newStatus);
     }
 
 
@@ -113,10 +175,29 @@ public class iHatFacade: IiHatFacade{
     }
 
 
+    public async Task<List<Mapa>> GetMapasDaObra(List<string> listaMapasIds){
+        var results = new List<Mapa>();
+        
+        foreach(string id in listaMapasIds){
+            var mapa = await imapas.GetMapaById(id);
+            if(mapa != null)
+                results.Add(mapa);
+        }
 
-    // VERIFICAS OBRAS
+        return results;
+    }
 
+    public async Task AddMapa(string idObra, IFormFile mapaFile){
+        var listaSvgDBIds = new List<string>();
+        var listaSvg = await requestHTTP(mapaFile);                   
 
-
-
+        foreach(var svg in listaSvg){
+            // new mapa value added to the db
+            var ids = await imapas.Add(svg.Key, svg.Value);
+            if(ids != null)
+                listaSvgDBIds.Add(ids);
+        }
+        
+        await iobras.AddListaMapaToObra(idObra, listaSvgDBIds);
+    }
 }
