@@ -44,8 +44,14 @@ const saveEdit = async (confirmation: boolean) => {
 <template>
     <template v-if="mapList.length > 0">
         <template v-for="(map, index) in mapList" :key="map.name">
-            <map-editor :active="index == page - 1" :edit="edit" :svg="map.svg" :zones="map.zones"
-                @update:zones="map.zones = $event"></map-editor>
+            <map-editor 
+                :active="index == page - 1" 
+                :edit="edit" 
+                :svg="map.svg" 
+                :zones="map.zones"
+                @update:zones="map.zones = $event"
+                options="Edit"
+            ></map-editor>
         </template>
         <v-row class="my-4">
             <v-spacer />

@@ -3,8 +3,12 @@ import { ref, onMounted, computed } from 'vue'
 import type { Ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import { parse, type ElementNode } from 'svg-parser'
-import type { Zone , Point } from '@/interfaces'
+import SvgDraw from './SvgDraw.vue'
+import SvgTooltip from './SvgTooltip.vue'
+import type { Option } from './SvgTooltip.vue'
 import type { PropType } from 'vue'
+import type { Capacete } from '@/views/SimulatorView.vue'
+import type { Zone , Point } from '@/interfaces'
 import { watch } from 'vue'
 
 const props = defineProps({
@@ -20,6 +24,18 @@ const props = defineProps({
         type: Boolean,
         required: true
     },
+    options: {
+        type: String,
+        required: true
+    },
+    capacetesPosition: {
+        type: Array as PropType<Array<Capacete>>,
+        required: false
+    },
+    capaceteSelected: {
+        type: Array as PropType<Array<number>>,
+        required: false
+    },
     zones: {
         type: Array as PropType<Array<Zone>>,
         required: true
@@ -34,8 +50,6 @@ watch(() => props.edit, (newValue) => {
 })
 
 
-const emit = defineEmits(['update:svg', 'update:zones'])
-
 const baseWidth = ref(0)
 const baseHeight = ref(0)
 const svgWidth = ref(0)
@@ -43,6 +57,16 @@ const svgHeight = ref(0)
 const scaleSVG = ref(1)
 const { height, width, mdAndDown } = useDisplay()
 const cursorType = ref('default')
+
+const emit = defineEmits([
+    'update:svg', 
+    'update:zones',
+    'addCapacete',
+    'selectCapacete',
+    'update::capacete',
+    'selectAll',
+    'unselectAll'
+])
 
 const changeCursor = (value: string) => {
     if (props.edit) cursorType.value = value
@@ -92,7 +116,7 @@ onMounted(async () => {
 
 const drawPoints = ref<Array<Point>>([])
 const selectedZone = ref<number | null>(null)
-const selectedPoint = ref<number | null>(null)
+const selectedPoint = ref<number>(0)
 const toggle = ref<string | undefined>(undefined)
 const drag = ref(false)
 const dragPoint = ref<Point>({ x: 0, y: 0 })
@@ -166,6 +190,7 @@ const deleteZone = () => {
 }
 
 const updateEditButton = (newValue: string | null) => {
+    if (newValue) toggle.value = newValue
     switch (newValue) {
         case 'startDraw':
             drawPoints.value = []
@@ -187,59 +212,27 @@ const updateEditButton = (newValue: string | null) => {
         case 'remove':
             if (selectedPoint.value != null) {
                 drawPoints.value.splice(selectedPoint.value, 1)
-                selectedPoint.value = null
+                selectedPoint.value = 0
             }
             toggle.value = undefined
             break
+        case 'addCapacete':
+            break
+        case 'selectAll':
+            emit('selectAll')
+            toggle.value = undefined
+            break
+        case 'unselectAll':
+            emit('unselectAll')
+            toggle.value = undefined
+            break
         case undefined:
+            toggle.value = undefined
             clearPoints()
             break
     }
 }
 
-const lastPos = computed(() => {
-    return drawPoints.value[drawPoints.value.length - 1]
-})
-
-const drawLines = computed(() => {
-    if (toggle.value !== 'startDraw') return []
-    let lines: Array<[Point, Point]> = []
-    for (let i = 0; i < drawPoints.value.length - 1; i++) {
-        let line: [Point, Point] = [drawPoints.value[i], drawPoints.value[i + 1]]
-        lines.push(line)
-    }
-    return lines
-})
-
-const drawPointsMiddle = computed(() => {
-    let points: Array<Point> = []
-    for (let i = 0; i < drawPoints.value.length - 1; i++) {
-        let point: Point = {
-            x: (drawPoints.value[i].x + drawPoints.value[i + 1].x) / 2,
-            y: (drawPoints.value[i].y + drawPoints.value[i + 1].y) / 2
-        }
-        points.push(point)
-    }
-    // last point to first point
-    if (drawPoints.value.length > 2 && !isDrawing.value) {
-        let point: Point = {
-            x: (drawPoints.value[drawPoints.value.length - 1].x + drawPoints.value[0].x) / 2,
-            y: (drawPoints.value[drawPoints.value.length - 1].y + drawPoints.value[0].y) / 2
-        }
-        points.push(point)
-    }
-    return points
-})
-
-const drawPointsAll = computed(() => {
-    let all = []
-    for (let i = 0; i < drawPoints.value.length; i++) {
-        all.push({ point: drawPoints.value[i], index: i, real: true })
-        if (!isDrawing.value && i < drawPointsMiddle.value.length)
-            all.push({ point: drawPointsMiddle.value[i], index: i, real: false })
-    }
-    return all
-})
 
 const isZoneSelected = (id: number) => {
     return selectedZone.value == id
@@ -282,40 +275,6 @@ const svgClick = (e: MouseEvent) => {
     }
 }
 
-const pointClick = (index: number, real: boolean) => {
-    if (real && index == 0 && toggle.value == 'startDraw') {
-        endDrawing()
-    } else {
-        drag.value = true
-        if (real) {
-            dragPoint.value = drawPoints.value[index]
-            selectedPoint.value = index
-        } else {
-            drawPoints.value.splice(index + 1, 0, drawPointsMiddle.value[index])
-            dragPoint.value = drawPoints.value[index + 1]
-            selectedPoint.value = index + 1
-        }
-        changeCursor('grabbing')
-    }
-}
-
-const pointOver = (index: number) => {
-    if (isDrawing.value && index == 0) {
-        changeCursor('pointer')
-    } else if (!drag.value) {
-        changeCursor('grab')
-    }
-}
-
-const pointLeave = () => {
-    if (isDrawing.value) changeCursor('crosshair')
-    else if (!drag.value) changeCursor('default')
-}
-
-const isPointSelected = (index: number) => {
-    return selectedPoint.value == index
-}
-
 const moveDrag = (e: MouseEvent) => {
     if (drag.value) {
         dragPoint.value.x = e.offsetX * scaleSVG.value
@@ -328,6 +287,13 @@ const svgLeave = () => {
     drag.value = false
 }
 
+const addPointToDrawPoints = (index: number, point: Point) => {
+    drawPoints.value.splice(index, 0, point)
+}
+
+const canDelete = computed(() => {
+    return !(selectedZone.value != null)
+})
 const polygonStrokeArray = (id: number) => {
     if (isZoneSelected(id)) return `${5 * scaleSVG.value} ${10  * scaleSVG.value}`
     else return '0'
@@ -344,6 +310,32 @@ const createBlobURL = (svg: string) => {
   return URL.createObjectURL(blob);
 }
 
+const canUndo = computed(() => {
+    return !(isDrawing.value && drawPoints.value.length > 0)
+})
+
+const canRemove = computed(() => {
+    return !(selectedPoint.value != null && drawPoints.value.length > 3)
+})
+
+const optionsEdit: Array<Option> = [
+    { value: 'startDraw', text: 'Start Polygon', icon: 'mdi-shape-polygon-plus' },
+    { value: 'deleteZone', text: 'Delete Zone', icon: 'mdi-delete', disabled: canDelete },
+    { value: 'undo', text: 'Remove last point', icon: 'mdi-undo-variant', disabled: canUndo },
+    { value: 'clear', text: 'Clear', icon: 'mdi-broom' },
+    { value: 'remove', text: 'Remove Point', icon: 'mdi-close', disabled: canRemove }
+]
+
+const optionsSimulador: Array<Option> = [
+    { value: 'addCapacete', text: 'Adicionar Capacete', icon: 'mdi-plus' },
+    { value: 'selectAll', text: 'Select All', icon: 'mdi-select' },
+    { value: 'unselectAll', text: 'Unselect All', icon: 'mdi-select-off' }
+]
+
+const optionsTooltip = computed(() => {
+    if (props.options === 'Edit') return optionsEdit
+    else return optionsSimulador
+})
 </script>
 
 <template>
@@ -384,39 +376,34 @@ const createBlobURL = (svg: string) => {
                         :stroke-dasharray="polygonStrokeArray(id)"
                         :key="id"
                     />
-                    <circle
-                        v-for="{ point, index, real } in drawPointsAll"
-                        :cx="point.x / scaleSVG"
-                        :cy="point.y / scaleSVG"
-                        :r="real ? 8 : 5"
-                        fill="white"
-                        :stroke="isPointSelected(index) && real ? 'red' : 'black'"
-                        :stroke-width="isPointSelected(index) && real ? 3 : 1"
-                        :key="index"
-                        @mouseover="pointOver(index)"
-                        @mouseleave="pointLeave()"
-                        @mousedown="pointClick(index, real)"
+                    <svg-draw
+                        v-if="props.edit"
+                        :mousePos="mousePos"
+                        :isDrawing="isDrawing"
+                        @changeCursor="changeCursor"
+                        @end-drawing="endDrawing"
+                        :drawPoints="drawPoints"
+                        @add:drawPoints="addPointToDrawPoints"
+                        :selectedPoint="selectedPoint"
+                        @update:selectedPoint="selectedPoint = $event"
+                        :dragPoint="dragPoint"
+                        @update:dragPoint="dragPoint = $event"
+                        :isDrag="drag"
+                        @update:isDrag="drag = $event"
                     />
-
-                    <line
-                        v-for="(points, index) in drawLines"
-                        :x1="points[0].x / scaleSVG"
-                        :y1="points[0].y / scaleSVG"
-                        :x2="points[1].x / scaleSVG"
-                        :y2="points[1].y / scaleSVG"
-                        stroke="red"
-                        stroke-width="3"
-                        :key="index"
-                    />
-                    <line
-                        v-if="isDrawing && drawPoints.length > 0"
-                        :x1="lastPos.x  /scaleSVG"
-                        :y1="lastPos.y  /scaleSVG"
-                        :x2="mousePos.x /scaleSVG"
-                        :y2="mousePos.y /scaleSVG"
-                        stroke="red"
-                        stroke-dasharray="5 10"
-                        stroke-width="3 "
+                    <image
+                        v-for="{ position, key } in props.capacetesPosition"
+                        :key="key"
+                        @click="emit('selectCapacete', key)"
+                        :x="position['x'] - 15"
+                        :y="position['y'] - 15"
+                        width="30"
+                        height="30"
+                        :href="
+                            props.capaceteSelected?.includes(key)
+                                ? '/helmet_selected.svg'
+                                : '/helmet.svg'
+                        "
                     />
                 </svg>
             </v-row>
@@ -436,82 +423,13 @@ const createBlobURL = (svg: string) => {
                 <p>Conecte com o primeiro para terminar o polígono.</p>
             </v-sheet>
         </template>
-        <v-row
-            v-if="props.edit"
-            justify="center"
+        <svg-tooltip
             class="mt-5"
-        >
-            <v-btn-toggle
-                v-model="toggle"
-                color="info"
-                variant="outlined"
-                @update:model-value="updateEditButton"
-            >
-                <v-tooltip
-                    text="Start Polygon"
-                    location="bottom"
-                >
-                    <template v-slot:activator="{ props }">
-                        <v-btn
-                            v-bind="props"
-                            icon="mdi-shape-polygon-plus"
-                            value="startDraw"
-                        ></v-btn>
-                    </template>
-                </v-tooltip>
-                <v-tooltip
-                    text="Delete Zone"
-                    location="bottom"
-                >
-                    <template v-slot:activator="{ props }">
-                        <v-btn
-                            v-bind="props"
-                            icon="mdi-delete"
-                            value="deleteZone"
-                            :disabled="selectedZone == null"
-                        ></v-btn>
-                    </template>
-                </v-tooltip>
-                <v-tooltip
-                    text="Remove last point"
-                    location="bottom"
-                >
-                    <template v-slot:activator="{ props }">
-                        <v-btn
-                            v-bind="props"
-                            icon="mdi-undo-variant"
-                            value="undo"
-                            :disabled="!isDrawing || drawPoints.length == 0"
-                        ></v-btn>
-                    </template>
-                </v-tooltip>
-                <v-tooltip
-                    text="Clear"
-                    location="bottom"
-                >
-                    <template v-slot:activator="{ props }">
-                        <v-btn
-                            v-bind="props"
-                            icon="mdi-broom"
-                            value="clear"
-                        ></v-btn>
-                    </template>
-                </v-tooltip>
-                <v-tooltip
-                    text="Remove Point"
-                    location="bottom"
-                >
-                    <template v-slot:activator="{ props }">
-                        <v-btn
-                            v-bind="props"
-                            icon="mdi-close"
-                            value="remove"
-                            :disabled="selectedPoint == null || drawPoints.length <= 3"
-                        ></v-btn>
-                    </template>
-                </v-tooltip>
-            </v-btn-toggle>
-        </v-row>
+            v-if="props.edit"
+            :toggle="toggle"
+            :options="optionsTooltip"
+            @update:model-value="updateEditButton"
+        />
     </v-container>
 </template>
 

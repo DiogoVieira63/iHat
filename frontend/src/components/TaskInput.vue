@@ -1,0 +1,346 @@
+<script setup lang="ts">
+import { ref, computed, watch} from 'vue'
+import SimuladorInput from '@/components/SimuladorInput.vue'
+import SimuladorInfo from '@/components/SimuladorInfo.vue'
+import { MqttService } from '@/mqttService'
+import { onMounted } from 'vue'
+import { useTaskStore } from '@/store'
+import { useMQTTStore } from '@/store'
+import { Task } from '@/store'
+import Confirmation from '@/components/Confirmation.vue'
+import type { PropType } from 'vue'
+
+let mqtt: MqttService | null = null
+const mqttStore = useMQTTStore()
+
+const props = defineProps({
+    selected: {
+        type: Array as PropType<Array<number>>,
+        required: true
+    },
+    inputs: {
+        type: Array as PropType<Array<Input>>,
+        required: true
+    },
+    tempo: {
+        type: Number,
+        required: true
+    },
+    taskName: {
+        type: String,
+        required: true
+    }
+})
+
+const emit = defineEmits(['update:selected', 'update:inputs', 'update:tempo', 'update:taskName'])
+
+onMounted(() => {
+    if (!mqttStore.mqtt) {
+        mqtt = new MqttService(undefined)
+        mqttStore.setMqtt(mqtt)
+    } else {
+        mqtt = mqttStore.mqtt as MqttService
+    }
+})
+
+export interface Capacete {
+    position: { x: number; y: number }
+    key: number
+    inputs: Array<Input>
+}
+
+export interface Input {
+    title: string
+    value: [number, number]
+    range: [number, number]
+    tipo: string
+    step?: number
+}
+
+const taskStore = useTaskStore()
+const tipoEnvio = ref('Unidade')
+const showInfo = ref(false)
+const rules = [(v: number) => v >= 0.1 || 'Inválido (min: 0.1)']
+const rulesTaskName = [(v: string) => v.length > 0 || 'Inválido']
+
+
+const newTask = (confirmation: boolean) => {
+    if (!confirmation) return
+    let time = tipoEnvio.value == 'Tempo' ? props.tempo : 0
+    const task = new Task(props.taskName, props.inputs,time,props.selected)
+    // remove all capacetes from current tasks
+    taskStore.stopTaskByCapacetes(props.selected)
+    if (mqtt) taskStore.addTask(mqtt, task)
+    emit('update:selected', [])
+    emit('update:inputs', [])
+}
+
+const saveEditTask = (confirmation: boolean) => {
+    if (!confirmation) return
+    if (mqtt && taskEdit.value != null){
+        const task = taskStore.tasks[taskEdit.value]
+        task.edit(mqtt,props.taskName, props.inputs, props.tempo)
+    }
+}
+
+const disabledApply = computed(() => {
+    return props.selected.length == 0 || (tipoEnvio.value == 'Tempo' && props.taskName.length == 0)
+})
+
+
+
+const taskEdit = computed(() => {
+    const editKey = Object.keys(taskStore.tasks).find(key => taskStore.tasks[key].isEdit);
+    return editKey || null;
+})
+
+
+watch(taskEdit, (newValue) => {
+    if (newValue != null && taskEdit.value != null){
+        const task = taskStore.tasks[taskEdit.value]
+        if (task.intervalSeconds > 0)
+            tipoEnvio.value = 'Tempo'
+        else
+            tipoEnvio.value = 'Unidade'
+    }
+})
+
+const textPossibleStopped = computed(() => {
+    return taskStore.possibleStoppedTasks(props.selected).map((item) => item.title)
+})
+
+const textChangeTask = computed(() => {
+    return props.selected.filter((item) => taskStore.hasTask(item))
+})
+
+const isTempo = computed(() => {
+    return tipoEnvio.value == 'Tempo'
+})
+
+const isUnidade = computed(() => {
+    return tipoEnvio.value == 'Unidade'
+})
+
+
+</script>
+<template>
+    <v-card height="fit-content" rounded="xl" color="grey-lighten-5">
+        <v-card style="overflow: auto" variant="text" height="60vh" rounded="xl" color="black">
+            <v-card-title class="my-4">
+                <v-row justify="space-between">
+                    <v-col cols="auto" />
+                    <v-col cols="auto" class="text-center text-h4">
+                        {{ taskEdit != null ? 'Editar Tarefa' : 'Nova Tarefa' }}
+                    </v-col>
+                    <v-col cols="auto">
+                        <v-btn
+                            v-if="!showInfo"
+                            rounded="xl"
+                            variant="flat"
+                            @click="showInfo = true"
+                            icon="mdi-information"
+                            color="info"
+                            density="compact"
+                            size="large"
+                        >
+                        </v-btn>
+                        <v-btn
+                            v-else
+                            rounded="xl"
+                            variant="flat"
+                            @click="showInfo = false"
+                            icon="mdi-close"
+                            color="error"
+                            density="compact"
+                            size="large"
+                        >
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-card-title>
+            <v-card-text>
+                <SimuladorInfo v-if="showInfo" />
+                <v-row v-else>
+                    <template v-if="selected.length == 0">
+                        <v-col cols="12" class="text-center">
+                            <p class="text-h6 mt-16">
+                                <v-icon color="info">mdi-information-outline</v-icon>
+                                Selecione ou adicione um capacete para editar os valores
+                            </p>
+                        </v-col>
+                    </template>
+                    <template v-else>
+                        <v-col cols="12" md="6">
+                            <v-btn
+                                block
+                                value="Unidade"
+                                :color="isUnidade ? 'primary' : 'default'"
+                                @click="tipoEnvio = 'Unidade'"
+                                rounded="xl"
+                                :disabled="taskEdit != null"
+                            >
+                                Unidade
+                            </v-btn>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-btn
+                                block
+                                value="Tempo"
+                                :color="isTempo ? 'primary' : 'default'"
+                                @click="tipoEnvio = 'Tempo'"
+                                rounded="xl"
+                                :disabled="taskEdit != null"
+                            >
+                                Período de Tempo
+                            </v-btn>
+                        </v-col>
+                        <v-col :cols="isTempo ? 6 : 12">
+                            <v-text-field
+                                :model-value="taskName"
+                                @update:model-value="emit('update:taskName', $event)"
+                                class="mt-2 text-h6"
+                                single-line
+                                type="text"
+                                variant="solo"
+                                hint="Nome da Tarefa"
+                                persistent-hint
+                                :rules="rulesTaskName"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="6" v-if="isTempo">
+                            <v-text-field
+                                v-if="isTempo"
+                                :model-value="tempo"
+                                @update:model-value="emit('update:tempo', $event)"
+                                class="mt-2"
+                                :rules="rules"
+                                single-line
+                                step="0.01"
+                                type="number"
+                                variant="outlined"
+                                label="Tempo"
+                                hint="Tempo em segundos"
+                                persistent-hint
+                            ></v-text-field>
+                        </v-col>
+                    </template>
+                    <template v-for="input in props.inputs" :key="input.title">
+                        <v-col cols="12" md="6">
+                            <v-card elevation="4" rounded="lg">
+                                <v-card-title>
+                                    <h1 class="text-h6 text-center mb-6">{{ input.title }}</h1>
+                                    <v-row class="mb-2">
+                                        <v-col cols="6">
+                                            <v-btn
+                                                block
+                                                value="Constante"
+                                                :color="
+                                                    input.tipo == 'Constante'
+                                                        ? 'primary'
+                                                        : 'default'
+                                                "
+                                                @click="input.tipo = 'Constante'"
+                                                rounded="xl"
+                                            >
+                                                Constante
+                                            </v-btn>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-btn
+                                                block
+                                                value="Variável"
+                                                :color="
+                                                    input.tipo == 'Variável' ? 'primary' : 'value'
+                                                "
+                                                @click="input.tipo = 'Variável'"
+                                                rounded="xl"
+                                            >
+                                                Variável
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-title>
+                                <v-card-text>
+                                    <SimuladorInput
+                                        @updateValue="input.value = $event"
+                                        :tipo="input.tipo"
+                                        :range="input.range"
+                                        :value="input.value"
+                                        :step="input.step"
+                                    />
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </template>
+                </v-row>
+            </v-card-text>
+        </v-card>
+        <v-row class="ma-2">
+            <v-col cols="6" class="text-h6 text-black">
+                Número de Capacetes Selecionados: <strong>{{ selected.length }}</strong>
+            </v-col>
+            <v-col cols="3">
+                <confirmation
+                    v-if="taskEdit != null"
+                    title="Guardar Alterações na Tarefa"
+                    :function="saveEditTask"
+                >
+                    <template #button="{ prop }">
+                        <v-btn
+                            v-bind="prop"
+                            color="success"
+                            block
+                            rounded="xl"
+                            :disabled="disabledApply"
+                        >
+                            Salvar
+                        </v-btn>
+                    </template>
+                    <template #message>
+                        Tem a certeza que pretende guardar as alterações?
+                    </template>
+                </confirmation>
+            </v-col>
+            <v-col cols="3">
+                <confirmation title="Criar Nova Tarefa" :function="newTask">
+                    <template #button="{ prop }">
+                        <v-btn
+                            v-bind="prop"
+                            color="success"
+                            block
+                            rounded="xl"
+                            :disabled="disabledApply"
+                        >
+                            Criar
+                        </v-btn>
+                    </template>
+                    <template #message>
+                        <strong v-if="textChangeTask.length > 0">
+                            Capacetes afetados:
+                        </strong>
+                        <ul>
+                            <li class="ml-5" v-for="(item, index) in textChangeTask" :key="index">
+                                {{ item }}<br />
+                            </li>
+                        </ul>
+                        <strong v-if="textPossibleStopped.length > 0">
+                            Tarefas que serão suspensas:
+                        </strong>
+                        <ul>
+                            <li
+                                class="ml-5"
+                                v-for="(item, index) in textPossibleStopped"
+                                :key="index"
+                            >
+                                {{ item }}<br />
+                            </li>
+                        </ul>
+                        Tem a certeza que pretende criar uma nova Tarefa?
+                    </template>
+                </confirmation>
+            </v-col>
+        </v-row>
+    </v-card>
+</template>
+
+<style></style>

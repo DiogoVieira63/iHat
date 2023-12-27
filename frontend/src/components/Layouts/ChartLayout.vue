@@ -60,7 +60,6 @@ const selected = (name: string, index: number) => {
     selectChart.value = name
     selectIndex.value = index
 }
-
 </script>
 
 <template>

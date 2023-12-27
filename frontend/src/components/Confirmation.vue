@@ -9,6 +9,10 @@ const props = defineProps({
     function: {
         type: Function,
         required: true
+    },
+    functionParams: {
+        type: Array,
+        required: false,
     }
 })
 
@@ -16,7 +20,8 @@ const dialog = ref(false)
 
 function callFunction(value: boolean) {
     dialog.value = false
-    props.function(value)
+    if (props.functionParams) props.function(...props.functionParams, value)
+    else props.function(value)
 }
 
 function openDialog() {
