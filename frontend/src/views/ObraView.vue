@@ -2,7 +2,7 @@
 import Lista from '@/components/Lista.vue'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
 import { ref, onMounted, nextTick } from 'vue'
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import Map from '@/components/Map.vue'
 import Confirmation from '@/components/Confirmation.vue'
@@ -141,7 +141,8 @@ const filtersHeaders = ['Estado']
                         size="large"
                         variant="flat"
                         color="primary"
-                        @click="goToSimulador" >
+                        @click="goToSimulador"
+                    >
                         Simulador
                     </v-btn>
                 </v-row>

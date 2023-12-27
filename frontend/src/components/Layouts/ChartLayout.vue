@@ -60,7 +60,6 @@ const selected = (name: string, index: number) => {
     selectChart.value = name
     selectIndex.value = index
 }
-
 </script>
 
 <template>
@@ -69,7 +68,9 @@ const selected = (name: string, index: number) => {
             <v-tooltip v-for="(key, index) in titles" :text="key" location="top" :key="key">
                 <template v-slot:activator="{ props }">
                     <v-btn v-bind="props" :value="key">
-                        <v-icon :color="colors[index]" :active="isActive(key)">mdi-checkbox-blank-circle</v-icon>
+                        <v-icon :color="colors[index]" :active="isActive(key)"
+                            >mdi-checkbox-blank-circle</v-icon
+                        >
                     </v-btn>
                 </template>
             </v-tooltip>
@@ -85,7 +86,12 @@ const selected = (name: string, index: number) => {
                                 <v-icon :color="colors[index]">mdi-checkbox-blank-circle</v-icon>
                                 {{ key }}
                                 <v-spacer />
-                                <v-btn icon="mdi-fullscreen" variant="text" size="md" @click="selected(key, index)" />
+                                <v-btn
+                                    icon="mdi-fullscreen"
+                                    variant="text"
+                                    size="md"
+                                    @click="selected(key, index)"
+                                />
                             </v-row>
                         </v-card-title>
                         <slot :name="key"></slot>
@@ -101,12 +107,18 @@ const selected = (name: string, index: number) => {
                     <v-icon :color="colors[selectIndex]">mdi-checkbox-blank-circle</v-icon>
                     {{ selectChart }}
                     <v-spacer />
-                    <v-btn class="mr-4" icon="mdi-close" variant="text" size="md" @click="dialog = false" />
+                    <v-btn
+                        class="mr-4"
+                        icon="mdi-close"
+                        variant="text"
+                        size="md"
+                        @click="dialog = false"
+                    />
                 </v-row>
             </v-card-title>
             <v-card-text>
                 <v-sheet class="mx-auto border-md rounded-xl" max-width="80vw" color="background">
-                    <slot :name="selectChart" ></slot>
+                    <slot :name="selectChart"></slot>
                 </v-sheet>
             </v-card-text>
         </v-card>

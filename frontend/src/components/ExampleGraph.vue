@@ -2,11 +2,10 @@
 import ChartLayout from '@/components/Layouts/ChartLayout.vue'
 import { ref } from 'vue'
 
-
 const options = (id: number) => {
     const options = {
         chart: {
-            id: id,
+            id: id
         },
         xaxis: {
             categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
@@ -18,7 +17,6 @@ const options = (id: number) => {
     return options
 }
 
-
 const series = [
     {
         name: 'series-1',
@@ -29,8 +27,6 @@ const types = ref(['line', 'area', 'bar', 'heatmap', 'line', 'area', 'bar', 'hea
 const slotName = (index: number) => {
     return types.value[index] + index
 }
-
-
 </script>
 
 <template>

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { ComputedRef} from 'vue'
+import type { ComputedRef } from 'vue'
 import type { PropType } from 'vue'
 
-
-export interface Option{
+export interface Option {
     value: string
     text: string
     icon: string
@@ -21,8 +20,6 @@ const props = defineProps({
     }
 })
 const emit = defineEmits(['update:modelValue'])
-
-
 </script>
 <template>
     <v-row justify="center">
@@ -32,7 +29,12 @@ const emit = defineEmits(['update:modelValue'])
             @update:model-value="emit('update:modelValue', $event)"
             :model-value="props.toggle"
         >
-            <v-tooltip v-for="option in props.options" :key="option.value" :text="option.text" location="bottom">
+            <v-tooltip
+                v-for="option in props.options"
+                :key="option.value"
+                :text="option.text"
+                location="bottom"
+            >
                 <template v-slot:activator="{ props }">
                     <v-btn
                         v-bind="props"
@@ -46,6 +48,4 @@ const emit = defineEmits(['update:modelValue'])
     </v-row>
 </template>
 
-<style>
-
-</style>
+<style></style>

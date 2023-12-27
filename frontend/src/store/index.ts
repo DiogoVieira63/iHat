@@ -2,14 +2,70 @@
 import { defineStore } from 'pinia'
 import type { Input } from '@/views/SimulatorView.vue'
 import { MqttService } from '@/mqttService'
-import { encode } from 'punycode'
 
+type Status = 'Stopped' | 'Running' | 'Finished'
 
-interface Task {
+export class Task  {
+    title: string
     inputs: Array<Input>
     intervalId?: NodeJS.Timeout
     intervalSeconds: number
     capacetes: Array<number>
+    isEdit: boolean
+    status: Status
+    time: Date
+
+    constructor(title: string, inputs: Array<Input>, intervalSeconds: number, capacetes: Array<number>) {
+        this.title = title
+        this.inputs = inputs
+        this.intervalSeconds = intervalSeconds
+        this.capacetes = capacetes
+        this.isEdit = false
+        this.status = 'Running'
+        this.time = new Date()
+    }
+
+    suspend(){
+        this.status = 'Stopped'
+        this.time = new Date()
+        clearInterval(this.intervalId)
+    }
+
+    play(mqtt : MqttService){
+        const { intervalSeconds } = this
+        const func = () => envio(mqtt, this)
+        func()
+        if(intervalSeconds != 0){
+            const intervalId = setInterval(func, intervalSeconds * 1000)
+            this.intervalId = intervalId
+            this.status = 'Running'
+        }
+        else{
+            this.status = 'Finished'
+        }
+        this.time = new Date()
+    }
+
+    edit(mqtt: MqttService, title: string, inputs: Array<Input>, intervalSeconds: number){
+        clearInterval(this.intervalId)
+        this.title = title
+        this.inputs = inputs
+        this.intervalSeconds = intervalSeconds
+        this.isEdit = false
+        if(this.status == 'Running') this.play(mqtt)
+    }
+
+    removeCapacete(idCapacete: number){
+        const index = this.capacetes.indexOf(idCapacete)
+        if(index != -1){
+            this.capacetes.splice(index, 1)
+        }
+        if(this.capacetes.length == 0){
+            this.suspend()
+        }
+    }
+    
+
 }
 
 interface DataMQTT {
@@ -29,75 +85,50 @@ interface DataMQTT {
     }
 }
 
-/*
-        result.Add("HelmetNB", "1");
-        result.Add("TypeMessage","ValueUpdate");
-        result.Add("Fall", "False");
-        result.Add("BodyTemperature", 36.1);
-        result.Add("Heartrate", 100);
-        result.Add("Proximity", "10");
-        result.Add("Position", "?");
-
-
-
-        JObject loc = new JObject();
-        loc.Add("X", 0);
-        loc.Add("Y", 0);
-        loc.Add("Z", 0);
-        result.Add("Location", loc);
-
-        JObject gases = new JObject();
-        gases.Add("Metano", 0);
-        gases.Add("MonoxidoCarbono", 0);
-
-        result.Add("Gases", gases);
-*/
-
-
 
 const random = (min: number, max: number) => {
-    return Math.random() * (max - min) + min;
+    return Math.random() * (max - min) + min
 }
-const envio = (mqtt : MqttService, task : Task) => {
+
+const envio = (mqtt: MqttService, task: Task) => {
     const { inputs, capacetes } = task
-    for(const idCapacete of capacetes){
+    for (const idCapacete of capacetes) {
         const input = inputs.map((item) => {
             if (item.tipo == 'Constante') {
                 return {
                     title: item.title,
                     value: item.value[0]
                 }
-            }
-            else {
-
+            } else {
                 let value = random(item.value[0], item.value[1])
-                if (item.title == 'Probabilidade de Queda') value = value > item.value[1] ? 1 : 0
+                if (item.title == 'Probabilidade de Queda') value = random(0,1) <= value ? 1 : 0
                 return {
                     title: item.title,
                     value: value
                 }
             }
         })
-    
-        const newInput : {[key : string] : any} = input.reduce((acc: {[key: string]: typeof item.value}, item) => {
-            acc[item.title] = item.value;
-            return acc; 
-        }, {});
-    
+
+        const newInput: { [key: string]: any } = input.reduce(
+            (acc: { [key: string]: typeof item.value }, item) => {
+                acc[item.title] = item.value
+                return acc
+            },
+            {}
+        )
 
         newInput['Position'] = {
             x: newInput['Posição do Capacete (X)'],
             y: newInput['Posição do Capacete (Y)'],
             z: newInput['Posição do Capacete (Z)']
         }
-    
+
         newInput['Gases Tóxicos'] = {
             'Monóxido de Carbono': newInput['Gases Tóxicos (Monóxido de Carbono)'],
-            'Metano': newInput['Gases Tóxicos (Metano)']
+            Metano: newInput['Gases Tóxicos (Metano)']
         }
 
-
-        const dataMQTT : DataMQTT = {
+        const dataMQTT: DataMQTT = {
             HelmetNB: idCapacete,
             Fall: newInput['Probabilidade de Queda'] == 1,
             BodyTemperature: newInput['Temperatura Corporal'],
@@ -113,12 +144,10 @@ const envio = (mqtt : MqttService, task : Task) => {
                 MonoxidoCarbono: newInput['Gases Tóxicos (Monóxido de Carbono)']
             }
         }
-        
+
         mqtt.publish('dados', JSON.stringify(dataMQTT))
     }
-
 }
-
 
 export const useMQTTStore = defineStore('mqtt', {
     state: () => ({
@@ -131,36 +160,43 @@ export const useMQTTStore = defineStore('mqtt', {
     }
 })
 
-
-
 export const useTaskStore = defineStore('taskMQTT', {
     state: () => ({
-        tasks: [] as Task[]
+        tasks: {} as { [key: string]: Task }
     }),
     actions: {
-        addTask(inputs : Array<Input>, capacetes : Array<number> ,intervalSeconds: number, mqtt : MqttService) {
-            const task : Task = { 
-                inputs : [...inputs],
-                capacetes : [...capacetes],
-                intervalSeconds
-            }
-            const func = () => envio(mqtt, task)
-            func()
-            if (intervalSeconds == 0) return
-            const intervalId = setInterval(func, intervalSeconds * 1000)
-            task.intervalId = intervalId
-            this.tasks.push(task)
+        addTask(mqtt: MqttService, task: Task) {
+            task.play(mqtt)
+            this.tasks[Date.now()] = task
+            //this.tasks.push(task)
         },
-
-        hasTask(idCapacete : number){
-            return this.tasks.some((task) => task.capacetes.includes(idCapacete))
+        hasTask(idCapacete: number) {
+            return Object.values(this.tasks).some((task) => task.status =="Running" && task.capacetes.includes(idCapacete))
         },
-        removeTask(index: number) {
+        taskByCapacete(idCapacete: number) {
+            //return key of task
+            return Object.keys(this.tasks).find((key) => this.tasks[key].capacetes.includes(idCapacete))
+        },
+        removeTask(index: string) {
             const task = this.tasks[index]
             if (task) {
                 clearInterval(task.intervalId)
-                this.tasks.splice(index, 1)
+                delete this.tasks[index]
             }
+        },
+        possibleStoppedTasks(capacetes: Array<number>) {
+            return Object.values(this.tasks).filter((task) =>{
+                if(task.status == 'Running')
+                    return task.capacetes.some((capacete) => capacetes.includes(capacete))
+            })
+        },
+        stopTaskByCapacetes(capacetes: Array<number>) {
+            Object.values(this.tasks).forEach((task) => {
+                if(task.status == 'Running'){
+                    if (task.capacetes.some((capacete) => capacetes.includes(capacete)))
+                        task.suspend()
+                }
+            })
         }
     }
 })

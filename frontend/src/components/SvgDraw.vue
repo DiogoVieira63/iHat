@@ -15,7 +15,7 @@ const props = defineProps({
         type: Boolean,
         required: true
     },
-    selectedPoint : {
+    selectedPoint: {
         type: Number,
         required: true
     },
@@ -29,7 +29,6 @@ const props = defineProps({
     }
 })
 
-
 interface Point {
     x: number
     y: number
@@ -38,16 +37,16 @@ interface Point {
 
 const coefSvg = ref<number>(1)
 
-const emit = defineEmits(
-    ['endDrawing', 
-    'changeCursor', 
-    'add:drawPoints', 
-    'update:selectedPoint', 
+const emit = defineEmits([
+    'endDrawing',
+    'changeCursor',
+    'add:drawPoints',
+    'update:selectedPoint',
     'update:dragPoint',
-    'update:isDrag'])
+    'update:isDrag'
+])
 
-
- const isPointSelected = (index : number) => {
+const isPointSelected = (index: number) => {
     return props.selectedPoint == index
 }
 
@@ -71,13 +70,12 @@ const drawPointsMiddle = computed(() => {
     return points
 })
 
-
-
 const drawPointsAll = computed(() => {
     let all = []
     for (let i = 0; i < props.drawPoints.length; i++) {
-        all.push({'point': props.drawPoints[i], 'index': i, 'real': true} )
-        if (!props.isDrawing && i < drawPointsMiddle.value.length) all.push( {'point': drawPointsMiddle.value[i], 'index': i, 'real': false} )
+        all.push({ point: props.drawPoints[i], index: i, real: true })
+        if (!props.isDrawing && i < drawPointsMiddle.value.length)
+            all.push({ point: drawPointsMiddle.value[i], index: i, real: false })
     }
     return all
 })
@@ -92,27 +90,22 @@ const drawLines = computed(() => {
     return lines
 })
 
-
-
-
-const pointClick = (index : number, real : boolean) => {
-    if(real && index == 0 && props.isDrawing){
+const pointClick = (index: number, real: boolean) => {
+    if (real && index == 0 && props.isDrawing) {
         emit('endDrawing')
-    }
-    else{
+    } else {
         emit('update:isDrag', true)
-        if(real){
+        if (real) {
             emit('update:dragPoint', props.drawPoints[index])
             emit('update:selectedPoint', index)
-        }
-        else{
-            emit('add:drawPoints', index +1, drawPointsMiddle.value[index])
+        } else {
+            emit('add:drawPoints', index + 1, drawPointsMiddle.value[index])
             emit('update:dragPoint', props.drawPoints[index + 1])
             emit('update:selectedPoint', index + 1)
         }
-        emit('changeCursor','grabbing')
+        emit('changeCursor', 'grabbing')
     }
-}  
+}
 
 function transform(value: number | null | undefined) {
     if (!value) {
@@ -126,24 +119,22 @@ const lastPos = computed(() => {
     return props.drawPoints[props.drawPoints.length - 1]
 })
 
-const pointOver = (index : number) => {
-    if (props.isDrawing && index == 0){
-        emit('changeCursor','pointer')
-    }
-    else if (!props.isDrag){
-        emit('changeCursor','grab')
+const pointOver = (index: number) => {
+    if (props.isDrawing && index == 0) {
+        emit('changeCursor', 'pointer')
+    } else if (!props.isDrag) {
+        emit('changeCursor', 'grab')
     }
 }
 
 const pointLeave = () => {
-    if (props.isDrawing) emit('changeCursor','crosshair')
-    else if (!props.isDrag) emit('changeCursor','default')
+    if (props.isDrawing) emit('changeCursor', 'crosshair')
+    else if (!props.isDrag) emit('changeCursor', 'default')
 }
-
 </script>
 <template>
     <line
-    v-for="(points, index) in drawLines"
+        v-for="(points, index) in drawLines"
         :x1="points[0].x"
         :y1="points[0].y"
         :x2="points[1].x"
@@ -151,7 +142,7 @@ const pointLeave = () => {
         stroke="red"
         stroke-width="3"
         :key="index"
-        />
+    />
     <line
         v-if="isDrawing && props.drawPoints.length > 0"
         :x1="lastPos.x"
@@ -161,23 +152,21 @@ const pointLeave = () => {
         stroke="red"
         stroke-dasharray="5 10"
         stroke-width="3"
-        />
+    />
     <circle
-        v-for="{point, index, real} in drawPointsAll"
+        v-for="{ point, index, real } in drawPointsAll"
         :cx="point.x"
         :cy="point.y"
         :r="real ? 8 : 5"
         fill="white"
-        :stroke="isPointSelected(index) && real? 'red' : 'black'"
-        :stroke-width="isPointSelected(index) && real? 3 : 1"
+        :stroke="isPointSelected(index) && real ? 'red' : 'black'"
+        :stroke-width="isPointSelected(index) && real ? 3 : 1"
         :transform="transform(point.coef)"
         :key="index"
         @mouseover="pointOver(index)"
         @mouseleave="pointLeave()"
-        @mousedown="pointClick(index,real)"
+        @mousedown="pointClick(index, real)"
     />
 </template>
 
-<style>
-
-</style>
+<style></style>

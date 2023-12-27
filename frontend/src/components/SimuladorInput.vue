@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 
 const props = defineProps({
-    title: {
-        type: String,
-        default: 'Title'
-    },
     range: {
         type: Array as PropType<Array<number>>,
         default: () => [-10, 10]
@@ -25,10 +20,9 @@ const props = defineProps({
     }
 })
 
-
 const emit = defineEmits(['updateValue'])
 
-const updateValue = (value: [number,number]) => {
+const updateValue = (value: [number, number]) => {
     emit('updateValue', value)
 }
 
@@ -41,63 +35,63 @@ const updatePosition = (value: number, index: number) => {
 const rules = [
     (v: number) => v >= props.value[0] || 'Inválido',
     (v: number) => v <= props.value[1] || 'Inválido',
-    (v: number) => v >= props.range[0] && v <= props.range[1] || `Fora do Range:[${props.range}]`,
+    (v: number) => (v >= props.range[0] && v <= props.range[1]) || `Fora do Range:[${props.range}]`
 ]
-
 </script>
 <template>
-    <v-card height="fit-content" elevation="0">
-        <v-card-title>
-            <h4 class="text-center">{{ props.title }}</h4>
-        </v-card-title>
-        <v-card-text>
-            <template v-if="tipo == 'Variável'">
-                <v-range-slider :model-value="props.value" @update:model-value="updateValue" thumb-label="always" class="mt-5" :step="props.step" :min="props.range[0]" :max="props.range[1]" >
-                </v-range-slider>
-                <v-row>
-                    <v-col cols="6" >
-                        <v-text-field
-                            :model-value="props.value[0]"
-                            @update:model-value="updatePosition(Number($event),0)"
-                            single-line
-                            :step="props.step"
-                            type="number"
-                            variant="outlined"
-                            density="compact"
-                            label="Min"
-                            :rules="rules"
-                          ></v-text-field>
-                    </v-col>
-                    <v-col cols="6" >
-                        <v-text-field
-                            :model-value="props.value[1]"
-                            @update:model-value="updatePosition(Number($event),1)"
-                            single-line
-                            :step="props.step"
-                            type="number"
-                            variant="outlined"
-                            density="compact"
-                            label="Max"
-                            :rules="rules"
-                          ></v-text-field>
-                    </v-col>
-                </v-row>
-            </template>
-            <template v-else>
+    <template v-if="tipo == 'Variável'">
+        <v-range-slider
+            :model-value="props.value"
+            @update:model-value="updateValue"
+            thumb-label="always"
+            class="mt-5"
+            :step="props.step"
+            :min="props.range[0]"
+            :max="props.range[1]"
+        >
+        </v-range-slider>
+        <v-row>
+            <v-col cols="6">
                 <v-text-field
                     :model-value="props.value[0]"
-                    @update:model-value="updateValue([Number($event),Number($event)])"
+                    @update:model-value="updatePosition(Number($event), 0)"
                     single-line
                     :step="props.step"
                     type="number"
                     variant="outlined"
                     density="compact"
-                    label="Valor"
+                    label="Min"
                     :rules="rules"
-                  ></v-text-field>
-            </template>
-        </v-card-text>
-    </v-card>
+                ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+                <v-text-field
+                    :model-value="props.value[1]"
+                    @update:model-value="updatePosition(Number($event), 1)"
+                    single-line
+                    :step="props.step"
+                    type="number"
+                    variant="outlined"
+                    density="compact"
+                    label="Max"
+                    :rules="rules"
+                ></v-text-field>
+            </v-col>
+        </v-row>
+    </template>
+    <template v-else>
+        <v-text-field
+            :model-value="props.value[0]"
+            @update:model-value="updateValue([Number($event), Number($event)])"
+            single-line
+            :step="props.step"
+            type="number"
+            variant="outlined"
+            density="compact"
+            label="Valor"
+            :rules="rules"
+        ></v-text-field>
+    </template>
 </template>
 
 <style></style>
