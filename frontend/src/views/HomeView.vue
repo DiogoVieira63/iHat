@@ -1,113 +1,119 @@
-<script setup>
-import FormObra from "../components/FormObra.vue"
-import FormCapacete from "../components/FormCapacete.vue"
-import Lista from "../components/Lista.vue"
-import PageLayout from "../components/PageLayout.vue"
-import { computed, ref, watch, onMounted} from "vue"
-import { useRoute, useRouter } from 'vue-router'
+<script setup lang="ts">
+import FormObra from '@/components/FormObra.vue'
+import FormCapacete from '@/components/FormCapacete.vue'
+import Lista from '@/components/Lista.vue'
+import PageLayout from '@/components/PageLayout.vue'
+import { computed, ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import type { ComputedRef } from 'vue'
+import type { Capacete, Obra } from '@/interfaces'
+import { CapaceteService, ObraService } from '@/http_requests'
+import type { Header } from '@/interfaces'
 
-const obras = ref([])
-const capacetes = ref([])
-const tab = ref("obras")
-const formObra = ref(true)
-const list = ref([])
+const obras = ref<Array<Obra>>([])
+const capacetes = ref<Array<Capacete>>([])
+const tab = ref('obras')
 const router = useRouter()
 
-onMounted(() => {
-  for (let i = 0; i < 30; i++) {
-    const randomEstado = Math.floor(Math.random() * 3)
-    let estado = ""
-    if (randomEstado === 0) {
-      estado = "Livre"
-    } else if (randomEstado === 1) {
-      estado = "Em uso"
-    } else {
-      estado = "Não Operacional"
-    }
-    let randomObra = Math.floor(Math.random() * 5)
-    let obra = randomObra === 0 ? "" : "Obra" + randomObra
-    let randomEstadoObra = Math.floor(Math.random() * 5)
-    let estadoObra = ""
-    if (randomEstadoObra === 0) {
-      estadoObra = "Pendente"
-    } else if (randomEstadoObra === 1) {
-      estadoObra = "Em Curso"
-    } else if (randomEstadoObra === 2) {
-      estadoObra = "Concluída"
-    } else if (randomEstadoObra === 3) {
-      estadoObra = "Cancelada"
-    } else {
-      estadoObra = "Planeada"
-    }
-    obras.value.push({ 'id': i, 'Nome da obra': 'Obra' + i, 'Estado': estadoObra })
-    capacetes.value.push({ 'id': i, 'Estado': estado, 'Obra': obra})
-  }
-  list.value = obras.value
-})
+const getCapacetes = () => {
+    console.log('getCapacetes')
+    capacetes.value = []
+    CapaceteService.getCapacetes().then((answer) => {
+        console.log(answer)
+        answer.forEach((capacete) => {
+            capacetes.value.push(capacete)
+        })
+    })
+}
 
-const headers = computed(() => {
-  if (tab.value === "obras") {
-    return {"Nome da obra":['sort'], "Estado":["filter",'sort']}
-  } else if (tab.value === "capacetes") {
-    return {"id":['sort'],"Estado":['filter','sort'],'Obra':['filter','sort']}
-  }
-})
-
-/*watch(tab, (newValue, oldValue) => {
-  if (newValue === "obras") {
-    list.value = obras.value
-    formObra.value = true
-  } else if (newValue === "capacetes") {
-    list.value = capacetes.value
-    formObra.value = false
-  }
-})
-*/
-
-const changeTab = (newValue) => {
-  if (newValue === "obras") {
-    list.value = obras.value
-    formObra.value = true
-    console.log("obras", obras.value, list.value)
-  } else if (newValue === "capacetes") {
-    list.value = capacetes.value
-    formObra.value = false
-    console.log("capacetes", capacetes.value)
-  }
+const getObras = () => {
+    console.log("getObras")
+    obras.value = []
+    // enviar id de responsavel no get
+    ObraService.getObras().then((answer) => {
+        console.log(answer)
+        answer.forEach((obra) => {
+            obras.value.push(obra)
+        })
+    })
 }
 
 
-function changePage(id) {
+onMounted(() => {
+    getCapacetes()
+    getObras()
+})
+
+const headers: ComputedRef<Array<Header>> = computed(() => {
+    let value: Array<Header> = []
+    if (tab.value === 'obras') {
+        value = [
+            { key: 'name', name: 'Nome', params: ['sort'] },
+            { key: 'status', name: 'Estado', params: ['filter', 'sort'] }
+        ]
+    } else if (tab.value === 'capacetes') {
+        value = [
+            { key: 'nCapacete', name: 'Id', params: ['sort'] },
+            { key: 'status', name: 'Estado', params: ['filter', 'sort'] }
+        ]
+    }
+    return value
+})
+
+function changePage(id: string) {
     router.push({ path: `/${tab.value}/${id}` })
 }
-
 </script>
 
 <template>
-  <PageLayout>
-    <v-container>
-      <v-sheet class="mx-auto" max-width="1500px">
-        <Lista v-if="list.length > 0" :list="list" :headers="headers">
-          <template v-slot:tabs>
-            <v-tabs  v-model="tab" class="rounded-t-xl align-start" bg-color="grey lighten-3" color="black"
-              align-tabs="center" @update:model-value="changeTab">
-              <v-tab value="obras" color="black">Obras</v-tab>
-              <v-tab value="capacetes" color="black">capacetes</v-tab>
-            </v-tabs>
-          </template>
-          <template v-slot:add>
-            <FormObra v-if="formObra" />
-            <FormCapacete v-else />
-          </template>
-          <template #row="{row, headers}">
-            <td v-for="(_,key) in headers" :key="row.id"  @click="changePage(row.id)">
-              {{ row[key] }}
-            </td>
-          </template>
-        </Lista>
-        <v-alert v-else dense type="info">No results found</v-alert>
-      </v-sheet>
-    </v-container>
-  </PageLayout>
+    <PageLayout>
+        <v-container>
+            <v-sheet
+                class="mx-auto"
+                max-width="1500px"
+            >
+                <Lista
+                    :list="tab == 'capacetes' ? capacetes : obras"
+                    :headers="headers"
+                >
+                    <template v-slot:tabs>
+                        <v-tabs
+                            v-model="tab"
+                            class="rounded-t-xl align-start"
+                            bg-color="grey lighten-3"
+                            color="black"
+                            align-tabs="center"
+                        >
+                            <v-tab
+                                value="obras"
+                                color="black"
+                                >Obras</v-tab
+                            >
+                            <v-tab
+                                value="capacetes"
+                                color="black"
+                                >capacetes</v-tab
+                            >
+                        </v-tabs>
+                    </template>
+                    <template v-slot:add>
+                        <FormObra v-if="tab == 'obras'" />
+                        <FormCapacete
+                            v-else
+                            @update="getCapacetes"
+                        />
+                    </template>
+                    <template #row="{ row, headers }">
+                        <td
+                            v-for="{ key } in headers"
+                            :key="key"
+                            @click="changePage(row['nCapacete'] ? row['nCapacete'] : row['id'])"
+                        >
+                            {{ row[key] }}
+                        </td>
+                    </template>
+                </Lista>
+            </v-sheet>
+        </v-container>
+    </PageLayout>
 </template>
-

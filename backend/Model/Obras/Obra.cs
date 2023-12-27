@@ -1,28 +1,32 @@
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-
+using iHat.Model.Mapas;
 namespace iHat.Model.Obras;
 
 public class Obra
 {
-    [BsonId] // Primary key
-    [BsonRepresentation(BsonType.ObjectId)] // permite passar uma variável do tipo ObjectId como string
-    public string? Id { get; set; } // string?
-
-    // [BsonElement("Name")]: Nome na "tabela" do mongoDB
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id { get; set; }
     public int IdResponsavel { get; set; }
     public string Name { get; set; }
-    public List<string> Zonas { get; set; } //GeoJSON 
-    public string Mapa { get; set; }
-    public List<string> Capacetes { get; set; }
+    public List<string> Mapa { get; set; }
+    public List<int> Capacetes { get; set; }
     public string Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
 
-    public Obra(string name, int idResponsavel, string mapa, string status){
-        this.IdResponsavel = idResponsavel;
-        this.Name = name;
-        this.Zonas = new List<string>();
-        this.Mapa = mapa;
-        this.Capacetes = new List<string>();
-        this.Status = status;
+    public static readonly string Planeada = "Planeada";
+    public static readonly string Pendente = "Pendente";
+    public static readonly string EmCurso = "Em Curso";
+    public static readonly string Cancelada = "Cancelada";
+    public static readonly string Finalizada = "Finalizada";
+
+    public Obra(string name, int idResponsavel, List<string> mapas)
+    {
+        IdResponsavel = idResponsavel;
+        Name = name;
+        Mapa = mapas;
+        Capacetes = new List<int>();
+        Status = Planeada;
     }
 }

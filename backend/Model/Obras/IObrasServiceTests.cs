@@ -38,7 +38,7 @@ public class ObrasServiceTests{
         var allPreviousObras = await obraService.GetObrasOfResponsavel(idResponsavel);
 
         // Act
-        await obraService.AddObra(nameObra, idResponsavel, "", "Planeada");
+        await obraService.AddObra(nameObra, idResponsavel, new List<string>());
 
         // Assert [Se já existir um valor antes na lista, esta não deverá ter sido adicionada]
         var allAfterObras = await obraService.GetObrasOfResponsavel(idResponsavel);
@@ -62,12 +62,12 @@ public class ObrasServiceTests{
             return;
 
         try{
-            await obraService.AddObra(nameObra, idResponsavel, "", "Planeada");
+            await obraService.AddObra(nameObra, idResponsavel, new List<string>());
         }
         catch(Exception){}
 
         // Act
-        Action act = () => obraService.AddObra(nameObra, idResponsavel, "", "Planeada");
+        Action act = () => obraService.AddObra(nameObra, idResponsavel, new List<string>());
         
         //assert
         Exception exception = Assert.Throws<Exception>(act);
