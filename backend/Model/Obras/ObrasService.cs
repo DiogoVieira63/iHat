@@ -119,9 +119,9 @@ public class ObrasService: IObrasService{
     }
 
 
-    public async Task<string?> GetIdObraWithCapaceteId(int nCapaceteToFind){
+    public async Task<Obra?> GetObraWithCapaceteId(int nCapaceteToFind){
         var obra = await _obraCollection.Find(o => o.Capacetes.Contains(nCapaceteToFind)).FirstOrDefaultAsync();
-        return obra == null ? null : obra.Id;
+        return obra;
     }
 
 

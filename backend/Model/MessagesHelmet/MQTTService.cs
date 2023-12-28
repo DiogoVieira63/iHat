@@ -8,6 +8,8 @@ using MQTTnet.Client;
 using MQTTnet.Formatter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using iHat.MensagensCapacete.Values;
+using iHat.Model.Mapas;
 
 
 namespace iHat.MQTTService;
@@ -30,14 +32,16 @@ public class MQTTService {
     private IObrasService _obrasService;
     private ILogsService _logsService;
     private MensagemCapaceteService _mensagemCapaceteService;
+    private IMapaService _mapsService;
 
-    public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService, ILogsService logsService, MensagemCapaceteService mensagemCapaceteService){
+    public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService, ILogsService logsService, MensagemCapaceteService mensagemCapaceteService, IMapaService mapsService){
 
         _logger = logger;
         _obrasService = obrasService;
         _capacetesService = capacetesService;
         _logsService = logsService;
         _mensagemCapaceteService = mensagemCapaceteService;
+        _mapsService = mapsService;
 
         _mqttFactory = new MqttFactory();
         _mqttClient = _mqttFactory.CreateMqttClient();
@@ -124,11 +128,15 @@ public class MQTTService {
 
             await _mensagemCapaceteService.Add(messageJson);
 
+            var obra = await _obrasService.GetObraWithCapaceteId(capacete.NCapacete);
+            if(obra == null){
+                return;
+            }
+
             Tuple<bool, string> messageRe = messageJson.SearchForAnormalValues();
             if (messageRe.Item1 == true){
                 _logger.LogInformation("Abnormal Value Detected.");              
-                var obra = await _obrasService.GetIdObraWithCapaceteId(capacete.NCapacete);
-                var log = new Log(DateTime.Now, obra, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
+                var log = new Log(DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
                 await _logsService.Add(log);
                 
                 // Notify Helmet
@@ -136,11 +144,35 @@ public class MQTTService {
                         
                 // Notify FrontEnd
             }
+
+            var found = await CheckSeCapaceteEstaZonaRisco(obra, messageJson.Location);           
+            if(found){
+                await NotifyCapacete(messageJson.NCapacete);
+            }
+
+
+
         }catch(Exception e){
             Console.WriteLine(e.Message);
         }
     }
 
+    public async Task<bool> CheckSeCapaceteEstaZonaRisco(Obra obra, Location location){
+        var naZona = false;
+
+        var mapas = obra.Mapa;
+
+        foreach (var mapaId in mapas){
+            var mapa = await _mapsService.GetMapaById(mapaId);
+            if(mapa != null && mapa.Floor == location.Z){
+                var zonasRisco = mapa.Zonas;
+                foreach(var zona in zonasRisco){
+                    naZona &= zona.InsideZonaRisco(location.X, location.Y);
+                }
+            }        
+        }
+        return naZona;
+    }
 
     public async Task StopAsync(){
         await _mqttClient.DisconnectAsync(

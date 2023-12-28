@@ -12,12 +12,15 @@ public class iHatFacade: IiHatFacade{
     private readonly ICapacetesService icapacetes;
     private readonly ILogsService ilogs;
     private readonly IMapaService imapas;
+    private readonly ILogger<iHatFacade> _logger;
 
-    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService){
+    
+    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService, ILogger<iHatFacade> logger){
         iobras = obrasService;
         icapacetes = capacetesService;
         ilogs = logsService;
         imapas = mapasService;
+        _logger = logger;
     }
 
 
@@ -46,6 +49,7 @@ public class iHatFacade: IiHatFacade{
                 throw new Exception("Unable to connect to python server");
             }
 
+            _logger.LogWarning(response.Content);
             var zipBytes = await response.Content.ReadAsByteArrayAsync();
 
             using (MemoryStream zipStream = new MemoryStream(zipBytes))
@@ -78,7 +82,7 @@ public class iHatFacade: IiHatFacade{
 
             foreach(var svg in listaSvg){
                 // new mapa value added to the db
-                var ids = await imapas.Add(svg.Key, svg.Value);
+                var ids = await imapas.Add(svg.Key, svg.Value, -1);
                 if(ids != null)
                     listaSvgDBIds.Add(ids);
             }
@@ -191,11 +195,13 @@ public class iHatFacade: IiHatFacade{
         var listaSvgDBIds = new List<string>();
         var listaSvg = await requestHTTP(mapaFile);                   
 
+        var number = 0;        
         foreach(var svg in listaSvg){
             // new mapa value added to the db
-            var ids = await imapas.Add(svg.Key, svg.Value);
+            var ids = await imapas.Add(svg.Key, svg.Value, 0);
             if(ids != null)
                 listaSvgDBIds.Add(ids);
+            number++;
         }
         
         await iobras.AddListaMapaToObra(idObra, listaSvgDBIds);

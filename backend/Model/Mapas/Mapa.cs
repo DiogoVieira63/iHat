@@ -11,12 +11,14 @@ public class Mapa
     public string? Id { get; set; }
     public string Name { get; set; }
     public string Svg { get; set; } // rever
+    public int Floor { get; set; }
     public List<ZonasRisco> Zonas { get; set; } // rever
 
 
-    public Mapa(string name, string svg){
+    public Mapa(string name, string svg, int floor){
         Name = name;
         Svg = svg;
+        Floor = floor;
         Zonas = new List<ZonasRisco>();
     }
 }

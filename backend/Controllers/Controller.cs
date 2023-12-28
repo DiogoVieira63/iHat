@@ -29,7 +29,6 @@ public class IHatController : ControllerBase{
 
     }
     
-
     [HttpGet("constructions")]
     public async Task<ActionResult<List<Obra>?>> GetConstructions(){
         
@@ -63,7 +62,7 @@ public class IHatController : ControllerBase{
 
     [HttpPost("construction")]
     [DisableRequestSizeLimit]
-    public async Task<IActionResult> NewConstruction([FromForm]NewConstructionForm form){
+    public async Task<IActionResult> NewConstruction([FromForm] NewConstructionForm form){
         if(form != null){
             try{
                 var idResponsavel = 1;
