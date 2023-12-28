@@ -11,6 +11,8 @@ import { useMQTTStore } from '@/store'
 import TaskHistory from '@/components/TaskHistory.vue'
 import TaskInput from '@/components/TaskInput.vue'
 import { Task } from '@/store'
+import mapa from '@/data/map.json'
+import type { Mapa } from '@/interfaces'
 
 
 export interface Capacete {
@@ -40,7 +42,7 @@ const selected = ref<Array<number>>([])
 const capacetes = ref<Array<Capacete>>([])
 const taskName = ref('Tarefa')
 const addCapaceteTask = ref("")
-
+const mapList = ref<Array<Mapa>>([])
 const inputsConstante: Array<Input> = [
     {
         title: 'Temperatura Corpural',
@@ -100,22 +102,13 @@ const inputsConstante: Array<Input> = [
 ]
 
 onMounted(() => {
+    mapList.value = mapa
     if (!mqttStore.mqtt) {
         mqtt = new MqttService(undefined)
         mqttStore.setMqtt(mqtt)
     } else {
         mqtt = mqttStore.mqtt as MqttService
     }
-})
-
-
-
-
-
-const getCurrentImage = computed(() => {
-    const currentIndex = page.value - 1
-    const validIndex = Math.min(Math.max(currentIndex, 0), imageUrls.length - 1)
-    return imageUrls[validIndex]
 })
 
 const updateCapacete = (capacete: Capacete) => {
@@ -229,13 +222,15 @@ const changeAddCapaceteTask = (id: string) => {
         <ObraLayout>
             <template #map>
                 <h1 class="text-center text-h3">Nome da Obra</h1>
-                <template v-for="image in imageUrls" :key="image">
-                    <map-editor
-                        :active="image === getCurrentImage"
-                        :edit="true"
-                        :svg-src="image"
+                <template v-for="(map, index) in mapList" :key="map.name">
+                    <map-editor 
+                        :active="index == page - 1" 
+                        :edit="true" 
+                        :svg="map.svg" 
+                        :zones="map.zones"
                         :capacetes-position="capacetes"
                         :capacete-selected="selected"
+                        @update:zones="map.zones = $event"
                         @addCapacete="addCapacete"
                         @selectCapacete="selectedCapacete"
                         @update::capacete="updateCapacete($event)"
@@ -244,8 +239,8 @@ const changeAddCapaceteTask = (id: string) => {
                         options="Simulador"
                     ></map-editor>
                 </template>
-                <v-row class="d-flex justify-center mt-5">
-                    <v-pagination v-model="page" :length="imageUrls.length" :total-visible="5" />
+                <v-row class="d-flex justify-center mt-5" v-if="mapList.length > 1">
+                    <v-pagination v-model="page" :length="mapList.length" :total-visible="5" />
                 </v-row>
             </template>
             <template #content>
