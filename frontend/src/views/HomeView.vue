@@ -16,7 +16,6 @@ const tab = ref('obras')
 const router = useRouter()
 
 const getCapacetes = () => {
-    console.log('getCapacetes')
     capacetes.value = []
     CapaceteService.getCapacetes().then((answer) => {
         console.log(answer)
@@ -27,7 +26,6 @@ const getCapacetes = () => {
 }
 
 const getObras = () => {
-    console.log("getObras")
     obras.value = []
     // enviar id de responsavel no get
     ObraService.getObras().then((answer) => {

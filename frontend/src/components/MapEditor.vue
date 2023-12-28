@@ -138,6 +138,10 @@ const isDrawing = computed(() => {
     return toggle.value === 'startDraw'
 })
 
+const isAddingCapacete = computed(() => {
+    return toggle.value === 'addCapacete'
+})
+
 const viewBox = computed(() => {
     return `0 0 ${svgWidth.value} ${svgHeight.value}`
 })
@@ -261,17 +265,20 @@ const showPosMouse = (e: MouseEvent) => {
 }
 
 const svgClick = (e: MouseEvent) => {
-    if (!props.edit) return
+    const x = e.offsetX
+    const y = e.offsetY
+    if (isAddingCapacete.value) {
+        const key = Date.now()
+        emit('addCapacete', { position: { x: x, y: y }, key: key })
+        emit('selectCapacete', key)
+        return
+    }
     if (drag.value) {
         drag.value = false
         return
     }
-    if (toggle.value === 'startDraw') {
-        const x = e.offsetX
-        const y = e.offsetY
-        if (toggle.value === 'startDraw') {
-            createPoint(drawPoints, x, y)
-        }
+    if (isDrawing.value) {
+        createPoint(drawPoints, x, y)
     }
 }
 
@@ -344,7 +351,7 @@ const optionsTooltip = computed(() => {
             <v-row justify="center">
                 <svg
                     @click="svgClick"
-                    @mouseenter="() => (isDrawing ? changeCursor('crosshair') : undefined)"
+                    @mouseenter="() => (isDrawing || isAddingCapacete ? changeCursor('crosshair') : undefined)"
                     @mouseleave="svgLeave"
                     @mousemove="showPosMouse"
                     id="my-svg"
@@ -358,7 +365,7 @@ const optionsTooltip = computed(() => {
                 >
                     <!--image :href="props.svg" :width="svgWidth" :height="svgHeight" /-->
                     <image
-                        :xlink:href="createBlobURL(props.svg)"
+                        :xlink:href="createBlobURL(props.svg)   "
                         :width="svgWidth"
                         :height="svgHeight"
                     />

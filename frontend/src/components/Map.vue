@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import MapEditor from '@/components/MapEditor.vue'
 import Confirmation from '@/components/Confirmation.vue'
 import { useDisplay } from 'vuetify'
