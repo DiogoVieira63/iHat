@@ -5,9 +5,8 @@ import Confirmation from '@/components/Confirmation.vue'
 import { useDisplay } from 'vuetify'
 import FormMapa from './FormMapa.vue'
 import type { Mapa } from '@/interfaces'
-import { onMounted } from 'vue'
-import mapa from '@/data/map.json'
 import { useRoute } from 'vue-router'
+import  type { PropType } from 'vue'
 
 const route = useRoute()
 const { mdAndDown } = useDisplay()
@@ -18,22 +17,15 @@ const addMapa = ref(false)
 const id : string = route.params.id as string
 
 
-
-const getMapList = () => {
-    //return mapList.value
-}
-
-
-onMounted(() => {
-    getMapList()
-    mapList.value = mapa
+const props = defineProps({
+    mapList: {
+        type: Array as PropType<Array<Mapa>>,
+        required: true,
+    },
 })
-
-const mapList = ref<Array<Mapa>>([])
 
 const saveEdit = async (confirmation: boolean) => {
     if (confirmation) {
-        console.log(mapList.value, typeof mapList.value)
         console.log('Save')
     } else {
         console.log('Cancel')
@@ -42,21 +34,22 @@ const saveEdit = async (confirmation: boolean) => {
 }
 </script>
 <template>
-    <template v-if="mapList.length > 0">
-        <template v-for="(map, index) in mapList" :key="map.name">
+    <template v-if="props.mapList.length > 0">
+        <template v-for="(map, index) in props.mapList" :key="map.name">
             <map-editor 
+                :name="map.name"
                 :active="index == page - 1" 
                 :edit="edit" 
                 :svg="map.svg" 
-                :zones="map.zones"
-                @update:zones="map.zones = $event"
+                :zones="map.zonas"
+                @update:zones="map.zonas = $event"
                 options="Edit"
             ></map-editor>
         </template>
         <v-row class="my-4">
             <v-spacer />
             <v-col cols="10" md="8">
-                <v-pagination v-if="mapList.length > 1" v-model="page" :length="mapList.length" :total-visible="5">
+                <v-pagination v-if="props.mapList.length > 1" v-model="page" :length="mapList.length" :total-visible="5">
                 </v-pagination>
             </v-col>
             <v-col cols="2" md="4" class="mt-3">

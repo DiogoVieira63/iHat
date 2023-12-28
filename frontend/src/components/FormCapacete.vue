@@ -19,12 +19,12 @@ const dialogCapacete = ref(false)
 
 const emit = defineEmits(['update'])
 
-const submit = handleSubmit(async (values, actions) => {
+const submit = handleSubmit((values, actions) => {
     const Capacete: Capacete = {
         NCapacete: Number(values.id),
-        Status: 'Disponivel',
-        Info: '',
-        Trabalhador: ''
+        status: 'Disponivel',
+        info: '',
+        trabalhador: ''
     }
 
     CapaceteService.addOneCapacete(Capacete)
@@ -68,32 +68,19 @@ const submit = handleSubmit(async (values, actions) => {
                     </v-card-title>
                     <v-card-text>
                         <v-container>
-                            <v-row>
-                                <v-col
-                                    cols="12"
-                                    md="6"
-                                >
-                                    <v-text-field
-                                        v-model="id.value.value"
-                                        label="id do Capacete*"
-                                        :error-messages="id.errorMessage.value"
-                                    ></v-text-field>
-                                </v-col>
-                            </v-row>
+                            <v-text-field
+                                v-model="id.value.value"
+                                label="id do Capacete*"
+                                :error-messages="id.errorMessage.value"
+                            ></v-text-field>
                         </v-container>
-                        <v-alert
-                            color="info"
-                            icon="$info"
-                            text="* indicates required field"
+                        <v-btn
+                            type="submit"
+                            color="primary"
+                            block
+                            >Submit</v-btn
                         >
-                        </v-alert>
                     </v-card-text>
-                    <v-btn
-                        type="submit"
-                        block
-                        class="mt-2"
-                        >Submit</v-btn
-                    >
                 </v-form>
             </v-card>
         </v-dialog>

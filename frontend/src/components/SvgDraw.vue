@@ -26,6 +26,10 @@ const props = defineProps({
     isDrag: {
         type: Boolean,
         required: true
+    },
+    coefSvg: {
+        type: Number,
+        required: true
     }
 })
 
@@ -34,8 +38,6 @@ interface Point {
     y: number
     coef?: number
 }
-
-const coefSvg = ref<number>(1)
 
 const emit = defineEmits([
     'endDrawing',
@@ -107,11 +109,8 @@ const pointClick = (index: number, real: boolean) => {
     }
 }
 
-function transform(value: number | null | undefined) {
-    if (!value) {
-        return `scale(${coefSvg.value})`
-    }
-    let res = coefSvg.value / value
+function transform() {
+    let res = 1 / props.coefSvg 
     return `scale(${res})`
 }
 
@@ -142,6 +141,7 @@ const pointLeave = () => {
         stroke="red"
         stroke-width="3"
         :key="index"
+        :transform="transform()"
     />
     <line
         v-if="isDrawing && props.drawPoints.length > 0"
@@ -152,6 +152,7 @@ const pointLeave = () => {
         stroke="red"
         stroke-dasharray="5 10"
         stroke-width="3"
+        :transform="transform()"
     />
     <circle
         v-for="{ point, index, real } in drawPointsAll"
@@ -161,7 +162,7 @@ const pointLeave = () => {
         fill="white"
         :stroke="isPointSelected(index) && real ? 'red' : 'black'"
         :stroke-width="isPointSelected(index) && real ? 3 : 1"
-        :transform="transform(point.coef)"
+        :transform="transform()"
         :key="index"
         @mouseover="pointOver(index)"
         @mouseleave="pointLeave()"

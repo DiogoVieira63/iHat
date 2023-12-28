@@ -2,33 +2,44 @@
 import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate'
 import { object, string } from 'yup'
-import FormMapa from './FormMapa.vue'
+import { ObraService } from '@/http_requests'
+import FormMapa from '@/components/FormMapa.vue'
+
 
 const dialog = ref(false)
 
-type Estado = 'Planeada' | 'Pendente' | 'Em curso'
-const estados: Estado[] = ['Planeada', 'Pendente', 'Em curso']
-
 interface FormObra {
     nomeObra: string
-    estado: Estado
 }
 
 const { handleSubmit, resetForm } = useForm<FormObra>({
     validationSchema: object({
-        nomeObra: string().min(2).required(),
-        estado: string().required()
+        nomeObra: string().min(2).required()
     })
 })
 
 const nomeObra = useField('nomeObra')
-const estado = useField<Estado>('estado')
 const notSubmited = ref(true)
+const idObra = ref('')
 
-const submit = handleSubmit((values) => {
-    notSubmited.value = false
-    alert(JSON.stringify(values, null, 2))
-    resetForm()
+const submit = handleSubmit((values,actions) => {
+    const obra = {
+        name: values.nomeObra,
+    }
+    ObraService.addOneObra(obra).
+        then((success) => {
+            if (success) {
+                notSubmited.value = false
+                dialog.value = false
+                idObra.value = success.id ? success.id : ''
+                resetForm()
+            } else {
+                actions.setFieldError("nomeObra","Erro na criação da Obra.")
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
 })
 
 const close = () => {
@@ -78,30 +89,11 @@ const close = () => {
                             @submit.prevent="submit"
                             v-if="notSubmited"
                         >
-                            <v-row>
-                                <v-col
-                                    cols="12"
-                                    md="6"
-                                >
-                                    <v-text-field
-                                        v-model="nomeObra.value.value"
-                                        :error-messages="nomeObra.errorMessage.value"
-                                        label="Nome da Obra*"
-                                    ></v-text-field>
-                                </v-col>
-
-                                <v-col
-                                    cols="12"
-                                    md="6"
-                                >
-                                    <v-select
-                                        v-model="estado.value.value"
-                                        :error-messages="estado.errorMessage.value"
-                                        :items="estados"
-                                        label="Estado*"
-                                    ></v-select>
-                                </v-col>
-                            </v-row>
+                            <v-text-field
+                                v-model="nomeObra.value.value"
+                                :error-messages="nomeObra.errorMessage.value"
+                                label="Nome da Obra*"
+                            ></v-text-field>
                             <v-btn
                                 color="primary"
                                 type="submit"
@@ -110,7 +102,7 @@ const close = () => {
                                 >Submit</v-btn
                             >
                         </v-form>
-                        <FormMapa v-else />
+                        <FormMapa v-else :id-obra="idObra"/>
                     </v-container>
                 </v-card-text>
             </v-card>

@@ -4,23 +4,24 @@ import PageLayout from '@/components/Layouts/PageLayout.vue'
 import { ref, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
-import Map from '@/components/Map.vue'
 import Confirmation from '@/components/Confirmation.vue'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
-import type { Capacete, Obra, Header} from '@/interfaces'
-import { CapaceteService, ObraService } from '@/http_requests'
+import type { Capacete, Header} from '@/interfaces'
+import {  ObraService } from '@/http_requests'
+import type { Mapa } from '@/interfaces'
+import Map from '@/components/Map.vue'
 
 const router = useRouter()
 const route = useRoute()
-const title = ref('Nome da Obra ' + route.params.id)
+const title = ref('')
 const capacetes = ref<Array<Capacete>>([])
 const list = ref<Array<Capacete>>([])
 const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('')
 const newEstado = ref('')
-const id = route.params.id
+const mapList = ref<Array<Mapa>>([])
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
@@ -47,7 +48,7 @@ const saveTitle = () => {
 
 const getObra = () => {
     ObraService.getOneObra(route.params.id.toString()).then((answer) => {
-        console.log(answer)
+        if(answer.mapa) mapList.value = answer.mapa
         if(answer.name) title.value = answer.name
         if(answer.status) estadoObra.value = answer.status
     })
@@ -63,16 +64,6 @@ const getCapacetesObra = () => {
     list.value = capacetes.value
 }
 
-// const getCapacetesFromObra = (id: string) => {
-//   console.log("getCapacetesFromObra")
-//   list.value = []
-//   ObraService.getCapacetesFromObra(id).then((answer) => {
-//     console.log(answer)
-//     answer.forEach((capacete) => {
-//       list.value.push(capacete)
-//     })
-//   })
-// }
 
 onMounted(() => {
     getObra()
@@ -137,7 +128,6 @@ const goToSimulador = () => {
     router.push(currentRoute.fullPath + '/simulador')
 }
 
-const filtersHeaders = ['Estado']
 </script>
 <template>
     <PageLayout>
@@ -164,7 +154,9 @@ const filtersHeaders = ['Estado']
                             @click="toggleEditing"
                         ></v-btn>
                     </v-col>
-                    <Map></Map>
+                    <Map
+                        :mapList="mapList"
+                    ></Map>
                 </v-row>
             </template>
             <template #content>
@@ -212,7 +204,6 @@ const filtersHeaders = ['Estado']
                     </v-btn>
                 </v-row>
                 <Lista
-                    v-if="list.length > 0"
                     :list="list"
                     :headers="headers"
                 >

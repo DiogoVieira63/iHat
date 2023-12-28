@@ -173,7 +173,7 @@ watch(
                         v-for="(value, key) in filterOptions"
                         :key="key"
                     >
-                        <h2 class="text-h6">{{ key }}</h2>
+                        <h2 class="text-h6">{{ filterName(String(key)) }}</h2>
                         <v-chip-group
                             v-model="filter[key]"
                             column
