@@ -74,7 +74,7 @@ public class ObrasService: IObrasService{
     }
 
 
-    public void AlteraEstadoObra(string id, string estado)
+    public async Task AlteraEstadoObra(string id, string estado)
     {
         var obra = _obraCollection.Find(x => x.Id == id).FirstOrDefault();
 

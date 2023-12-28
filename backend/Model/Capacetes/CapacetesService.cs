@@ -57,7 +57,8 @@ public class CapacetesService: ICapacetesService{
         var capacete = await _capaceteCollection.Find(x => x.NCapacete == nCapacete).FirstOrDefaultAsync();
         if (capacete == null)
             return false;
-        return capacete.Status == "Em Uso";
+        // return capacete.Status == "Em Uso";
+        return capacete.Status == "Associado à Obra";
     }
 
     public async Task UpdateCapaceteStatus(int nCapacete, string status){
@@ -72,7 +73,7 @@ public class CapacetesService: ICapacetesService{
     }
 
     public async Task AddCapaceteToObra(int nCapacete){
-        await UpdateCapaceteStatus(nCapacete, "Associado a obra");
+        await UpdateCapaceteStatus(nCapacete, "Associado à Obra");
     }
 
     public async Task UpdateCapaceteStatusToLivre(int nCapacete){

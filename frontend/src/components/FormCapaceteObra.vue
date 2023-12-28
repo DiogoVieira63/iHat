@@ -20,7 +20,11 @@ const close = () => {
 
 <template>
     <v-row justify="center">
-        <v-dialog v-model="dialogCapacete" persistent width="600">
+        <v-dialog
+            v-model="dialogCapacete"
+            persistent
+            width="600"
+        >
             <template v-slot:activator="{ props }">
                 <v-btn
                     v-bind="props"
@@ -39,7 +43,11 @@ const close = () => {
                             <v-spacer></v-spacer>
                             <h1 class="text-h5">Adicionar Capacete à Obra</h1>
                             <v-spacer></v-spacer>
-                            <v-btn icon @click="close" variant="text">
+                            <v-btn
+                                icon
+                                @click="close"
+                                variant="text"
+                            >
                                 <v-icon>mdi-close</v-icon>
                             </v-btn>
                         </v-row>
@@ -62,7 +70,13 @@ const close = () => {
                             transition="false"
                             variant="solo"
                         ></v-autocomplete>
-                        <v-btn type="submit" block class="mt-2" color="primary">Submit</v-btn>
+                        <v-btn
+                            type="submit"
+                            block
+                            class="mt-2"
+                            color="primary"
+                            >Submit</v-btn
+                        >
                     </v-card-text>
                 </v-form>
             </v-card>

@@ -48,7 +48,7 @@ db.${CAPACETES_COLLECTION}.insertMany( [
     },
     {
         "NCapacete":2,
-        "Status":"Livre",
+        "Status":"Associado à Obra",
         "Trabalhador": null,
     }
 ] )

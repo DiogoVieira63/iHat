@@ -28,23 +28,43 @@ public class IHatController : ControllerBase{
     public void LoginUser(){
 
     }
+
+    //rever
+    [HttpPatch("constructions/{obraId}")]
+    public async Task<IActionResult> UpdateNomeObra(string obraId, [FromBody] string name ) {
+        Console.WriteLine("New NameObra PATCH Request");
+
+        if (string.IsNullOrEmpty(name)) {
+            return BadRequest("New name cannot be empty");
+        }
+
+        try{
+            await _facade.UpdateNomeObra(obraId, name);
+        }
+        catch (Exception e){
+            return BadRequest(e.Message);
+        }
+
+        return Ok(); // Return a success response
+    }
     
-    [HttpGet("constructions")]
-    public async Task<ActionResult<List<Obra>?>> GetConstructions(){
-        
-        var lista = await _facade.GetObras(1);
+    [HttpGet("constructions/{idObra}/helmets")]
+    public async Task<ActionResult<List<Capacete>>> GetAllHelmetsFromObra(string idObra){
+        Console.WriteLine("Get All Helmets From Obra GET Request");
+
+        var lista = await _facade.GetAllCapacetesdaObra(idObra);
+        // var lista = null;
 
         if(lista == null){
             return NotFound();
         }
-        
+
         return lista;
     }
 
-
     // Get the construction identified by the id
-    // ihat/construction/{id}
-    [HttpGet("construction/{id}")]
+    // ihat/constructions/{id}
+    [HttpGet("constructions/{id}")]
     public async Task<ActionResult<ObrasDTO>> GetConstruction(string id){
         if (id != null){
             var obras = await _facade.GetConstructionById(id);
@@ -57,10 +77,19 @@ public class IHatController : ControllerBase{
         }
     }
 
+    [HttpGet("constructions")]
+    public async Task<ActionResult<List<Obra>?>> GetConstructions(){
+        
+        var lista = await _facade.GetObras(1);
 
-    // Input: name, mapa, estado
+        if(lista == null){
+            return NotFound();
+        }
+        
+        return lista;
+    }
 
-    [HttpPost("construction")]
+    [HttpPost("constructions")]
     [DisableRequestSizeLimit]
     public async Task<IActionResult> NewConstruction([FromForm] NewConstructionForm form){
         if(form != null){
@@ -82,30 +111,27 @@ public class IHatController : ControllerBase{
             return BadRequest();
     }
 
-    [HttpPost("atualizarEstado")]
-    public void AlteraEstadoObra(string obraId, string novoEstado) {
-        _facade.AlteraEstadoObra(obraId, "Tó");
-    }
+    [HttpPatch("constructions/{obraId}/state")]
+    public async Task<IActionResult> AlteraEstadoObra(string obraId, [FromBody] string state) {
+        Console.WriteLine("New Construction State");
 
-//rever
-    [HttpPatch("constructions/{obraId}/{novoNome}")]
-    public async Task<IActionResult> UpdateNomeObra(string obraId, string novoNome) {
-        Console.WriteLine("New NameObra PATCH Request");
-        await _facade.UpdateNomeObra(obraId, novoNome);
+        // Fazer verificação do estado !!!!!!!!!!!!!!!!!!
+
+        if (string.IsNullOrEmpty(state)) {
+            return BadRequest("Cannot change to empty state");
+        }
+
+        try{
+            await _facade.AlteraEstadoObra(obraId, state);
+        }
+        catch (Exception e){
+            return BadRequest(e.Message);
+        }
+
         return Ok(); // Return a success response
     }
 
-
-
-    [HttpDelete("construction/{id}")]
-    public async Task<IActionResult> RemoveObraById(string id){
-        await _facade.RemoveObraById(id);
-
-        return NoContent(); // Returns 204 No Content -> sucesso
-    }
-
-
-    [HttpPost("construction/{id}/map")]
+    [HttpPost("constructions/{id}/map")]
     [DisableRequestSizeLimit]
     public async Task<IActionResult> AddMapaToObra(string id, [FromForm] IFormFile Mapa){
         try{
@@ -118,9 +144,7 @@ public class IHatController : ControllerBase{
         return Ok();
     }
 
-
-
-    [HttpPost("helmet")]
+    [HttpPost("helmets")]
     public async Task<IActionResult> NewHelmet(NewHelmetForm form){
         Console.WriteLine("New Helmet POST Request");       
         try
@@ -134,15 +158,8 @@ public class IHatController : ControllerBase{
         }
     }
     
-
-    [HttpGet("helmet")]
-    public async Task<ActionResult<List<Capacete>>> GetAllHelmets(){
-        var lista = await _facade.GetAllCapacetes();
-        return lista;
-    }
-
-
-    [HttpGet("helmet/{id}")]
+    //funcionar
+    [HttpGet("helmets/{id}")]
     public async Task<ActionResult<Capacete>> GetHelmet(string id){
         int nCapacete = Int32.Parse(id);
         Console.WriteLine("Get Helmet GET Request {0}", nCapacete);
@@ -156,12 +173,12 @@ public class IHatController : ControllerBase{
         return capacete;
     }
 
-// verificar
-    [HttpGet("helmet/obra/{idObra}")]
-    public async Task<ActionResult<List<Capacete>>> GetAllHelmetsFromObra(string idObra){
-        Console.WriteLine("Get All Helmets From Obra GET Request");
+//funcionar
+    [HttpGet("helmets")]
+    public async Task<ActionResult<List<Capacete>>> GetAllHelmets(){
+        Console.WriteLine("Get All Helmets GET Request");
 
-        var lista = await _facade.GetAllCapacetesdaObra(idObra);
+        var lista = await _facade.GetAllCapacetes();
 
         if(lista == null){
             return NotFound();
@@ -170,16 +187,25 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
+
+    [HttpDelete("constructions/{id}")]
+    public async Task<IActionResult> RemoveObraById(string id){
+        await _facade.RemoveObraById(id);
+
+        return NoContent(); // Returns 204 No Content -> sucesso
+    }
+
 //funciona
-    [HttpDelete("helmet/{idCapacete}/{idObra}")]
-    public async Task<IActionResult> DeleteHelmet(int idCapacete, string idObra){
-        Console.WriteLine("Delete Helmet DELETE Request");
+    [HttpDelete("constructions/{idObra}/helmets/{idCapacete}")]
+    public async Task<IActionResult> DeleteHelmet(string idCapacete, string idObra){
+        Console.WriteLine($"Delete Helmet DELETE Request | Obra: {idObra} | Capacete: {idCapacete}");
 
         // string idObra = "6543c109e272c87c6b5f3d33";
 
         try
         {
-            await _facade.DeleteCapaceteToObra(idCapacete, idObra);
+            int nCapacete = Int32.Parse(idCapacete);
+            await _facade.DeleteCapaceteToObra(nCapacete, idObra);
             return Ok(); // Retorna uma resposta de sucesso            
         }
         catch (Exception e)
@@ -189,8 +215,8 @@ public class IHatController : ControllerBase{
     }
 
 // funciona
-    [HttpPost("helmet/obra/{idObra}/{idCapacete}")]
-    public async Task<IActionResult> AddHelmetToObra(int idCapacete, string idObra){
+    [HttpPost("constructions/{idObra}/helmets/{idCapacete}")]
+    public async Task<IActionResult> AddHelmetToObra(string idCapacete, string idObra){
         Console.WriteLine("Add Helmet To Obra POST Request");
 
         // string idCapacete = "6543c272e272c87c6b5f3d34";
@@ -198,7 +224,8 @@ public class IHatController : ControllerBase{
 
         try
         {
-            await _facade.AddCapaceteToObra(idCapacete, idObra);
+            int nCapacete = Int32.Parse(idCapacete);
+            await _facade.AddCapaceteToObra(nCapacete, idObra);
             return Ok(); // Retorna uma resposta de sucesso
         }
         catch (Exception e)
@@ -207,12 +234,6 @@ public class IHatController : ControllerBase{
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
         }
     }
-
-
-
-
-
-
 
     [HttpGet("logs/{idObra}")]
     public async Task<ActionResult<List<Log>>> GetLogs(string idObra){
