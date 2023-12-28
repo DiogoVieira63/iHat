@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using iHat.Model.Obras;
 using iHat.Model.Zonas;
 
 namespace iHat.Model.Mapas;
@@ -21,8 +20,8 @@ public class MapaService: IMapaService{
             iHatDatabaseSettings.Value.MapasCollectionName);
     }
 
-    public async Task<string?> Add(string name, string svg){
-        var mapa = new Mapa(name, svg);
+    public async Task<string?> Add(string name, string svg, int floor){
+        var mapa = new Mapa(name, svg, floor);
         await _mapaCollection.InsertOneAsync(mapa);
         return mapa.Id;
     }
@@ -116,5 +115,20 @@ public class MapaService: IMapaService{
     public async Task<Mapa?> GetMapaById(string id){
         var mapa = await _mapaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
         return mapa;
+    }
+
+    public async Task<List<ZonasRisco>?> GetZonasdeRisco(string id){
+        var mapa = await _mapaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        if(mapa == null){
+            return null;
+        }
+
+        return mapa.Zonas;
+    }
+
+    public async Task RemoveMapas(List<string> mapas){
+        foreach (var id in mapas){
+            await _mapaCollection.DeleteOneAsync(x => x.Id == id);
+        }
     }
 }

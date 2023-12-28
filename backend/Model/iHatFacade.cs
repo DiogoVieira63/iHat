@@ -12,12 +12,15 @@ public class iHatFacade: IiHatFacade{
     private readonly ICapacetesService icapacetes;
     private readonly ILogsService ilogs;
     private readonly IMapaService imapas;
+    private readonly ILogger<iHatFacade> _logger;
 
-    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService){
+    
+    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService, ILogger<iHatFacade> logger){
         iobras = obrasService;
         icapacetes = capacetesService;
         ilogs = logsService;
         imapas = mapasService;
+        _logger = logger;
     }
 
 
@@ -76,11 +79,13 @@ public class iHatFacade: IiHatFacade{
 
             var listaSvg = await requestHTTP(mapa);                   
 
+            var number = 0;
             foreach(var svg in listaSvg){
                 // new mapa value added to the db
-                var ids = await imapas.Add(svg.Key, svg.Value);
+                var ids = await imapas.Add(svg.Key, svg.Value, number);
                 if(ids != null)
                     listaSvgDBIds.Add(ids);
+                number++;
             }
 
         }
@@ -191,13 +196,16 @@ public class iHatFacade: IiHatFacade{
         var listaSvgDBIds = new List<string>();
         var listaSvg = await requestHTTP(mapaFile);                   
 
+        var number = 0;        
         foreach(var svg in listaSvg){
             // new mapa value added to the db
-            var ids = await imapas.Add(svg.Key, svg.Value);
+            var ids = await imapas.Add(svg.Key, svg.Value, 0);
             if(ids != null)
                 listaSvgDBIds.Add(ids);
+            number++;
         }
         
-        await iobras.AddListaMapaToObra(idObra, listaSvgDBIds);
+        var listaMapasAnteriores = await iobras.AddListaMapaToObra(idObra, listaSvgDBIds);
+        await imapas.RemoveMapas(listaMapasAnteriores);
     }
 }

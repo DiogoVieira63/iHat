@@ -57,6 +57,5 @@ public class MensagemCapacete {
         if (Gases.isAbnormalValue())
             return new Tuple<bool, string>(true, "Gases");
         return new Tuple<bool, string>(false, "");
-        // localização com as zonas de perigo
     }
 }

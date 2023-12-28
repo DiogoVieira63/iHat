@@ -21,7 +21,7 @@ public interface IObrasService{
 
     // Task UpdateZonasPerigo(string idObra, List<Tuple<double,double>> lista);
 
-    Task<string?> GetIdObraWithCapaceteId(int nCapaceteToFind);
+    Task<Obra?> GetObraWithCapaceteId(int nCapaceteToFind);
 
     Task<List<int>> GetAllCapacetesOfObra(string idObra);
 
@@ -31,6 +31,6 @@ public interface IObrasService{
     
     Task DeleteCapaceteToObra(int id, string idObra);
 
-    Task AddListaMapaToObra(string id, List<string> mapas);
+    Task<List<string>> AddListaMapaToObra(string id, List<string> mapas);
 }
     
