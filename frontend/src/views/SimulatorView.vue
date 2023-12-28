@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import MapEditor from '@/components/MapEditor.vue'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { MqttService } from '@/mqttService'
 import { onMounted } from 'vue'
 import { useTaskStore } from '@/store'
@@ -11,9 +11,8 @@ import { useMQTTStore } from '@/store'
 import TaskHistory from '@/components/TaskHistory.vue'
 import TaskInput from '@/components/TaskInput.vue'
 import { Task } from '@/store'
-import mapa from '@/data/map.json'
 import type { Mapa } from '@/interfaces'
-
+import { ObraService } from '@/http_requests'
 
 export interface Capacete {
     position: { x: number; y: number }
@@ -36,6 +35,8 @@ const inputs = ref<Array<Input>>([])
 const imageUrls: Array<string> = ['/Duplex1.svg', '/Duplex2.svg']
 const taskStore = useTaskStore()
 const router = useRouter()
+const route = useRoute()
+const title = ref('')
 const page = ref(1)
 const tempo = ref(1)
 const selected = ref<Array<number>>([])
@@ -101,8 +102,16 @@ const inputsConstante: Array<Input> = [
     }
 ]
 
+const getObra = () => {
+    ObraService.getOneObra(route.params.id.toString()).then((answer) => {
+        if(answer.mapa) mapList.value = answer.mapa
+        if(answer.name) title.value = answer.name
+    })
+}
+
+
 onMounted(() => {
-    mapList.value = mapa
+    getObra()
     if (!mqttStore.mqtt) {
         mqtt = new MqttService(undefined)
         mqttStore.setMqtt(mqtt)
@@ -221,16 +230,16 @@ const changeAddCapaceteTask = (id: string) => {
     <page-layout>
         <ObraLayout>
             <template #map>
-                <h1 class="text-center text-h3">Nome da Obra</h1>
+                <h1 class="text-center text-h3">{{ title }}</h1>
                 <template v-for="(map, index) in mapList" :key="map.name">
                     <map-editor 
                         :active="index == page - 1" 
                         :edit="true" 
                         :svg="map.svg" 
-                        :zones="map.zones"
+                        :zones="map.zonas"
                         :capacetes-position="capacetes"
                         :capacete-selected="selected"
-                        @update:zones="map.zones = $event"
+                        @update:zones="map.zonas = $event"
                         @addCapacete="addCapacete"
                         @selectCapacete="selectedCapacete"
                         @update::capacete="updateCapacete($event)"

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Obra, Capacete, CapacetePost, ObraPost } from './interfaces'
+import type { Obra, Capacete } from './interfaces'
 const url = `http://localhost:5069/ihat`
 
 // Obras
@@ -34,7 +34,7 @@ export class ObraService {
             .catch((error) => console.error('Error:', error))
     }
 
-    static addOneObra(body: ObraPost): Promise<Obra> {
+    static addOneObra(body: Obra): Promise<Obra> {
         return axios
             .post(`${url}/constructions`, body)
             .then((response) => {
@@ -89,7 +89,7 @@ export class ObraService {
 
     static addMapaToObra(idObra: string, file : File): Promise<void> {
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('Mapa', file);
         return axios
             .post(`${url}/constructions/${idObra}/map`, formData, {headers : {
                 'Content-Type': 'multipart/form-data'
@@ -121,7 +121,7 @@ export class CapaceteService {
             .catch((error) => console.error('Error:', error))
     }
 
-    static addOneCapacete(body: CapacetePost): Promise<boolean> {
+    static addOneCapacete(body: Capacete): Promise<boolean> {
         return axios
             .post(`${url}/helmets`, body)
             .then((response) => {

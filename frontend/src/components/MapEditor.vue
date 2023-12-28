@@ -39,6 +39,10 @@ const props = defineProps({
     zones: {
         type: Array as PropType<Array<Zone>>,
         required: true
+    },
+    name: {
+        type: String,
+        required: false
     }
 })
 
@@ -73,11 +77,6 @@ const changeCursor = (value: string) => {
     else cursorType.value = 'default'
 }
 
-const decodeBase64 = (svg: string) => {
-    // return atob(svg.split(',')[1])
-    return atob(svg)
-}
-
 const resizeSVG = () => {
     let coef = 1
     const ratio = baseWidth.value / baseHeight.value
@@ -97,7 +96,7 @@ const resizeSVG = () => {
 
 
 onMounted(async () => {
-    const parsed = parse(decodeBase64(props.svg))
+    const parsed = parse(props.svg)
     const node: ElementNode = parsed.children[0] as ElementNode
     const height = node.properties ? node.properties.height : 100
     const vB = node.properties ? (node.properties.viewBox as string) : '0 0 100 100'
@@ -129,9 +128,8 @@ const pointScale = (point : Point) => {
 }
 
 
-const transform = (value: number | null | undefined) => {
-    if (value == null) return ''
-    return `scale(${1/value})`
+const transform = () => {
+    return `scale(${1/scaleSVG.value})`
 }
 
 const isDrawing = computed(() => {
@@ -306,16 +304,7 @@ const polygonStrokeArray = (id: number) => {
     else return '0'
 }
 
-const createBlobURL = (svg: string) => {
-  // Decode the base64 SVG content
-  const decodedSVG = atob(svg);
-  
-  // Convert decoded SVG content to a Blob
-  const blob = new Blob([decodedSVG], { type: 'image/svg+xml' });
-  
-  // Create a URL for the Blob
-  return URL.createObjectURL(blob);
-}
+
 
 const canUndo = computed(() => {
     return !(isDrawing.value && drawPoints.value.length > 0)
@@ -343,6 +332,11 @@ const optionsTooltip = computed(() => {
     if (props.options === 'Edit') return optionsEdit
     else return optionsSimulador
 })
+
+const encodeBase64 = (svg: string) => {
+    return "data:image/svg+xml;base64," + btoa(svg)
+}
+
 </script>
 
 <template>
@@ -365,7 +359,7 @@ const optionsTooltip = computed(() => {
                 >
                     <!--image :href="props.svg" :width="svgWidth" :height="svgHeight" /-->
                     <image
-                        :xlink:href="createBlobURL(props.svg)   "
+                        :xlink:href="encodeBase64(props.svg)"
                         :width="svgWidth"
                         :height="svgHeight"
                     />
@@ -377,7 +371,7 @@ const optionsTooltip = computed(() => {
                         fill="red"
                         fill-opacity="0.5"
                         @click="selectZone(id)"
-                        :transform="transform(scaleSVG)"
+                        :transform="transform()"
                         stroke="black"
                         :stroke-width="3 * scaleSVG"
                         :stroke-dasharray="polygonStrokeArray(id)"
@@ -387,6 +381,7 @@ const optionsTooltip = computed(() => {
                         v-if="props.edit"
                         :mousePos="mousePos"
                         :isDrawing="isDrawing"
+                        :coefSvg = "scaleSVG"
                         @changeCursor="changeCursor"
                         @end-drawing="endDrawing"
                         :drawPoints="drawPoints"
@@ -404,8 +399,8 @@ const optionsTooltip = computed(() => {
                         @click="emit('selectCapacete', key)"
                         :x="position['x'] - 15"
                         :y="position['y'] - 15"
-                        width="30"
-                        height="30"
+                        :width="30  / scaleSVG"
+                        :height="30 / scaleSVG"
                         :href="
                             props.capaceteSelected?.includes(key)
                                 ? '/helmet_selected.svg'
@@ -415,6 +410,9 @@ const optionsTooltip = computed(() => {
                 </svg>
             </v-row>
         </v-sheet>
+        <h1 v-if="props.name" class="text-center text-h4">
+            {{ props.name.split('.')[0] }}
+        </h1>
         <template class="d-flex justify-center">
             <v-sheet
                 v-if="isDrawing"

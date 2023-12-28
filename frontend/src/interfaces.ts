@@ -1,18 +1,18 @@
 export interface Obra {
     id?: string,
     idResponsavel?: number,
-    name?: string,
+    name: string,
     zonas?: Array<string>, // temporario
-    mapa?: string, // temporário
     capacetes?: Array<string>, //temporario
     status?: string
-    mapas: Array<Mapa>
+    mapa?: Array<Mapa>
 }
 
 export interface Mapa {
+    id: string
     name: string
     svg: string
-    zones: Array<Zone>
+    zonas: Array<Zone>
 }
 
 export interface Zone {
@@ -27,20 +27,10 @@ export interface Point {
 
 export interface Capacete {
   id?: string 
-  nCapacete: number,
+  NCapacete: number,
   status: string,
   info?: string,
   trabalhador?: string
-}
-
-export interface CapacetePost {
-    nCapacete: number;
-}
-
-export interface ObraPost {
-    name: string,
-    mapa: string,
-    status: string
 }
 
 export interface Header {
