@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using iHat.Model.Obras;
 using iHat.Model.Zonas;
 
 namespace iHat.Model.Mapas;
@@ -125,5 +124,11 @@ public class MapaService: IMapaService{
         }
 
         return mapa.Zonas;
+    }
+
+    public async Task RemoveMapas(List<string> mapas){
+        foreach (var id in mapas){
+            await _mapaCollection.DeleteOneAsync(x => x.Id == id);
+        }
     }
 }

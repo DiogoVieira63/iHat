@@ -49,7 +49,6 @@ public class iHatFacade: IiHatFacade{
                 throw new Exception("Unable to connect to python server");
             }
 
-            _logger.LogWarning(response.Content);
             var zipBytes = await response.Content.ReadAsByteArrayAsync();
 
             using (MemoryStream zipStream = new MemoryStream(zipBytes))
@@ -80,11 +79,13 @@ public class iHatFacade: IiHatFacade{
 
             var listaSvg = await requestHTTP(mapa);                   
 
+            var number = 0;
             foreach(var svg in listaSvg){
                 // new mapa value added to the db
-                var ids = await imapas.Add(svg.Key, svg.Value, -1);
+                var ids = await imapas.Add(svg.Key, svg.Value, number);
                 if(ids != null)
                     listaSvgDBIds.Add(ids);
+                number++;
             }
 
         }
@@ -204,6 +205,7 @@ public class iHatFacade: IiHatFacade{
             number++;
         }
         
-        await iobras.AddListaMapaToObra(idObra, listaSvgDBIds);
+        var listaMapasAnteriores = await iobras.AddListaMapaToObra(idObra, listaSvgDBIds);
+        await imapas.RemoveMapas(listaMapasAnteriores);
     }
 }

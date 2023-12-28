@@ -76,7 +76,7 @@ public class ObrasService: IObrasService{
 
     public async Task AlteraEstadoObra(string id, string estado)
     {
-        var obra = _obraCollection.Find(x => x.Id == id).FirstOrDefault();
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         if (obra == null)
         {
@@ -135,11 +135,13 @@ public class ObrasService: IObrasService{
         return obra.Capacetes;
     }
 
-    public async Task AddListaMapaToObra(string id, List<string> mapas){
+    public async Task<List<string>> AddListaMapaToObra(string id, List<string> mapas){
         var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
+        var listaPreviousMapas = obra.Mapa;
         var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, id);
         var obraUpdate = Builders<Obra>.Update.Set(x => x.Mapa, mapas);
         await _obraCollection.UpdateOneAsync(obraFilter, obraUpdate);
+        return listaPreviousMapas;
     }
 
 

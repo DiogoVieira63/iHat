@@ -16,4 +16,6 @@ public interface IMapaService{
     Task<Mapa?> GetMapaById(string id);
 
     Task<List<ZonasRisco>?> GetZonasdeRisco(string id);
+
+    Task RemoveMapas(List<string> mapas);
 }
