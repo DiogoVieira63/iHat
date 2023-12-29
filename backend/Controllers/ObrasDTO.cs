@@ -6,7 +6,7 @@ namespace iHat.Model.Obras;
 
 public class ObrasDTO
 {
-    public string Id { get; set; }
+    public string? Id { get; set; }
     public int IdResponsavel { get; set; }
     public string Name { get; set; }
     public List<Mapa> Mapa { get; set; }
