@@ -35,23 +35,27 @@ const taskStore = useTaskStore()
 const tab = ref('Ativas')
 
 const cancelEditTask = (index: number | string) => {
-    taskStore.tasks[index].isEdit = false
+    taskStore.tasks[taskStore.active][index].isEdit = false
 }
 const taskLength = computed(() => {
-    return Object.values(taskStore.tasks).filter((task) => task.status === tab.value).length
+    if(!taskStore.tasks[taskStore.active]) return 0
+    return Object.values(taskStore.tasks[taskStore.active]).filter((task) => task.status === tab.value).length
 })
 
 
 const taskAtivasLength = computed(() => {
-    return Object.values(taskStore.tasks).filter((task) => task.status === 'Running').length
+    if(!taskStore.tasks[taskStore.active]) return 0
+    return Object.values(taskStore.tasks[taskStore.active]).filter((task) => task.status === 'Running').length
 })
 
 const taskStoppedLength = computed(() => {
-    return Object.values(taskStore.tasks).filter((task) => task.status === 'Stopped').length
+    if(!taskStore.tasks[taskStore.active]) return 0
+    return Object.values(taskStore.tasks[taskStore.active]).filter((task) => task.status === 'Stopped').length
 })
 
 const taskFinishedLength = computed(() => {
-    return Object.values(taskStore.tasks).filter((task) => task.status === 'Finished').length
+    if(!taskStore.tasks[taskStore.active]) return 0
+    return Object.values(taskStore.tasks[taskStore.active]).filter((task) => task.status === 'Finished').length
 })
 
 
@@ -137,7 +141,8 @@ const removeTask = (index: string, confirmation : boolean) => {
 }
 
 const tasks = computed(() => {
-    return Object.fromEntries(Object.entries(taskStore.tasks).filter((task) => task[1].status === tab.value))
+    if(!taskStore.tasks[taskStore.active]) return {}
+    return Object.fromEntries(Object.entries(taskStore.tasks[taskStore.active]).filter((task) => task[1].status === tab.value))
 })
 
 const isAddCapaceteTask = computed(() => {

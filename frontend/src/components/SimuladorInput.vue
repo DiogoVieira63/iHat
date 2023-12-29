@@ -32,11 +32,15 @@ const updatePosition = (value: number, index: number) => {
     emit('updateValue', newValue)
 }
 
-const rules = [
-    (v: number) => v >= props.value[0] || 'Inválido',
-    (v: number) => v <= props.value[1] || 'Inválido',
-    (v: number) => (v >= props.range[0] && v <= props.range[1]) || `Fora do Range:[${props.range}]`
-]
+
+
+const rules = {
+    min: (v: number) => v >= props.value[0] || 'Inválido',
+    max: (v: number) => v <= props.value[1] || 'Inválido',
+    range: (v: number) => (v >= props.range[0] && v <= props.range[1]) || `Fora do Range:[${props.range}]`,
+}
+
+
 </script>
 <template>
     <template v-if="tipo == 'Variável'">
@@ -61,7 +65,7 @@ const rules = [
                     variant="outlined"
                     density="compact"
                     label="Min"
-                    :rules="rules"
+                    :rules="[rules.max,rules.range]"
                 ></v-text-field>
             </v-col>
             <v-col cols="6">
@@ -74,7 +78,7 @@ const rules = [
                     variant="outlined"
                     density="compact"
                     label="Max"
-                    :rules="rules"
+                    :rules="[rules.min,rules.range]"
                 ></v-text-field>
             </v-col>
         </v-row>
@@ -89,7 +93,7 @@ const rules = [
             variant="outlined"
             density="compact"
             label="Valor"
-            :rules="rules"
+            :rules="[rules.range]"
         ></v-text-field>
     </template>
 </template>

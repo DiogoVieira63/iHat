@@ -46,7 +46,7 @@ const addCapaceteTask = ref("")
 const mapList = ref<Array<Mapa>>([])
 const inputsConstante: Array<Input> = [
     {
-        title: 'Temperatura Corpural',
+        title: 'Temperatura Corporal',
         range: [35, 42],
         value: [36.5, 37.5],
         tipo: 'Variável'
@@ -111,6 +111,8 @@ const getObra = () => {
 
 
 onMounted(() => {
+    const idObra = route.params.id as string
+    taskStore.setActive(idObra)
     getObra()
     if (!mqttStore.mqtt) {
         mqtt = new MqttService(undefined)
@@ -143,7 +145,7 @@ const unselectCapacete = (id: number) => {
     if (selected.value.length == 0) {
         if (taskEdit.value != null) {
             const index = taskEdit.value
-            const task = taskStore.tasks[index]
+            const task = taskStore.tasks[taskStore.active][index]
             task.isEdit = false
         }
         inputs.value = []
@@ -160,16 +162,16 @@ const selectedCapacete = (id: number) => {
     if (hasTask) {
         const key = taskStore.taskByCapacete(id)
         if(key){
-            const task = taskStore.tasks[key]
+            const task = taskStore.tasks[taskStore.active][key]
             editTask(task)
         }
     } else {
         if (taskEdit.value != null) {
-            taskStore.tasks[taskEdit.value].isEdit = false
+            taskStore.tasks[taskStore.active][taskEdit.value].isEdit = false
         }
         selected.value.push(id)
         if (addCapaceteTask.value != "") {
-            const task = taskStore.tasks[addCapaceteTask.value]
+            const task = taskStore.tasks[taskStore.active][addCapaceteTask.value]
             task.capacetes.push(id)
         }
         inputs.value = [...inputsConstante]
@@ -200,7 +202,7 @@ const editTask = (task : Task) => {
     tempo.value = task.intervalSeconds
     if (taskEdit.value != null) {
         const last = taskEdit.value
-        taskStore.tasks[taskEdit.value].isEdit = false
+        taskStore.tasks[taskStore.active][taskEdit.value].isEdit = false
         task.isEdit = true
         if (last == taskEdit.value) {
             task.isEdit = false
@@ -219,7 +221,7 @@ const changeAddCapaceteTask = (id: string) => {
         addCapaceteTask.value = ""
     }
     else {
-        const task = taskStore.tasks[id]
+        const task = taskStore.tasks[taskStore.active][id]
         selected.value = [...task.capacetes]
         addCapaceteTask.value = id
     }
@@ -270,7 +272,7 @@ const changeAddCapaceteTask = (id: string) => {
                     :taskName="taskName"
                     :selected="selected"
                     @update:inputs="inputs = $event"
-                    @update:tempo="tempo = $event"
+                    @update:tempo="tempo = Number($event)"
                     @update:taskName="taskName = $event"
                     @update:selected="selected = $event"
                 />
