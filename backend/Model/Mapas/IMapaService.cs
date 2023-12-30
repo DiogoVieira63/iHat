@@ -18,4 +18,6 @@ public interface IMapaService{
     Task<List<ZonasRisco>?> GetZonasdeRisco(string id);
 
     Task RemoveMapas(List<string> mapas);
+
+    Task UpdateFloorNumber(string id, int newFloorNumber);
 }

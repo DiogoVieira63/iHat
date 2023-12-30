@@ -44,4 +44,6 @@ public interface IiHatFacade{
     Task AddMapa(string idObra, IFormFile mapaFile);
 
     Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete);
+
+    Task UpdateMapaFloorNumber(string idObra, Dictionary<string, int> newFloors);
 }

@@ -131,4 +131,10 @@ public class MapaService: IMapaService{
             await _mapaCollection.DeleteOneAsync(x => x.Id == id);
         }
     }
+
+    public async Task UpdateFloorNumber(string id, int newFloorNumber){
+        var mapa = await _mapaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        var floorUpdate = Builders<Mapa>.Update.Set(x => x.Floor, newFloorNumber);
+        await  _mapaCollection.UpdateOneAsync(x => x.Id == id, floorUpdate);
+    }
 }

@@ -4,6 +4,7 @@ using iHat.Model.Logs;
 using System.IO.Compression;
 using iHat.Model.Mapas;
 using iHat.Model.MensagensCapacete;
+using System.ComponentModel;
 
 namespace iHat.Model.iHatFacade;
 
@@ -201,7 +202,7 @@ public class iHatFacade: IiHatFacade{
         var number = 0;        
         foreach(var svg in listaSvg){
             // new mapa value added to the db
-            var ids = await imapas.Add(svg.Key, svg.Value, 0);
+            var ids = await imapas.Add(svg.Key, svg.Value, number);
             if(ids != null)
                 listaSvgDBIds.Add(ids);
             number++;
@@ -213,5 +214,37 @@ public class iHatFacade: IiHatFacade{
 
     public async Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete){
         return await _mensagemCapaceteService.GetUltimosDadosDoCapacete(nCapacete);
+    }
+
+    public async Task UpdateMapaFloorNumber(string idObra, Dictionary<string, int> newFloors){
+        
+        // check if idMapas are in Obra
+        var obra = await iobras.GetConstructionById(idObra);
+        var idMapas = obra.Mapa;
+
+        foreach(var i in idMapas)
+            Console.WriteLine(i);
+
+
+        if(idMapas.Except(newFloors.Keys).ToList().Count != 0){
+            throw new Exception("Todos os ids dos mapas de uma obra devem estar presentes no valor enviado no HTTP Request");
+        }
+        
+        if(newFloors.Values.Distinct().Count() != newFloors.Values.Count){
+            throw new Exception("Não podem haver números de pisos repetidos");
+        }
+
+        var orderFloors = newFloors.Values.Order().ToList();
+        for (int i = 0; i < orderFloors.Count; i++){
+            if(orderFloors[i] != i){
+                throw new Exception("Os números dos pisos devem ser >= 0 e sem valores intermédios em 'falta'.");   
+            }
+        }
+
+        foreach(var pair in newFloors){
+            await imapas.UpdateFloorNumber(pair.Key, pair.Value);
+        }
+        
+        // 
     }
 }

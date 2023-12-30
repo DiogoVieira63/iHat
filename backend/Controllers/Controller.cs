@@ -61,7 +61,17 @@ public class IHatController : ControllerBase{
 
         return Ok();
     }
-    
+
+    // The dictionary newFloors must have all the maps'ids in Keys;
+    // There shouldn't be any Values of the Dictionary repeated.
+    [HttpPatch("map/{idObra}")]
+    public async Task<IActionResult> UpdateMapaFloorNumber(string idObra, [FromBody] Dictionary<string, int> newFloors){
+        foreach(var ids in newFloors)
+            _logger.LogWarning(ids.Key);
+        await _facade.UpdateMapaFloorNumber(idObra, newFloors);
+        return Ok();
+    }
+
     [HttpGet("constructions/{id}/helmets")]
     public async Task<ActionResult<List<Capacete>>> GetAllHelmetsFromObra(string id){
         var lista = await _facade.GetAllCapacetesdaObra(id);
@@ -262,4 +272,5 @@ public class IHatController : ControllerBase{
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
         }
     }    
+
 }
