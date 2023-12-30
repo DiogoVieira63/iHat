@@ -34,7 +34,7 @@ public class ObrasService: IObrasService{
         return obras;
     }
 
-    public async Task AddObra(string name, int idResponsavel, List<string> mapa){
+    public async Task<string?> AddObra(string name, int idResponsavel, List<string> mapa){
 
         /*if (status != "Planeada"){
             _logger.LogInformation("Status of the new Construction is different from \"Planeada\".");
@@ -51,6 +51,7 @@ public class ObrasService: IObrasService{
 
         try{
             await _obraCollection.InsertOneAsync(newObra);
+            return newObra.Id;
         }
         catch (Exception e){
             throw new Exception(e.Message);
@@ -217,4 +218,5 @@ public class ObrasService: IObrasService{
         await _obraCollection.UpdateOneAsync(obraFilter, obraUpdate);
     
     }
+    
 }
