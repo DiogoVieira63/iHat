@@ -128,23 +128,6 @@ public class IHatController : ControllerBase{
         return Ok();
     }
 
-    [HttpPost("constructions/{name}")]
-    [DisableRequestSizeLimit]
-    public async Task<IActionResult> NewConstruction(string name){
-        try{
-            var idResponsavel = 1;
-            if(name != null)
-                await _facade.NewConstruction(name, null, idResponsavel);
-            else
-                throw new Exception("Nome da nova Obra tem de ser indicado");
-        }
-        catch (Exception e){
-            return BadRequest(e.Message);
-        }
-        return Ok();
-        
-    }
-
     /*[HttpPost("constructions")]
     [DisableRequestSizeLimit]
     public async Task<IActionResult> NewConstruction([FromForm] NewConstructionForm form){
@@ -165,8 +148,28 @@ public class IHatController : ControllerBase{
         }
         else
             return BadRequest();
+    }*/
+
+    [HttpPost("constructions")]
+    [DisableRequestSizeLimit]
+    public async Task<ActionResult<string?>> NewConstruction([FromForm] NewConstructionForm form){
+        if(form != null){
+            string? id = null;
+            try{
+                var idResponsavel = 1;
+                if(form.Name != null)
+                    id = await _facade.NewConstruction(form.Name, null, idResponsavel);
+                else
+                    throw new Exception("Nome da nova Obra tem de ser indicado");
+            }
+            catch (Exception e){
+                return BadRequest(e.Message);
+            }
+            return Ok(id);
+        }
+        else
+            return BadRequest();
     }
-    */
 
     [HttpDelete("constructions/{idObra}/helmets/{idCapacete}")]
     public async Task<IActionResult> DeleteHelmet(string idObra, string idCapacete){

@@ -75,7 +75,7 @@ public class iHatFacade: IiHatFacade{
     }
 
 
-    public async Task NewConstruction(string name, IFormFile? mapa, int idResponsavel){
+    public async Task<string?> NewConstruction(string name, IFormFile? mapa, int idResponsavel){
 
         var listaSvgDBIds = new List<string>();
         if(mapa != null && mapa.Length != 0){
@@ -92,7 +92,8 @@ public class iHatFacade: IiHatFacade{
             }
 
         }
-        await iobras.AddObra(name, idResponsavel, listaSvgDBIds); 
+        var id = await iobras.AddObra(name, idResponsavel, listaSvgDBIds); 
+        return id;
     }
 
     public async Task<List<Obra>?> GetObras(int idResponsavel){
