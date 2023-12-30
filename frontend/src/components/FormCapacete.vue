@@ -4,6 +4,7 @@ import { useField, useForm } from 'vee-validate'
 import { object, string } from 'yup'
 import type { Capacete } from '@/interfaces'
 import { CapaceteService } from '@/http_requests'
+
 interface Form {
     id: string
 }
@@ -28,18 +29,14 @@ const submit = handleSubmit((values, actions) => {
     }
 
     CapaceteService.addOneCapacete(Capacete)
-        .then((success) => {
-            console.log('Success', success)
-            if (success) {
+        .then(() => {
                 dialogCapacete.value = false
                 id.value.value = ''
                 id.errorMessage.value = ''
                 emit('update')
-            } else {
-                actions.setFieldError('id', 'Capacete já existe')
-            }
-        })
-        .catch((error) => {
+            })
+            .catch((error) => {
+            actions.setFieldError('id', 'Capacete já existe')
             console.log(error)
         })
 })
