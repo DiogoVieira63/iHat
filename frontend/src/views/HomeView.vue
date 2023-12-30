@@ -18,7 +18,6 @@ const router = useRouter()
 const getCapacetes = () => {
     capacetes.value = []
     CapaceteService.getCapacetes().then((answer) => {
-        console.log(answer)
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
         })
@@ -29,7 +28,6 @@ const getObras = () => {
     obras.value = []
     // enviar id de responsavel no get
     ObraService.getObras().then((answer) => {
-        console.log(answer)
         answer.forEach((obra) => {
             obras.value.push(obra)
         })
@@ -95,7 +93,10 @@ function changePage(id: string) {
                         </v-tabs>
                     </template>
                     <template v-slot:add>
-                        <FormObra v-if="tab == 'obras'" />
+                        <FormObra 
+                            v-if="tab == 'obras'" 
+                            @update="getObras"
+                        />
                         <FormCapacete
                             v-else
                             @update="getCapacetes"

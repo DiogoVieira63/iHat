@@ -13,7 +13,6 @@ const { mdAndDown } = useDisplay()
 
 const page = ref(1)
 const edit = ref(false)
-const addMapa = ref(false)
 const id : string = route.params.id as string
 
 
@@ -32,6 +31,12 @@ const saveEdit = async (confirmation: boolean) => {
     }
     edit.value = false
 }
+
+
+const addMapa = ref(false)
+const emit = defineEmits(['update'])
+
+
 </script>
 <template>
     <template v-if="props.mapList.length > 0">
@@ -71,21 +76,23 @@ const saveEdit = async (confirmation: boolean) => {
     <v-container v-else>
         <v-sheet width="100%" height="900px" class="d-flex justify-center">
             <div class="d-flex align-center">
-                <v-sheet class="d-flex flex-column" width="500px">
-                    <p class="text-center text-h6">Não existem mapas para esta obra.</p>
-                    <v-row>
-                        <v-col>
-                            <v-btn block color="primary" @click="addMapa = true" class="text-center mt-5">
-                                Adicionar Mapa
-                            </v-btn>
-                        </v-col>
-                        <v-col v-if="addMapa">
-                            <v-btn block color="primary" @click="addMapa = false" class="text-center mt-5">
-                                Cancelar
-                            </v-btn>
-                        </v-col>
-                    </v-row>
-                    <FormMapa v-if="addMapa" class="mt-2"  :idObra="id" />
+                <v-sheet
+                    class="d-flex flex-column" 
+                    width="500px"
+                >
+                    <div
+                        v-if="!addMapa" 
+                    >
+                        <p class="text-center text-h6">Não existem mapas para esta obra.</p>
+                        <v-btn  block color="primary" @click="addMapa = true" class="text-center mt-5">
+                            Adicionar Mapa
+                        </v-btn>
+                    </div>
+                    <FormMapa 
+                        v-else
+                        @update="emit('update')"
+                        class="mt-2"  :idObra="id" 
+                    />
                 </v-sheet>
             </div>
         </v-sheet>

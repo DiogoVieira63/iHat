@@ -156,6 +156,7 @@ const goToSimulador = () => {
                     </v-col>
                     <Map
                         :mapList="mapList"
+                        @update="getObra"
                     ></Map>
                 </v-row>
             </template>

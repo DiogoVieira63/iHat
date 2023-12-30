@@ -22,22 +22,22 @@ const nomeObra = useField('nomeObra')
 const notSubmited = ref(true)
 const idObra = ref('')
 
+const emit = defineEmits(['update'])
+
+
 const submit = handleSubmit((values,actions) => {
     const obra = {
         name: values.nomeObra,
     }
     ObraService.addOneObra(obra).
-        then((success) => {
-            if (success) {
-                notSubmited.value = false
-                dialog.value = false
-                idObra.value = success.id ? success.id : ''
-                resetForm()
-            } else {
-                actions.setFieldError("nomeObra","Erro na criação da Obra.")
-            }
+        then((res_idObra) => {
+            idObra.value = res_idObra
+            notSubmited.value = false
+            emit('update')
+            resetForm()
         })
         .catch((error) => {
+            actions.setFieldError("nomeObra","Erro na criação da Obra.")
             console.log(error)
         })
 })
@@ -50,6 +50,8 @@ const close = () => {
 </script>
 
 <template>
+
+
     <v-row justify="center">
         <v-dialog
             v-model="dialog"
@@ -66,7 +68,7 @@ const close = () => {
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
             </template>
-            <v-card>
+            <v-card rounded="xl">
                 <v-card-title>
                     <v-row class="mt-2">
                         <v-spacer></v-spacer>
@@ -99,10 +101,14 @@ const close = () => {
                                 type="submit"
                                 block
                                 class="mt-2"
+                                rounded="xl"
                                 >Submit</v-btn
                             >
                         </v-form>
-                        <FormMapa v-else :id-obra="idObra"/>
+                        <FormMapa 
+                            v-else :id-obra="idObra"
+                            :canCancel="false"
+                            @update="close" />
                     </v-container>
                 </v-card-text>
             </v-card>
