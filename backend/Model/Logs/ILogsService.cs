@@ -6,5 +6,5 @@ public interface ILogsService{
     
     Task Add(Log log);
 
-    Task AddLogAndNotifyClients(Log log);
+    Task AddAndNotifyClients(Log log);
 }

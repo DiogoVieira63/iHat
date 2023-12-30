@@ -3,6 +3,7 @@ using iHat.Model.Capacetes;
 using iHat.Model.Logs;
 using System.IO.Compression;
 using iHat.Model.Mapas;
+using iHat.Model.MensagensCapacete;
 
 namespace iHat.Model.iHatFacade;
 
@@ -12,14 +13,15 @@ public class iHatFacade: IiHatFacade{
     private readonly ICapacetesService icapacetes;
     private readonly ILogsService ilogs;
     private readonly IMapaService imapas;
+    private readonly MensagemCapaceteService _mensagemCapaceteService;
     private readonly ILogger<iHatFacade> _logger;
-
     
-    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService, ILogger<iHatFacade> logger){
+    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService,  MensagemCapaceteService mensagemCapaceteService, ILogger<iHatFacade> logger){
         iobras = obrasService;
         icapacetes = capacetesService;
         ilogs = logsService;
         imapas = mapasService;
+        _mensagemCapaceteService = mensagemCapaceteService;
         _logger = logger;
     }
 
@@ -207,5 +209,9 @@ public class iHatFacade: IiHatFacade{
         
         var listaMapasAnteriores = await iobras.AddListaMapaToObra(idObra, listaSvgDBIds);
         await imapas.RemoveMapas(listaMapasAnteriores);
+    }
+
+    public async Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete){
+        return await _mensagemCapaceteService.GetUltimosDadosDoCapacete(nCapacete);
     }
 }

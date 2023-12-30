@@ -76,5 +76,7 @@ app.UseCors("MyPolicy");
 
 app.MapControllers();
 app.MapHub<LogsHub>("logs");
+app.MapHub<DadosCapaceteHub>("helmetdata");
+
 
 app.Run();

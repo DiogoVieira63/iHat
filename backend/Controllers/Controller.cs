@@ -4,6 +4,7 @@ using iHat.Model.Obras;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
 using Microsoft.AspNetCore.Mvc;
+using iHat.Model.MensagensCapacete;
 
 namespace iHat.Controllers;
 
@@ -196,6 +197,17 @@ public class IHatController : ControllerBase{
         }
     }
     
+    // Permite retornar os últimos 20 dados recebidos do capacete
+    [HttpGet("helmets/data/{id}")]
+    public async Task<ActionResult<List<MensagemCapacete>?>> GetHelmetData(string id){
+        int nCapacete = int.Parse(id);
+        var capacetedata = await _facade.GetUltimosDadosDoCapacete(nCapacete);
+        if(capacetedata == null){
+            return NotFound();
+        }
+        return capacetedata;
+    }
+
     [HttpGet("helmets/{id}")]
     public async Task<ActionResult<Capacete>> GetHelmet(string id){
         int nCapacete = Int32.Parse(id);

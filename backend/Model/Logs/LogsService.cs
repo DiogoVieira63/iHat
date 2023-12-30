@@ -31,7 +31,7 @@ public class LogsService: ILogsService{
         await _logsCollection.InsertOneAsync(log);
     }
 
-    public async Task AddLogAndNotifyClients(Log log){
+    public async Task AddAndNotifyClients(Log log){
         
         await Add(log);
         if(log.IdObra != null){

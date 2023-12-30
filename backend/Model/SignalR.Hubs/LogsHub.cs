@@ -35,7 +35,7 @@ public sealed class LogsHub : Hub {
             // RegistarConexao(obraIdString);
             await RegistarConexaoGroup(obraIdString);
             await base.OnConnectedAsync();
-            Console.WriteLine("Connection Concluded");
+            Console.WriteLine("Connection Started");
         }
         else
             throw new Exception("Subscription for log's updates failed: 'obra_id' is a mandatory parameter.");

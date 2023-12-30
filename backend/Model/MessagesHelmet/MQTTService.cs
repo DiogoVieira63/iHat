@@ -137,7 +137,7 @@ public class MQTTService {
                 _logger.LogInformation("Abnormal Value Detected.");              
                 var log = new Log(DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
                 //await _logsService.Add(log);
-                await _logsService.AddLogAndNotifyClients(log);
+                await _logsService.AddAndNotifyClients(log);
                 
                 // Notify Helmet
                 await NotifyCapacete(messageJson.NCapacete);
