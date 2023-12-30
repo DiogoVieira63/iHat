@@ -59,9 +59,11 @@ export interface Input {
 
 const taskStore = useTaskStore()
 const tipoEnvio = ref('Unidade')
+const minTime = 0.1
 const showInfo = ref(false)
-const rules = [(v: number) => v >= 0.1 || 'Inválido (min: 0.1)']
+const rules = [(v: number) => v >= minTime || `Inválido (min: ${minTime})`]
 const rulesTaskName = [(v: string) => v.length > 0 || 'Inválido']
+
 
 
 const newTask = (confirmation: boolean) => {
@@ -71,6 +73,7 @@ const newTask = (confirmation: boolean) => {
     // remove all capacetes from current tasks
     taskStore.stopTaskByCapacetes(props.selected)
     if (mqtt) taskStore.addTask(mqtt, task)
+    if (taskEdit.value) taskStore.tasks[taskStore.active][taskEdit.value].isEdit = false
     emit('update:selected', [])
     emit('update:inputs', [])
 }
@@ -78,26 +81,35 @@ const newTask = (confirmation: boolean) => {
 const saveEditTask = (confirmation: boolean) => {
     if (!confirmation) return
     if (mqtt && taskEdit.value != null){
-        const task = taskStore.tasks[taskEdit.value]
+        const idObra = taskStore.active
+        const task = taskStore.tasks[idObra][taskEdit.value]
         task.edit(mqtt,props.taskName, props.inputs, props.tempo)
     }
 }
 
 const disabledApply = computed(() => {
-    return props.selected.length == 0 || (tipoEnvio.value == 'Tempo' && props.taskName.length == 0)
+    if (!formStatus.value) return true
+    if (props.selected.length == 0) return true
+    if (tipoEnvio.value == 'Tempo') {
+        if (props.taskName.length == 0) return true
+        if (props.tempo < minTime) return true
+    }
+    return false
 })
 
 
 
 const taskEdit = computed(() => {
-    const editKey = Object.keys(taskStore.tasks).find(key => taskStore.tasks[key].isEdit);
+    if (!taskStore.active) return null
+    const editKey =  Object.keys(taskStore.tasks[taskStore.active]).find(key => taskStore.tasks[taskStore.active][key].isEdit);
     return editKey || null;
 })
 
 
 watch(taskEdit, (newValue) => {
     if (newValue != null && taskEdit.value != null){
-        const task = taskStore.tasks[taskEdit.value]
+        const idObra = taskStore.active
+        const task = taskStore.tasks[idObra][taskEdit.value]
         if (task.intervalSeconds > 0)
             tipoEnvio.value = 'Tempo'
         else
@@ -122,8 +134,15 @@ const isUnidade = computed(() => {
 })
 
 
+const formStatus = ref(false)
+
 </script>
 <template>
+    <v-form
+        validate-on="input"
+        v-model="formStatus"
+        ref="form"
+    >
     <v-card height="fit-content" rounded="xl" color="grey-lighten-5">
         <v-card style="overflow: auto" variant="text" height="60vh" rounded="xl" color="black">
             <v-card-title class="my-4">
@@ -341,6 +360,7 @@ const isUnidade = computed(() => {
             </v-col>
         </v-row>
     </v-card>
+    </v-form>
 </template>
 
 <style></style>

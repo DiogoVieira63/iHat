@@ -80,9 +80,9 @@ const changeCursor = (value: string) => {
 const resizeSVG = () => {
     let coef = 1
     const ratio = baseWidth.value / baseHeight.value
-    if (baseWidth.value > baseHeight.value) {
-        if (mdAndDown.value) coef = 0.90
-        else coef = 0.45
+    if (baseWidth.value >= baseHeight.value) {
+        if (mdAndDown.value) coef = 0.70
+        else coef = 0.35
         svgWidth.value = width.value * coef
         svgHeight.value = svgWidth.value / ratio
         scaleSVG.value = baseWidth.value / svgWidth.value

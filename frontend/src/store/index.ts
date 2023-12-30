@@ -162,36 +162,50 @@ export const useMQTTStore = defineStore('mqtt', {
 
 export const useTaskStore = defineStore('taskMQTT', {
     state: () => ({
-        tasks: {} as { [key: string]: Task }
+        tasks: {} as { [idObra: string]: { [idTask: string] : Task} },
+        active: "" as string
     }),
     actions: {
+        setActive(idObra : string){
+            this.active = idObra
+            if(!this.tasks[idObra]) {
+                this.tasks[idObra] = {}
+                console.log("Não existem tarefas para esta obra")
+            }
+            else{
+                console.log("Existem tarefas para esta obra")
+            }
+        },
         addTask(mqtt: MqttService, task: Task) {
             task.play(mqtt)
-            this.tasks[Date.now()] = task
+            this.tasks[this.active][Date.now()] = task
             //this.tasks.push(task)
         },
         hasTask(idCapacete: number) {
-            return Object.values(this.tasks).some((task) => task.status =="Running" && task.capacetes.includes(idCapacete))
+            return Object.values(this.tasks[this.active]).some((task) => task.status =="Running" && task.capacetes.includes(idCapacete))
         },
         taskByCapacete(idCapacete: number) {
             //return key of task
-            return Object.keys(this.tasks).find((key) => this.tasks[key].capacetes.includes(idCapacete))
+            return Object.keys(this.tasks[this.active]).find((key) => this.tasks[this.active][key].capacetes.includes(idCapacete))
         },
         removeTask(index: string) {
-            const task = this.tasks[index]
+            const task = this.tasks[this.active][index]
             if (task) {
                 clearInterval(task.intervalId)
-                delete this.tasks[index]
+                delete this.tasks[this.active][index]
+            }
+            else{
+                console.log("Não existe tarefa com esse id", index)
             }
         },
         possibleStoppedTasks(capacetes: Array<number>) {
-            return Object.values(this.tasks).filter((task) =>{
+            return Object.values(this.tasks[this.active]).filter((task) =>{
                 if(task.status == 'Running')
                     return task.capacetes.some((capacete) => capacetes.includes(capacete))
             })
         },
         stopTaskByCapacetes(capacetes: Array<number>) {
-            Object.values(this.tasks).forEach((task) => {
+            Object.values(this.tasks[this.active]).forEach((task) => {
                 if(task.status == 'Running'){
                     if (task.capacetes.some((capacete) => capacetes.includes(capacete)))
                         task.suspend()
