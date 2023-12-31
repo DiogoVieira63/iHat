@@ -41,4 +41,5 @@ public interface IiHatFacade{
     Task<List<Capacete>> GetFreeHelmets();
 
     Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas);
+
 }

@@ -256,8 +256,6 @@ public class IHatController : ControllerBase{
         }
     }
 
-    //add zona de risco no mapa
-    // [HttpPost("addZonaRisco")]
    
 
     

@@ -8,6 +8,8 @@ public class Log
     [BsonId] // Primary key
     [BsonRepresentation(BsonType.ObjectId)] // permite passar uma variável do tipo ObjectId como string
     public string? Id {get; set;}
+
+    public string Type {get; set;} // tipo de gravidade
     public DateTime Timestap {get; set;}
     public string? IdObra {get; set;}
     public int? IdCapacete {get; set;}
@@ -23,8 +25,9 @@ public class Log
         Mensagem = mensagem;
     }*/
 
-    public Log(DateTime timestap, string? idObra, int idCapacete, string idTrabalhador, string tipo){
-
+    public Log( String type, DateTime timestap, string? idObra, int idCapacete, string idTrabalhador, string tipo){
+        
+        Type = type;
         Timestap = timestap;
         IdObra = idObra;
         IdCapacete = idCapacete;
