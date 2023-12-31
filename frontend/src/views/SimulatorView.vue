@@ -4,7 +4,7 @@ import MapEditor from '@/components/MapEditor.vue'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { MqttService } from '@/mqttService'
+import { MqttService } from '@/services/mqtt'
 import { onMounted } from 'vue'
 import { useTaskStore } from '@/store'
 import { useMQTTStore } from '@/store'
@@ -12,7 +12,7 @@ import TaskHistory from '@/components/TaskHistory.vue'
 import TaskInput from '@/components/TaskInput.vue'
 import { Task } from '@/store'
 import type { Mapa } from '@/interfaces'
-import { ObraService } from '@/http_requests'
+import { ObraService } from '@/services/http'
 
 export interface Capacete {
     position: { x: number; y: number }
