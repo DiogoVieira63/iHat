@@ -7,6 +7,8 @@ import NotFound from '@/views/NotFoundView.vue'
 import Simulator from '@/views/SimulatorView.vue'
 
 import type { RouteRecordRaw } from 'vue-router'
+import AboutView from '@/views/AboutView.vue'
+import TeamView from '@/views/TeamView.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -25,6 +27,14 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/obras/:id/simulador',
         component: Simulator
+    },
+    {
+        path: '/about', 
+        component: AboutView
+    },
+    {
+        path: '/team', 
+        component: TeamView
     },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }
 ]
