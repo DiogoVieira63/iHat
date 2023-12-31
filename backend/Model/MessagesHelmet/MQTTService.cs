@@ -8,7 +8,9 @@ using MQTTnet.Client;
 using MQTTnet.Formatter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using iHat.MensagensCapacete.Values;
+using iHat.Model.Mapas;
+using SignalR.Hubs;
 
 namespace iHat.MQTTService;
 
@@ -30,14 +32,20 @@ public class MQTTService {
     private IObrasService _obrasService;
     private ILogsService _logsService;
     private MensagemCapaceteService _mensagemCapaceteService;
+    private IMapaService _mapsService;
+    private ManageNotificationClients _manageNotificationClients;
+    
 
-    public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService, ILogsService logsService, MensagemCapaceteService mensagemCapaceteService){
+    public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService,
+                       ILogsService logsService, MensagemCapaceteService mensagemCapaceteService, IMapaService mapsService,
+                       ManageNotificationClients manageNotificationClients){
 
         _logger = logger;
         _obrasService = obrasService;
         _capacetesService = capacetesService;
         _logsService = logsService;
         _mensagemCapaceteService = mensagemCapaceteService;
+        _mapsService = mapsService;
 
         _mqttFactory = new MqttFactory();
         _mqttClient = _mqttFactory.CreateMqttClient();
@@ -54,6 +62,7 @@ public class MQTTService {
                 await _mqttClient.ConnectAsync(_mqttClient.Options, _timeoutToken.Token);
             }
         };
+        _manageNotificationClients = manageNotificationClients;
     }
 
 
@@ -90,6 +99,14 @@ public class MQTTService {
         }
     }
 
+    public async Task StopAsync(){
+        await _mqttClient.DisconnectAsync(
+            new MqttClientDisconnectOptionsBuilder()
+                .WithReason(MqttClientDisconnectOptionsReason.NormalDisconnection)
+                .Build()
+        );
+    }  
+
     private async Task HandleReceivedMessage(MqttApplicationMessageReceivedEventArgs eventArgs)
     {
         var payload = Encoding.UTF8.GetString(eventArgs.ApplicationMessage.PayloadSegment);
@@ -123,6 +140,16 @@ public class MQTTService {
             }
 
             await _mensagemCapaceteService.Add(messageJson);
+            await _manageNotificationClients.NotifyClientsCapaceteWithLastMessage(messageJson.NCapacete, messageJson);
+
+
+            var obra = await _obrasService.GetObraWithCapaceteId(capacete.NCapacete);
+            if(obra == null){
+                return;
+            }
+
+            await NotifyClientsWithCapaceteLocation(capacete, messageJson, obra.Id!);
+            
 
             Tuple<bool, string> messageRe = messageJson.SearchForAnormalValues();
             if (messageRe.Item1 == true){
@@ -147,27 +174,65 @@ public class MQTTService {
                 }
 
                 var log = new Log(type, DateTime.Now, obra, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
+                // var log = new Log(DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
                 await _logsService.Add(log);
+
+                // Notify Frontend
+                if(log.IdObra != null){
+                    var listaLogs = await _logsService.GetLogsOfObra(log.IdObra);
+                    await _manageNotificationClients.NotifyClientsObraWithAllLogs(log.IdObra, listaLogs);
+                }
                 
                 // Notify Helmet
                 await NotifyCapacete(messageJson.NCapacete);
-                        
-                // Notify FrontEnd
+            }
+
+            var found = await CheckSeCapaceteEstaZonaRisco(obra, messageJson.Location);           
+            if(found){
+                await NotifyCapacete(messageJson.NCapacete);
             }
         }catch(Exception e){
             Console.WriteLine(e.Message);
         }
     }
 
+    public async Task NotifyClientsWithCapaceteLocation(Capacete capacete, MensagemCapacete messageJson, string obraId){
+        // Primeira op: Notificar apenas com a nova localização recebida...
+        var dict = new Dictionary<int, Location>
+        {
+            { capacete.NCapacete, messageJson.Location }
+        };
+        await _manageNotificationClients.NotifyClientsObraWithSingleLocation(obraId, dict);        
 
-    public async Task StopAsync(){
-        await _mqttClient.DisconnectAsync(
-            new MqttClientDisconnectOptionsBuilder()
-                .WithReason(MqttClientDisconnectOptionsReason.NormalDisconnection)
-                .Build()
-        );
-    }  
+        // Segunda op: Notificar com todas as últimas localizações...
+        // var listaCapacetes = obra.Capacetes;
+        // var allCapacetesLocation = new List<Location>();
+        // foreach(var id in listaCapacetes){
+        //     var loc = await _mensagemCapaceteService.GetLastLocation(id);
+        //     allCapacetesLocation.Add(loc);
+        // }
+        // await _logsHub.Clients.Group(obraId).SendAsync("UpdateAllLocation", allCapacetesLocation);
+    }
 
+
+
+    public async Task<bool> CheckSeCapaceteEstaZonaRisco(Obra obra, Location location){
+        var naZona = false;
+
+        var mapas = obra.Mapa;
+
+        foreach (var mapaId in mapas){
+            var mapa = await _mapsService.GetMapaById(mapaId);
+            if(mapa != null && mapa.Floor == location.Z){
+                var zonasRisco = mapa.Zonas;
+                foreach(var zona in zonasRisco){
+                    naZona &= zona.InsideZonaRisco(location.X, location.Y);
+                }
+            }        
+        }
+        return naZona;
+    }
+    
 
     public async Task NotifyCapacete(int nCapacete){
         var messagePayload = new JObject

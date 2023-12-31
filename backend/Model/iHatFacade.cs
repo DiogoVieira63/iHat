@@ -4,6 +4,8 @@ using iHat.Model.Logs;
 using System.IO.Compression;
 using iHat.Model.Mapas;
 using iHat.Model.Zonas;
+using iHat.Model.MensagensCapacete;
+using System.ComponentModel;
 
 namespace iHat.Model.iHatFacade;
 
@@ -13,73 +15,86 @@ public class iHatFacade: IiHatFacade{
     private readonly ICapacetesService icapacetes;
     private readonly ILogsService ilogs;
     private readonly IMapaService imapas;
-
-    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService){
+    private readonly MensagemCapaceteService _mensagemCapaceteService;
+    private readonly ILogger<iHatFacade> _logger;
+    
+    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService,  MensagemCapaceteService mensagemCapaceteService, ILogger<iHatFacade> logger){
         iobras = obrasService;
         icapacetes = capacetesService;
         ilogs = logsService;
         imapas = mapasService;
+        _mensagemCapaceteService = mensagemCapaceteService;
+        _logger = logger;
     }
 
-    public async Task NewConstruction(string name, IFormFile? mapa, int idResponsavel){
+
+    public async Task<Dictionary<string, string>> requestHTTP(IFormFile mapaFile){
+        // Request to python service "model2SVG"
+        var listaSvg = new Dictionary<string, string>();
+
+        // POST request to http://127.0.0.1:5000/ifc2sv {"ifc_file": "FILE"}
+        using (HttpClient client = new HttpClient())
+        using (MultipartFormDataContent content = new MultipartFormDataContent())
+        {
+            byte[] fileBytes;
+            using (var ms = new MemoryStream())
+            {
+                mapaFile.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+            ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
+            content.Add(fileContent, "ifc_file", "ifc_file"); // "file" is the name of the parameter expected by the server
+
+            HttpResponseMessage response = await client.PostAsync("http://127.0.0.1:5000/ifc2svg", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                throw new Exception("Unable to connect to python server");
+            }
+
+            var zipBytes = await response.Content.ReadAsByteArrayAsync();
+
+            using (MemoryStream zipStream = new MemoryStream(zipBytes))
+            using (ZipArchive zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read))
+            {
+                // Extract each entry in the zip archive
+                foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                {
+                    // Lê os bytes do arquivo
+                    using (Stream entryStream = entry.Open())
+                    using (StreamReader reader = new StreamReader(entryStream))
+                    {
+                        string contentFile = reader.ReadToEnd();
+                        listaSvg.Add(entry.Name, contentFile);
+                    }
+                }
+            }                
+        } 
+
+        return listaSvg; 
+    }
+
+
+    public async Task<string?> NewConstruction(string name, IFormFile? mapa, int idResponsavel){
 
         var listaSvgDBIds = new List<string>();
         if(mapa != null && mapa.Length != 0){
 
-            // Request to python service "model2SVG"
-            var listaSvg = new Dictionary<string, string>();
+            var listaSvg = await requestHTTP(mapa);                   
 
-            // POST request to http://127.0.0.1:5000/ifc2sv {"ifc_file": "FILE"}
-            using (HttpClient client = new HttpClient())
-            using (MultipartFormDataContent content = new MultipartFormDataContent())
-            {
-                byte[] fileBytes;
-                using (var ms = new MemoryStream())
-                {
-                    mapa.CopyTo(ms);
-                    fileBytes = ms.ToArray();
-                }
-                ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
-                content.Add(fileContent, "ifc_file", "ifc_file"); // "file" is the name of the parameter expected by the server
-
-                HttpResponseMessage response = await client.PostAsync("http://127.0.0.1:5000/ifc2svg", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                    return;
-                }
-
-                var zipBytes = await response.Content.ReadAsByteArrayAsync();
-
-                using (MemoryStream zipStream = new MemoryStream(zipBytes))
-                using (ZipArchive zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read))
-                {
-                    // Extract each entry in the zip archive
-                    foreach (ZipArchiveEntry entry in zipArchive.Entries)
-                    {
-                        // Lê os bytes do arquivo
-                        using (Stream entryStream = entry.Open())
-                        using (StreamReader reader = new StreamReader(entryStream))
-                        {
-                            string contentFile = reader.ReadToEnd();
-                            listaSvg.Add(entry.Name, contentFile);
-                        }
-                    }
-                }                
-
-            }            
-
-
+            var number = 0;
             foreach(var svg in listaSvg){
                 // new mapa value added to the db
-                var ids = await imapas.Add(svg.Key, svg.Value);
+                var ids = await imapas.Add(svg.Key, svg.Value, number);
                 if(ids != null)
                     listaSvgDBIds.Add(ids);
+                number++;
             }
 
         }
-        await iobras.AddObra(name, idResponsavel, listaSvgDBIds); 
+        var id = await iobras.AddObra(name, idResponsavel, listaSvgDBIds); 
+        return id;
     }
 
     public async Task<List<Obra>?> GetObras(int idResponsavel){
@@ -132,8 +147,8 @@ public class iHatFacade: IiHatFacade{
         }
     }
 
-    public async void AlteraEstadoObra(string id, string estado){
-        iobras.AlteraEstadoObra(id, estado);
+    public async Task AlteraEstadoObra(string id, string estado){
+        await iobras.AlteraEstadoObra(id, estado);
     }
 
     public async Task UpdateNomeObra(string idObra, string nome){
@@ -178,10 +193,68 @@ public class iHatFacade: IiHatFacade{
     }
 
 
+    public async Task<List<Mapa>> GetMapasDaObra(List<string> listaMapasIds){
+        var results = new List<Mapa>();
+        
+        foreach(string id in listaMapasIds){
+            var mapa = await imapas.GetMapaById(id);
+            if(mapa != null)
+                results.Add(mapa);
+        }
 
-    // VERIFICAS OBRAS
+        return results;
+    }
+
+    public async Task AddMapa(string idObra, IFormFile mapaFile){
+        var listaSvgDBIds = new List<string>();
+        var listaSvg = await requestHTTP(mapaFile);                   
+
+        var number = 0;        
+        foreach(var svg in listaSvg){
+            // new mapa value added to the db
+            var ids = await imapas.Add(svg.Key, svg.Value, number);
+            if(ids != null)
+                listaSvgDBIds.Add(ids);
+            number++;
+        }
+        
+        var listaMapasAnteriores = await iobras.AddListaMapaToObra(idObra, listaSvgDBIds);
+        await imapas.RemoveMapas(listaMapasAnteriores);
+    }
+
+    public async Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete){
+        return await _mensagemCapaceteService.GetUltimosDadosDoCapacete(nCapacete);
+    }
+
+    public async Task UpdateMapaFloorNumber(string idObra, Dictionary<string, int> newFloors){
+        
+        // check if idMapas are in Obra
+        var obra = await iobras.GetConstructionById(idObra);
+        var idMapas = obra.Mapa;
+
+        foreach(var i in idMapas)
+            Console.WriteLine(i);
 
 
+        if(idMapas.Except(newFloors.Keys).ToList().Count != 0){
+            throw new Exception("Todos os ids dos mapas de uma obra devem estar presentes no valor enviado no HTTP Request");
+        }
+        
+        if(newFloors.Values.Distinct().Count() != newFloors.Values.Count){
+            throw new Exception("Não podem haver números de pisos repetidos");
+        }
 
+        var orderFloors = newFloors.Values.Order().ToList();
+        for (int i = 0; i < orderFloors.Count; i++){
+            if(orderFloors[i] != i){
+                throw new Exception("Os números dos pisos devem ser >= 0 e sem valores intermédios em 'falta'.");   
+            }
+        }
 
+        foreach(var pair in newFloors){
+            await imapas.UpdateFloorNumber(pair.Key, pair.Value);
+        }
+        
+        // 
+    }
 }

@@ -7,9 +7,9 @@ public interface IObrasService{
 
     Task RemoveObraByIdAsync(string obraId);
 
-    void AlteraEstadoObra(string id, string estado);
+    Task AlteraEstadoObra(string id, string estado);
 
-    Task AddObra(string name, int idResponsavel, List<string> mapa);
+    Task<string?> AddObra(string name, int idResponsavel, List<string> mapa);
     
     Task<Obra> GetConstructionById(string idObra);
 
@@ -23,7 +23,7 @@ public interface IObrasService{
 
     // Task UpdateZonasPerigo(string idObra, List<Tuple<double,double>> lista);
 
-    Task<string?> GetIdObraWithCapaceteId(int nCapaceteToFind);
+    Task<Obra?> GetObraWithCapaceteId(int nCapaceteToFind);
 
     Task<List<int>> GetAllCapacetesOfObra(string idObra);
 
@@ -34,5 +34,6 @@ public interface IObrasService{
     Task DeleteCapaceteToObra(int id, string idObra);
 
     Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas);
+    Task<List<string>> AddListaMapaToObra(string id, List<string> mapas);
 }
     

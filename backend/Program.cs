@@ -8,8 +8,22 @@ using iHat.MQTTService;
 using iHat.Model.Zonas;
 using Microsoft.AspNetCore.Http.Features;
 using iHat.Model.Mapas;
+using SignalR.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy",
+    builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 
 builder.Services.AddControllers();
 
@@ -37,9 +51,12 @@ builder.Services.AddSingleton<IZonasService,ZonasService> ();
 
 builder.Services.AddSingleton<IiHatFacade, iHatFacade>();
 
+builder.Services.AddSingleton<ManageNotificationClients>();
+
 builder.Services.AddSingleton<MQTTService>();
 builder.Services.AddHostedService<MQTTBackgroundService>();
 
+builder.Services.AddSignalR();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -57,7 +74,11 @@ var app = builder.Build();
 }
 
 app.UseHttpsRedirection();*/
+app.UseCors("MyPolicy");
 
 app.MapControllers();
+app.MapHub<ObrasHub>("obra");
+app.MapHub<DadosCapaceteHub>("helmetdata");
+
 
 app.Run();

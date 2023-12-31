@@ -46,7 +46,7 @@ public class ObrasService: IObrasService{
         return obras;
     }
 
-    public async Task AddObra(string name, int idResponsavel, List<string> mapa){
+    public async Task<string?> AddObra(string name, int idResponsavel, List<string> mapa){
 
         /*if (status != "Planeada"){
             _logger.LogInformation("Status of the new Construction is different from \"Planeada\".");
@@ -63,6 +63,7 @@ public class ObrasService: IObrasService{
 
         try{
             await _obraCollection.InsertOneAsync(newObra);
+            return newObra.Id;
         }
         catch (Exception e){
             throw new Exception(e.Message);
@@ -86,9 +87,9 @@ public class ObrasService: IObrasService{
     }
 
 
-    public void AlteraEstadoObra(string id, string estado)
+    public async Task AlteraEstadoObra(string id, string estado)
     {
-        var obra = _obraCollection.Find(x => x.Id == id).FirstOrDefault();
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         if (obra == null)
         {
@@ -131,9 +132,9 @@ public class ObrasService: IObrasService{
     }
 
 
-    public async Task<string?> GetIdObraWithCapaceteId(int nCapaceteToFind){
+    public async Task<Obra?> GetObraWithCapaceteId(int nCapaceteToFind){
         var obra = await _obraCollection.Find(o => o.Capacetes.Contains(nCapaceteToFind)).FirstOrDefaultAsync();
-        return obra == null ? null : obra.Id;
+        return obra;
     }
 
 
@@ -145,6 +146,15 @@ public class ObrasService: IObrasService{
         }
 
         return obra.Capacetes;
+    }
+
+    public async Task<List<string>> AddListaMapaToObra(string id, List<string> mapas){
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
+        var listaPreviousMapas = obra.Mapa;
+        var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, id);
+        var obraUpdate = Builders<Obra>.Update.Set(x => x.Mapa, mapas);
+        await _obraCollection.UpdateOneAsync(obraFilter, obraUpdate);
+        return listaPreviousMapas;
     }
 
 
@@ -242,4 +252,5 @@ public class ObrasService: IObrasService{
             throw new Exception("Mapa não encontrado.");
         }
     }  
+    
 }
