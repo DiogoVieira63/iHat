@@ -3,6 +3,7 @@ using iHat.Model.iHatFacade;
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
+using iHat.Model.Zonas;
 using Microsoft.AspNetCore.Mvc;
 using iHat.Model.MensagensCapacete;
 
@@ -248,6 +249,48 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
+//funciona
+    [HttpDelete("helmet/{idCapacete}/{idObra}")]
+    public async Task<IActionResult> DeleteHelmet(int idCapacete, string idObra){
+        Console.WriteLine("Delete Helmet DELETE Request");
+
+        // string idObra = "6543c109e272c87c6b5f3d33";
+
+        try
+        {
+            await _facade.DeleteCapaceteToObra(idCapacete, idObra);
+            return Ok(); // Retorna uma resposta de sucesso            
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
+        }
+    }
+
+// funciona
+    [HttpPost("helmet/obra/{idObra}/{idCapacete}")]
+    public async Task<IActionResult> AddHelmetToObra(int idCapacete, string idObra){
+        Console.WriteLine("Add Helmet To Obra POST Request");
+
+        // string idCapacete = "6543c272e272c87c6b5f3d34";
+        // idObra= 6543cd51e272c87c6b5f3d35
+
+        try
+        {
+            await _facade.AddCapaceteToObra(idCapacete, idObra);
+            return Ok(); // Retorna uma resposta de sucesso
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Erro: {e.Message}");
+            return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
+        }
+    }
+
+
+
+
+
     [HttpGet("logs/{idObra}")]
     public async Task<ActionResult<List<Log>>> GetLogs(string idObra){
         Console.WriteLine("Get Logs GET Request");
@@ -274,6 +317,36 @@ public class IHatController : ControllerBase{
         {
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
         }
-    }    
+    }
 
-}
+    [HttpGet("helmetLivres")]
+    public async Task<ActionResult<List<Capacete>>> GetFreeHelmets(){
+        Console.WriteLine("Get Free Helmets GET Request");
+
+        var lista = await _facade.GetFreeHelmets();
+
+        if(lista == null){
+            return NotFound();
+        }
+
+        return lista;
+    }
+
+    //fazer o Update Zonas de Risco (idObra, {idMapa: List[Zona]})
+    [HttpPost("updateZonasRisco")]
+    public async Task<IActionResult> UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
+        Console.WriteLine("Update Zonas de Risco POST Request");
+
+        try
+        {
+            await _facade.UpdateZonasRiscoObra(idObra, idMapa, zonas);
+            return Ok(); // Retorna uma resposta de sucesso
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
+        }
+    }
+
+   
+    }    
