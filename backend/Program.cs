@@ -51,6 +51,8 @@ builder.Services.AddSingleton<IZonasService,ZonasService> ();
 
 builder.Services.AddSingleton<IiHatFacade, iHatFacade>();
 
+builder.Services.AddSingleton<ManageNotificationClients>();
+
 builder.Services.AddSingleton<MQTTService>();
 builder.Services.AddHostedService<MQTTBackgroundService>();
 
@@ -75,7 +77,7 @@ app.UseHttpsRedirection();*/
 app.UseCors("MyPolicy");
 
 app.MapControllers();
-app.MapHub<LogsHub>("logs");
+app.MapHub<ObrasHub>("obra");
 app.MapHub<DadosCapaceteHub>("helmetdata");
 
 

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace SignalR.Hubs;
 
-public sealed class LogsHub : Hub {
+public sealed class ObrasHub : Hub {
     /*
     variável de instância que mantêm um mapeamente entre o id das obras
     e as conexões que deverá notificar quando um novo log for "criado"
@@ -38,7 +38,7 @@ public sealed class LogsHub : Hub {
             Console.WriteLine("Connection Started");
         }
         else
-            throw new Exception("Subscription for log's updates failed: 'obra_id' is a mandatory parameter.");
+            throw new Exception("Subscription for logs and helmet's location updates failed: 'obra_id' is a mandatory parameter.");
     }
 
     /*
@@ -68,7 +68,7 @@ public sealed class LogsHub : Hub {
             await base.OnDisconnectedAsync(exception);
         }
         else 
-            throw new Exception("Cancelling subscription for log's updates failed: 'obra_id' is a mandatory parameter.");
+            throw new Exception("Cancelling subscription for logs and helmet's location updates failed: 'obra_id' is a mandatory parameter.");
 
     }
 

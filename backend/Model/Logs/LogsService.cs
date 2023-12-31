@@ -8,9 +8,8 @@ namespace iHat.Model.Logs;
 public class LogsService: ILogsService{
 
     public readonly IMongoCollection<Log> _logsCollection;
-    private IHubContext<LogsHub> _logsHub;
-
-    public LogsService(IOptions<DatabaseSettings> iHatDatabaseSettings, IHubContext<LogsHub> logsHub){
+    
+    public LogsService(IOptions<DatabaseSettings> iHatDatabaseSettings){
         var mongoClient = new MongoClient(
             iHatDatabaseSettings.Value.ConnectionString);
 
@@ -19,8 +18,6 @@ public class LogsService: ILogsService{
 
         _logsCollection = mongoDatabase.GetCollection<Log>(
             iHatDatabaseSettings.Value.LogsCollectionName);
-
-        _logsHub = logsHub;
     }
 
     public async Task<List<Log>> GetLogsOfObra(string idObra){
@@ -29,15 +26,5 @@ public class LogsService: ILogsService{
 
     public async Task Add(Log log){
         await _logsCollection.InsertOneAsync(log);
-    }
-
-    public async Task AddAndNotifyClients(Log log){
-        
-        await Add(log);
-        if(log.IdObra != null){
-            var listaLogs = await GetLogsOfObra(log.IdObra);
-            await _logsHub.Clients.Group(log.IdObra).SendAsync("UpdateLogs", listaLogs);
-            Console.WriteLine("Clients Where Notified");
-        }
     }
 }
