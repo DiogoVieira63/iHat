@@ -5,6 +5,4 @@ public interface ILogsService{
     Task<List<Log>> GetLogsOfObra(string idObra);
     
     Task Add(Log log);
-
-    Task AddAndNotifyClients(Log log);
 }
