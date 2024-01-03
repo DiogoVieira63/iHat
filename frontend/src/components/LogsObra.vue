@@ -31,8 +31,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <v-infinite-scroll height="35vh" side="both" @load="load" class="ma-12">
-        <v-timeline side="both" align="start">
+    <v-infinite-scroll height="35vh" side="both" class="ma-12">
+        <v-timeline align="start">
             <v-timeline-item v-for="item in items"
               :dot-color="getColor(item.type)"
               size="large"

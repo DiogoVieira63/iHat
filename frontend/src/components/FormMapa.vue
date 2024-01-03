@@ -6,6 +6,10 @@ const props = defineProps({
     idObra: {
         type: String,
         required: true
+    },
+    canCancel: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -13,6 +17,9 @@ const tipo = ref('ifc')
 
 const filesIfc = ref<File[] | undefined>(undefined)
 const filesDxf = ref<File[] | undefined>(undefined)
+const isUploading = ref(false)
+
+const emit = defineEmits(['update'])
 
 const submit = (values: any) => {
     // post to backend  
@@ -22,26 +29,19 @@ const submit = (values: any) => {
     } 
 
     const promise = ObraService.addMapaToObra(props.idObra,file);
-
+    isUploading.value = true
     promise.then(()=>{
-        console.log("Mapa adicionado com sucesso")
+        emit('update')
+        isUploading.value = false
     }).catch((error)=>{
         console.log(error)
     })
-
-    /*if (tipo.value == 'ifc') {
-        console.log(filesIfc.value)
-        console.log(typeof filesIfc.value)
-    } else {
-        console.log(filesDxf.value)
-        console.log(typeof filesDxf.value)
-    }*/
     console.log(JSON.stringify(values, null, 2))
 }
 </script>
 
 <template>
-    <v-form @submit.prevent="submit">
+    <v-form @submit.prevent="submit" v-if="!isUploading">
         <v-radio-group
             v-model="tipo"
             inline
@@ -50,12 +50,12 @@ const submit = (values: any) => {
             <v-radio
                 label="IFC"
                 value="ifc"
-            ></v-radio>
+            />
             <v-radio
                 label="DXF"
                 value="dxf"
                 disabled
-            ></v-radio>
+            />
         </v-radio-group>
         <v-file-input
             v-model="filesIfc"
@@ -72,12 +72,38 @@ const submit = (values: any) => {
             accept=".dxf"
             density="compact"
         />
-        <v-btn
-            type="submit"
-            block
-            class="mt-2"
-            color="primary"
-            >Submit</v-btn
-        >
+        <v-row class="mt-2">
+            <v-col v-if="canCancel" >
+                <v-btn 
+                    block 
+                    color="error" 
+                    class="text-center"
+                >
+                    Cancelar
+                </v-btn>
+            </v-col>
+            <v-col>
+                <v-btn
+                    type="submit"
+                    block
+                    color="success"
+                    :disabled="!filesIfc && !filesDxf"
+                    class="rounded-pill"
+                >
+                    Submit
+                </v-btn>
+            </v-col>
+        </v-row>
     </v-form>
+    <div
+        class="d-flex justify-center"
+        v-else
+    >
+        <v-progress-circular
+            indeterminate
+            color="primary"
+            :size="70"
+            :width="7"
+        />
+    </div> 
 </template>

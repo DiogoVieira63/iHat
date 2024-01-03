@@ -12,6 +12,9 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import VueApexCharts from 'vue3-apexcharts'
+import { createPinia } from 'pinia'
+
+const pinia = createPinia()
 
 const vuetify = createVuetify({
     components,
@@ -36,10 +39,16 @@ const vuetify = createVuetify({
     }
 })
 
+// var corsOptions = {
+//     origin: "http://localhost:3000"
+//   };
+  
 const app = createApp(App)
+// app.use(cors.cors(corsOptions));
 app.use(VueApexCharts)
 app.use(vuetify)
 app.use(router)
+app.use(pinia)
 app.mount('#app')
 
 //createApp(App).use(vuetify).use(router).mount('#app')

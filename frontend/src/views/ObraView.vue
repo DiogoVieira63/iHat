@@ -1,27 +1,30 @@
 <script setup lang="ts">
-import Lista from '../components/Lista.vue'
-import PageLayout from '../components/PageLayout.vue'
+
+import Lista from '@/components/Lista.vue'
+import PageLayout from '@/components/Layouts/PageLayout.vue'
 import { ref, onMounted, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
-import Map from '@/components/Map.vue'
 import Confirmation from '@/components/Confirmation.vue'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
-import type { Capacete, Obra } from '@/interfaces'
-import { CapaceteService, ObraService } from '@/http_requests'
+import ObraLayout from '@/components/Layouts/ObraLayout.vue'
+import type { Capacete, Header, Log} from '@/interfaces'
+import {  ObraService } from '@/http_requests'
+import type { Mapa } from '@/interfaces'
+import Map from '@/components/Map.vue'
 import LogsObra from '@/components/LogsObra.vue'
 
-
+const router = useRouter()
 const route = useRoute()
+const title = ref('')
 const capacetes = ref<Array<Capacete>>([])
 const list = ref<Array<Capacete>>([])
-
-const title = ref('') 
 const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('')
 const newEstado = ref('')
-const id = route.params.id
+const mapList = ref<Array<Mapa>>([])
+const logs = ref<Array<Log>>([])
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
@@ -48,7 +51,7 @@ const saveTitle = () => {
 
 const getObra = () => {
     ObraService.getOneObra(route.params.id.toString()).then((answer) => {
-        console.log(answer)
+        if(answer.mapa) mapList.value = answer.mapa
         if(answer.name) title.value = answer.name
         if(answer.status) estadoObra.value = answer.status
     })
@@ -64,21 +67,16 @@ const getCapacetesObra = () => {
     list.value = capacetes.value
 }
 
-// const getCapacetesFromObra = (id: string) => {
-//   console.log("getCapacetesFromObra")
-//   list.value = []
-//   ObraService.getCapacetesFromObra(id).then((answer) => {
-//     console.log(answer)
-//     answer.forEach((capacete) => {
-//       list.value.push(capacete)
-//     })
-//   })
-// }
+// onMounted(() => {
+//     getObra()
+//     getCapacetesObra()
+//     startLogsConnection();
+// })
 
 onMounted(() => {
-    getObra()
-    getCapacetesObra()
-})
+    getObra();
+    getCapacetesObra();
+});
 
 const headers : Array<Header>= [
     { key: 'nCapacete', name: 'Id', params: ['sort'] },
@@ -130,11 +128,19 @@ const changeEstado = (value: boolean) => {
     }
     newEstado.value = ''
 }
+
+const goToSimulador = () => {
+    //router.push({ name: 'simulador', params: { id: route.params.id } })
+    const currentRoute = router.currentRoute.value
+
+    router.push(currentRoute.fullPath + '/simulador')
+}
+
 </script>
 <template>
     <PageLayout>
-        <v-row class="mt-2">
-            <v-col cols="12" lg="6" class="px-16">
+        <ObraLayout>
+            <template #map>
                 <v-row align="center" justify="start">
                     <v-col cols="auto" v-bind:offset-lg="4">
                         <div class="text-h4 text-lg-h3" v-if="!isEditing">
@@ -156,25 +162,16 @@ const changeEstado = (value: boolean) => {
                             @click="toggleEditing"
                         ></v-btn>
                     </v-col>
-                    <Map></Map>
+                    <Map
+                        :mapList="mapList"
+                        @update="getObra"
+                    ></Map>
                 </v-row>
-            </v-col>
-            <v-col
-                cols="12"
-                lg="6"
-                class="px-16"
-            >
-                <v-row>
-                    <v-spacer></v-spacer>
-                    <v-col
-                        cols="12"
-                        lg="6"
-                        xl="4"
-                    >
-                        <confirmation
-                            title="Confirmação"
-                            :function="changeEstado"
-                        >
+            </template>
+            <template #content>
+                <v-row class="d-flex align-center">
+                    <v-col cols="12" lg="6" xl="4">
+                        <confirmation title="Confirmação" :function="changeEstado">
                             <template #button="{ open }">
                                 <v-select
                                     rounded="t-xl"
@@ -204,9 +201,18 @@ const changeEstado = (value: boolean) => {
                             </template>
                         </confirmation>
                     </v-col>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        rounded="xl"
+                        size="large"
+                        variant="flat"
+                        color="primary"
+                        @click="goToSimulador"
+                    >
+                        Simulador
+                    </v-btn>
                 </v-row>
                 <Lista
-                    v-if="list.length > 0"
                     :list="list"
                     :headers="headers"
                 >
@@ -224,9 +230,10 @@ const changeEstado = (value: boolean) => {
                         <FormCapaceteObra />
                     </template>
                 </Lista>
-            </v-col>
-        </v-row>
-        <LogsObra></LogsObra>
-
+            </template>
+            <template #logs>
+                <LogsObra></LogsObra>
+            </template>
+        </ObraLayout>
     </PageLayout>
 </template>

@@ -1,12 +1,14 @@
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using SignalR.Hubs;
 
 namespace iHat.Model.Logs;
 
 public class LogsService: ILogsService{
 
     public readonly IMongoCollection<Log> _logsCollection;
-
+    
     public LogsService(IOptions<DatabaseSettings> iHatDatabaseSettings){
         var mongoClient = new MongoClient(
             iHatDatabaseSettings.Value.ConnectionString);

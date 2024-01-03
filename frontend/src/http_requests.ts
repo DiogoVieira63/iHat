@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Obra, Capacete, CapacetePost, ObraPost } from './interfaces'
+import type { Obra, Capacete } from './interfaces'
 const url = `http://localhost:5069/ihat`
 
 // Obras
@@ -9,7 +9,6 @@ export class ObraService {
         return axios
             .get(`${url}/constructions`)
             .then((response) => {
-                console.log(response.data)
                 return response.data
             })
             .catch((error) => console.error('Error:', error))
@@ -19,7 +18,6 @@ export class ObraService {
         return axios
             .get(`${url}/constructions/${id}`)
             .then((response) => {
-                console.log(response.data)
                 return response.data
             })
             .catch((error) => console.error('Error:', error))
@@ -34,13 +32,18 @@ export class ObraService {
             .catch((error) => console.error('Error:', error))
     }
 
-    static addOneObra(body: ObraPost): Promise<Obra> {
+    static addOneObra(body: Obra): Promise<string> {
+        const formData = new FormData();
+        formData.append('name', body.name);
         return axios
-            .post(`${url}/constructions`, body)
+            .post(`${url}/constructions`, formData)
             .then((response) => {
-                return response.data
+                if (response.status === 200) {
+                    return response.data
+                }
+                throw new Error('Error')
             })
-            .catch((error) => console.error('Error:', error))
+            .catch((error) => console.error('Error:', error.response))
     }
 
     static addCapaceteToObra(idObra: string, idCapacete: string): Promise<void> {
@@ -56,7 +59,6 @@ export class ObraService {
         return axios
             .get(`${url}/constructions/${idObra}/helmets`)
             .then((response) => {
-                console.log(response.data)
                 return response.data
             })
             .catch((error) => console.error('Error:', error))
@@ -89,7 +91,7 @@ export class ObraService {
 
     static addMapaToObra(idObra: string, file : File): Promise<void> {
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('Mapa', file);
         return axios
             .post(`${url}/constructions/${idObra}/map`, formData, {headers : {
                 'Content-Type': 'multipart/form-data'
@@ -115,23 +117,21 @@ export class CapaceteService {
         return axios
             .get(`${url}/helmets/${id}`)
             .then((response) => {
-                console.log(response.data)
                 return response.data
             })
             .catch((error) => console.error('Error:', error))
     }
 
-    static addOneCapacete(body: CapacetePost): Promise<boolean> {
+    static addOneCapacete(body: Capacete): Promise<void> {
         return axios
             .post(`${url}/helmets`, body)
             .then((response) => {
-                if (response.status === 200) {
-                    // mudar para 201
-                    return true
-                } else return false
+                if (response.status === 200) 
+                    return response.data
+                else throw new Error('Error')
             })
             .catch((_) => {
-                return false
+                console.error('Error in Axios')
             })
     }
 }

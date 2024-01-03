@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ChartLayout from '@/components/ChartLayout.vue'
+import ChartLayout from '@/components/Layouts/ChartLayout.vue'
 import { ref } from 'vue'
 
 const options = (id: number) => {
@@ -27,8 +27,6 @@ const types = ref(['line', 'area', 'bar', 'heatmap', 'line', 'area', 'bar', 'hea
 const slotName = (index: number) => {
     return types.value[index] + index
 }
-
-
 </script>
 
 <template>

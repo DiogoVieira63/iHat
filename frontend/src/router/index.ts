@@ -4,6 +4,7 @@ import Home from '@/views/HomeView.vue'
 import Obra from '@/views/ObraView.vue'
 import Capacete from '@/views/CapaceteView.vue'
 import NotFound from '@/views/NotFoundView.vue'
+import Simulator from '@/views/SimulatorView.vue'
 
 import type { RouteRecordRaw } from 'vue-router'
 
@@ -20,6 +21,10 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/capacetes/:id',
         component: Capacete
+    },
+    {
+        path: '/obras/:id/simulador',
+        component: Simulator
     },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }
 ]

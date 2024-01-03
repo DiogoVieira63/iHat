@@ -2,7 +2,7 @@
 import FormObra from '@/components/FormObra.vue'
 import FormCapacete from '@/components/FormCapacete.vue'
 import Lista from '@/components/Lista.vue'
-import PageLayout from '@/components/PageLayout.vue'
+import PageLayout from '@/components/Layouts/PageLayout.vue'
 import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { ComputedRef } from 'vue'
@@ -16,10 +16,8 @@ const tab = ref('obras')
 const router = useRouter()
 
 const getCapacetes = () => {
-    console.log('getCapacetes')
     capacetes.value = []
     CapaceteService.getCapacetes().then((answer) => {
-        console.log(answer)
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
         })
@@ -27,11 +25,9 @@ const getCapacetes = () => {
 }
 
 const getObras = () => {
-    console.log("getObras")
     obras.value = []
     // enviar id de responsavel no get
     ObraService.getObras().then((answer) => {
-        console.log(answer)
         answer.forEach((obra) => {
             obras.value.push(obra)
         })
@@ -97,7 +93,10 @@ function changePage(id: string) {
                         </v-tabs>
                     </template>
                     <template v-slot:add>
-                        <FormObra v-if="tab == 'obras'" />
+                        <FormObra 
+                            v-if="tab == 'obras'" 
+                            @update="getObras"
+                        />
                         <FormCapacete
                             v-else
                             @update="getCapacetes"
