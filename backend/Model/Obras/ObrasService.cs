@@ -15,6 +15,7 @@ public class ObrasService: IObrasService{
     public readonly IMongoCollection<ZonasRisco> _zonaRiscoCollection; 
 
 
+
     public ObrasService(IOptions<DatabaseSettings> iHatDatabaseSettings, ILogger<ObrasService> logger){
         var mongoClient = new MongoClient(
             iHatDatabaseSettings.Value.ConnectionString);
@@ -29,7 +30,8 @@ public class ObrasService: IObrasService{
             iHatDatabaseSettings.Value.MapasCollectionName);
 
         _zonaRiscoCollection = mongoDatabase.GetCollection<ZonasRisco>(
-        iHatDatabaseSettings.Value.ZonasCollectionName);
+            iHatDatabaseSettings.Value.ZonasCollectionName);
+
 
         _logger = logger;
     }
@@ -77,8 +79,6 @@ public class ObrasService: IObrasService{
 
 
 
-
-
     public async Task RemoveObraByIdAsync(string obraId)
     {
         var filter = Builders<Obra>.Filter.Eq(o => o.Id, obraId);
@@ -95,7 +95,8 @@ public class ObrasService: IObrasService{
         {
             Console.WriteLine("[iHatFacade] Obra não existe.");
             return;
-        }   
+        }
+
 
         obra.Status = estado;
 
