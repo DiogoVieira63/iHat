@@ -13,9 +13,8 @@ import {  ObraService } from '@/services/http'
 import type { Mapa } from '@/interfaces'
 import Map from '@/components/Map.vue'
 import LogsObra from '@/components/LogsObra.vue'
-import { SignalRService } from '@/services/signalR'
+import { ObraSignalRService } from '@/services/obraSignalR'
 
-const signalRService = new SignalRService('obra') 
 const router = useRouter()
 const route = useRoute()
 const title = ref('')
@@ -27,6 +26,8 @@ const estadoObra = ref('')
 const newEstado = ref('')
 const mapList = ref<Array<Mapa>>([])
 const logs = ref<Array<Log>>([])
+
+const signalRService = new ObraSignalRService(route.params.id.toString()) 
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value

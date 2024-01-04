@@ -2,26 +2,20 @@
 import * as signalR from '@microsoft/signalr';
 
 
-export class SignalRService {
+export class CapaceteSignalRService {
     connection : signalR.HubConnection
 
-    constructor(connectPoint: string){
+    constructor(idCapacete: string){
         this.connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://localhost:5069/" + connectPoint)
-        .build();
+            .configureLogging(signalR.LogLevel.Debug)
+            .withUrl("http://localhost:5069/helmetdata?capacete_id=" + idCapacete, {
+              skipNegotiation: true,
+              transport: signalR.HttpTransportType.WebSockets
+            })
+            .build();
 
         // this.connection.on("ReceiveMessage", (message) => {
         //     console.log("Received message:", message);
-        // });
-    
-        // Start the connection
-        // this.connection.start()
-        // .then(() => {
-        //     console.log("Connection established");
-        //     // this.connection.invoke("SendMessage", "Hello");
-        // })
-        // .catch((err) => {
-        //     console.error(err.toString());
         // });
 
         try {
