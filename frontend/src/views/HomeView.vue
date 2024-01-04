@@ -7,7 +7,7 @@ import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { ComputedRef } from 'vue'
 import type { Capacete, Obra } from '@/interfaces'
-import { CapaceteService, ObraService } from '@/http_requests'
+import { CapaceteService, ObraService } from '@/services/http'
 import type { Header } from '@/interfaces'
 
 const obras = ref<Array<Obra>>([])

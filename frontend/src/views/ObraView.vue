@@ -9,11 +9,13 @@ import Confirmation from '@/components/Confirmation.vue'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
 import type { Capacete, Header, Log} from '@/interfaces'
-import {  ObraService } from '@/http_requests'
+import {  ObraService } from '@/services/http'
 import type { Mapa } from '@/interfaces'
 import Map from '@/components/Map.vue'
 import LogsObra from '@/components/LogsObra.vue'
+import { SignalRService } from '@/services/signalR'
 
+const signalRService = new SignalRService('obra') 
 const router = useRouter()
 const route = useRoute()
 const title = ref('')

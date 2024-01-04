@@ -1,3 +1,5 @@
+using iHat.Model.Zonas;
+
 namespace iHat.Model.Obras;
 
 public interface IObrasService{
@@ -31,6 +33,7 @@ public interface IObrasService{
     
     Task DeleteCapaceteToObra(int id, string idObra);
 
+    Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas);
     Task<List<string>> AddListaMapaToObra(string id, List<string> mapas);
 }
     

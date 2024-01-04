@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Obra, Capacete } from './interfaces'
+import type { Obra, Capacete } from '@/interfaces'
 const url = `http://localhost:5069/ihat`
 
 // Obras
@@ -130,7 +130,7 @@ export class CapaceteService {
                     return response.data
                 else throw new Error('Error')
             })
-            .catch((_) => {
+            .catch(() => {
                 console.error('Error in Axios')
             })
     }

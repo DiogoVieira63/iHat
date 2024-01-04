@@ -21,7 +21,7 @@ public class ZonasService: IZonasService{
             iHatDatabaseSettings.Value.ObrasCollectionName);
 
         _zonaRiscoCollection = mongoDatabase.GetCollection<ZonasRisco>(
-            iHatDatabaseSettings.Value.ZonasCollectionName);
+            iHatDatabaseSettings.Value.ZonasRiscoCollectionName);
     }
     public async Task AddZonasPerigo(int idZona, List<Tuple<double,double>> lista)
     {

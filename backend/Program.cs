@@ -76,9 +76,8 @@ var app = builder.Build();
 app.UseHttpsRedirection();*/
 app.UseCors("MyPolicy");
 
-app.MapControllers();
 app.MapHub<ObrasHub>("obra");
 app.MapHub<DadosCapaceteHub>("helmetdata");
-
+app.MapControllers();
 
 app.Run();

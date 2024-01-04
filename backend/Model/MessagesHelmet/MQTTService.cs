@@ -154,7 +154,27 @@ public class MQTTService {
             Tuple<bool, string> messageRe = messageJson.SearchForAnormalValues();
             if (messageRe.Item1 == true){
                 _logger.LogInformation("Abnormal Value Detected.");              
-                var log = new Log(DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
+                // var obra = await _obrasService.GetIdObraWithCapaceteId(capacete.NCapacete);
+                var type = string.Empty;
+                switch(messageRe.Item2){
+                    case "Fall":
+                        type = "Grave";
+                        break;
+                    case "Temperature":
+                        type = "Alerta";
+                        break;
+                    case "Heartrate":
+                        type = "Alerta";
+                        break;
+                    case "Gases":
+                        type = "Alerta";
+                        break;
+                    default:
+                        break;
+                }
+
+                var log = new Log(type, DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
+                // var log = new Log(DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
                 await _logsService.Add(log);
 
                 // Notify Frontend
