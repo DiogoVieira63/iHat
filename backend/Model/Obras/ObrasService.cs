@@ -29,7 +29,7 @@ public class ObrasService: IObrasService{
             iHatDatabaseSettings.Value.MapasCollectionName);
 
         _zonaRiscoCollection = mongoDatabase.GetCollection<ZonasRisco>(
-        iHatDatabaseSettings.Value.ZonasRiscoCollectionName);
+            iHatDatabaseSettings.Value.ZonasRiscoCollectionName);
 
         _logger = logger;
     }

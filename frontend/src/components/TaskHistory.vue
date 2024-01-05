@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { ref, onMounted } from 'vue'
 import { Task } from '@/store';
 import { useMQTTStore } from '@/store';
-import { MqttService } from '@/mqttService';
+import { MqttService } from '@/services/mqtt';
 import Confirmation from './Confirmation.vue';
 
 

@@ -1,7 +1,7 @@
 // src/store/index.ts
 import { defineStore } from 'pinia'
 import type { Input } from '@/views/SimulatorView.vue'
-import { MqttService } from '@/mqttService'
+import { MqttService } from '@/services/mqtt'
 
 type Status = 'Stopped' | 'Running' | 'Finished'
 

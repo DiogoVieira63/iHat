@@ -2,7 +2,7 @@
 import { ref, computed, watch} from 'vue'
 import SimuladorInput from '@/components/SimuladorInput.vue'
 import SimuladorInfo from '@/components/SimuladorInfo.vue'
-import { MqttService } from '@/mqttService'
+import { MqttService } from '@/services/mqtt'
 import { onMounted } from 'vue'
 import { useTaskStore } from '@/store'
 import { useMQTTStore } from '@/store'

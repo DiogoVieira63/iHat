@@ -38,3 +38,13 @@ export interface Header {
     key: string
     params: Array<string>
 }
+
+export interface Log {
+    id?: string
+    type: string
+    timestamp: Date 
+    idObra: string
+    idCapacete?: number
+    idTrabalhador?: string
+    mensagem: string
+  }

@@ -272,8 +272,7 @@ watch(
             class="mx-4 rounded-pill"
             >
             Nenhum elemento encontrado
-        </v-alert
-        >
+        </v-alert>
     </v-sheet>
     <v-row class="mt-5">
         <v-spacer />
