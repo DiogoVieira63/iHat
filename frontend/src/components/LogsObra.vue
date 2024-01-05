@@ -71,7 +71,8 @@ onMounted(() => {
     <v-container v-else>
       <v-sheet
         height="35vh"
-        class="d-flex align-center" 
+        width="400px"
+        class="d-flex align-center mx-auto" 
         rounded="b-xl"
       >
         <v-alert
@@ -82,6 +83,6 @@ onMounted(() => {
           Não existem logs para esta obra
         </v-alert>
       </v-sheet>
-    </v-container>
+  </v-container>
  
 </template>
