@@ -27,7 +27,13 @@ const newEstado = ref('')
 const mapList = ref<Array<Mapa>>([])
 const logs = ref<Array<Log>>([])
 
-const signalRService = new ObraSignalRService(route.params.id.toString()) 
+const idObra: string = route.params.id.toString()
+const signalRService = new ObraSignalRService(idObra) 
+
+const updateLogs = (updatedLogs: Array<Log>) => {
+    console.log("Updating logs:", updatedLogs);
+    logs.value = updatedLogs// Assuming message is a log object
+};
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
@@ -42,7 +48,7 @@ const toggleEditing = () => {
 
 const saveTitle = () => {
     isEditing.value = false;
-    const id: string = route.params.id.toString();
+    const id: string = idObra;
     ObraService.updateNomeObra(id, title.value)
         .then(() => {
             getObra()
@@ -53,7 +59,7 @@ const saveTitle = () => {
 };
 
 const getObra = () => {
-    ObraService.getOneObra(route.params.id.toString()).then((answer) => {
+    ObraService.getOneObra(idObra).then((answer) => {
         if(answer.mapa) mapList.value = answer.mapa
         if(answer.name) title.value = answer.name
         if(answer.status) estadoObra.value = answer.status
@@ -62,7 +68,7 @@ const getObra = () => {
 
 const getCapacetesObra = () => {
     capacetes.value = []
-    ObraService.getCapacetesFromObra(route.params.id.toString()).then((answer) => {
+    ObraService.getCapacetesFromObra(idObra).then((answer) => {
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
         })
@@ -70,13 +76,17 @@ const getCapacetesObra = () => {
     list.value = capacetes.value
 }
 
-// onMounted(() => {
-//     getObra()
-//     getCapacetesObra()
-//     startLogsConnection();
-// })
+const getLogsObra = () => {
+    ObraService.getLogsObra(idObra).then((answer) => {
+        answer.forEach((log) => {
+            logs.value.push(log)
+        })
+    })
+}
 
 onMounted(() => {
+    getLogsObra()
+    signalRService.handleIncomingLogs(updateLogs);
     getObra();
     getCapacetesObra();
 });
@@ -88,7 +98,6 @@ const headers : Array<Header>= [
 ]
 
 function removeCapacete(id: string) {
-    const idObra: string = route.params.id.toString();
     ObraService.deleteCapaceteFromObra(idObra, id)
         .then(() => {
             getCapacetesObra()
@@ -117,7 +126,7 @@ const newEstadoPossible = (value: string) => {
 }
 
 const changeEstado = (value: boolean) => {
-    const id: string = route.params.id.toString();
+    const id: string = idObra;
 
     if (value) {
         estadoObra.value = newEstado.value
@@ -235,7 +244,7 @@ const goToSimulador = () => {
                 </Lista>
             </template>
             <template #logs>
-                <LogsObra></LogsObra>
+                <LogsObra :logs="logs"></LogsObra>
             </template>
         </ObraLayout>
     </PageLayout>

@@ -41,7 +41,7 @@ export interface Header {
 
 export interface Log {
     id?: string
-    tipo?: string // mudar para obrigatório depois
+    type: string
     timestamp: Date 
     idObra: string
     idCapacete?: number
