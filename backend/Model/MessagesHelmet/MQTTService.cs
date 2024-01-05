@@ -148,13 +148,13 @@ public class MQTTService {
                 return;
             }
 
-            await NotifyClientsWithCapaceteLocation(capacete, messageJson, obra.Id!);
+            await NotifyClientsWithCapaceteLocation(capacete, messageJson, obra);
             
 
             Tuple<bool, string> messageRe = messageJson.SearchForAnormalValues();
             if (messageRe.Item1 == true){
                 _logger.LogInformation("Abnormal Value Detected.");              
-                var obra = await _obrasService.GetIdObraWithCapaceteId(capacete.NCapacete);
+                // var obra = await _obrasService.GetIdObraWithCapaceteId(capacete.NCapacete);
                 var type = string.Empty;
                 switch(messageRe.Item2){
                     case "Fall":
@@ -173,7 +173,7 @@ public class MQTTService {
                         break;
                 }
 
-                var log = new Log(type, DateTime.Now, obra, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
+                var log = new Log(type, DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
                 // var log = new Log(DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
                 await _logsService.Add(log);
 
@@ -196,22 +196,23 @@ public class MQTTService {
         }
     }
 
-    public async Task NotifyClientsWithCapaceteLocation(Capacete capacete, MensagemCapacete messageJson, string obraId){
+    public async Task NotifyClientsWithCapaceteLocation(Capacete capacete, MensagemCapacete messageJson, Obra obra){
         // Primeira op: Notificar apenas com a nova localização recebida...
         var dict = new Dictionary<int, Location>
         {
             { capacete.NCapacete, messageJson.Location }
         };
-        await _manageNotificationClients.NotifyClientsObraWithSingleLocation(obraId, dict);        
+        await _manageNotificationClients.NotifyClientsObraWithSingleLocation(obra.Id!, dict);        
 
         // Segunda op: Notificar com todas as últimas localizações...
-        // var listaCapacetes = obra.Capacetes;
-        // var allCapacetesLocation = new List<Location>();
-        // foreach(var id in listaCapacetes){
-        //     var loc = await _mensagemCapaceteService.GetLastLocation(id);
-        //     allCapacetesLocation.Add(loc);
-        // }
-        // await _logsHub.Clients.Group(obraId).SendAsync("UpdateAllLocation", allCapacetesLocation);
+        var listaCapacetes = obra.Capacetes;
+        var allCapacetesLocation = new Dictionary<int, Location>();
+        foreach(var id in listaCapacetes){
+            var loc = await _mensagemCapaceteService.GetLastLocation(id);
+            if (loc != null)
+                allCapacetesLocation.Add(id, loc);
+        }
+        await _manageNotificationClients.NotifyClientsObraWithMultipleLocations(obra.Id!, allCapacetesLocation);
     }
 
 
