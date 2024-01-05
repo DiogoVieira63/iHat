@@ -83,4 +83,14 @@ public class CapacetesService: ICapacetesService{
     public async Task<List<Capacete>> GetFreeHelmets(){
         return await _capaceteCollection.Find(x => x.Status == "Livre").ToListAsync();
     }
+
+    public async Task AssociarTrabalhadorCapacete(int nCapacete, string idTrabalhador){
+        var capacete = await _capaceteCollection.Find(x => x.NCapacete == nCapacete).FirstOrDefaultAsync() ?? throw new Exception("Capacete "+nCapacete+" não encontrado");
+        if(capacete.Trabalhador != null){
+            throw new Exception("Capacete "+nCapacete+" já tem um trabalhador associado");
+        }
+
+        var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Trabalhador, idTrabalhador);
+        await _capaceteCollection.UpdateOneAsync(x => x.NCapacete == nCapacete, capaceteUpdate);
+    }
 }

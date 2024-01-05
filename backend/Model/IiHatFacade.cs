@@ -1,3 +1,4 @@
+using iHat.MensagensCapacete.Values;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
 using iHat.Model.Mapas;
@@ -30,10 +31,6 @@ public interface IiHatFacade{
 
     Task ChangeStatusCapacete(int nCapacete, string newStatus);
 
-
-
-
-
     Task<List<Capacete>> GetAllCapacetes();
 
     Task<Capacete?> GetCapacete(int nCapacete);
@@ -51,4 +48,6 @@ public interface IiHatFacade{
     Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete);
 
     Task UpdateMapaFloorNumber(string idObra, Dictionary<string, int> newFloors);
+
+    Task<Dictionary<int, Location>> GetLastLocationCapacetesObra(string obraId);
 }
