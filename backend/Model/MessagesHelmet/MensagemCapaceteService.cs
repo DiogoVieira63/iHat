@@ -34,9 +34,9 @@ public class MensagemCapaceteService {
         return moreRecentMensagens;
     }
 
-    public async Task<Location> GetLastLocation(int nCapacete){
+    public async Task<Location?> GetLastLocation(int nCapacete){
         var sortDefinition = Builders<MensagemCapacete>.Sort.Descending("timestamp");
         var mostRecentMessage = await _mensagemcapaceteCollection.Find(x => x.NCapacete == nCapacete).Sort(sortDefinition).FirstOrDefaultAsync();
-        return mostRecentMessage.Location;
+        return mostRecentMessage == null ? null : mostRecentMessage.Location;
     }
 }

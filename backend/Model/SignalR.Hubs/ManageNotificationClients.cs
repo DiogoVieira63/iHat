@@ -20,7 +20,7 @@ public sealed class ManageNotificationClients{
         await _obrasHub.Clients.Group(obraId).SendAsync("UpdateSingleLocation", dict);
     }
 
-    public async Task NotifyClientsObraWithMultipleLocations(string obraId, List<Location> allCapacetesLocation){
+    public async Task NotifyClientsObraWithMultipleLocations(string obraId, Dictionary<int, Location> allCapacetesLocation){
         await _obrasHub.Clients.Group(obraId).SendAsync("UpdateAllLocation", allCapacetesLocation);
     }
 
