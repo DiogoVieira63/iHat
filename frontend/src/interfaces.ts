@@ -27,10 +27,17 @@ export interface Point {
 
 export interface Capacete {
   id?: string 
-  NCapacete: number,
+  nCapacete: number,
   status: string,
   info?: string,
   trabalhador?: string
+  position?: Postition
+}
+
+export interface Postition{
+    x: number,
+    y: number,
+    z: number
 }
 
 export interface Header {
