@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Obra, Capacete } from '@/interfaces'
+import type { Obra, Capacete, Log } from '@/interfaces'
 const url = `http://localhost:5069/ihat`
 
 // Obras
@@ -96,6 +96,15 @@ export class ObraService {
             .post(`${url}/constructions/${idObra}/map`, formData, {headers : {
                 'Content-Type': 'multipart/form-data'
             }})
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => console.error('Error:', error))
+    }
+
+    static getLogsObra(idObra: string): Promise<Log[]> {
+        return axios
+            .get(`${url}/logs/${idObra}`)
             .then((response) => {
                 return response.data
             })

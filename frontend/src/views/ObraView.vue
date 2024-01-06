@@ -26,9 +26,13 @@ const estadoObra = ref('')
 const newEstado = ref('')
 const mapList = ref<Array<Mapa>>([])
 const logs = ref<Array<Log>>([])
-const idObra = route.params.id.toString()
-;
+const idObra: string = route.params.id.toString()
 const signalRService = ref<ObraSignalRService>(new ObraSignalRService(idObra))
+
+const updateLogs = (updatedLogs: Array<Log>) => {
+    console.log("Updating logs:", updatedLogs);
+    logs.value = updatedLogs// Assuming message is a log object
+};
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
@@ -71,11 +75,13 @@ const getCapacetesObra = () => {
     list.value = capacetes.value
 }
 
-// onMounted(() => {
-//     getObra()
-//     getCapacetesObra()
-//     startLogsConnection();
-// })
+const getLogsObra = () => {
+    ObraService.getLogsObra(idObra).then((answer) => {
+        answer.forEach((log) => {
+            logs.value.push(log)
+        })
+    })
+}
 
 
 
@@ -85,7 +91,6 @@ onUnmounted(() => {
 
 onMounted(() => {
     signalRService.value.updateCapacetePosition((id : number, pos: Postition) => {
-        console.log(id, pos)
         capacetes.value = capacetes.value.map((item) => {
             if (item.nCapacete === id) {
                 item.position = {
@@ -98,6 +103,8 @@ onMounted(() => {
             return item
         })
     });
+    getLogsObra()
+    signalRService.handleIncomingLogs(updateLogs);
     getObra();
     getCapacetesObra();
 });
@@ -254,7 +261,7 @@ const goToSimulador = () => {
                 </Lista>
             </template>
             <template #logs>
-                <LogsObra></LogsObra>
+                <LogsObra :logs="logs"></LogsObra>
             </template>
         </ObraLayout>
     </PageLayout>

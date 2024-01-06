@@ -31,7 +31,6 @@ public class ObrasService: IObrasService{
         _zonaRiscoCollection = mongoDatabase.GetCollection<ZonasRisco>(
             iHatDatabaseSettings.Value.ZonasRiscoCollectionName);
 
-
         _logger = logger;
     }
 
