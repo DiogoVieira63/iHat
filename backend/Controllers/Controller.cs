@@ -6,6 +6,8 @@ using iHat.Model.Logs;
 using iHat.Model.Zonas;
 using Microsoft.AspNetCore.Mvc;
 using iHat.Model.MensagensCapacete;
+using Microsoft.AspNetCore.Identity;
+using iHat.MensagensCapacete.Values;
 
 namespace iHat.Controllers;
 
@@ -71,6 +73,13 @@ public class IHatController : ControllerBase{
             _logger.LogWarning(ids.Key);
         await _facade.UpdateMapaFloorNumber(idObra, newFloors);
         return Ok();
+    }
+
+    [HttpGet("constructions/{id}/helmets/location")]
+    public async Task<Dictionary<int, Location>> GetLastLocationCapacetesObra(string id){
+
+        var lista = await _facade.GetLastLocationCapacetesObra(id);
+        return lista;
     }
 
     [HttpGet("constructions/{id}/helmets")]
@@ -238,8 +247,6 @@ public class IHatController : ControllerBase{
 
     [HttpGet("helmets")]
     public async Task<ActionResult<List<Capacete>>> GetAllHelmets(){
-        Console.WriteLine("Get All Helmets GET Request");
-
         var lista = await _facade.GetAllCapacetes();
 
         if(lista == null){

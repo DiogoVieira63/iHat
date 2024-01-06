@@ -54,6 +54,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 app.UseCors("MyPolicy");
+
 app.MapControllers();
 app.MapHub<ObrasHub>("obra");
 app.MapHub<DadosCapaceteHub>("helmetdata");
