@@ -2,13 +2,14 @@
 import { ref, computed, watch} from 'vue'
 import SimuladorInput from '@/components/SimuladorInput.vue'
 import SimuladorInfo from '@/components/SimuladorInfo.vue'
-import { MqttService } from '@/mqttService'
+import { MqttService } from '@/services/mqtt'
 import { onMounted } from 'vue'
 import { useTaskStore } from '@/store'
 import { useMQTTStore } from '@/store'
 import { Task } from '@/store'
 import Confirmation from '@/components/Confirmation.vue'
 import type { PropType } from 'vue'
+import type { Capacete } from '@/interfaces'
 
 let mqtt: MqttService | null = null
 const mqttStore = useMQTTStore()
@@ -18,8 +19,12 @@ const props = defineProps({
         type: Array as PropType<Array<number>>,
         required: true
     },
+    capacetes:{
+        type: Array as PropType<Array<Capacete>>,
+        required: true
+    },
     inputs: {
-        type: Array as PropType<Array<Input>>,
+        type: Object as PropType<Record<string, Input>>,
         required: true
     },
     tempo: {
@@ -29,10 +34,14 @@ const props = defineProps({
     taskName: {
         type: String,
         required: true
+    },
+    isAdding: {
+        type: Boolean,
+        required: true
     }
 })
 
-const emit = defineEmits(['update:selected', 'update:inputs', 'update:tempo', 'update:taskName'])
+const emit = defineEmits(['update:selected', 'update:inputs', 'update:tempo', 'update:taskName','selectCapacete','selectAll','unselectAll','selectPosition'])
 
 onMounted(() => {
     if (!mqttStore.mqtt) {
@@ -43,11 +52,6 @@ onMounted(() => {
     }
 })
 
-export interface Capacete {
-    position: { x: number; y: number }
-    key: number
-    inputs: Array<Input>
-}
 
 export interface Input {
     title: string
@@ -88,7 +92,7 @@ const saveEditTask = (confirmation: boolean) => {
 }
 
 const disabledApply = computed(() => {
-    if (!formStatus.value) return true
+    if (formStatus.value === false) return true
     if (props.selected.length == 0) return true
     if (tipoEnvio.value == 'Tempo') {
         if (props.taskName.length == 0) return true
@@ -134,7 +138,29 @@ const isUnidade = computed(() => {
 })
 
 
+watch(() => props.isAdding, (value) => {
+    if(value){
+        menuSelected.value = true
+    }
+});
+
 const formStatus = ref(false)
+const menuSelected = ref(false)
+const selectPos = ref(false)
+
+
+const isSelected = (id: number) => {
+    return props.selected.includes(id)
+}
+
+const changeSelected = (id: number) => {
+    emit('selectCapacete', id)
+}
+
+const selectPosition = () => {
+    selectPos.value = !selectPos.value
+    emit('selectPosition', selectPos.value)
+}
 
 </script>
 <template>
@@ -291,12 +317,87 @@ const formStatus = ref(false)
                             </v-card>
                         </v-col>
                     </template>
+                    <v-col cols="6" class="text-center" v-if="Object.keys(props.inputs).length > 0">
+                        <v-card elevation="4" rounded="lg">
+                            <v-card-title>
+                                <h1 class="text-h6 text-center mb-6">Posição</h1>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-btn
+                                    rounded="xl"
+                                    :variant="selectPos ? 'flat' : 'outlined'"
+                                    color="error"
+                                    density="compact"
+                                    size="x-large"
+                                    @click="selectPosition"
+                                    icon="mdi-map-marker"
+                                >
+                                </v-btn>
+                                <p class="my-6 text-body-1">
+                                    {{ selectPos ? 'Selecione um ponto no mapa' : 'Alterar Posição no Mapa'}}
+                                </p>
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
                 </v-row>
             </v-card-text>
         </v-card>
         <v-row class="ma-2">
             <v-col cols="6" class="text-h6 text-black">
-                Número de Capacetes Selecionados: <strong>{{ selected.length }}</strong>
+                Capacetes Selecionados:
+                <v-menu
+                    v-model="menuSelected"
+                    :close-on-content-click="false"
+                    location="top"
+                >
+                    <template v-slot:activator="{ props }">
+                        <v-btn
+                            color='primary'
+                            v-bind="props"
+                            icon
+                        >
+                        <p class="text-white">
+                            {{ selected.length }}
+                        </p>
+                        </v-btn>
+                    </template>
+                    <v-card>
+                        <v-card-title class="text-center">
+                            Selecionados
+                        </v-card-title>
+                        <v-card-text>
+                            <v-list >
+                                <v-list-item
+                                    class="d-flex justify-center"
+                                    v-for="{ nCapacete } in props.capacetes"
+                                    :key="nCapacete"
+                                >
+                                    <v-btn
+                                        color="info" 
+                                        class="mx-2" 
+                                        icon
+                                        :variant="isSelected(nCapacete) ? 'flat' : 'outlined'"
+                                        @click="changeSelected(nCapacete)"
+                                    >
+                                        {{ nCapacete }}
+                                    </v-btn>
+                                </v-list-item>
+                            </v-list>
+                            <div class="d-flex justify-space-between">
+                                <v-btn icon color="success" 
+                                    @click="emit('selectAll')"
+                                >
+                                    <v-icon>mdi-checkbox-multiple-marked-circle-outline</v-icon>
+                                </v-btn>
+                                <v-btn icon color="error"
+                                    @click="emit('unselectAll')"
+                                >
+                                    <v-icon>mdi-checkbox-multiple-blank-circle-outline</v-icon>
+                                </v-btn>
+                            </div>
+                        </v-card-text>
+                    </v-card>
+                </v-menu>
             </v-col>
             <v-col cols="3">
                 <confirmation

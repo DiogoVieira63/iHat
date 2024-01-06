@@ -8,4 +8,9 @@
             <slot name="content"></slot>
         </v-col>
     </v-row>
+    <v-row>
+        <v-col>
+            <slot name="logs"></slot>
+        </v-col>
+    </v-row>
 </template>

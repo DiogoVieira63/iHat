@@ -7,7 +7,7 @@ import SvgDraw from './SvgDraw.vue'
 import SvgTooltip from './SvgTooltip.vue'
 import type { Option } from './SvgTooltip.vue'
 import type { PropType } from 'vue'
-import type { Capacete } from '@/views/SimulatorView.vue'
+import type { Capacete } from '@/interfaces'
 import type { Zone , Point } from '@/interfaces'
 import { watch } from 'vue'
 
@@ -22,10 +22,6 @@ const props = defineProps({
     },
     active: {
         type: Boolean,
-        required: true
-    },
-    options: {
-        type: String,
         required: true
     },
     capacetesPosition: {
@@ -43,6 +39,18 @@ const props = defineProps({
     name: {
         type: String,
         required: false
+    },
+    isSelectingPosition: {
+        type: Boolean,
+        defalut: false
+    },
+    haveToolbar: {
+        type: Boolean,
+        default: false
+    },
+    pointSelected: {
+        type: Object as PropType<{x: Array<number>, y: Array<number>}>,
+        default: null
     }
 })
 
@@ -65,11 +73,12 @@ const cursorType = ref('default')
 const emit = defineEmits([
     'update:svg', 
     'update:zones',
-    'addCapacete',
+    'selectPosition',
     'selectCapacete',
     'update::capacete',
     'selectAll',
-    'unselectAll'
+    'unselectAll',
+    'mapSize'
 ])
 
 const changeCursor = (value: string) => {
@@ -100,7 +109,6 @@ onMounted(async () => {
     const node: ElementNode = parsed.children[0] as ElementNode
     const height = node.properties ? node.properties.height : 100
     const vB = node.properties ? (node.properties.viewBox as string) : '0 0 100 100'
-
     let values = vB.split(' ').map(Number)
     if (typeof height === 'string' && height.includes('mm')) {
         const viewBoxMM = vB.split(' ').map(Number)
@@ -108,6 +116,7 @@ onMounted(async () => {
     }
     const w = values[2] - values[0]
     const h = values[3] - values[1]
+    emit('mapSize', { x: w, y: h })
     baseWidth.value = w
     baseHeight.value = h
     resizeSVG()
@@ -134,10 +143,6 @@ const transform = () => {
 
 const isDrawing = computed(() => {
     return toggle.value === 'startDraw'
-})
-
-const isAddingCapacete = computed(() => {
-    return toggle.value === 'addCapacete'
 })
 
 const viewBox = computed(() => {
@@ -218,8 +223,6 @@ const updateEditButton = (newValue: string | null) => {
             }
             toggle.value = undefined
             break
-        case 'addCapacete':
-            break
         case 'selectAll':
             emit('selectAll')
             toggle.value = undefined
@@ -265,10 +268,8 @@ const showPosMouse = (e: MouseEvent) => {
 const svgClick = (e: MouseEvent) => {
     const x = e.offsetX
     const y = e.offsetY
-    if (isAddingCapacete.value) {
-        const key = Date.now()
-        emit('addCapacete', { position: { x: x, y: y }, key: key })
-        emit('selectCapacete', key)
+    if (props.isSelectingPosition) {
+        emit('selectPosition', { x: x * scaleSVG.value, y: y*scaleSVG.value })
         return
     }
     if (drag.value) {
@@ -314,7 +315,7 @@ const canRemove = computed(() => {
     return !(selectedPoint.value != null && drawPoints.value.length > 3)
 })
 
-const optionsEdit: Array<Option> = [
+const options: Array<Option> = [
     { value: 'startDraw', text: 'Start Polygon', icon: 'mdi-shape-polygon-plus' },
     { value: 'deleteZone', text: 'Delete Zone', icon: 'mdi-delete', disabled: canDelete },
     { value: 'undo', text: 'Remove last point', icon: 'mdi-undo-variant', disabled: canUndo },
@@ -322,20 +323,26 @@ const optionsEdit: Array<Option> = [
     { value: 'remove', text: 'Remove Point', icon: 'mdi-close', disabled: canRemove }
 ]
 
-const optionsSimulador: Array<Option> = [
-    { value: 'addCapacete', text: 'Adicionar Capacete', icon: 'mdi-plus' },
-    { value: 'selectAll', text: 'Select All', icon: 'mdi-select' },
-    { value: 'unselectAll', text: 'Unselect All', icon: 'mdi-select-off' }
-]
 
-const optionsTooltip = computed(() => {
-    if (props.options === 'Edit') return optionsEdit
-    else return optionsSimulador
-})
 
 const encodeBase64 = (svg: string) => {
     return "data:image/svg+xml;base64," + btoa(svg)
 }
+
+
+const pointSelectedString = computed(() => {
+    if (Object.keys(props.pointSelected).length > 0) {
+        const scale = 1 / scaleSVG.value;
+        const x0 = props.pointSelected['x'][0] * scale;
+        const x1 = props.pointSelected['x'][1] * scale;
+        const y0 = props.pointSelected['y'][0] * scale;
+        const y1 = props.pointSelected['y'][1] * scale;
+        const points = [{ x: x0, y: y0 }, { x: x1, y: y0 }, { x: x1, y: y1}, { x: x0, y: y1 }];
+        return polygonToString(points);
+    } else {
+        return ''
+    }
+})
 
 </script>
 
@@ -345,7 +352,7 @@ const encodeBase64 = (svg: string) => {
             <v-row justify="center">
                 <svg
                     @click="svgClick"
-                    @mouseenter="() => (isDrawing || isAddingCapacete ? changeCursor('crosshair') : undefined)"
+                    @mouseenter="() => (isDrawing || isSelectingPosition ? changeCursor('crosshair') : undefined)"
                     @mouseleave="svgLeave"
                     @mousemove="showPosMouse"
                     id="my-svg"
@@ -394,19 +401,30 @@ const encodeBase64 = (svg: string) => {
                         @update:isDrag="drag = $event"
                     />
                     <image
-                        v-for="{ position, key } in props.capacetesPosition"
-                        :key="key"
-                        @click="emit('selectCapacete', key)"
-                        :x="position['x'] - 15"
-                        :y="position['y'] - 15"
+                        v-for="{ position, nCapacete } in props.capacetesPosition"
+                        :key="nCapacete"
+                        @click="emit('selectCapacete', nCapacete)"
+                        :x="position ? position['x']/scaleSVG - 15 : -300"
+                        :y="position ? position['y']/scaleSVG - 15 : -300"
                         :width="30  / scaleSVG"
                         :height="30 / scaleSVG"
                         :href="
-                            props.capaceteSelected?.includes(key)
+                            props.capaceteSelected?.includes(nCapacete)
                                 ? '/helmet_selected.svg'
                                 : '/helmet.svg'
                         "
                     />
+                    <polygon
+                        v-if="props.pointSelected"
+                        :points="pointSelectedString"
+                        fill="blue"
+                        fill-opacity="0.5"
+                        stroke="black"
+                        :stroke-width="3 * scaleSVG"
+                    >
+
+
+                    </polygon>
                 </svg>
             </v-row>
         </v-sheet>
@@ -430,14 +448,10 @@ const encodeBase64 = (svg: string) => {
         </template>
         <svg-tooltip
             class="mt-5"
-            v-if="props.edit"
+            v-if="props.edit && props.haveToolbar"
             :toggle="toggle"
-            :options="optionsTooltip"
+            :options="options"
             @update:model-value="updateEditButton"
         />
     </v-container>
 </template>
-
-<style scoped>
-/* Add your component-specific styles here */
-</style>

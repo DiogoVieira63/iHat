@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import MapEditor from '@/components/MapEditor.vue'
 import Confirmation from '@/components/Confirmation.vue'
 import { useDisplay } from 'vuetify'
 import FormMapa from './FormMapa.vue'
-import type { Mapa } from '@/interfaces'
+import type { Mapa, Capacete } from '@/interfaces'
 import { useRoute } from 'vue-router'
 import  type { PropType } from 'vue'
 
@@ -21,6 +21,10 @@ const props = defineProps({
         type: Array as PropType<Array<Mapa>>,
         required: true,
     },
+    capacetesPosition: {
+        type: Array as PropType<Array<Capacete>>,
+        required: true,
+    }
 })
 
 const saveEdit = async (confirmation: boolean) => {
@@ -36,6 +40,14 @@ const saveEdit = async (confirmation: boolean) => {
 const addMapa = ref(false)
 const emit = defineEmits(['update'])
 
+const capacetesMap = computed(() => {
+    return props.capacetesPosition.filter((capacete) => {
+        if(capacete.position){
+            return capacete.position.z == page.value
+        }
+    })
+})
+
 
 </script>
 <template>
@@ -47,10 +59,11 @@ const emit = defineEmits(['update'])
                 :edit="edit" 
                 :svg="map.svg" 
                 :zones="map.zonas"
+                :capacetes-position="capacetesMap"
+                :haveToolbar = "true"
                 @update:zones="map.zonas = $event"
-                options="Edit"
             ></map-editor>
-        </template>
+        </template> 
         <v-row class="my-4">
             <v-spacer />
             <v-col cols="10" md="8">

@@ -227,6 +227,7 @@ watch(
         v-if="hasElements"
         height="60vh"
         fixed-header
+        class="border-md rounded-b-xl"
     >
         <thead>
             <tr>
@@ -272,8 +273,7 @@ watch(
             class="mx-4 rounded-pill"
             >
             Nenhum elemento encontrado
-        </v-alert
-        >
+        </v-alert>
     </v-sheet>
     <v-row class="mt-5">
         <v-spacer />

@@ -1,13 +1,13 @@
 // src/store/index.ts
 import { defineStore } from 'pinia'
 import type { Input } from '@/views/SimulatorView.vue'
-import { MqttService } from '@/mqttService'
+import { MqttService } from '@/services/mqtt'
 
 type Status = 'Stopped' | 'Running' | 'Finished'
 
 export class Task  {
     title: string
-    inputs: Array<Input>
+    inputs: Record<string, Input>
     intervalId?: NodeJS.Timeout
     intervalSeconds: number
     capacetes: Array<number>
@@ -15,7 +15,7 @@ export class Task  {
     status: Status
     time: Date
 
-    constructor(title: string, inputs: Array<Input>, intervalSeconds: number, capacetes: Array<number>) {
+    constructor(title: string, inputs: Record<string, Input>, intervalSeconds: number, capacetes: Array<number>) {
         this.title = title
         this.inputs = inputs
         this.intervalSeconds = intervalSeconds
@@ -46,7 +46,7 @@ export class Task  {
         this.time = new Date()
     }
 
-    edit(mqtt: MqttService, title: string, inputs: Array<Input>, intervalSeconds: number){
+    edit(mqtt: MqttService, title: string, inputs: Record<string, Input>, intervalSeconds: number){
         clearInterval(this.intervalId)
         this.title = title
         this.inputs = inputs
@@ -93,7 +93,7 @@ const random = (min: number, max: number) => {
 const envio = (mqtt: MqttService, task: Task) => {
     const { inputs, capacetes } = task
     for (const idCapacete of capacetes) {
-        const input = inputs.map((item) => {
+        const input = Object.values(inputs).map((item) => {
             if (item.tipo == 'Constante') {
                 return {
                     title: item.title,
@@ -144,8 +144,7 @@ const envio = (mqtt: MqttService, task: Task) => {
                 MonoxidoCarbono: newInput['Gases Tóxicos (Monóxido de Carbono)']
             }
         }
-
-        mqtt.publish('dados', JSON.stringify(dataMQTT))
+        mqtt.publish('my/topic', JSON.stringify(dataMQTT))
     }
 }
 

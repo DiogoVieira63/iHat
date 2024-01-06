@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate'
 import { object, string } from 'yup'
-import { ObraService } from '@/http_requests'
+import { ObraService } from '@/services/http'
 import FormMapa from '@/components/FormMapa.vue'
 
 
