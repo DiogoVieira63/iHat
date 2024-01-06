@@ -25,10 +25,10 @@ public class Log
         Mensagem = mensagem;
     }*/
 
-    public Log( String type, DateTime Timestamp, string? idObra, int idCapacete, string idTrabalhador, string tipo){
+    public Log( String type, DateTime timestamp, string? idObra, int idCapacete, string idTrabalhador, string tipo){
         
         Type = type;
-        Timestamp = Timestamp;
+        Timestamp = timestamp;
         IdObra = idObra;
         IdCapacete = idCapacete;
         IdTrabalhador = idTrabalhador;
