@@ -27,6 +27,28 @@ export class ObraSignalRService {
         }
     }
 
+
+    close(){
+        this.connection.stop().then(() => {
+            console.log("SignalR Disconnected.");
+        });
+    }
+
+    //Pass the
+    updateCapacetePosition(func: Function){
+        this.connection.on("UpdateSingleLocation", (message) => {
+            const id = Object.keys(message)[0];
+            func(Number(id), message[id]);
+        });
+    }
+
+    updateLogs(func: Function){
+        this.connection.on("UpdateLogs", (message) => {
+            console.log("Received message:", message);
+            func(message);
+        });
+    }
+
     handleIncomingLogs(callback: (updatedLogs: Array<Log>) => void) {
         this.connection.on("updatelogs", (updatedLogs) => {
             console.log("Received message:", updatedLogs);

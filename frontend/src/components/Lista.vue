@@ -227,6 +227,7 @@ watch(
         v-if="hasElements"
         height="60vh"
         fixed-header
+        class="border-md rounded-b-xl"
     >
         <thead>
             <tr>
