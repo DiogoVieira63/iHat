@@ -111,6 +111,10 @@ public class iHatFacade: IiHatFacade{
     public async Task RemoveObraById(string obraId){
 
         await iobras.RemoveObraByIdAsync(obraId);
+        // var capacetes = await GetAllCapacetesdaObra(obraId);
+        // foreach(var capacete in capacetes){
+        //     await icapacetes.UpdateCapaceteStatusToLivre(capacete.NCapacete);
+        // }
     }
 
     public async Task<Obra> GetConstructionById(string idObra){
@@ -150,6 +154,13 @@ public class iHatFacade: IiHatFacade{
 
     public async Task AlteraEstadoObra(string id, string estado){
         await iobras.AlteraEstadoObra(id, estado);
+        
+        if(estado == "Finalizada" || estado == "Cancelada"){
+            var capacetes = await GetAllCapacetesdaObra(id);
+            foreach(var capacete in capacetes){
+                await icapacetes.UpdateCapaceteStatusToLivre(capacete.NCapacete);
+            }
+        }
     }
 
     public async Task UpdateNomeObra(string idObra, string nome){
