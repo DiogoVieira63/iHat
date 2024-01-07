@@ -10,7 +10,7 @@ import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
 import type { Capacete, Header, Log} from '@/interfaces'
 import {  ObraService } from '@/services/http'
-import type { Mapa, Postition} from '@/interfaces'
+import type { Mapa, Position} from '@/interfaces'
 import Map from '@/components/Map.vue'
 import LogsObra from '@/components/LogsObra.vue'
 import { ObraSignalRService } from '@/services/obraSignalR'
@@ -28,11 +28,8 @@ const mapList = ref<Array<Mapa>>([])
 const logs = ref<Array<Log>>([])
 const idObra: string = route.params.id.toString()
 const signalRService = ref<ObraSignalRService>(new ObraSignalRService(idObra))
+const isLoaded = ref(false)
 
-const updateLogs = (updatedLogs: Array<Log>) => {
-    console.log("Updating logs:", updatedLogs);
-    logs.value = updatedLogs// Assuming message is a log object
-};
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
@@ -58,7 +55,7 @@ const saveTitle = () => {
 };
 
 const getObra = () => {
-    ObraService.getOneObra(idObra).then((answer) => {
+    return ObraService.getOneObra(idObra).then((answer) => {
         if(answer.mapa) mapList.value = answer.mapa
         if(answer.name) title.value = answer.name
         if(answer.status) estadoObra.value = answer.status
@@ -66,17 +63,16 @@ const getObra = () => {
 }
 
 const getCapacetesObra = () => {
-    capacetes.value = []
-    ObraService.getCapacetesFromObra(idObra).then((answer) => {
+    return ObraService.getCapacetesFromObra(idObra).then((answer) => {
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
         })
+        list.value = capacetes.value
     })
-    list.value = capacetes.value
 }
 
 const getLogsObra = () => {
-    ObraService.getLogsObra(idObra).then((answer) => {
+    return ObraService.getLogsObra(idObra).then((answer) => {
         answer.forEach((log) => {
             logs.value.push(log)
         })
@@ -84,29 +80,56 @@ const getLogsObra = () => {
 }
 
 
+const getLastLocationObra = () =>{
+    return ObraService.getLocationCapacetes(idObra).then((answer) => {
+        Object.keys(answer).forEach((key) => {
+            const capacete = capacetes.value.find((capacete) => capacete.nCapacete === parseInt(key))
+            if (capacete) {
+                capacete.position = answer[key]
+            }
+        })
+    })
+
+}
+
+const updateCapacetePosition = (id : number, pos: Position) => {
+    capacetes.value = capacetes.value.map((item) => {
+        if (item.nCapacete === id) {
+            item.position = {
+                x: pos.x,
+                y: pos.y,
+                z: pos.z    
+            }
+            return item
+        }
+        return item
+    })
+}
+
+const updateLogs = (updatedLogs: Array<Log>) => {
+    console.log("Updating logs:", updatedLogs);
+    logs.value = updatedLogs// Assuming message is a log object
+};
+
+
+
+onMounted(async () => {
+    
+    await Promise.all([
+        getObra(), 
+        getCapacetesObra(), 
+        getLogsObra(), 
+        getLastLocationObra(), 
+        signalRService.value.start()
+    ])
+    signalRService.value.updateCapacetePosition(updateCapacetePosition);
+    signalRService.value.handleIncomingLogs(updateLogs);
+    isLoaded.value = true
+});
+
 
 onUnmounted(() => {
     signalRService.value.close();
-});
-
-onMounted(() => {
-    signalRService.value.updateCapacetePosition((id : number, pos: Postition) => {
-        capacetes.value = capacetes.value.map((item) => {
-            if (item.nCapacete === id) {
-                item.position = {
-                    x: pos.x,
-                    y: pos.y,
-                    z: pos.z    
-                }
-                return item
-            }
-            return item
-        })
-    });
-    getLogsObra()
-    signalRService.handleIncomingLogs(updateLogs);
-    getObra();
-    getCapacetesObra();
 });
 
 const headers : Array<Header>= [
@@ -167,7 +190,7 @@ const goToSimulador = () => {
 </script>
 <template>
     <PageLayout>
-        <ObraLayout>
+        <ObraLayout v-if="isLoaded">
             <template #map>
                 <v-row align="center" justify="start">
                     <v-col cols="auto" v-bind:offset-lg="4">
@@ -264,5 +287,17 @@ const goToSimulador = () => {
                 <LogsObra :logs="logs"></LogsObra>
             </template>
         </ObraLayout>
+        <div v-else class="d-flex align-center h-screen">
+            <!--Make a Loading Page-->
+            <h1>
+                Getting all information from obra...
+            </h1>
+            <v-progress-circular
+            color="primary"
+            indeterminate
+            absolute
+            bottom
+            ></v-progress-circular>
+        </div>
     </PageLayout>
 </template>
