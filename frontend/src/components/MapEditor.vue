@@ -28,7 +28,7 @@ const props = defineProps({
         type: Array as PropType<Array<Capacete>>,
         required: false
     },
-    capaceteSelected: {
+    capacetesSelected: {
         type: Array as PropType<Array<number>>,
         required: false
     },
@@ -409,7 +409,7 @@ const pointSelectedString = computed(() => {
                         :width="30  / scaleSVG"
                         :height="30 / scaleSVG"
                         :href="
-                            props.capaceteSelected?.includes(nCapacete)
+                            props.capacetesSelected?.includes(nCapacete)
                                 ? '/helmet_selected.svg'
                                 : '/helmet.svg'
                         "

@@ -148,6 +148,18 @@ const envio = (mqtt: MqttService, task: Task) => {
     }
 }
 
+const pairing = (mqtt: MqttService, nCapacete: number, idObra : string) => {
+    
+    const mensagem ={
+        nCapacete: nCapacete,
+        obra: idObra,
+        trabalhador: "T" + nCapacete
+    }
+
+    mqtt.publish('ihat/obras', JSON.stringify(mensagem))
+}
+
+
 export const useMQTTStore = defineStore('mqtt', {
     state: () => ({
         mqtt: null as MqttService | null
@@ -169,13 +181,12 @@ export const useTaskStore = defineStore('taskMQTT', {
             this.active = idObra
             if(!this.tasks[idObra]) {
                 this.tasks[idObra] = {}
-                console.log("Não existem tarefas para esta obra")
-            }
-            else{
-                console.log("Existem tarefas para esta obra")
             }
         },
-        addTask(mqtt: MqttService, task: Task) {
+        addTask(mqtt: MqttService, task: Task) {            
+            for (const idCapacete of task.capacetes){
+                pairing(mqtt, idCapacete, this.active)
+            }
             task.play(mqtt)
             this.tasks[this.active][Date.now()] = task
             //this.tasks.push(task)
