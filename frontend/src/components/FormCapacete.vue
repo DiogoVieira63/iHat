@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate'
 import { object, string } from 'yup'
 import type { Capacete } from '@/interfaces'
-import { CapaceteService } from '@/http_requests'
+import { CapaceteService } from '@/services/http'
 
 interface Form {
     id: string
@@ -22,7 +22,7 @@ const emit = defineEmits(['update'])
 
 const submit = handleSubmit((values, actions) => {
     const Capacete: Capacete = {
-        NCapacete: Number(values.id),
+        nCapacete: Number(values.id),
         status: 'Disponivel',
         info: '',
         trabalhador: ''

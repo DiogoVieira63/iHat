@@ -63,7 +63,7 @@ function isInUso() {
             </template>
             <template v-slot:message>
                 Tem a certeza que pretende alterar o Status do
-                <strong> Capacete {{ props.row.NCapacete }}</strong> de
+                <strong> Capacete {{ props.row.nCapacete }}</strong> de
                 <span class="font-weight-bold text-red">{{ props.row['status'] }}</span> para
                 <span class="font-weight-bold text-green">{{ newStatus(props.row['status']) }}</span
                 >?

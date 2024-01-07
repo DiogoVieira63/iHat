@@ -7,11 +7,13 @@ export class MqttService {
     constructor(client: MqttClient | undefined) {
         if (client === undefined) {
             const options: IClientOptions = {
-                clientId: 'myUsername'
+                clientId: 'admin',
+                username: 'admin',
+                password: 'password',
             }
             console.log('Connecting to MQTT broker...')
 
-            this.client = mqtt.connect('ws://localhost:8883', options)
+            this.client = mqtt.connect('ws://localhost:9001', options)
 
             this.client.on('connect', () => {
                 console.log('Connected to MQTT broker')

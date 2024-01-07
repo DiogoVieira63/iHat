@@ -6,6 +6,7 @@ using iHat.Model.Mapas;
 using iHat.Model.Zonas;
 using iHat.Model.MensagensCapacete;
 using System.ComponentModel;
+using iHat.MensagensCapacete.Values;
 
 namespace iHat.Model.iHatFacade;
 
@@ -267,5 +268,17 @@ public class iHatFacade: IiHatFacade{
         }
         
         // 
+    }
+
+    public async Task<Dictionary<int, Location>> GetLastLocationCapacetesObra(string obraId){
+        
+        var listaCapacetes = await iobras.GetAllCapacetesOfObra(obraId);
+        var allCapacetesLocation = new Dictionary<int, Location>();
+        foreach(var id in listaCapacetes){
+            var loc = await _mensagemCapaceteService.GetLastLocation(id);
+            if (loc != null)
+                allCapacetesLocation.Add(id, loc);
+        }
+        return allCapacetesLocation;
     }
 }

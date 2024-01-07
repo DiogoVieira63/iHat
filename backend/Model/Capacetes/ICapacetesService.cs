@@ -43,4 +43,6 @@ public interface ICapacetesService{
     Task UpdateCapaceteStatus(int nCapacete, string status);
 
     Task<List<Capacete>> GetFreeHelmets();
+
+    Task AssociarTrabalhadorCapacete(int nCapacete, string idTrabalhador);
 }

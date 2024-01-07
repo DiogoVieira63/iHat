@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, toRaw} from 'vue'
 import MapEditor from '@/components/MapEditor.vue'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { MqttService } from '@/mqttService'
+import { MqttService } from '@/services/mqtt'
 import { onMounted } from 'vue'
 import { useTaskStore } from '@/store'
 import { useMQTTStore } from '@/store'
@@ -12,13 +12,8 @@ import TaskHistory from '@/components/TaskHistory.vue'
 import TaskInput from '@/components/TaskInput.vue'
 import { Task } from '@/store'
 import type { Mapa } from '@/interfaces'
-import { ObraService } from '@/http_requests'
-
-export interface Capacete {
-    position: { x: number; y: number }
-    key: number
-    inputs: Array<Input>
-}
+import { ObraService } from '@/services/http'
+import type { Capacete } from '@/interfaces'
 
 export interface Input {
     title: string
@@ -28,14 +23,16 @@ export interface Input {
     step?: number
 }
 
-
-let mqtt: MqttService | null = null
-const mqttStore = useMQTTStore()
-const inputs = ref<Array<Input>>([])
-const imageUrls: Array<string> = ['/Duplex1.svg', '/Duplex2.svg']
-const taskStore = useTaskStore()
 const router = useRouter()
 const route = useRoute()
+
+const mqttStore = useMQTTStore()
+const taskStore = useTaskStore()
+let mqtt: MqttService | null = null
+
+const idObra = route.params.id as string
+
+const inputs = ref<Record<string, Input>>({})
 const title = ref('')
 const page = ref(1)
 const tempo = ref(1)
@@ -44,68 +41,89 @@ const capacetes = ref<Array<Capacete>>([])
 const taskName = ref('Tarefa')
 const addCapaceteTask = ref("")
 const mapList = ref<Array<Mapa>>([])
-const inputsConstante: Array<Input> = [
-    {
+const rangeMaps = ref<Array<{ x : number, y: number }>>([])
+
+const numberMaps = computed(() => {
+    return mapList.value.length
+})
+
+const isSelectingPosition = ref(false)
+const inputsConstante: Record<string, Input> = {
+    'Temperatura Corporal': {
         title: 'Temperatura Corporal',
         range: [35, 42],
         value: [36.5, 37.5],
         tipo: 'Variável'
     },
-    {
+    'Ritmo Cardíaco': {
         title: 'Ritmo Cardíaco',
         range: [80, 200],
         value: [80, 100],
         tipo: 'Variável'
     },
-    {
+    'Probabilidade de Queda': {
         title: 'Probabilidade de Queda',
         range: [0, 1],
         value: [0.5, 0.5],
         tipo: 'Variável'
     },
-    {
+    'Proximidade': {
         title: 'Proximidade',
         range: [0, 200],
         value: [0, 0],
         tipo: 'Variável'
     },
-    {
+    'Gases Tóxicos (Monóxido de Carbono)': {
         title: 'Gases Tóxicos (Monóxido de Carbono)',
         range: [0, 1],
         value: [0, 0],
         tipo: 'Variável'
     },
-    {
+    'Gases Tóxicos (Metano)': {
         title: 'Gases Tóxicos (Metano)',
         range: [0, 1],
         value: [0, 0],
         tipo: 'Variável'
     },
-    {
+    'Posição do Capacete (X)': {
         title: 'Posição do Capacete (X)',
-        range: [0, 1],
+        range: [-1, 1],
         value: [0, 0],
         tipo: 'Variável'
     },
-    {
+    'Posição do Capacete (Y)': {
         title: 'Posição do Capacete (Y)',
-        range: [0, 1],
+        range: [-1, 1],
         value: [0, 0],
         tipo: 'Variável'
     },
-    {
+};
+
+const resetInputs = () => {
+    inputs.value = structuredClone(inputsConstante)
+    inputs.value['Posição do Capacete (Z)'] =  {
         title: 'Posição do Capacete (Z)',
-        range: [1, imageUrls.length],
+        range: [1, numberMaps.value],
         value: [1, 1],
         step: 1,
         tipo: 'Constante'
     }
-]
+    setInputMapSize(page.value - 1)
+}
 
 const getObra = () => {
     ObraService.getOneObra(route.params.id.toString()).then((answer) => {
         if(answer.mapa) mapList.value = answer.mapa
         if(answer.name) title.value = answer.name
+    })
+}
+
+const getCapacetesObra = () => {
+    capacetes.value = []
+    ObraService.getCapacetesFromObra(idObra).then((answer) => {
+        answer.forEach((capacete) => {
+            capacetes.value.push(capacete)
+        })
     })
 }
 
@@ -120,21 +138,18 @@ onMounted(() => {
     } else {
         mqtt = mqttStore.mqtt as MqttService
     }
+    getCapacetesObra()
 })
 
 const updateCapacete = (capacete: Capacete) => {
     capacetes.value = capacetes.value.map((item) => {
-        if (item.key === capacete.key) {
+        if (item.nCapacete === capacete.nCapacete) {
             return capacete
         }
         return item
     })
 }
 
-const addCapacete = (capacete: Capacete) => {
-    capacete.inputs = [...inputsConstante]
-    capacetes.value.push(capacete)
-}
 
 const goToObraPage = () => {
     router.push('/obras/' + router.currentRoute.value.params.id)
@@ -148,7 +163,7 @@ const unselectCapacete = (id: number) => {
             const task = taskStore.tasks[taskStore.active][index]
             task.isEdit = false
         }
-        inputs.value = []
+        inputs.value = {}
     }
     return
 }
@@ -166,6 +181,7 @@ const selectedCapacete = (id: number) => {
             editTask(task)
         }
     } else {
+        resetInputs()
         if (taskEdit.value != null) {
             taskStore.tasks[taskStore.active][taskEdit.value].isEdit = false
         }
@@ -174,28 +190,21 @@ const selectedCapacete = (id: number) => {
             const task = taskStore.tasks[taskStore.active][addCapaceteTask.value]
             task.capacetes.push(id)
         }
-        inputs.value = [...inputsConstante]
     }
 }
 
 const selectAll = () => {
-    selected.value = capacetes.value.map((item) => item.key)
-    inputs.value = [...inputsConstante]
+    selected.value = capacetes.value.map((item) => item.nCapacete)
+    resetInputs()
 }
 
 const unselectAll = () => {
     selected.value = []
-    inputs.value = []
+    inputs.value = {}
 }
-
-const deepCopy = (obj: Array<Input>) => {
-    return obj.map(a => {return {...a}})
-
-}
-
 
 const editTask = (task : Task) => {
-    inputs.value = deepCopy(task.inputs)
+    inputs.value = structuredClone(toRaw(task.inputs))
     //clone selected array
     selected.value = [...task.capacetes]    
     taskName.value = task.title
@@ -227,10 +236,59 @@ const changeAddCapaceteTask = (id: string) => {
     }
 }
 
+const selectPosition = (value : { [key: string] : number }) => {
+    const posX = inputs.value['Posição do Capacete (X)']
+    const posY = inputs.value['Posição do Capacete (Y)']
+    posX.value = [value.x, value.x]
+    posY.value = [value.y, value.y]
+    posX.tipo = 'Constante'
+    posY.tipo = 'Constante'
+    const posZ = inputs.value['Posição do Capacete (Z)']
+    posZ.value = [page.value, page.value]
+}
+
+const changeSelectPosition = (value : boolean) => {
+    isSelectingPosition.value = value
+}
+
+const setMapSize = (index : number, value : { x : number, y : number }) => {
+    rangeMaps.value[index] = { x : Math.ceil(value.x) -1 , y : Math.ceil(value.y) -1}
+    if(index == page.value - 1 && !isInputsEmpty.value ) {
+        setInputMapSize(index)
+    }
+}
+const setInputMapSize = (index : number) => {
+    inputs.value['Posição do Capacete (X)']['range'] = [0, rangeMaps.value[index]['x']]
+    inputs.value['Posição do Capacete (Y)']['range'] = [0, rangeMaps.value[index]['y']]
+}
+
+
+watch(page, (value) => { 
+    if(!isInputsEmpty.value) setInputMapSize(value - 1)
+})
+
+const isInputsEmpty = computed(() => {
+    return Object.keys(inputs.value).length == 0
+})
+
+const points = computed(() => {
+    if(!isInputsEmpty.value) {
+        return {
+            x : inputs.value['Posição do Capacete (X)'].value,
+            y : inputs.value['Posição do Capacete (Y)'].value,
+        }
+    }
+    return {
+        x : [0, 0],
+        y : [0, 0],
+    }
+})
+
 </script>
 <template>
     <page-layout>
         <ObraLayout>
+            {{ inputs }}
             <template #map>
                 <h1 class="text-center text-h3">{{ title }}</h1>
                 <template v-for="(map, index) in mapList" :key="map.name">
@@ -241,13 +299,15 @@ const changeAddCapaceteTask = (id: string) => {
                         :zones="map.zonas"
                         :capacetes-position="capacetes"
                         :capacete-selected="selected"
+                        :isSelectingPosition="isSelectingPosition"
+                        :pointSelected = "points"
                         @update:zones="map.zonas = $event"
-                        @addCapacete="addCapacete"
                         @selectCapacete="selectedCapacete"
                         @update::capacete="updateCapacete($event)"
                         @select-all="selectAll"
                         @unselect-all="unselectAll"
-                        options="Simulador"
+                        @selectPosition="selectPosition"
+                        @mapSize="setMapSize(index, $event)"
                     ></map-editor>
                 </template>
                 <v-row class="d-flex justify-center mt-5" v-if="mapList.length > 1">
@@ -270,11 +330,17 @@ const changeAddCapaceteTask = (id: string) => {
                     :inputs="inputs"
                     :tempo="tempo"
                     :taskName="taskName"
+                    :capacetes="capacetes"
                     :selected="selected"
+                    :isAdding="addCapaceteTask != ''"
                     @update:inputs="inputs = $event"
                     @update:tempo="tempo = Number($event)"
                     @update:taskName="taskName = $event"
                     @update:selected="selected = $event"
+                    @selectCapacete="selectedCapacete"
+                    @selectAll="selectAll"
+                    @unselectAll="unselectAll"
+                    @selectPosition="changeSelectPosition"
                 />
                 <TaskHistory 
                     :addCapaceteTask="addCapaceteTask"
@@ -285,4 +351,3 @@ const changeAddCapaceteTask = (id: string) => {
         </ObraLayout>
     </page-layout>
 </template>
-<style></style>

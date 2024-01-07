@@ -16,7 +16,8 @@ namespace iHat.MQTTService;
 
 public class MQTTService {
 
-    private readonly string _topic = "my/topic";
+    private readonly string _BasicTopic = "my/topic";
+    private readonly string _PairingTopic = "ihat/obras";
     private readonly string _clientId = "iHatBackendServer";
     private readonly string _url = "localhost";
     private readonly int _port = 1883;
@@ -86,7 +87,8 @@ public class MQTTService {
             var mqttSubscribeOptions = _mqttFactory.CreateSubscribeOptionsBuilder()
                 .WithTopicFilter(
                     f => {
-                        f.WithTopic(_topic);
+                        f.WithTopic(_BasicTopic);
+                        f.WithTopic(_PairingTopic);
                     })
                 .Build();
 
@@ -110,8 +112,19 @@ public class MQTTService {
     private async Task HandleReceivedMessage(MqttApplicationMessageReceivedEventArgs eventArgs)
     {
         var payload = Encoding.UTF8.GetString(eventArgs.ApplicationMessage.PayloadSegment);
-        _logger.LogDebug("Received application message. {0}. Topic: {1}", payload, eventArgs.ApplicationMessage.Topic);
+        _logger.LogWarning("Received application message. {0}. Topic: {1}", payload, eventArgs.ApplicationMessage.Topic);
     
+
+        if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_BasicTopic)){
+            await HandleMessageFromCapacetes(payload);
+        }
+        
+        if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_PairingTopic)){
+            await HandlePairingMessage(payload);
+        }
+    }
+
+    public async Task HandleMessageFromCapacetes(string payload){
         try {
             var messageJson = JsonConvert.DeserializeObject<MensagemCapacete>(payload);
 
@@ -148,12 +161,13 @@ public class MQTTService {
                 return;
             }
 
-            await NotifyClientsWithCapaceteLocation(capacete, messageJson, obra.Id!);
+            await NotifyClientsWithCapaceteLocation(capacete, messageJson, obra);
             
 
             Tuple<bool, string> messageRe = messageJson.SearchForAnormalValues();
             if (messageRe.Item1 == true){
                 _logger.LogInformation("Abnormal Value Detected.");              
+                // var obra = await _obrasService.GetIdObraWithCapaceteId(capacete.NCapacete);
                 var type = string.Empty;
                 switch(messageRe.Item2){
                     case "Fall":
@@ -195,22 +209,42 @@ public class MQTTService {
         }
     }
 
-    public async Task NotifyClientsWithCapaceteLocation(Capacete capacete, MensagemCapacete messageJson, string obraId){
+    public async Task HandlePairingMessage(string payload){
+        JObject jsonObject = JObject.Parse(payload);
+        JToken? nCapacete = jsonObject["nCapacete"];
+        JToken? idTrabalhador = jsonObject["idTrabalhador"];
+        JToken? obra = jsonObject["obra"];
+    
+        if(nCapacete != null && idTrabalhador != null){
+            int nCap = (int) nCapacete;
+            string idTrab = (string) idTrabalhador;
+            try{
+                await _capacetesService.AssociarTrabalhadorCapacete(nCap, idTrab);
+            }
+            catch(Exception e){
+                _logger.LogWarning(e.Message);
+            }
+            
+        }
+    }
+
+    public async Task NotifyClientsWithCapaceteLocation(Capacete capacete, MensagemCapacete messageJson, Obra obra){
         // Primeira op: Notificar apenas com a nova localização recebida...
         var dict = new Dictionary<int, Location>
         {
             { capacete.NCapacete, messageJson.Location }
         };
-        await _manageNotificationClients.NotifyClientsObraWithSingleLocation(obraId, dict);        
+        await _manageNotificationClients.NotifyClientsObraWithSingleLocation(obra.Id!, dict);        
 
         // Segunda op: Notificar com todas as últimas localizações...
-        // var listaCapacetes = obra.Capacetes;
-        // var allCapacetesLocation = new List<Location>();
-        // foreach(var id in listaCapacetes){
-        //     var loc = await _mensagemCapaceteService.GetLastLocation(id);
-        //     allCapacetesLocation.Add(loc);
-        // }
-        // await _logsHub.Clients.Group(obraId).SendAsync("UpdateAllLocation", allCapacetesLocation);
+        var listaCapacetes = obra.Capacetes;
+        var allCapacetesLocation = new Dictionary<int, Location>();
+        foreach(var id in listaCapacetes){
+            var loc = await _mensagemCapaceteService.GetLastLocation(id);
+            if (loc != null)
+                allCapacetesLocation.Add(id, loc);
+        }
+        await _manageNotificationClients.NotifyClientsObraWithMultipleLocations(obra.Id!, allCapacetesLocation);
     }
 
 

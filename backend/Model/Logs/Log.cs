@@ -10,25 +10,25 @@ public class Log
     public string? Id {get; set;}
 
     public string Type {get; set;} // tipo de gravidade
-    public DateTime Timestap {get; set;}
+    public DateTime Timestamp {get; set;}
     public string? IdObra {get; set;}
     public int? IdCapacete {get; set;}
     public string? IdTrabalhador {get; set;}
     public string? Mensagem {get; set;}
 
-    /*public Log(DateTime timestap, string? idObra, int idCapacete, string idTrabalhador, string mensagem )
+    /*public Log(DateTime Timestamp, string? idObra, int idCapacete, string idTrabalhador, string mensagem )
     {
-        Timestap = timestap;
+        Timestamp = Timestamp;
         IdObra = idObra;
         IdCapacete = idCapacete;
         IdTrabalhador = idTrabalhador;
         Mensagem = mensagem;
     }*/
 
-    public Log( String type, DateTime timestap, string? idObra, int idCapacete, string idTrabalhador, string tipo){
+    public Log( String type, DateTime timestamp, string? idObra, int idCapacete, string idTrabalhador, string tipo){
         
         Type = type;
-        Timestap = timestap;
+        Timestamp = timestamp;
         IdObra = idObra;
         IdCapacete = idCapacete;
         IdTrabalhador = idTrabalhador;
