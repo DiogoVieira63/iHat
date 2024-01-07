@@ -37,9 +37,6 @@ export class MqttService {
             if (err) {
                 console.error(`Failed to publish: ${err}`)
             }
-            else {
-                console.log(`Published to ${topic}: ${message}`)
-            }
         })
     }
 }
