@@ -4,7 +4,8 @@ import { ref } from 'vue'
 import Confirmation from './Confirmation.vue'
 
 interface Props {
-    row: { [nCapacete: string]: string }
+    row: { [nCapacete: string]: string },
+    selected: boolean
 }
 
 const props = defineProps<Props>()
@@ -41,7 +42,7 @@ function isInUso() {
 </script>
 <template>
     <td @click="changePage(props.row.nCapacete)">{{ props.row['nCapacete'] }}</td>
-    <td>
+    <td >
         <confirmation
             title="Confirmação"
             :function="changeStatus"

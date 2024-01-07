@@ -2,7 +2,7 @@
 
 import Lista from '@/components/Lista.vue'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
-import { ref, onMounted, nextTick, onUnmounted } from 'vue'
+import { ref, onMounted, nextTick, onUnmounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import Confirmation from '@/components/Confirmation.vue'
@@ -19,6 +19,7 @@ const router = useRouter()
 const route = useRoute()
 const title = ref('')
 const capacetes = ref<Array<Capacete>>([])
+const capacetesSelected = ref<number>()
 const list = ref<Array<Capacete>>([])
 const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
@@ -64,6 +65,7 @@ const getObra = () => {
 
 const getCapacetesObra = () => {
     return ObraService.getCapacetesFromObra(idObra).then((answer) => {
+        capacetes.value = []
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
         })
@@ -122,6 +124,8 @@ onMounted(async () => {
         getLastLocationObra(), 
         signalRService.value.start()
     ])
+
+    
     signalRService.value.updateCapacetePosition(updateCapacetePosition);
     signalRService.value.handleIncomingLogs(updateLogs);
     isLoaded.value = true
@@ -147,16 +151,6 @@ function removeCapacete(id: string) {
             console.error('Error updating title:', error);
         });
 }
-
-// onMounted(() => {
-//   const id = route.params.id
-//     getCapacetesFromObra(id);  
-// })
-
-
-// function removeCapacete(id: number) {
-//     list.value = list.value.filter((item) => item.nCapacete !== id)
-// }
 
 const changeEstadoCapacete = (row: { [key: string]: string }, value: string) => {
     row['status'] = value
@@ -187,12 +181,20 @@ const goToSimulador = () => {
     router.push(currentRoute.fullPath + '/simulador')
 }
 
+const selectCapacete = (idCapacete: number) => {
+    if (capacetesSelected.value === idCapacete) {
+        capacetesSelected.value = undefined
+    } else {
+        capacetesSelected.value = idCapacete
+    }
+}
+
 </script>
 <template>
     <PageLayout>
-        <ObraLayout v-if="isLoaded">
+        <ObraLayout>
             <template #map>
-                <v-row align="center" justify="start">
+                <v-row align="center" justify="start" class="mb-2">
                     <v-col cols="auto" v-bind:offset-lg="4">
                         <div class="text-h4 text-lg-h3" v-if="!isEditing">
                             {{ title }}
@@ -213,12 +215,20 @@ const goToSimulador = () => {
                             @click="toggleEditing"
                         ></v-btn>
                     </v-col>
+                </v-row>
+                <v-skeleton-loader
+                    :loading="!isLoaded"
+                    type="card, image"
+                    height="65vh"
+                >
                     <Map
                         :capacetesPosition="capacetes"
+                        :capacetesSelected="capacetesSelected"
                         :mapList="mapList"
                         @update="getObra"
+                        @selectCapacete="selectCapacete"
                     ></Map>
-                </v-row>
+                </v-skeleton-loader>
             </template>
             <template #content>
                 <v-row class="d-flex align-center">
@@ -264,40 +274,38 @@ const goToSimulador = () => {
                         Simulador
                     </v-btn>
                 </v-row>
-                <Lista
-                    :list="list"
-                    :headers="headers"
+                <v-skeleton-loader
+                    :loading="!isLoaded"
+                    type="card, table"
                 >
-                    <template v-slot:tabs>
-                        <p class="text-md-h6 ml-2 text-subtitle-1">Lista de Capacetes</p>
-                    </template>
-                    <template #row="{ row }">
-                        <RowObra
-                            :row="row"
-                            @removeCapacete="(nCapacete) => removeCapacete(nCapacete)"
-                            @changeStatus="(value) => changeEstadoCapacete(row, value)"
-                        />
-                    </template>
-                    <template v-slot:add>
-                        <FormCapaceteObra />
-                    </template>
-                </Lista>
+                    <Lista
+                        :list="list"
+                        :headers="headers"
+                        :selected="{
+                                'key': 'nCapacete',
+                                'value': capacetesSelected
+                            }"
+                    >
+                        <template v-slot:tabs>
+                            <p class="text-md-h6 ml-2 text-subtitle-1">Lista de Capacetes</p>
+                        </template>
+                        <template #row="{ row }">
+                            <RowObra
+                                :selected="capacetesSelected == row['nCapacete']"
+                                :row="row"
+                                @removeCapacete="(nCapacete) => removeCapacete(nCapacete)"
+                                @changeStatus="(value) => changeEstadoCapacete(row, value)"
+                            />
+                        </template>
+                        <template v-slot:add>
+                            <FormCapaceteObra />
+                        </template>
+                    </Lista>
+                </v-skeleton-loader>
             </template>
             <template #logs>
                 <LogsObra :logs="logs"></LogsObra>
             </template>
         </ObraLayout>
-        <div v-else class="d-flex align-center h-screen">
-            <!--Make a Loading Page-->
-            <h1>
-                Getting all information from obra...
-            </h1>
-            <v-progress-circular
-            color="primary"
-            indeterminate
-            absolute
-            bottom
-            ></v-progress-circular>
-        </div>
     </PageLayout>
 </template>

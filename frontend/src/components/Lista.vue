@@ -12,6 +12,10 @@ const props = defineProps({
     headers: {
         type: Array as PropType<Array<Header>>,
         required: true
+    },
+    selected: {
+        type: Object as PropType<Record<string,number | string | undefined>>,
+        default: () => {}
     }
 })
 
@@ -150,6 +154,26 @@ watch(
     }
 )
 
+watch(
+    () => props.selected,
+    (newValue) => {
+        if (newValue['key'] && newValue['value']) {
+            const index = rowsSorted.value.findIndex((row) => row[String(newValue['key'])] == newValue['value'])
+            if (index >= 0) {
+                page.value = Math.ceil((index + 1) / maxPerPage.value)
+            }
+        }
+    }
+)
+
+
+const rowSelected = (row: { [id: string]: string }) => {
+    if (props.selected && props.selected['key'] && props.selected['value']) {
+        if(row[props.selected['key']] == props.selected['value']) 
+            return 'bg-grey-lighten-2'
+    }
+    return ''
+}
 
 
 </script>
@@ -249,6 +273,7 @@ watch(
         <tbody>
             <tr
                 class="text-center"
+                :class="rowSelected(row)"
                 v-for="(row, rowIndex) in rowsPage"
                 :key="rowIndex"
             >
@@ -266,6 +291,7 @@ watch(
         class="d-flex align-center"
         border
         rounded="b-xl"
+        width="100%"
     >
         <v-alert
             dense
