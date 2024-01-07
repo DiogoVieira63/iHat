@@ -88,13 +88,14 @@ public class MQTTService {
                 .WithTopicFilter(
                     f => {
                         f.WithTopic(_BasicTopic);
+                    })
+                .WithTopicFilter(
+                    f => {
                         f.WithTopic(_PairingTopic);
                     })
                 .Build();
-
             await _mqttClient.SubscribeAsync(mqttSubscribeOptions, CancellationToken.None);
-            _logger.LogInformation("MQTT client subscribed to topic.");
-
+            _logger.LogInformation("MQTT client subscribed to topic "+_BasicTopic+" and to topic "+_PairingTopic+".");
         }
         catch(Exception e){
             _logger.LogInformation(e.Message);
