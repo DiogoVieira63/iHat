@@ -63,9 +63,13 @@ const getObra = () => {
 }
 
 const getCapacetesObra = () => {
+    capacetes.value = []
     return ObraService.getCapacetesFromObra(idObra).then((answer) => {
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
+        })
+        capacetes.value = capacetes.value.sort((a, b) => {
+            return a.nCapacete - b.nCapacete
         })
         list.value = capacetes.value
     })
@@ -108,7 +112,7 @@ const updateCapacetePosition = (id : number, pos: Position) => {
 
 const updateLogs = (updatedLogs: Array<Log>) => {
     console.log("Updating logs:", updatedLogs);
-    logs.value = updatedLogs// Assuming message is a log object
+    logs.value = updatedLogs
 };
 
 
@@ -279,7 +283,7 @@ const goToSimulador = () => {
                         />
                     </template>
                     <template v-slot:add>
-                        <FormCapaceteObra />
+                        <FormCapaceteObra :idObra="idObra" @update="getCapacetesObra"/>
                     </template>
                 </Lista>
             </template>

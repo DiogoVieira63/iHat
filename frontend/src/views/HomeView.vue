@@ -21,6 +21,9 @@ const getCapacetes = () => {
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
         })
+        capacetes.value = capacetes.value.sort((a, b) => {
+            return a.nCapacete - b.nCapacete
+        })
     })
 }
 
@@ -31,7 +34,13 @@ const getObras = () => {
         answer.forEach((obra) => {
             obras.value.push(obra)
         })
+        obras.value = obras.value.sort(function (a, b) {
+        if (a.name < b.name) return -1;
+        else if (a.name > b.name) return 1;
+        else return 0;
     })
+    })
+    
 }
 
 

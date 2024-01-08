@@ -11,7 +11,7 @@ interface Form {
 
 const { handleSubmit } = useForm<Form>({
     validationSchema: object({
-        id: string().min(2).required()
+        id: string().min(1).required()
     })
 })
 
