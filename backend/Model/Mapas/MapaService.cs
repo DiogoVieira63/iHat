@@ -9,7 +9,9 @@ public class MapaService: IMapaService{
 
     public readonly IMongoCollection<Mapa> _mapaCollection;
 
-    public MapaService(IOptions<DatabaseSettings> iHatDatabaseSettings ){
+    private readonly ILogger<MapaService> _logger;
+
+    public MapaService(IOptions<DatabaseSettings> iHatDatabaseSettings, ILogger<MapaService> logger ){
         var mongoClient = new MongoClient(
             iHatDatabaseSettings.Value.ConnectionString);
 
@@ -18,6 +20,8 @@ public class MapaService: IMapaService{
 
         _mapaCollection = mongoDatabase.GetCollection<Mapa>(
             iHatDatabaseSettings.Value.MapasCollectionName);
+
+        _logger = logger;
     }
 
     public async Task<string?> Add(string name, string svg, int floor){
