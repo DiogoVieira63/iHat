@@ -23,7 +23,7 @@ public class ZonasService: IZonasService{
         _zonaRiscoCollection = mongoDatabase.GetCollection<ZonasRisco>(
             iHatDatabaseSettings.Value.ZonasRiscoCollectionName);
     }
-    public async Task AddZonasPerigo(int idZona, List<Tuple<double,double>> lista)
+    public async Task AddZonasPerigo(int idZona, List<Point> lista)
     {
         var zona = await _zonaRiscoCollection.Find(x => x.IdZona == idZona).FirstOrDefaultAsync();
 
@@ -56,7 +56,7 @@ public class ZonasService: IZonasService{
             return;
         }
 
-        zona.Zonas = new List<Tuple<double, double>>();
+        zona.Zonas = new List<Point>();
 
         try
         {
@@ -78,7 +78,7 @@ public class ZonasService: IZonasService{
             return;
         }
 
-        zona.Zonas = new List<Tuple<double, double>>();
+        zona.Zonas = new List<Point>();
 
         try
         {
@@ -90,7 +90,7 @@ public class ZonasService: IZonasService{
         }
     }
 
-    public async Task UpdateZonasPerigo(int idZona, List<Tuple<double,double>> lista)
+    public async Task UpdateZonasPerigo(int idZona, List<Point> lista)
     {
         var zona = await _zonaRiscoCollection.Find(x => x.IdZona == idZona).FirstOrDefaultAsync();
 
