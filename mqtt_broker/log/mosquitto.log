@@ -270,3 +270,119 @@ To fix this, use `chmod 0700 /mosquitto/config/password.txt`.
 1701123446: New client connected from 172.18.0.2:60738 as auto-EEED419B-EFEA-8711-180F-B4BB3C29890C (p2, c1, k60, u'admin').
 1701123446: Client auto-EEED419B-EFEA-8711-180F-B4BB3C29890C disconnected.
 1701123449: Client iHatBackendServer disconnected.
+1704397253: mosquitto version 2.0.18 starting
+1704397253: Config loaded from /mosquitto/config/mosquitto.conf.
+1704397253: Warning: File /mosquitto/config/password.txt has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/password.txt`.
+1704397253: Warning: File /mosquitto/config/password.txt owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/password.txt`.
+1704397253: Warning: File /mosquitto/config/password.txt group is not mosquitto. Future versions will refuse to load this file.
+1704397253: Opening ipv4 listen socket on port 1883.
+1704397253: Opening ipv6 listen socket on port 1883.
+1704397253: Opening websockets listen socket on port 9001.
+1704397253: mosquitto version 2.0.18 running
+1704397274: New client connected from ::ffff:172.20.0.1:45938 as admin (p2, c1, k60, u'admin').
+1704397298: New connection from 172.20.0.1:54430 on port 1883.
+1704397298: New client connected from 172.20.0.1:54430 as auto-4E6942FF-D38D-2785-54CB-965D16728F87 (p2, c1, k60, u'admin').
+1704397298: Client auto-4E6942FF-D38D-2785-54CB-965D16728F87 disconnected.
+1704397353: mosquitto version 2.0.18 terminating
+1704397353: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1704397353: Client admin closed its connection.
+1704397396: mosquitto version 2.0.18 starting
+1704397396: Config loaded from /mosquitto/config/mosquitto.conf.
+1704397396: Warning: File /mosquitto/config/password.txt has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/password.txt`.
+1704397396: Warning: File /mosquitto/config/password.txt owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/password.txt`.
+1704397396: Warning: File /mosquitto/config/password.txt group is not mosquitto. Future versions will refuse to load this file.
+1704397396: Opening ipv4 listen socket on port 1883.
+1704397396: Opening ipv6 listen socket on port 1883.
+1704397396: Opening websockets listen socket on port 9001.
+1704397396: mosquitto version 2.0.18 running
+1704397401: New client connected from ::ffff:172.20.0.1:43014 as admin (p2, c1, k60, u'admin').
+1704397407: New connection from 172.20.0.1:57440 on port 1883.
+1704397407: New client connected from 172.20.0.1:57440 as iHatBackendServer (p5, c1, k15, u'admin').
+1704397515: Client admin closed its connection.
+1704397519: New client connected from ::ffff:172.20.0.1:35002 as admin (p2, c1, k60, u'admin').
+1704397722: Client iHatBackendServer disconnected.
+1704397732: New connection from 172.20.0.1:59734 on port 1883.
+1704397732: New client connected from 172.20.0.1:59734 as iHatBackendServer (p5, c1, k15, u'admin').
+1704397894: Client admin closed its connection.
+1704397895: New client connected from ::ffff:172.20.0.1:54644 as admin (p2, c1, k60, u'admin').
+1704397944: Client admin closed its connection.
+1704397945: New client connected from ::ffff:172.20.0.1:35854 as admin (p2, c1, k60, u'admin').
+1704397954: Client iHatBackendServer disconnected.
+1704397960: mosquitto version 2.0.18 terminating
+1704397960: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1704397960: Client admin closed its connection.
+1704402761: mosquitto version 2.0.18 starting
+1704402761: Config loaded from /mosquitto/config/mosquitto.conf.
+1704402761: Warning: File /mosquitto/config/password.txt has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/password.txt`.
+1704402761: Warning: File /mosquitto/config/password.txt owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/password.txt`.
+1704402761: Warning: File /mosquitto/config/password.txt group is not mosquitto. Future versions will refuse to load this file.
+1704402761: Opening ipv4 listen socket on port 1883.
+1704402761: Opening ipv6 listen socket on port 1883.
+1704402761: Opening websockets listen socket on port 9001.
+1704402761: mosquitto version 2.0.18 running
+1704402764: New client connected from ::ffff:172.20.0.1:39154 as admin (p2, c1, k60, u'admin').
+1704402883: Client admin closed its connection.
+1704403845: New client connected from ::ffff:172.20.0.1:42858 as admin (p2, c1, k60, u'admin').
+1704404561: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1704404575: Client admin closed its connection.
+1704404578: New client connected from ::ffff:172.20.0.1:43280 as admin (p2, c1, k60, u'admin').
+1704405035: Client admin closed its connection.
+1704405036: New client connected from ::ffff:172.20.0.1:38584 as admin (p2, c1, k60, u'admin').
+1704405052: mosquitto version 2.0.18 terminating
+1704405052: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1704405052: Client admin closed its connection.
+1704410692: mosquitto version 2.0.18 starting
+1704410692: Config loaded from /mosquitto/config/mosquitto.conf.
+1704410692: Warning: File /mosquitto/config/password.txt has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/password.txt`.
+1704410692: Warning: File /mosquitto/config/password.txt owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/password.txt`.
+1704410692: Warning: File /mosquitto/config/password.txt group is not mosquitto. Future versions will refuse to load this file.
+1704410692: Opening ipv4 listen socket on port 1883.
+1704410692: Opening ipv6 listen socket on port 1883.
+1704410692: Opening websockets listen socket on port 9001.
+1704410692: mosquitto version 2.0.18 running
+1704410707: New client connected from ::ffff:172.20.0.1:53064 as admin (p2, c1, k60, u'admin').
+1704410817: Client admin closed its connection.
+1704410818: New client connected from ::ffff:172.20.0.1:38482 as admin (p2, c1, k60, u'admin').
+1704410983: Client admin closed its connection.
+1704410985: New client connected from ::ffff:172.20.0.1:51066 as admin (p2, c1, k60, u'admin').
+1704411155: Client admin closed its connection.
+1704411157: New client connected from ::ffff:172.20.0.1:37074 as admin (p2, c1, k60, u'admin').
+1704411295: Client admin closed its connection.
+1704411296: New client connected from ::ffff:172.20.0.1:33474 as admin (p2, c1, k60, u'admin').
+1704411492: Client admin closed its connection.
+1704411494: New client connected from ::ffff:172.20.0.1:33108 as admin (p2, c1, k60, u'admin').
+1704411539: Client admin closed its connection.
+1704411682: New client connected from ::ffff:172.20.0.1:56286 as admin (p2, c1, k60, u'admin').
+1704411770: Client admin closed its connection.
+1704411772: New client connected from ::ffff:172.20.0.1:33964 as admin (p2, c1, k60, u'admin').
+1704411814: mosquitto version 2.0.18 terminating
+1704411814: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1704411814: Client admin closed its connection.
+1704411846: mosquitto version 2.0.18 starting
+1704411846: Config loaded from /mosquitto/config/mosquitto.conf.
+1704411846: Warning: File /mosquitto/config/password.txt has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/password.txt`.
+1704411846: Warning: File /mosquitto/config/password.txt owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/password.txt`.
+1704411846: Warning: File /mosquitto/config/password.txt group is not mosquitto. Future versions will refuse to load this file.
+1704411846: Opening ipv4 listen socket on port 1883.
+1704411846: Opening ipv6 listen socket on port 1883.
+1704411846: Opening websockets listen socket on port 9001.
+1704411846: mosquitto version 2.0.18 running
+1704411859: New client connected from ::ffff:172.20.0.1:52836 as admin (p2, c1, k60, u'admin').
+1704412001: Client admin closed its connection.
+1704412003: New client connected from ::ffff:172.20.0.1:49900 as admin (p2, c1, k60, u'admin').
+1704412038: New connection from 172.20.0.1:45358 on port 1883.
+1704412038: New client connected from 172.20.0.1:45358 as iHatBackendServer (p5, c1, k15, u'admin').
+1704412495: Client admin closed its connection.
+1704412598: New client connected from ::ffff:172.20.0.1:41620 as admin (p2, c1, k60, u'admin').
+1704412655: Client admin closed its connection.
+1704412835: New client connected from ::ffff:172.20.0.1:35658 as admin (p2, c1, k60, u'admin').
+1704413252: Client admin closed its connection.
+1704452217: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1704452217: Client iHatBackendServer has exceeded timeout, disconnecting.
+1704452420: mosquitto version 2.0.18 terminating
+1704452420: Saving in-memory database to /mosquitto/data//mosquitto.db.

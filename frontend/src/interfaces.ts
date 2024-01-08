@@ -31,10 +31,10 @@ export interface Capacete {
   status: string,
   info?: string,
   trabalhador?: string
-  position?: Postition
+  position?: Position
 }
 
-export interface Postition{
+export interface Position{
     x: number,
     y: number,
     z: number

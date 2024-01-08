@@ -33,7 +33,7 @@ db.${OBRAS_COLLECTION}.insertMany( [
         "IdResponsavel":1,
         "Name":"Segunda Obra",
         "Mapa": [],
-        "Capacetes":[1,2],
+        "Capacetes":[1,2,3,4],
         "Status":"Em Curso"
     }
 ] )
@@ -50,6 +50,36 @@ db.${CAPACETES_COLLECTION}.insertMany( [
         "NCapacete":2,
         "Status":"Associado à Obra",
         "Trabalhador": null,
+    },
+    {
+        "NCapacete":3,
+        "Status":"Em Uso",
+        "Trabalhador":"a02",
+    },
+    {
+        "NCapacete":4,
+        "Status":"Em Uso",
+        "Trabalhador":"a03"
+    },
+    {
+        "NCapacete":5,
+        "Status":"Livre",
+        "Trabalhador":""
+    },
+    {
+        "NCapacete":6,
+        "Status":"Livre",
+        "Trabalhador":""
+    },
+    {
+        "NCapacete":7,
+        "Status":"Livre",
+        "Trabalhador":""
+    },
+    {
+        "NCapacete":8,
+        "Status":"Livre",
+        "Trabalhador":""
     }
 ] )
 

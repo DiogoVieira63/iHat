@@ -14,30 +14,39 @@ const obras = ref<Array<Obra>>([])
 const capacetes = ref<Array<Capacete>>([])
 const tab = ref('obras')
 const router = useRouter()
+const isLoaded = ref(false)
 
 const getCapacetes = () => {
     capacetes.value = []
-    CapaceteService.getCapacetes().then((answer) => {
+    return CapaceteService.getCapacetes().then((answer) => {
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
+        })
+        capacetes.value = capacetes.value.sort((a, b) => {
+            return a.nCapacete - b.nCapacete
         })
     })
 }
 
 const getObras = () => {
     obras.value = []
-    // enviar id de responsavel no get
-    ObraService.getObras().then((answer) => {
+    return ObraService.getObras().then((answer) => {
         answer.forEach((obra) => {
             obras.value.push(obra)
         })
+        obras.value = obras.value.sort(function (a, b) {
+        if (a.name < b.name) return -1;
+        else if (a.name > b.name) return 1;
+        else return 0;
     })
+    })
+    
 }
 
 
-onMounted(() => {
-    getCapacetes()
-    getObras()
+onMounted(async () => {
+    await Promise.all([getCapacetes(), getObras()])
+    isLoaded.value = true
 })
 
 const headers: ComputedRef<Array<Header>> = computed(() => {
@@ -63,10 +72,15 @@ function changePage(id: string) {
 
 <template>
     <PageLayout>
-        <v-container>
-            <v-sheet
+        <v-container >
+            <v-skeleton-loader
+                :loading="!isLoaded"
+                type="card, table"
+                >
+            <v-card
                 class="mx-auto"
                 max-width="1500px"
+                variant="text"
             >
                 <Lista
                     :list="tab == 'capacetes' ? capacetes : obras"
@@ -112,7 +126,8 @@ function changePage(id: string) {
                         </td>
                     </template>
                 </Lista>
-            </v-sheet>
+            </v-card>
+        </v-skeleton-loader>
         </v-container>
     </PageLayout>
 </template>

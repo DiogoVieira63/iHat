@@ -294,6 +294,23 @@ public class IHatController : ControllerBase{
         }
     }
 
+    //change estado capacete
+    [HttpPatch("helmets/{idCapacete}/newStatus")]
+    public async Task<IActionResult> ChangeStatusCapacete(string idCapacete, [FromBody] string newStatus){
+        Console.WriteLine("Change Status Capacete PATCH Request");
+
+        try
+        {
+            int nCapacete = Int32.Parse(idCapacete);
+            await _facade.ChangeStatusCapacete(nCapacete, newStatus);
+            return Ok(); // Retorna uma resposta de sucesso
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
+        }
+    }
+
 
 
 
@@ -326,7 +343,7 @@ public class IHatController : ControllerBase{
         }
     }
 
-    [HttpGet("helmetLivres")]
+    [HttpGet("helmets/free")]
     public async Task<ActionResult<List<Capacete>>> GetFreeHelmets(){
         Console.WriteLine("Get Free Helmets GET Request");
 

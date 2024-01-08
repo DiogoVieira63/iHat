@@ -1,6 +1,6 @@
 // Import the SignalR library
 import * as signalR from '@microsoft/signalr';
-import { type Log } from '@/interfaces';
+import type { Position, Log} from '@/interfaces';
 
 export class ObraSignalRService {
     connection : signalR.HubConnection
@@ -17,16 +17,24 @@ export class ObraSignalRService {
         // this.connection.on("updatelogs", (message) => {
         //     console.log("Received message:", message);
         // });
-
-        try {
-            this.connection.start().then(() => {
-            console.log("SignalR Connected.");
-            });
-        } catch (err) {
-            console.log(err);
-        }
+        // try {
+        //     this.connection.start().then(() => {
+        //     console.log("SignalR Connected.");
+        //     });
+        // } catch (err) {
+        //     console.log(err);
+        // }
     }
 
+
+    start(){
+        return this.connection.start().then(() => {
+            console.log("SignalR Connected.");
+        }
+        ).catch((err) => {
+            console.log(err);
+        });
+    }
 
     close(){
         this.connection.stop().then(() => {
@@ -34,20 +42,19 @@ export class ObraSignalRService {
         });
     }
 
-    //Pass the
-    updateCapacetePosition(func: Function){
+    updateCapacetePosition(callback: (capaceteId: number, position: Position) => void) {
         this.connection.on("UpdateSingleLocation", (message) => {
             const id = Object.keys(message)[0];
-            func(Number(id), message[id]);
+            callback(Number(id), message[id]);
         });
     }
 
-    updateLogs(func: Function){
-        this.connection.on("UpdateLogs", (message) => {
-            console.log("Received message:", message);
-            func(message);
-        });
-    }
+    // updateLogs(func: Function){
+    //     this.connection.on("UpdateLogs", (message) => {
+    //         console.log("Received message:", message);
+    //         func(message);
+    //     });
+    // }
 
     handleIncomingLogs(callback: (updatedLogs: Array<Log>) => void) {
         this.connection.on("updatelogs", (updatedLogs) => {

@@ -42,6 +42,7 @@ const taskName = ref('Tarefa')
 const addCapaceteTask = ref("")
 const mapList = ref<Array<Mapa>>([])
 const rangeMaps = ref<Array<{ x : number, y: number }>>([])
+const isLoaded = ref(false)
 
 const numberMaps = computed(() => {
     return mapList.value.length
@@ -112,7 +113,7 @@ const resetInputs = () => {
 }
 
 const getObra = () => {
-    ObraService.getOneObra(route.params.id.toString()).then((answer) => {
+    return ObraService.getOneObra(route.params.id.toString()).then((answer) => {
         if(answer.mapa) mapList.value = answer.mapa
         if(answer.name) title.value = answer.name
     })
@@ -120,25 +121,32 @@ const getObra = () => {
 
 const getCapacetesObra = () => {
     capacetes.value = []
-    ObraService.getCapacetesFromObra(idObra).then((answer) => {
+    return ObraService.getCapacetesFromObra(idObra).then((answer) => {
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
         })
     })
+
 }
 
 
-onMounted(() => {
-    const idObra = route.params.id as string
-    taskStore.setActive(idObra)
-    getObra()
+
+
+const setupMqtt = async() => {
+    //make this async 
     if (!mqttStore.mqtt) {
         mqtt = new MqttService(undefined)
         mqttStore.setMqtt(mqtt)
     } else {
         mqtt = mqttStore.mqtt as MqttService
     }
-    getCapacetesObra()
+}
+
+onMounted(async() => {
+    const idObra = route.params.id as string
+    taskStore.setActive(idObra)
+    await Promise.all([getObra(), getCapacetesObra(), setupMqtt()])
+    isLoaded.value = true
 })
 
 const updateCapacete = (capacete: Capacete) => {
@@ -288,33 +296,43 @@ const points = computed(() => {
 <template>
     <page-layout>
         <ObraLayout>
-            {{ inputs }}
             <template #map>
-                <h1 class="text-center text-h3">{{ title }}</h1>
-                <template v-for="(map, index) in mapList" :key="map.name">
-                    <map-editor 
-                        :active="index == page - 1" 
-                        :edit="true" 
-                        :svg="map.svg" 
-                        :zones="map.zonas"
-                        :capacetes-position="capacetes"
-                        :capacete-selected="selected"
-                        :isSelectingPosition="isSelectingPosition"
-                        :pointSelected = "points"
-                        @update:zones="map.zonas = $event"
-                        @selectCapacete="selectedCapacete"
-                        @update::capacete="updateCapacete($event)"
-                        @select-all="selectAll"
-                        @unselect-all="unselectAll"
-                        @selectPosition="selectPosition"
-                        @mapSize="setMapSize(index, $event)"
-                    ></map-editor>
-                </template>
-                <v-row class="d-flex justify-center mt-5" v-if="mapList.length > 1">
-                    <v-pagination v-model="page" :length="mapList.length" :total-visible="5" />
-                </v-row>
+                <h1 class="text-center text-h3 mb-2">{{ title }}</h1>
+                <v-skeleton-loader
+                    :loading="!isLoaded"
+                    type="card, image"
+                >
+                    <template v-for="(map, index) in mapList" :key="map.name">
+                        <map-editor 
+                            :active="index == page - 1" 
+                            :edit="true" 
+                            :svg="map.svg" 
+                            :zones="map.zonas"
+                            :capacetes-position="capacetes"
+                            :capacetes-selected="selected"
+                            :isSelectingPosition="isSelectingPosition"
+                            :pointSelected = "points"
+                            @update:zones="map.zonas = $event"
+                            @selectCapacete="selectedCapacete"
+                            @update::capacete="updateCapacete($event)"
+                            @select-all="selectAll"
+                            @unselect-all="unselectAll"
+                            @selectPosition="selectPosition"
+                            @mapSize="setMapSize(index, $event)"
+                        ></map-editor>
+                    </template>
+                    <v-row class="d-flex justify-center mt-5" v-if="mapList.length > 1">
+                        <v-pagination v-model="page" :length="mapList.length" :total-visible="5" />
+                    </v-row>
+                </v-skeleton-loader>
             </template>
             <template #content>
+                <v-skeleton-loader
+                    v-if="!isLoaded"
+                    type="card, table"
+                >
+                </v-skeleton-loader>
+                <div v-else>
                 <v-row class="d-flex justify-end my-2">
                     <v-btn
                         rounded="xl"
@@ -347,6 +365,8 @@ const points = computed(() => {
                     @edit="editTask"
                     @addCapaceteTask="changeAddCapaceteTask"
                 />
+            </div>
+
             </template>
         </ObraLayout>
     </page-layout>

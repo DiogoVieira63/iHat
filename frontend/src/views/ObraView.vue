@@ -2,7 +2,7 @@
 
 import Lista from '@/components/Lista.vue'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
-import { ref, onMounted, nextTick, onUnmounted } from 'vue'
+import { ref, onMounted, nextTick, onUnmounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import Confirmation from '@/components/Confirmation.vue'
@@ -10,7 +10,7 @@ import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
 import type { Capacete, Header, Log} from '@/interfaces'
 import {  ObraService } from '@/services/http'
-import type { Mapa, Postition} from '@/interfaces'
+import type { Mapa, Position} from '@/interfaces'
 import Map from '@/components/Map.vue'
 import LogsObra from '@/components/LogsObra.vue'
 import { ObraSignalRService } from '@/services/obraSignalR'
@@ -19,6 +19,7 @@ const router = useRouter()
 const route = useRoute()
 const title = ref('')
 const capacetes = ref<Array<Capacete>>([])
+const capacetesSelected = ref<number>()
 const list = ref<Array<Capacete>>([])
 const isEditing = ref(false)
 const textField = ref<HTMLInputElement | null>(null)
@@ -28,11 +29,8 @@ const mapList = ref<Array<Mapa>>([])
 const logs = ref<Array<Log>>([])
 const idObra: string = route.params.id.toString()
 const signalRService = ref<ObraSignalRService>(new ObraSignalRService(idObra))
+const isLoaded = ref(false)
 
-const updateLogs = (updatedLogs: Array<Log>) => {
-    console.log("Updating logs:", updatedLogs);
-    logs.value = updatedLogs// Assuming message is a log object
-};
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
@@ -58,7 +56,7 @@ const saveTitle = () => {
 };
 
 const getObra = () => {
-    ObraService.getOneObra(idObra).then((answer) => {
+    return ObraService.getOneObra(idObra).then((answer) => {
         if(answer.mapa) mapList.value = answer.mapa
         if(answer.name) title.value = answer.name
         if(answer.status) estadoObra.value = answer.status
@@ -67,16 +65,20 @@ const getObra = () => {
 
 const getCapacetesObra = () => {
     capacetes.value = []
-    ObraService.getCapacetesFromObra(idObra).then((answer) => {
+    return ObraService.getCapacetesFromObra(idObra).then((answer) => {
+        capacetes.value = []
         answer.forEach((capacete) => {
             capacetes.value.push(capacete)
         })
+        capacetes.value = capacetes.value.sort((a, b) => {
+            return a.nCapacete - b.nCapacete
+        })
+        list.value = capacetes.value
     })
-    list.value = capacetes.value
 }
 
 const getLogsObra = () => {
-    ObraService.getLogsObra(idObra).then((answer) => {
+    return ObraService.getLogsObra(idObra).then((answer) => {
         answer.forEach((log) => {
             logs.value.push(log)
         })
@@ -84,29 +86,58 @@ const getLogsObra = () => {
 }
 
 
+const getLastLocationObra = () =>{
+    return ObraService.getLocationCapacetes(idObra).then((answer) => {
+        Object.keys(answer).forEach((key) => {
+            const capacete = capacetes.value.find((capacete) => capacete.nCapacete === parseInt(key))
+            if (capacete) {
+                capacete.position = answer[key]
+            }
+        })
+    })
+
+}
+
+const updateCapacetePosition = (id : number, pos: Position) => {
+    capacetes.value = capacetes.value.map((item) => {
+        if (item.nCapacete === id) {
+            item.position = {
+                x: pos.x,
+                y: pos.y,
+                z: pos.z    
+            }
+            return item
+        }
+        return item
+    })
+}
+
+const updateLogs = (updatedLogs: Array<Log>) => {
+    console.log("Updating logs:", updatedLogs);
+    logs.value = updatedLogs
+};
+
+
+
+onMounted(async () => {
+    
+    await Promise.all([
+        getObra(), 
+        getCapacetesObra(), 
+        getLogsObra(), 
+        getLastLocationObra(), 
+        signalRService.value.start()
+    ])
+
+    
+    signalRService.value.updateCapacetePosition(updateCapacetePosition);
+    signalRService.value.handleIncomingLogs(updateLogs);
+    isLoaded.value = true
+});
+
 
 onUnmounted(() => {
     signalRService.value.close();
-});
-
-onMounted(() => {
-    signalRService.value.updateCapacetePosition((id : number, pos: Postition) => {
-        capacetes.value = capacetes.value.map((item) => {
-            if (item.nCapacete === id) {
-                item.position = {
-                    x: pos.x,
-                    y: pos.y,
-                    z: pos.z    
-                }
-                return item
-            }
-            return item
-        })
-    });
-    getLogsObra()
-    signalRService.handleIncomingLogs(updateLogs);
-    getObra();
-    getCapacetesObra();
 });
 
 const headers : Array<Header>= [
@@ -124,16 +155,6 @@ function removeCapacete(id: string) {
             console.error('Error updating title:', error);
         });
 }
-
-// onMounted(() => {
-//   const id = route.params.id
-//     getCapacetesFromObra(id);  
-// })
-
-
-// function removeCapacete(id: number) {
-//     list.value = list.value.filter((item) => item.nCapacete !== id)
-// }
 
 const changeEstadoCapacete = (row: { [key: string]: string }, value: string) => {
     row['status'] = value
@@ -164,12 +185,20 @@ const goToSimulador = () => {
     router.push(currentRoute.fullPath + '/simulador')
 }
 
+const selectCapacete = (idCapacete: number) => {
+    if (capacetesSelected.value === idCapacete) {
+        capacetesSelected.value = undefined
+    } else {
+        capacetesSelected.value = idCapacete
+    }
+}
+
 </script>
 <template>
     <PageLayout>
         <ObraLayout>
             <template #map>
-                <v-row align="center" justify="start">
+                <v-row align="center" justify="start" class="mb-2">
                     <v-col cols="auto" v-bind:offset-lg="4">
                         <div class="text-h4 text-lg-h3" v-if="!isEditing">
                             {{ title }}
@@ -190,12 +219,20 @@ const goToSimulador = () => {
                             @click="toggleEditing"
                         ></v-btn>
                     </v-col>
+                </v-row>
+                <v-skeleton-loader
+                    :loading="!isLoaded"
+                    type="card, image"
+                    height="65vh"
+                >
                     <Map
                         :capacetesPosition="capacetes"
+                        :capacetesSelected="capacetesSelected"
                         :mapList="mapList"
                         @update="getObra"
+                        @selectCapacete="selectCapacete"
                     ></Map>
-                </v-row>
+                </v-skeleton-loader>
             </template>
             <template #content>
                 <v-row class="d-flex align-center">
@@ -241,24 +278,34 @@ const goToSimulador = () => {
                         Simulador
                     </v-btn>
                 </v-row>
-                <Lista
-                    :list="list"
-                    :headers="headers"
+                <v-skeleton-loader
+                    :loading="!isLoaded"
+                    type="card, table"
                 >
-                    <template v-slot:tabs>
-                        <p class="text-md-h6 ml-2 text-subtitle-1">Lista de Capacetes</p>
-                    </template>
-                    <template #row="{ row }">
-                        <RowObra
-                            :row="row"
-                            @removeCapacete="(nCapacete) => removeCapacete(nCapacete)"
-                            @changeStatus="(value) => changeEstadoCapacete(row, value)"
-                        />
-                    </template>
-                    <template v-slot:add>
-                        <FormCapaceteObra />
-                    </template>
-                </Lista>
+                    <Lista
+                        :list="list"
+                        :headers="headers"
+                        :selected="{
+                                'key': 'nCapacete',
+                                'value': capacetesSelected
+                            }"
+                    >
+                        <template v-slot:tabs>
+                            <p class="text-md-h6 ml-2 text-subtitle-1">Lista de Capacetes</p>
+                        </template>
+                        <template #row="{ row }">
+                            <RowObra
+                                :selected="capacetesSelected == row['nCapacete']"
+                                :row="row"
+                                @removeCapacete="(nCapacete) => removeCapacete(nCapacete)"
+                                @changeStatus="(value) => changeEstadoCapacete(row, value)"
+                            />
+                        </template>
+                        <template v-slot:add>
+                            <FormCapaceteObra :idObra="idObra" @update="getCapacetesObra"/>
+                        </template>
+                    </Lista>
+                </v-skeleton-loader>
             </template>
             <template #logs>
                 <LogsObra :logs="logs"></LogsObra>

@@ -24,6 +24,10 @@ const props = defineProps({
     capacetesPosition: {
         type: Array as PropType<Array<Capacete>>,
         required: true,
+    },
+    capacetesSelected: {
+        type: Number,
+        default: -1,
     }
 })
 
@@ -38,7 +42,7 @@ const saveEdit = async (confirmation: boolean) => {
 
 
 const addMapa = ref(false)
-const emit = defineEmits(['update'])
+const emit = defineEmits(['update', 'selectCapacete'])
 
 const capacetesMap = computed(() => {
     return props.capacetesPosition.filter((capacete) => {
@@ -60,8 +64,10 @@ const capacetesMap = computed(() => {
                 :svg="map.svg" 
                 :zones="map.zonas"
                 :capacetes-position="capacetesMap"
+                :capacetesSelected="[props.capacetesSelected]"
                 :haveToolbar = "true"
                 @update:zones="map.zonas = $event"
+                @selectCapacete="emit('selectCapacete', $event)"
             ></map-editor>
         </template> 
         <v-row class="my-4">
