@@ -10,12 +10,12 @@ namespace iHat.Model.Zonas
         [BsonRepresentation(BsonType.ObjectId)] // permite passar uma variável do tipo ObjectId como string
         public string? Id { get; set; }
         public int IdZona { get; set; }
-        public List<Tuple<double, double>>? Zonas { get; set; } //GeoJSON 
+        public List<Point>? Zonas { get; set; } //GeoJSON 
 
         public ZonasRisco(int idZona)
         {
             IdZona = idZona;
-            Zonas = new List<Tuple<double, double>>();
+            Zonas = new List<Point>();
         }
 
         /* algoritmo de Ray Casting
@@ -27,10 +27,12 @@ namespace iHat.Model.Zonas
             int n = Zonas!.Count;
             for (int i = 0, j = n - 1; i < n; j = i++)
             {
-                if (((Zonas[i].Item2 <= y && y < Zonas[j].Item2) || (Zonas[j].Item2 <= y && y < Zonas[i].Item2)) &&
-                    (x < (Zonas[j].Item1 - Zonas[i].Item1) * (y - Zonas[i].Item2) / (Zonas[j].Item2 - Zonas[i].Item2) + Zonas[i].Item1))
+                if (((Zonas[i].Y <= y) && (y < Zonas[j].Y)) || ((Zonas[j].Y <= y) && (y < Zonas[i].Y)))
                 {
-                    count++;
+                    if (x > (Zonas[j].X - Zonas[i].X) * (y - Zonas[i].Y) / (Zonas[j].Y - Zonas[i].Y) + Zonas[i].X)
+                    {
+                        count++;
+                    }
                 }
             }
             return count % 2 == 1;
