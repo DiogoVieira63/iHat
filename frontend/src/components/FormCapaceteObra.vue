@@ -1,13 +1,45 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import type { Capacete } from '@/interfaces';
+import {  CapaceteService, ObraService } from '@/services/http'
+
+const props = defineProps({
+    idObra: {
+        type: String,
+        required: true
+    }
+})
 
 const id = ref([])
 const dialogCapacete = ref(false)
+const capacetesLivres = ref<Array<Capacete>>([])
 
-const items = ['Capacete 1', 'Capacete 2', 'Capacete 3']
+const getCapacetesLivres = () => {
+    capacetesLivres.value = []
+    CapaceteService.getCapacetesLivres().then((answer) => {
+        answer.forEach((capacete) => {
+            capacetesLivres.value.push(capacete)
+        })
+    })
+}
+
+// onMounted( () => {
+//     getCapacetesLivres()
+// });
+
+const emit = defineEmits(['update'])
 
 const submit = () => {
-    alert(JSON.stringify(id.value, null, 2))
+    id.value.forEach(idCapacete => {
+        ObraService.addCapaceteToObra(props.idObra, idCapacete)
+            .then(() => {
+                emit('update')
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        })
+    // alert(JSON.stringify(id.value, null, 2))
     id.value = []
     dialogCapacete.value = false
 }
@@ -15,6 +47,13 @@ const submit = () => {
 const close = () => {
     id.value = []
     dialogCapacete.value = false
+}
+
+const capacetesLivresWithTitle = () => {
+    return capacetesLivres.value.map(item => ({
+        ...item,
+        title: `Capacete ${item.nCapacete}`
+    }));
 }
 </script>
 
@@ -33,6 +72,7 @@ const close = () => {
                     icon="mdi-plus"
                     rounded="xl"
                     class="ma-1"
+                    @click="getCapacetesLivres"
                 >
                 </v-btn>
             </template>
@@ -55,7 +95,7 @@ const close = () => {
                     <v-card-text>
                         <v-autocomplete
                             v-model="id"
-                            :items="items"
+                            :items="capacetesLivresWithTitle()"
                             auto-select-first
                             density="comfortable"
                             menu-icon=""
@@ -69,6 +109,8 @@ const close = () => {
                             chips
                             transition="false"
                             variant="solo"
+                            item-title="title"
+                            item-value="nCapacete"
                         ></v-autocomplete>
                         <v-btn
                             type="submit"

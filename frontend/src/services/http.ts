@@ -134,6 +134,15 @@ export class CapaceteService {
             .catch((error) => console.error('Error:', error))
     }
 
+    static getCapacetesLivres(): Promise<Capacete[]> {
+        return axios
+            .get(`${url}/helmets/free`)
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => console.error('Error:', error))
+    }
+
     static getOneCapacete(id: string): Promise<Capacete> {
         return axios
             .get(`${url}/helmets/${id}`)

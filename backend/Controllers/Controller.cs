@@ -326,7 +326,7 @@ public class IHatController : ControllerBase{
         }
     }
 
-    [HttpGet("helmetLivres")]
+    [HttpGet("helmets/free")]
     public async Task<ActionResult<List<Capacete>>> GetFreeHelmets(){
         Console.WriteLine("Get Free Helmets GET Request");
 
