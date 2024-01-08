@@ -20,6 +20,7 @@ const getCapacetesLivres = () => {
         answer.forEach((capacete) => {
             capacetesLivres.value.push(capacete)
         })
+        capacetesLivresWithTitle()
     })
 }
 
@@ -93,7 +94,7 @@ const capacetesLivresWithTitle = () => {
                     <v-card-text>
                         <v-autocomplete
                             v-model="id"
-                            :items="capacetesLivresWithTitle()"
+                            :items="capacetesLivres"
                             auto-select-first
                             density="comfortable"
                             menu-icon=""

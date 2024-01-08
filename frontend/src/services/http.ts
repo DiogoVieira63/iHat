@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Obra, Capacete, Log, Position } from '@/interfaces'
+import type { Obra, Capacete, Log, Position, Zone} from '@/interfaces'
 const url = `http://localhost:5069/ihat`
 
 // Obras
@@ -121,6 +121,17 @@ export class ObraService {
                 throw new Error('Error')
             })
     }
+
+    static updateZonasRisco(idObra : string, idMapa : string, zonas : Array<Zone> ){
+        return axios
+            .post(`${url}/construction/${idObra}/map/${idMapa}/zones`, zonas, {headers: {'Content-Type': 'application/json',}})
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => console.error('Error:', error));
+
+    }
+
     
 }
 
@@ -164,4 +175,14 @@ export class CapaceteService {
                 console.error('Error in Axios')
             })
     }
+
+    static changeEstadoCapacete(idCapacete: number, state: string): Promise<void> {
+        console.log("Change Status",idCapacete,state)
+        return axios.patch(`${url}/helmets/${idCapacete}/newStatus`, state, {headers: {'Content-Type': 'application/json',}})
+        .then((response) => {
+            return response.data
+        })
+        .catch((error) => console.error('Error:', error));
+        }
+
 }

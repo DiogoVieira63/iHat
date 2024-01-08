@@ -28,7 +28,7 @@ function changeStatus(confirmation: boolean) {
 }
 
 function newStatus(Status: string) {
-    return Status === 'Livre' ? 'Não Operacional' : 'Livre'
+    return Status === 'Não Operacional' ? 'Livre' : 'Não Operacional'
 }
 
 function removeCapacete(confirmation: boolean) {
@@ -65,7 +65,7 @@ function isInUso() {
             <template v-slot:message>
                 Tem a certeza que pretende alterar o Status do
                 <strong> Capacete {{ props.row.nCapacete }}</strong> de
-                <span class="font-weight-bold text-red">{{ props.row['status'] }}</span> para
+                <span class="font-weight-bold text-red">{{ props.row['status'] == 'Associado à Obra' ? 'Livre' : props.row['status']  }}</span> para
                 <span class="font-weight-bold text-green">{{ newStatus(props.row['status']) }}</span
                 >?
             </template>

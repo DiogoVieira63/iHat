@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, toRaw} from 'vue'
 import MapEditor from '@/components/MapEditor.vue'
 import Confirmation from '@/components/Confirmation.vue'
 import { useDisplay } from 'vuetify'
@@ -7,6 +7,7 @@ import FormMapa from './FormMapa.vue'
 import type { Mapa, Capacete } from '@/interfaces'
 import { useRoute } from 'vue-router'
 import  type { PropType } from 'vue'
+import { ObraService } from '@/services/http'
 
 const route = useRoute()
 const { mdAndDown } = useDisplay()
@@ -33,7 +34,17 @@ const props = defineProps({
 
 const saveEdit = async (confirmation: boolean) => {
     if (confirmation) {
-        console.log('Save')
+        const zonas = props.mapList.map((map) => {
+            return {
+                id: map.id,
+                zonas: map.zonas
+            }
+        })
+        for (const zona of zonas) {
+            await ObraService.updateZonasRisco(id, zona.id, zona.zonas).then(() => {
+                console.log('Zonas atualizadas', zona.id,toRaw(zona.zonas))
+            })
+        }
     } else {
         console.log('Cancel')
     }

@@ -9,7 +9,7 @@ import Confirmation from '@/components/Confirmation.vue'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
 import type { Capacete, Header, Log} from '@/interfaces'
-import {  ObraService } from '@/services/http'
+import {  CapaceteService, ObraService } from '@/services/http'
 import type { Mapa, Position} from '@/interfaces'
 import Map from '@/components/Map.vue'
 import LogsObra from '@/components/LogsObra.vue'
@@ -113,7 +113,6 @@ const updateCapacetePosition = (id : number, pos: Position) => {
 }
 
 const updateLogs = (updatedLogs: Array<Log>) => {
-    console.log("Updating logs:", updatedLogs);
     logs.value = updatedLogs
 };
 
@@ -156,8 +155,14 @@ function removeCapacete(id: string) {
         });
 }
 
-const changeEstadoCapacete = (row: { [key: string]: string }, value: string) => {
-    row['status'] = value
+const changeEstadoCapacete = async (row: { [key: string]: string }, value: string) => {
+    await CapaceteService.changeEstadoCapacete(Number(row['nCapacete']), value)
+        .then(() => {
+            getCapacetesObra()
+        })
+        .catch((error) => {
+            console.error('Error changing state:', error);
+        });
 }
 
 const newEstadoPossible = (value: string) => {
