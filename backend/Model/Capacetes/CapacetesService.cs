@@ -8,7 +8,9 @@ public class CapacetesService: ICapacetesService{
 
     public readonly IMongoCollection<Capacete> _capaceteCollection;
 
-    public CapacetesService(IOptions<DatabaseSettings> iHatDatabaseSettings){
+    private readonly ILogger<CapacetesService> _logger;
+
+    public CapacetesService(IOptions<DatabaseSettings> iHatDatabaseSettings, ILogger<CapacetesService> logger ){
         var mongoClient = new MongoClient(
             iHatDatabaseSettings.Value.ConnectionString);
 
@@ -17,6 +19,8 @@ public class CapacetesService: ICapacetesService{
 
         _capaceteCollection = mongoDatabase.GetCollection<Capacete>(
             iHatDatabaseSettings.Value.CapacetesCollectionName);
+
+        _logger = logger;
     }
 
     public async Task<List<Capacete>> GetAll(){
