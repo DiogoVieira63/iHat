@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted , onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 
-const route = useRoute()
+import { CapaceteSignalRService } from '@/services/capaceteSignalR'
+import type { MensagemCapacete } from '@/interfaces';
 
+const route = useRoute()
 const routeId = ref('')
 const liveData = ref([
     { type: 'heart-rate', value: 80, severity: 'normal' },
@@ -11,12 +13,30 @@ const liveData = ref([
     { type: 'gases', value: 'Moderate', severity: 'slightly_bad' },
     { type: 'fall-detection', value: 'Yes', severity: 'bad' }
 ])
+const idCapacete: string = route.params.idCapacete.toString()
+const signalRService = ref<CapaceteSignalRService>(new CapaceteSignalRService(idCapacete))
 
-onMounted(() => {
+//provisorio
+const updateCapaceteData = (mensagemCapacete: MensagemCapacete) => {
+    console.log(mensagemCapacete)
+}
+
+onMounted(async () => {
     if (typeof route.params.id === 'string') {
         routeId.value = route.params.id
     }
-})
+
+    await Promise.all([
+        signalRService.value.start()
+    ])
+
+    signalRService.value.updateCapaceteData(updateCapaceteData);
+});
+
+onUnmounted(() => {
+    signalRService.value.close();
+
+});
 
 const getIcon = (type: string) => {
     switch (type) {

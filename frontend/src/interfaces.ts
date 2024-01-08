@@ -34,6 +34,29 @@ export interface Capacete {
   position?: Position
 }
 
+export interface ValueObject {
+    Value: number;
+}
+
+export interface Gases {
+    Metano: number;
+    MonoxidoCarbono: number;
+}
+
+export interface MensagemCapacete {
+    id?: string 
+    timestamp: Date, 
+    nCapacete: number,
+    type: string,
+    fall: boolean,
+    bodytemperature: ValueObject,
+    heartrate: ValueObject,
+    proximity: number,
+    position: Position,
+    location: Position,
+    gases: Gases,
+  }
+
 export interface Position{
     x: number,
     y: number,
