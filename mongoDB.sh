@@ -60,6 +60,26 @@ db.${CAPACETES_COLLECTION}.insertMany( [
         "NCapacete":4,
         "Status":"Em Uso",
         "Trabalhador":"a03"
+    },
+    {
+        "NCapacete":5,
+        "Status":"Livre",
+        "Trabalhador":""
+    },
+    {
+        "NCapacete":6,
+        "Status":"Livre",
+        "Trabalhador":""
+    },
+    {
+        "NCapacete":7,
+        "Status":"Livre",
+        "Trabalhador":""
+    },
+    {
+        "NCapacete":8,
+        "Status":"Livre",
+        "Trabalhador":""
     }
 ] )
 

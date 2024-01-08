@@ -23,26 +23,20 @@ const getCapacetesLivres = () => {
     })
 }
 
-// onMounted( () => {
-//     getCapacetesLivres()
-// });
-
 const emit = defineEmits(['update'])
 
-const submit = () => {
-    id.value.forEach(idCapacete => {
-        ObraService.addCapaceteToObra(props.idObra, idCapacete)
-            .then(() => {
-                emit('update')
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-        })
-    // alert(JSON.stringify(id.value, null, 2))
-    id.value = []
-    dialogCapacete.value = false
-}
+const submit = async () => {
+    try {
+        for (const idCapacete of id.value) {
+            await ObraService.addCapaceteToObra(props.idObra, idCapacete);
+        }
+        emit('update');
+        id.value = [];
+        dialogCapacete.value = false;
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 const close = () => {
     id.value = []
@@ -50,10 +44,14 @@ const close = () => {
 }
 
 const capacetesLivresWithTitle = () => {
-    return capacetesLivres.value.map(item => ({
+    capacetesLivres.value = capacetesLivres.value.map(item => ({
         ...item,
         title: `Capacete ${item.nCapacete}`
     }));
+    capacetesLivres.value = capacetesLivres.value.sort((a, b) => {
+        return a.nCapacete - b.nCapacete
+    })
+    return capacetesLivres.value
 }
 </script>
 
