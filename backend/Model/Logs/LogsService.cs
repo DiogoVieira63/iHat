@@ -31,4 +31,8 @@ public class LogsService: ILogsService{
     public async Task Add(Log log){
         await _logsCollection.InsertOneAsync(log);
     }
+
+    public async Task<List<Log>> GetLogsOfObraByDate(string idObra, DateTime date){
+        return await _logsCollection.Find(x => x.IdObra == idObra && x.Timestamp == date.Date).ToListAsync();
+    }
 }
