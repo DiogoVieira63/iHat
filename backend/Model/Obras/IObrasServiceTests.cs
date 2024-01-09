@@ -97,4 +97,470 @@ public class ObrasServiceTests{
             obra.Equals(firstElement);
         }
     }
+
+    [Fact]
+    public async void Test_RemoveObraByIdAsync(){
+        var idResponsavel1 = 1;
+        var nameObra1 = "Obra5";
+
+        var idResponsavel2 = 2;
+        var nameObra2 = "Obra6";
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+        
+        // Act - Adicionar uma Obra
+        var obra1 = await obraService.AddObra(nameObra1, idResponsavel1, new List<string>());
+        var obra2 = await obraService.AddObra(nameObra2, idResponsavel2, new List<string>());
+
+        // Assert - Verificar se a Obra foi adicionada
+        var allObras = await obraService.GetObrasOfResponsavel(idResponsavel1);
+        var addedObra = allObras.Find(obra => obra.Name == nameObra1) != null;
+        addedObra.Equals(true);
+
+        // Act - Remover a Obra
+        await obraService.RemoveObraByIdAsync(obra1);
+        // Assert - Verificar se a Obra foi removida
+        allObras = await obraService.GetObrasOfResponsavel(idResponsavel1);
+        addedObra = allObras.Find(obra => obra.Name == nameObra1) != null;
+        addedObra.Equals(false);
+    }
+
+    [Fact]
+    public async void Test_RemoveObraByIdAsync_FailBecauseTheObraDoesNotExist(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+
+        // Assert - Verificar se a Obra foi adicionada
+        var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        addedObra.Equals(true);
+
+        // Act - Remover a Obra
+        await obraService.RemoveObraByIdAsync(obra);
+        // Assert - Verificar se a Obra foi removida
+        allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        addedObra.Equals(false);
+
+        // Act - Remover a Obra
+        Action act = () => obraService.RemoveObraByIdAsync(obra);
+        
+        //assert
+        Exception exception = Assert.Throws<Exception>(act);
+        //The thrown exception can be used for even more detailed assertions.
+        Assert.Equal("Construction with this id does not exist.", exception.Message);   
+    }
+
+    [Fact]
+    public async void Test_AlteraEstadoObra(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+
+        // Assert - Verificar se a Obra foi adicionada
+        var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        addedObra.Equals(true);
+
+        // Act - Alterar o estado da Obra
+        await obraService.AlteraEstadoObra(obra, "Cancelada");
+        // Assert - Verificar se o estado da Obra foi alterado
+        allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var obraAlterada = allObras.Find(obra => obra.Name == nameObra && obra.Status == "Cancelada") != null;
+        obraAlterada.Equals(true);
+    }
+
+    [Fact]
+    public async void Test_AlteraEstadoObra_FailBecauseTheObraDoesNotExist(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+
+        // Assert - Verificar se a Obra foi adicionada
+        var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        addedObra.Equals(true);
+
+        // Act - Alterar o estado da Obra
+        await obraService.AlteraEstadoObra(obra, "Cancelada");
+        // Assert - Verificar se o estado da Obra foi alterado
+        allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var obraAlterada = allObras.Find(obra => obra.Name == nameObra && obra.Status == "Cancelada") != null;
+        obraAlterada.Equals(true);
+
+        // Act - Alterar o estado da Obra
+        Action act = () => obraService.AlteraEstadoObra(obra, "Cancelada");
+        
+        //assert
+        Exception exception = Assert.Throws<Exception>(act);
+        //The thrown exception can be used for even more detailed assertions.
+        Assert.Equal("Construction with this id does not exist.", exception.Message);   
+    }
+
+    [Fact]
+    public async void Test_UpdateNomeObra(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var newNameObra = "Obra6";
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+
+        // Assert - Verificar se a Obra foi adicionada
+        var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        addedObra.Equals(true);
+
+        // Act - Alterar o nome da Obra
+        await obraService.UpdateNomeObra(obra, newNameObra);
+        // Assert - Verificar se o nome da Obra foi alterado
+        allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var obraAlterada = allObras.Find(obra => obra.Name == newNameObra) != null;
+        obraAlterada.Equals(true);
+    }
+
+    [Fact]
+    public async void Test_UpdateNomeObra_FailBecauseTheObraDoesNotExist(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var newNameObra = "Obra6";
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+
+        // Assert - Verificar se a Obra foi adicionada
+        var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        addedObra.Equals(true);
+
+        // Act - Alterar o nome da Obra
+        await obraService.UpdateNomeObra(obra, newNameObra);
+        // Assert - Verificar se o nome da Obra foi alterado
+        allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var obraAlterada = allObras.Find(obra => obra.Name == newNameObra) != null;
+        obraAlterada.Equals(true);
+
+        // Act - Alterar o nome da Obra
+        Action act = () => obraService.UpdateNomeObra(obra, newNameObra);
+        
+        //assert
+        Exception exception = Assert.Throws<Exception>(act);
+        //The thrown exception can be used for even more detailed assertions.
+        Assert.Equal("Construction with this id does not exist.", exception.Message);   
+    }
+
+    [Fact]
+    public async void Test_GetObraWithCapaceteId(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var idCapacete = 1;
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+        await obraService.AddCapaceteToObra(idCapacete, obra);
+
+        // Assert - Verificar se a Obra foi adicionada
+        var obraWithCapacete = await obraService.GetObraWithCapaceteId(idCapacete);
+        obraWithCapacete.Equals(obra);
+    }
+
+    [Fact]
+    public async void Test_GetObraWithCapaceteId_FailBecauseTheObraDoesNotExist(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var idCapacete = 1;
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+        await obraService.AddCapaceteToObra(idCapacete, obra);
+
+        // Assert - Verificar se a Obra foi adicionada
+        var obraWithCapacete = await obraService.GetObraWithCapaceteId(idCapacete);
+        obraWithCapacete.Equals(obra);
+
+        // Act - Adicionar uma Obra
+        Action act = () => obraService.GetObraWithCapaceteId(idCapacete);
+        
+        //assert
+        Exception exception = Assert.Throws<Exception>(act);
+        //The thrown exception can be used for even more detailed assertions.
+        Assert.Equal("Construction with this capacete does not exist.", exception.Message);   
+    }
+
+    [Fact]
+    public async void Test_GetAllCapacetesOfObra(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var idCapacete1 = 1;
+        var idCapacete2 = 2;
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+        await obraService.AddCapaceteToObra(idCapacete1, obra);
+        await obraService.AddCapaceteToObra(idCapacete2, obra);
+
+        // Assert - Verificar se a Obra foi adicionada
+        var allCapacetes = await obraService.GetAllCapacetesOfObra(obra);
+        var capacete1 = allCapacetes.Find(capacete => capacete == idCapacete1) != null;
+        var capacete2 = allCapacetes.Find(capacete => capacete == idCapacete2) != null;
+        capacete1.Equals(true);
+        capacete2.Equals(true);
+    }
+
+    [Fact]
+    public async void Test_GetAllCapacetesOfObra_FailBecauseTheObraDoesNotExist(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var idCapacete1 = 1;
+        var idCapacete2 = 2;
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+        await obraService.AddCapaceteToObra(idCapacete1, obra);
+        await obraService.AddCapaceteToObra(idCapacete2, obra);
+
+        // Assert - Verificar se a Obra foi adicionada
+        var allCapacetes = await obraService.GetAllCapacetesOfObra(obra);
+        var capacete1 = allCapacetes.Find(capacete => capacete == idCapacete1) != null;
+        var capacete2 = allCapacetes.Find(capacete => capacete == idCapacete2) != null;
+        capacete1.Equals(true);
+        capacete2.Equals(true);
+
+        // Act - Adicionar uma Obra
+        Action act = () => obraService.GetAllCapacetesOfObra(obra);
+        
+        //assert
+        Exception exception = Assert.Throws<Exception>(act);
+        //The thrown exception can be used for even more detailed assertions.
+        Assert.Equal("Construction with this id does not exist.", exception.Message);   
+    }
+
+    [Fact]
+    public async void Test_CheckIfObraExists(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+
+        // Assert - Verificar se a Obra foi adicionada
+        var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        addedObra.Equals(true);
+
+        // Act - Verificar se a Obra existe
+        var obraExists = await obraService.CheckIfObraExists(allObras[0].Id!);
+        obraExists.Equals(true);
+    }
+
+    [Fact]
+    public async void Test_CheckIfObraExists_FailBecauseTheObraDoesNotExist(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+
+        // Act - Adicionar uma Obra
+        await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+
+        // Assert - Verificar se a Obra foi adicionada
+        var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
+        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        addedObra.Equals(true);
+
+        // Act - Verificar se a Obra existe
+        var obraExists = await obraService.CheckIfObraExists(allObras[0].Id!);
+        obraExists.Equals(true);
+
+        // Act - Verificar se a Obra existe
+        Action act = () => obraService.CheckIfObraExists(allObras[0].Id!);
+        
+        //assert
+        Exception exception = Assert.Throws<Exception>(act);
+        //The thrown exception can be used for even more detailed assertions.
+        Assert.Equal("Construction with this id does not exist.", exception.Message);   
+    }
+
+    [Fact]
+    public async void Test_DeleteCapaceteToObra(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var idCapacete1 = 1;
+        var idCapacete2 = 2;
+        var capacetesInicialmenteNaObra = new List<int>{idCapacete1, idCapacete2};
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+        
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+        await obraService.AddCapaceteToObra(idCapacete1, obra);
+        await obraService.AddCapaceteToObra(idCapacete2, obra);
+        // Assert - Remover um Capacete da Obra
+        await obraService.DeleteCapaceteToObra(idCapacete1, obra);
+        // Assert - Verificar se o Capacete foi removido da Obra
+        var allCapacetes = await obraService.GetAllCapacetesOfObra(obra);
+        var capacete1 = allCapacetes.Find(capacete => capacete == idCapacete1) != null;
+        var capacete2 = allCapacetes.Find(capacete => capacete == idCapacete2) != null;
+        capacete1.Equals(false);
+        capacete2.Equals(true);
+
+    }
+
+    [Fact]
+    public async void Test_DeleteCapaceteToObra_FailBecauseTheObraDoesNotExist(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var idCapacete1 = 1;
+        var idCapacete2 = 2;
+        var capacetesInicialmenteNaObra = new List<int>{idCapacete1, idCapacete2};
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+        
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+        await obraService.AddCapaceteToObra(idCapacete1, obra);
+        await obraService.AddCapaceteToObra(idCapacete2, obra);
+        // Assert - Remover um Capacete da Obra
+        await obraService.DeleteCapaceteToObra(idCapacete1, obra);
+        // Assert - Verificar se o Capacete foi removido da Obra
+        var allCapacetes = await obraService.GetAllCapacetesOfObra(obra);
+        var capacete1 = allCapacetes.Find(capacete => capacete == idCapacete1) != null;
+        var capacete2 = allCapacetes.Find(capacete => capacete == idCapacete2) != null;
+        capacete1.Equals(false);
+        capacete2.Equals(true);
+
+        // Act - Remover um Capacete da Obra
+        Action act = () => obraService.DeleteCapaceteToObra(idCapacete1, obra);
+        
+        //assert
+        Exception exception = Assert.Throws<Exception>(act);
+        //The thrown exception can be used for even more detailed assertions.
+        Assert.Equal("Construction with this id does not exist.", exception.Message);   
+    }
+
+    [Fact]
+    public async void Test_UpdateZonasRiscoObra(){
+
+    }
+
+    [Fact]
+    public async void Test_AddListaMapaToObra(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var mapas = new List<string>{"Mapa1", "Mapa2"};
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+        
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+        // Assert - Adicionar uma lista de mapas à Obra
+        var mapasAdicionados = await obraService.AddListaMapaToObra(obra, mapas);
+        // Assert - Verificar se os mapas foram adicionados à Obra
+        var allMapas = await obraService.GetConstructionById(obra);
+        var mapa1 = allMapas.Mapa.Find(mapa => mapa == mapas[0]) != null;
+        var mapa2 = allMapas.Mapa.Find(mapa => mapa == mapas[1]) != null;
+        mapa1.Equals(true);
+        mapa2.Equals(true);
+    }
+
+    [Fact]
+    public async void Test_AddListaMapaToObra_FailBecauseTheObraDoesNotExist(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var mapas = new List<string>{"Mapa1", "Mapa2"};
+
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+        
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
+        // Assert - Adicionar uma lista de mapas à Obra
+        var mapasAdicionados = await obraService.AddListaMapaToObra(obra, mapas);
+        // Assert - Verificar se os mapas foram adicionados à Obra
+        var allMapas = await obraService.GetConstructionById(obra);
+        var mapa1 = allMapas.Mapa.Find(mapa => mapa == mapas[0]) != null;
+        var mapa2 = allMapas.Mapa.Find(mapa => mapa == mapas[1]) != null;
+        mapa1.Equals(true);
+        mapa2.Equals(true);
+
+        // Act - Adicionar uma lista de mapas à Obra
+        Action act = () => obraService.AddListaMapaToObra(obra, mapas);
+        
+        //assert
+        Exception exception = Assert.Throws<Exception>(act);
+        //The thrown exception can be used for even more detailed assertions.
+        Assert.Equal("Construction with this id does not exist.", exception.Message);   
+    }
 }
