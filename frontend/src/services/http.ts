@@ -122,9 +122,10 @@ export class ObraService {
             })
     }
 
-    static updateZonasRisco(idObra : string, idMapa : string, zonas : Array<Zone> ){
+    static updateZonasRisco(idObra : string, idMapa : string, zonas : any ){
+        console.log("Zonas", zonas)
         return axios
-            .post(`${url}/construction/${idObra}/map/${idMapa}/zones`, zonas, {headers: {'Content-Type': 'application/json',}})
+            .patch(`${url}/constructions/${idObra}/map/${idMapa}/zonas`, zonas, {headers: {'Content-Type': 'application/json',}})
             .then((response) => {
                 return response.data
             })

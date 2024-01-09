@@ -36,13 +36,17 @@ const saveEdit = async (confirmation: boolean) => {
     if (confirmation) {
         const zonas = props.mapList.map((map) => {
             return {
-                id: map.id,
-                zonas: map.zonas
+                idMapa: map.id,
+                zonas: map.zonas.map((zona) => {
+                    return {
+                        idZona: zona.id,
+                        zonas: toRaw(zona.points),
+                }})
             }
         })
         for (const zona of zonas) {
-            await ObraService.updateZonasRisco(id, zona.id, zona.zonas).then(() => {
-                console.log('Zonas atualizadas', zona.id,toRaw(zona.zonas))
+            await ObraService.updateZonasRisco(id, zona.idMapa, zona.zonas).then(() => {
+                console.log('Zonas atualizadas', zona.idMapa,toRaw(zona.zonas))
             })
         }
     } else {
