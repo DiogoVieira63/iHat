@@ -8,8 +8,10 @@ namespace iHat.Model.Logs;
 public class LogsService: ILogsService{
 
     public readonly IMongoCollection<Log> _logsCollection;
+
+    private readonly ILogger<LogsService> _logger;
     
-    public LogsService(IOptions<DatabaseSettings> iHatDatabaseSettings){
+    public LogsService(IOptions<DatabaseSettings> iHatDatabaseSettings, ILogger<LogsService> logger){
         var mongoClient = new MongoClient(
             iHatDatabaseSettings.Value.ConnectionString);
 
@@ -18,6 +20,8 @@ public class LogsService: ILogsService{
 
         _logsCollection = mongoDatabase.GetCollection<Log>(
             iHatDatabaseSettings.Value.LogsCollectionName);
+
+        _logger = logger;
     }
 
     public async Task<List<Log>> GetLogsOfObra(string idObra){

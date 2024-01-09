@@ -13,17 +13,6 @@ export class ObraSignalRService {
               transport: signalR.HttpTransportType.WebSockets
             })
             .build();
-
-        // this.connection.on("updatelogs", (message) => {
-        //     console.log("Received message:", message);
-        // });
-        // try {
-        //     this.connection.start().then(() => {
-        //     console.log("SignalR Connected.");
-        //     });
-        // } catch (err) {
-        //     console.log(err);
-        // }
     }
 
 
@@ -49,15 +38,8 @@ export class ObraSignalRService {
         });
     }
 
-    // updateLogs(func: Function){
-    //     this.connection.on("UpdateLogs", (message) => {
-    //         console.log("Received message:", message);
-    //         func(message);
-    //     });
-    // }
-
     handleIncomingLogs(callback: (updatedLogs: Array<Log>) => void) {
-        this.connection.on("updatelogs", (updatedLogs) => {
+        this.connection.on("UpdateLogs", (updatedLogs) => {
             console.log("Received message:", updatedLogs);
             callback(updatedLogs);
         });
