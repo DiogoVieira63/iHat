@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
-import { onMounted, type PropType } from 'vue'
 import type { Log } from '@/interfaces';
+import  type { PropType } from 'vue'
 
 const props = defineProps({
     logs: {
@@ -9,9 +9,6 @@ const props = defineProps({
         required: true
     }
 })
-
-const items = [{message: 'Home', time: '5pm', description: "...", type: "informative" }, {message: 'Home 2', time: '10pm', description: "...", type: "alert"}, {message: 'Home 2', time: '10pm', description: "...", type: "alertDanger"}, {message: 'Home 2', time: '10pm', description: "...", type: "informative"}, {message: 'Home 2', time: '10pm', description: "...", type: "alert"}, {message: 'Home 2', time: '10pm', description: "...", type: "alertDanger"}, {message: 'Home 2', time: '10pm', description: "...", type: "informative"}, {message: 'Home 2', time: '10pm', description: "...", type: "alert"}, {message: 'Home 2', time: '10pm', description: "...", type: "alertDanger"}, {message: 'Home 2', time: '10pm', description: "...", type: "informative"}, {message: 'Home 2', time: '10pm', description: "...", type: "alertDanger"}]
-
 
 const getIcon = (type: string) => {
   switch (type) {
@@ -32,9 +29,18 @@ const getColor = (type: string) => {
   else if (type==="Grave") return "error"
 }
 
-onMounted(() => {
+const formatTimestamp = (timestamp: Date) => {
+  const stringDate = timestamp.toString()
+  const date = new Date(stringDate)
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear()
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
 
-})
+  return `${day}-${month}-${year} @ ${hours}:${minutes}:${seconds}`;
+}
 
 </script>
 
@@ -54,14 +60,25 @@ onMounted(() => {
                       {{log.type}}
                     </h2>
                   </v-card-title>
-                  <v-card-text>
+                  <v-card-text class="py-2">
                     <h3>{{log.mensagem}}</h3>
                   </v-card-text>
+                  <v-card-actions>
+                    <v-list-item class="w-100">
+                      <template v-slot:prepend>
+                        <v-avatar
+                          image="/helmet.svg"
+                        ></v-avatar>
+                      </template>
+                      <v-list-item-title> <b>Id Trabalhador:</b> {{ log.idTrabalhador }}</v-list-item-title>
+                      <v-list-item-subtitle><b>Id Capacete:</b> {{ log.idCapacete }}</v-list-item-subtitle>
+                    </v-list-item>
+                  </v-card-actions>
                 </v-card>
                 <template v-slot:opposite>
                     <div
-                      :class="`pt-1 headline font-weight-bold text-${getColor(log.type)}`"
-                      v-text="log.timestamp"
+                      class="pt-1 headline font-weight-bold"
+                      v-text="formatTimestamp(log.timestamp)"
                     ></div>
                   </template>
               </v-timeline-item>
