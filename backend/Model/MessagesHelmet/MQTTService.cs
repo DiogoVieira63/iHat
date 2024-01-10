@@ -35,6 +35,9 @@ public class MQTTService {
     private MensagemCapaceteService _mensagemCapaceteService;
     private IMapaService _mapsService;
     private ManageNotificationClients _manageNotificationClients;
+
+    private readonly string PairingMessageType = "Pairing";
+    private readonly string DisconnectMessageType = "Disconnect";
     
 
     public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService,
@@ -212,20 +215,35 @@ public class MQTTService {
 
     public async Task HandlePairingMessage(string payload){
         JObject jsonObject = JObject.Parse(payload);
+        JToken? type = jsonObject["type"];
         JToken? nCapacete = jsonObject["nCapacete"];
         JToken? idTrabalhador = jsonObject["idTrabalhador"];
         JToken? obra = jsonObject["obra"];
     
-        if(nCapacete != null && idTrabalhador != null){
-            int nCap = (int) nCapacete;
-            string idTrab = (string) idTrabalhador;
-            try{
-                await _capacetesService.AssociarTrabalhadorCapacete(nCap, idTrab);
+        if(type != null && nCapacete != null && idTrabalhador != null){
+
+            string typeString = (string) type;
+
+            if(typeString.Equals(this.PairingMessageType)){
+                int nCap = (int) nCapacete;
+                string idTrab = (string) idTrabalhador;
+                try{
+                    await _capacetesService.AssociarTrabalhadorCapacete(nCap, idTrab);
+                }
+                catch(Exception e){
+                    _logger.LogWarning(e.Message);
+                }
             }
-            catch(Exception e){
-                _logger.LogWarning(e.Message);
+            else if (typeString.Equals(this.DisconnectMessageType)){
+                int nCap = (int) nCapacete;
+                string idTrab = (string) idTrabalhador;
+                try{
+                    await _capacetesService.DesassociarTrabalhadorCapacete(nCap, idTrab);
+                }
+                catch(Exception e){
+                    _logger.LogWarning(e.Message);
+                }
             }
-            
         }
     }
 
