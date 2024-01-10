@@ -14,18 +14,6 @@ export class CapaceteSignalRService {
               transport: signalR.HttpTransportType.WebSockets
             })
             .build();
-
-        // this.connection.on("ReceiveMessage", (message) => {
-        //     console.log("Received message:", message);
-        // });
-
-        try {
-            this.connection.start().then(() => {
-            console.log("SignalR Connected.");
-            });
-        } catch (err) {
-            console.log(err);
-        }
     }
 
 
@@ -45,7 +33,7 @@ export class CapaceteSignalRService {
     }
     
     updateCapaceteData(callback: (updatedCapaceteData: MensagemCapacete) => void) {
-        this.connection.on("UpdateDadosCapacetes", (updatedCapaceteData) => {
+        this.connection.on("UpdateDadosCapacete", (updatedCapaceteData) => {
             console.log("Received message:", updatedCapaceteData);
             callback(updatedCapaceteData);
         });

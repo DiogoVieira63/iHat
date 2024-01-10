@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Obra, Capacete, Log, Position } from '@/interfaces'
+import type { Obra, Capacete, Log, Position , MensagemCapacete} from '@/interfaces'
 const url = `http://localhost:5069/ihat`
 
 // Obras
@@ -163,5 +163,14 @@ export class CapaceteService {
             .catch(() => {
                 console.error('Error in Axios')
             })
+    }
+
+    static getDadosCapacete(id: string): Promise<MensagemCapacete[]> {
+        return axios
+            .get(`${url}/helmets/${id}/data`)
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => console.error('Error:', error))
     }
 }

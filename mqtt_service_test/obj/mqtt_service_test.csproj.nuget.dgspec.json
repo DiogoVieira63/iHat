@@ -1,0 +1,75 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/edu/Desktop/iHat/mqtt_service_test/mqtt_service_test.csproj": {}
+  },
+  "projects": {
+    "/home/edu/Desktop/iHat/mqtt_service_test/mqtt_service_test.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/edu/Desktop/iHat/mqtt_service_test/mqtt_service_test.csproj",
+        "projectName": "mqtt_service_test",
+        "projectPath": "/home/edu/Desktop/iHat/mqtt_service_test/mqtt_service_test.csproj",
+        "packagesPath": "/home/edu/.nuget/packages/",
+        "outputPath": "/home/edu/Desktop/iHat/mqtt_service_test/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/edu/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "MQTTnet": {
+              "target": "Package",
+              "version": "[4.3.1.873, )"
+            },
+            "MQTTnet.Extensions.ManagedClient": {
+              "target": "Package",
+              "version": "[4.3.1.873, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/7.0.402/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
