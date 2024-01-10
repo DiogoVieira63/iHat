@@ -324,9 +324,20 @@ const options: Array<Option> = [
 ]
 
 
+function cleanString(input : string) {
+    var output = "";
+    for (var i=0; i<input.length; i++) {
+        if (input.charCodeAt(i) <= 127) {
+            output += input.charAt(i);
+        }
+    }
+    return output;
+}
+
+
 
 const encodeBase64 = (svg: string) => {
-    return "data:image/svg+xml;base64," + btoa(svg)
+    return "data:image/svg+xml;base64," + btoa(cleanString(svg))
 }
 
 
@@ -404,14 +415,14 @@ const pointSelectedString = computed(() => {
                         v-for="{ position, nCapacete } in props.capacetesPosition"
                         :key="nCapacete"
                         @click="emit('selectCapacete', nCapacete)"
-                        :x="position ? position['x']/scaleSVG - 15 : -300"
-                        :y="position ? position['y']/scaleSVG - 15 : -300"
-                        :width="30  / scaleSVG"
-                        :height="30 / scaleSVG"
+                        :x="position ? position['x']/scaleSVG - 20 : -300"
+                        :y="position ? position['y']/scaleSVG - 20 : -300"
+                        :width=" 40  / scaleSVG"
+                        :height="40 / scaleSVG"
                         :href="
                             props.capacetesSelected?.includes(nCapacete)
-                                ? '/helmet_selected.svg'
-                                : '/helmet.svg'
+                                ? '/helmet2_selected.svg'
+                                : '/helmet2.svg'
                         "
                     />
                     <polygon

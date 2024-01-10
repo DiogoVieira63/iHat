@@ -1,6 +1,7 @@
 using Xunit;
 using Moq;
 using Microsoft.Extensions.Options;
+using iHat.Model.Zonas;
 
 namespace iHat.Model.Obras;
 
@@ -507,8 +508,38 @@ public class ObrasServiceTests{
 
     [Fact]
     public async void Test_UpdateZonasRiscoObra(){
+        var idResponsavel = 1;
+        var nameObra = "Obra5";
+        var zonasRisco = new List<ZonasRisco>{
+            new ZonasRisco(1){
+                Zonas = new List<Point>{
+                    new Point(992.9577606666666, 709.2555433333333),
+                    new Point(947.823317, 947.823317),
+                    new Point(1373.3766429999998, 702.8077656666666)
+                }
+            }
+        };
+        var idMapa = "Mapa1";
 
-    }
+        // Arrange
+        var obraService = Setup();
+        if(obraService == null)
+            return;
+        
+        // Act - Adicionar uma Obra
+        var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>{idMapa});
+        // Assert - Alterar as Zonas de Risco da Obra
+        await obraService.UpdateZonasRiscoObra(obra, idMapa, zonasRisco);
+
+        // Assert - Verificar se as Zonas de Risco foram alteradas
+        var allMapas = await obraService.GetConstructionById(obra);
+        var mapa = allMapas.Mapa.Find(mapa => mapa == idMapa) != null;
+        mapa.Equals(true);
+
+        // var allZonasRisco = await obraService.GetConstructionById(obra);
+        // var zonasRisco1 = allZonasRisco.ZonasRisco.Find(zona => zona.IdZona == zonasRisco[0].IdZona) != null;
+        // zonasRisco1.Equals(true);
+     }
 
     [Fact]
     public async void Test_AddListaMapaToObra(){

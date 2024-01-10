@@ -7,7 +7,7 @@ export class ObraSignalRService {
 
     constructor(idObra: string){
         this.connection = new signalR.HubConnectionBuilder()
-            .configureLogging(signalR.LogLevel.Debug)
+            .configureLogging(signalR.LogLevel.None)
             .withUrl("http://localhost:5069/obra?obra_id=" + idObra, {
               skipNegotiation: true,
               transport: signalR.HttpTransportType.WebSockets
@@ -40,7 +40,6 @@ export class ObraSignalRService {
 
     handleIncomingLogs(callback: (updatedLogs: Array<Log>) => void) {
         this.connection.on("UpdateLogs", (updatedLogs) => {
-            console.log("Received message:", updatedLogs);
             callback(updatedLogs);
         });
     }

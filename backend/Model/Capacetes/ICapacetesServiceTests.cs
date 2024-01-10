@@ -394,4 +394,25 @@ public class CapacetesServiceTests{
         //assert
         Assert.Throws<Exception>(act);
     }
+
+// REVER
+    [Fact]
+    public async Task Test_DesassociarTrabalhadorCapacete() {
+        int nCapacete = 2;
+        string idTrabalhador = "1";
+        // Arrange
+        var capaceteService = Setup();
+        if(capaceteService == null)
+            return;
+
+        await capaceteService.AssociarTrabalhadorCapacete(nCapacete, idTrabalhador);
+        // Act
+        await capaceteService.DesassociarTrabalhadorCapacete(nCapacete, idTrabalhador);
+        // Assert
+        var capacete = await capaceteService.GetById(nCapacete);
+        Assert.Null(capacete?.Trabalhador);
+
+        
+    }
+
 }

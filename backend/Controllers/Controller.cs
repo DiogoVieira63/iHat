@@ -328,6 +328,23 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
+    //REVER
+    [HttpGet("logs/{idObra}/{date}")]
+    public async Task<ActionResult<List<Log>>> GetLogsByDate(string idObra, string date){
+        Console.WriteLine("Get Logs By Date GET Request");
+
+        DateTime date1 = DateTime.Parse(date);
+
+        var lista = await _facade.GetLogsByDate(idObra, date1);
+
+        if(lista == null){
+            return NotFound();
+        }
+
+        return lista;
+    }
+    
+
     [HttpPost("logs")]
     public async Task<IActionResult> AddLogs(Log logs){
         Console.WriteLine("Add Logs POST Request");
