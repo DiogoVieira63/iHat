@@ -52,7 +52,7 @@ const isSelectingPosition = ref(false)
 const inputsConstante: Record<string, Input> = {
     'Temperatura Corporal': {
         title: 'Temperatura Corporal',
-        range: [35, 42],
+        range: [34, 42],
         value: [36.5, 37.5],
         tipo: 'Variável'
     },
@@ -65,7 +65,7 @@ const inputsConstante: Record<string, Input> = {
     'Probabilidade de Queda': {
         title: 'Probabilidade de Queda',
         range: [0, 1],
-        value: [0.5, 0.5],
+        value: [0, 0],
         tipo: 'Variável'
     },
     'Proximidade': {
@@ -253,10 +253,11 @@ const selectPosition = (value : { [key: string] : number }) => {
     posY.tipo = 'Constante'
     const posZ = inputs.value['Posição do Capacete (Z)']
     posZ.value = [page.value, page.value]
+    isSelectingPosition.value = false
 }
 
-const changeSelectPosition = (value : boolean) => {
-    isSelectingPosition.value = value
+const changeSelectPosition = () => {
+    isSelectingPosition.value = !isSelectingPosition.value
 }
 
 const setMapSize = (index : number, value : { x : number, y : number }) => {
@@ -351,6 +352,7 @@ const points = computed(() => {
                     :capacetes="capacetes"
                     :selected="selected"
                     :isAdding="addCapaceteTask != ''"
+                    :isSelectingPosition="isSelectingPosition"
                     @update:inputs="inputs = $event"
                     @update:tempo="tempo = Number($event)"
                     @update:taskName="taskName = $event"

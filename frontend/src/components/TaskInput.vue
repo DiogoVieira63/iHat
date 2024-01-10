@@ -38,6 +38,10 @@ const props = defineProps({
     isAdding: {
         type: Boolean,
         required: true
+    },
+    isSelectingPosition: {
+        type: Boolean,
+        required: true
     }
 })
 
@@ -146,7 +150,6 @@ watch(() => props.isAdding, (value) => {
 
 const formStatus = ref(false)
 const menuSelected = ref(false)
-const selectPos = ref(false)
 
 
 const isSelected = (id: number) => {
@@ -158,8 +161,7 @@ const changeSelected = (id: number) => {
 }
 
 const selectPosition = () => {
-    selectPos.value = !selectPos.value
-    emit('selectPosition', selectPos.value)
+    emit('selectPosition')
 }
 
 </script>
@@ -325,7 +327,7 @@ const selectPosition = () => {
                             <v-card-text>
                                 <v-btn
                                     rounded="xl"
-                                    :variant="selectPos ? 'flat' : 'outlined'"
+                                    :variant="props.isSelectingPosition ? 'flat' : 'outlined'"
                                     color="error"
                                     density="compact"
                                     size="x-large"
@@ -334,7 +336,7 @@ const selectPosition = () => {
                                 >
                                 </v-btn>
                                 <p class="my-6 text-body-1">
-                                    {{ selectPos ? 'Selecione um ponto no mapa' : 'Alterar Posição no Mapa'}}
+                                    {{ props.isSelectingPosition ? 'Selecione um ponto no mapa' : 'Alterar Posição no Mapa'}}
                                 </p>
                             </v-card-text>
                         </v-card>
