@@ -17,16 +17,14 @@ public class PublisherService{
     static JObject GetMessageContent(){
         var result = new JObject
         {
-            { "HelmetNB", "1" },
+            { "HelmetNB", 1 },
             { "TypeMessage", "ValueUpdate" },
-            { "Fall", "False" },
+            { "Fall", false },
             { "BodyTemperature", 38 },
             { "Heartrate", 100 },
             { "Proximity", "10" },
             { "Position", "?" }
         };
-
-
 
         JObject loc = new JObject
         {

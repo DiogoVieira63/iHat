@@ -1,5 +1,6 @@
 // Import the SignalR library
-import * as signalR from '@microsoft/signalr'
+import type { MensagemCapacete } from '@/interfaces';
+import * as signalR from '@microsoft/signalr';
 
 export class CapaceteSignalRService {
     connection: signalR.HubConnection
@@ -12,17 +13,29 @@ export class CapaceteSignalRService {
                 transport: signalR.HttpTransportType.WebSockets
             })
             .build()
-
-        // this.connection.on("ReceiveMessage", (message) => {
-        //     console.log("Received message:", message);
-        // });
-
-        try {
-            this.connection.start().then(() => {
-                console.log('SignalR Connected.')
-            })
-        } catch (err) {
-            console.log(err)
-        }
     }
+
+
+    start(){
+        return this.connection.start().then(() => {
+            console.log("SignalR Connected.");
+        }
+        ).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    close(){
+        this.connection.stop().then(() => {
+            console.log("SignalR Disconnected.");
+        });
+    }
+    
+    updateCapaceteData(callback: (updatedCapaceteData: MensagemCapacete) => void) {
+        this.connection.on("UpdateDadosCapacete", (updatedCapaceteData) => {
+            console.log("Received message:", updatedCapaceteData);
+            callback(updatedCapaceteData);
+        });
+    }
+
 }
