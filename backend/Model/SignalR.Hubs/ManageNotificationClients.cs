@@ -12,8 +12,8 @@ public sealed class ManageNotificationClients{
     private IHubContext<ObrasHub> _obrasHub;
 
     public ManageNotificationClients(IHubContext<DadosCapaceteHub> dadosCapaceteHub, IHubContext<ObrasHub> obrasHub){
-        _dadosCapaceteHub = dadosCapaceteHub; // helmetdata
-        _obrasHub = obrasHub; // obras
+        _dadosCapaceteHub = dadosCapaceteHub;
+        _obrasHub = obrasHub; 
     }
 
     public async Task NotifyClientsObraWithSingleLocation(string obraId, Dictionary<int, Location> dict){

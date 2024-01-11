@@ -12,10 +12,6 @@ public class ObrasService: IObrasService{
 
     public readonly IMongoCollection<Mapa> _mapaCollection;
 
-    public readonly IMongoCollection<ZonasRisco> _zonaRiscoCollection; 
-
-
-
     public ObrasService(IOptions<DatabaseSettings> iHatDatabaseSettings, ILogger<ObrasService> logger){
         var mongoClient = new MongoClient(
             iHatDatabaseSettings.Value.ConnectionString);
@@ -29,52 +25,31 @@ public class ObrasService: IObrasService{
         _mapaCollection = mongoDatabase.GetCollection<Mapa>(
             iHatDatabaseSettings.Value.MapasCollectionName);
 
-        _zonaRiscoCollection = mongoDatabase.GetCollection<ZonasRisco>(
-            iHatDatabaseSettings.Value.ZonasRiscoCollectionName);
-
         _logger = logger;
     }
 
-
     public async Task<List<Obra>> GetObrasOfResponsavel(int idResponsavel){
         var obras = await _obraCollection.Find(x => x.IdResponsavel == idResponsavel).ToListAsync();
+        return obras;
+    }
 
-        if (obras.Count == 0)
-        {
-            // Nenhum resultado encontrado, retornar uma lista vazia ou fazer outra ação apropriada.
-            return new List<Obra>();
-        }
+    public async Task<Obra?> GetConstructionById(string idObra){
+        var obras = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
         return obras;
     }
 
     public async Task<string?> AddObra(string name, int idResponsavel, List<string> mapa){
-
-        /*if (status != "Planeada"){
-            _logger.LogInformation("Status of the new Construction is different from \"Planeada\".");
-        }*/
-
-        var newObra = new Obra(name, idResponsavel, mapa);
-
-        var checkIfConstructionSameName = 
-            await _obraCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
-
+        var checkIfConstructionSameName = await _obraCollection.Find(x => x.Nome == name).FirstOrDefaultAsync();
         if(checkIfConstructionSameName != null){
             throw new Exception("Construction with this name already exists.");
         }
 
-        try{
-            await _obraCollection.InsertOneAsync(newObra);
-            return newObra.Id;
-        }
-        catch (Exception e){
-            throw new Exception(e.Message);
-        }
+        var newObra = new Obra(name, idResponsavel, mapa);
+        await _obraCollection.InsertOneAsync(newObra);
+        return newObra.Id;
     }
 
-    public async Task<Obra> GetConstructionById(string idObra){
-        var obras = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
-        return obras;
-    }
+    
 
 
 
@@ -119,7 +94,7 @@ public class ObrasService: IObrasService{
             return;
         }
 
-        obra.Name = nome;
+        obra.Nome = nome;
 
         try
         {
