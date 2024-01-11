@@ -14,7 +14,7 @@ const props = defineProps({
         required: true
     },
     selected: {
-        type: Object as PropType<Record<string,number | string | undefined>>,
+        type: Object as PropType<Record<string, number | string | undefined>>,
         default: () => {}
     }
 })
@@ -120,8 +120,8 @@ const hasFilters = computed(() => {
     return Object.keys(filterOptions.value).length > 0
 })
 
-const hasElements = computed(() =>{
-    return rowsPage.value.length > 0; 
+const hasElements = computed(() => {
+    return rowsPage.value.length > 0
 })
 
 const selectSort = (header: string) => {
@@ -158,7 +158,9 @@ watch(
     () => props.selected,
     (newValue) => {
         if (newValue['key'] && newValue['value']) {
-            const index = rowsSorted.value.findIndex((row) => row[String(newValue['key'])] == newValue['value'])
+            const index = rowsSorted.value.findIndex(
+                (row) => row[String(newValue['key'])] == newValue['value']
+            )
             if (index >= 0) {
                 page.value = Math.ceil((index + 1) / maxPerPage.value)
             }
@@ -166,16 +168,12 @@ watch(
     }
 )
 
-
 const rowSelected = (row: { [id: string]: string }) => {
     if (props.selected && props.selected['key'] && props.selected['value']) {
-        if(row[props.selected['key']] == props.selected['value']) 
-            return 'bg-grey-lighten-2'
+        if (row[props.selected['key']] == props.selected['value']) return 'bg-grey-lighten-2'
     }
     return ''
 }
-
-
 </script>
 <template>
     <v-toolbar class="rounded-t-xl pr-2">
@@ -227,7 +225,7 @@ const rowSelected = (row: { [id: string]: string }) => {
                 </v-card-text>
             </v-card>
         </v-menu>
-        <v-responsive 
+        <v-responsive
             max-width="400"
             v-if="list.length > 0"
         >
@@ -297,7 +295,7 @@ const rowSelected = (row: { [id: string]: string }) => {
             dense
             type="info"
             class="mx-4 rounded-pill"
-            >
+        >
             Nenhum elemento encontrado
         </v-alert>
     </v-sheet>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { Capacete } from '@/interfaces';
-import {  CapaceteService, ObraService } from '@/services/http'
+import { ref} from 'vue'
+import type { Capacete } from '@/interfaces'
+import { CapaceteService, ObraService } from '@/services/http'
 
 const props = defineProps({
     idObra: {
@@ -29,15 +29,15 @@ const emit = defineEmits(['update'])
 const submit = async () => {
     try {
         for (const idCapacete of id.value) {
-            await ObraService.addCapaceteToObra(props.idObra, idCapacete);
+            await ObraService.addCapaceteToObra(props.idObra, idCapacete)
         }
-        emit('update');
-        id.value = [];
-        dialogCapacete.value = false;
+        emit('update')
+        id.value = []
+        dialogCapacete.value = false
     } catch (error) {
-        console.error(error);
+        console.error(error)
     }
-};
+}
 
 const close = () => {
     id.value = []
@@ -45,10 +45,10 @@ const close = () => {
 }
 
 const capacetesLivresWithTitle = () => {
-    capacetesLivres.value = capacetesLivres.value.map(item => ({
+    capacetesLivres.value = capacetesLivres.value.map((item) => ({
         ...item,
         title: `Capacete ${item.nCapacete}`
-    }));
+    }))
     capacetesLivres.value = capacetesLivres.value.sort((a, b) => {
         return a.nCapacete - b.nCapacete
     })
