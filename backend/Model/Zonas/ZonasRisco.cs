@@ -1,6 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
+using System.Text;
 
 namespace iHat.Model.Zonas
 {
@@ -17,6 +18,24 @@ namespace iHat.Model.Zonas
             IdZona = idZona;
             Zonas = new List<Point>();
         }
+
+        public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine($"Id: {Id}");
+        sb.AppendLine($"IdZona: {IdZona}");
+
+        if (Zonas != null)
+        {
+            sb.AppendLine("Zonas:");
+            foreach (var ponto in Zonas)
+            {
+                sb.AppendLine($"  Latitude: {ponto.X}, Longitude: {ponto.Y}");
+            }
+        }
+
+        return sb.ToString();
+    }
 
         /* algoritmo de Ray Casting
             Conta o número de interseções entre um raio horizontal que parte do ponto e as arestas do polígono. 
