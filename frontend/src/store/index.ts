@@ -155,7 +155,7 @@ const pairing = (mqtt: MqttService, nCapacete: number, idObra: string) => {
         type: 'Pairing',
         nCapacete: nCapacete,
         obra: idObra,
-        trabalhador: 'T' + nCapacete
+        idTrabalhador: 'T' + nCapacete
     }
 
     mqtt.publish('ihat/obras', JSON.stringify(mensagem))
@@ -166,7 +166,7 @@ const disconnect = (mqtt: MqttService, nCapacete: number) => {
         type: 'Disconnect',
         nCapacete: nCapacete,
         obra: '',
-        trabalhador: 'T' + nCapacete
+        idTrabalhador: 'T' + nCapacete
     }
 
     mqtt.publish('ihat/obras', JSON.stringify(mensagem))
@@ -205,7 +205,10 @@ export const useTaskStore = defineStore('taskMQTT', {
             for (const idCapacete of task.capacetes) {
                 pairing(mqtt, idCapacete, this.active)
             }
-            task.play(mqtt)
+            setTimeout(() => {
+                task.play(mqtt)
+            }
+            , 2000)
             this.tasks[this.active][Date.now()] = task
             //this.tasks.push(task)
         },

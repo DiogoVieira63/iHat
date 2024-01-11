@@ -24,23 +24,23 @@ namespace iHat.Model.Zonas
             Points = new List<Point>();
         }
 
-        public override string ToString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine($"Id: {Id}");
-        sb.AppendLine($"IdZona: {IdZona}");
+    //     public override string ToString()
+    // {
+    //     StringBuilder sb = new StringBuilder();
+    //     sb.AppendLine($"Id: {Id}");
+    //     sb.AppendLine($"IdZona: {IdZona}");
 
-        if (Zonas != null)
-        {
-            sb.AppendLine("Zonas:");
-            foreach (var ponto in Zonas)
-            {
-                sb.AppendLine($"  Latitude: {ponto.X}, Longitude: {ponto.Y}");
-            }
-        }
+    //     if (Zonas != null)
+    //     {
+    //         sb.AppendLine("Zonas:");
+    //         foreach (var ponto in Zonas)
+    //         {
+    //             sb.AppendLine($"  Latitude: {ponto.X}, Longitude: {ponto.Y}");
+    //         }
+    //     }
 
-        return sb.ToString();
-    }
+    //     return sb.ToString();
+    // }
 
         /* algoritmo de Ray Casting
             Conta o número de interseções entre um raio horizontal que parte do ponto e as arestas do polígono. 

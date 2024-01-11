@@ -41,6 +41,7 @@ export class ObraSignalRService {
 
     handleIncomingLogs(callback: (updatedLogs: Array<Log>) => void) {
         this.connection.on('UpdateLogs', (updatedLogs) => {
+            console.log('Received logs:', updatedLogs)
             callback(updatedLogs)
         })
     }

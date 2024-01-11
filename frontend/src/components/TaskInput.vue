@@ -169,8 +169,8 @@ const selectPosition = () => {
 }
 
 const capacetesLivres = computed(() => {
-    return props.capacetes
-    //return props.capacetes.filter((capacete) => capacete.status == 'Livre')
+    //return props.capacetes
+    return props.capacetes.filter((capacete) => capacete.status == 'Livre')
 })
 </script>
 <template>
