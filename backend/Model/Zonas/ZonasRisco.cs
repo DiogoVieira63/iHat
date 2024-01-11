@@ -6,13 +6,18 @@ namespace iHat.Model.Zonas
 {
     public class ZonasRisco
     {
-        // [BsonId] // Primary key
-        // [BsonRepresentation(BsonType.ObjectId)] // permite passar uma variável do tipo ObjectId como string
-        // public string? Id { get; set; }
-        public int Id { get; set; }
+        [BsonId] // Primary key
+        [BsonRepresentation(BsonType.ObjectId)] // permite passar uma variável do tipo ObjectId como string
+        public string? Id { get; set; }
+        // public int Id { get; set; }
         public List<Point>? Points { get; set; } //GeoJSON 
 
-        public ZonasRisco(int idZona)
+        public ZonasRisco()
+        {
+            Points = new List<Point>();
+        }
+
+        public ZonasRisco(string idZona)
         {
             Id = idZona;
             Points = new List<Point>();

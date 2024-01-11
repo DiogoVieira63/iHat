@@ -23,7 +23,7 @@ public class ZonasService: IZonasService{
         _zonaRiscoCollection = mongoDatabase.GetCollection<ZonasRisco>(
             iHatDatabaseSettings.Value.ZonasRiscoCollectionName);
     }
-    public async Task AddZonasPerigo(int idZona, List<Point> lista)
+    public async Task AddZonasPerigo(string idZona, List<Point> lista)
     {
         var zona = await _zonaRiscoCollection.Find(x => x.Id == idZona).FirstOrDefaultAsync();
 
@@ -46,7 +46,7 @@ public class ZonasService: IZonasService{
         
     }
 
-    public async Task RemoveZonasPerigo(int idZona)
+    public async Task RemoveZonasPerigo(string idZona)
     {
         var zona = await _zonaRiscoCollection.Find(x => x.Id == idZona).FirstOrDefaultAsync();
 
@@ -68,7 +68,7 @@ public class ZonasService: IZonasService{
         }
     }
 
-    public async Task RemoveAllZonasPerigo(int idZona)
+    public async Task RemoveAllZonasPerigo(string idZona)
     {
         var zona = await _zonaRiscoCollection.Find(x => x.Id == idZona).FirstOrDefaultAsync();
 
@@ -90,7 +90,7 @@ public class ZonasService: IZonasService{
         }
     }
 
-    public async Task UpdateZonasPerigo(int idZona, List<Point> lista)
+    public async Task UpdateZonasPerigo(string idZona, List<Point> lista)
     {
         var zona = await _zonaRiscoCollection.Find(x => x.Id == idZona).FirstOrDefaultAsync();
 
