@@ -511,7 +511,7 @@ public class ObrasServiceTests{
         var idResponsavel = 1;
         var nameObra = "Obra5";
         var zonasRisco = new List<ZonasRisco>{
-            new ZonasRisco(1){
+            new ZonasRisco("1"){
                 Points = new List<Point>{
                     new Point(992.9577606666666, 709.2555433333333),
                     new Point(947.823317, 947.823317),

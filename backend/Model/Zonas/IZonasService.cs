@@ -1,11 +1,11 @@
 namespace iHat.Model.Zonas;
 
 public interface IZonasService{
-    Task AddZonasPerigo(int idZona, List<Point> lista);
+    Task AddZonasPerigo(string idZona, List<Point> lista);
 
-    Task RemoveZonasPerigo(int idZona);
+    Task RemoveZonasPerigo(string idZona);
 
-    Task RemoveAllZonasPerigo(int idZona);
+    Task RemoveAllZonasPerigo(string idZona);
 
-    Task UpdateZonasPerigo(int idZona, List<Point> lista);
+    Task UpdateZonasPerigo(string idZona, List<Point> lista);
 }
