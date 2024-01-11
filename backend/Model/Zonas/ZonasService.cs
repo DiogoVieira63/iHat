@@ -23,9 +23,9 @@ public class ZonasService: IZonasService{
         _zonaRiscoCollection = mongoDatabase.GetCollection<ZonasRisco>(
             iHatDatabaseSettings.Value.ZonasRiscoCollectionName);
     }
-    public async Task AddZonasPerigo(int idZona, List<Point> lista)
+    public async Task AddZonasPerigo(string idZona, List<Point> lista)
     {
-        var zona = await _zonaRiscoCollection.Find(x => x.IdZona == idZona).FirstOrDefaultAsync();
+        var zona = await _zonaRiscoCollection.Find(x => x.Id == idZona).FirstOrDefaultAsync();
 
         if (zona == null)
         {
@@ -33,11 +33,11 @@ public class ZonasService: IZonasService{
             return;
         }
 
-        zona.Zonas = lista;
+        zona.Points = lista;
 
         try
         {
-            await _zonaRiscoCollection.ReplaceOneAsync(x => x.IdZona == idZona, zona);
+            await _zonaRiscoCollection.ReplaceOneAsync(x => x.Id == idZona, zona);
         }
         catch (Exception ex)
         {
@@ -46,9 +46,9 @@ public class ZonasService: IZonasService{
         
     }
 
-    public async Task RemoveZonasPerigo(int idZona)
+    public async Task RemoveZonasPerigo(string idZona)
     {
-        var zona = await _zonaRiscoCollection.Find(x => x.IdZona == idZona).FirstOrDefaultAsync();
+        var zona = await _zonaRiscoCollection.Find(x => x.Id == idZona).FirstOrDefaultAsync();
 
         if (zona == null)
         {
@@ -56,11 +56,11 @@ public class ZonasService: IZonasService{
             return;
         }
 
-        zona.Zonas = new List<Point>();
+        zona.Points = new List<Point>();
 
         try
         {
-            await _zonaRiscoCollection.ReplaceOneAsync(x => x.IdZona == idZona, zona);
+            await _zonaRiscoCollection.ReplaceOneAsync(x => x.Id == idZona, zona);
         }
         catch (Exception ex)
         {
@@ -68,9 +68,9 @@ public class ZonasService: IZonasService{
         }
     }
 
-    public async Task RemoveAllZonasPerigo(int idZona)
+    public async Task RemoveAllZonasPerigo(string idZona)
     {
-        var zona = await _zonaRiscoCollection.Find(x => x.IdZona == idZona).FirstOrDefaultAsync();
+        var zona = await _zonaRiscoCollection.Find(x => x.Id == idZona).FirstOrDefaultAsync();
 
         if (zona == null)
         {
@@ -78,11 +78,11 @@ public class ZonasService: IZonasService{
             return;
         }
 
-        zona.Zonas = new List<Point>();
+        zona.Points = new List<Point>();
 
         try
         {
-            await _zonaRiscoCollection.ReplaceOneAsync(x => x.IdZona == idZona, zona);
+            await _zonaRiscoCollection.ReplaceOneAsync(x => x.Id == idZona, zona);
         }
         catch (Exception ex)
         {
@@ -90,9 +90,9 @@ public class ZonasService: IZonasService{
         }
     }
 
-    public async Task UpdateZonasPerigo(int idZona, List<Point> lista)
+    public async Task UpdateZonasPerigo(string idZona, List<Point> lista)
     {
-        var zona = await _zonaRiscoCollection.Find(x => x.IdZona == idZona).FirstOrDefaultAsync();
+        var zona = await _zonaRiscoCollection.Find(x => x.Id == idZona).FirstOrDefaultAsync();
 
         if (zona == null)
         {
@@ -100,11 +100,11 @@ public class ZonasService: IZonasService{
             return;
         }
 
-        zona.Zonas = lista;
+        zona.Points = lista;
 
         try
         {
-            await _zonaRiscoCollection.ReplaceOneAsync(x => x.IdZona == idZona, zona);
+            await _zonaRiscoCollection.ReplaceOneAsync(x => x.Id == idZona, zona);
         }
         catch (Exception ex)
         {

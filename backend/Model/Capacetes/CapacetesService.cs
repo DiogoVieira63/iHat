@@ -96,5 +96,26 @@ public class CapacetesService: ICapacetesService{
 
         var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Trabalhador, idTrabalhador);
         await _capaceteCollection.UpdateOneAsync(x => x.NCapacete == nCapacete, capaceteUpdate);
+
+        capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, Capacete.EmUso);
+        await _capaceteCollection.UpdateOneAsync(x => x.NCapacete == nCapacete, capaceteUpdate);
+    }
+
+    public async Task DesassociarTrabalhadorCapacete(int nCapacete, string idTrabalhador){
+        var capacete = await _capaceteCollection.Find(x => x.NCapacete == nCapacete).FirstOrDefaultAsync() ?? throw new Exception("Capacete "+nCapacete+" não encontrado");
+        
+        /*if(capacete.Trabalhador != null){
+            throw new Exception("Capacete "+nCapacete+" já tem um trabalhador associado");
+        }*/
+
+        if(capacete.Trabalhador != null && capacete.Trabalhador != idTrabalhador){
+            throw new Exception("Capacete "+nCapacete+" não está associado ao trabalhador indicado.");
+        }
+        
+        var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Trabalhador, null);
+        await _capaceteCollection.UpdateOneAsync(x => x.NCapacete == nCapacete, capaceteUpdate);
+
+        capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, Capacete.AssociadoObra);
+        await _capaceteCollection.UpdateOneAsync(x => x.NCapacete == nCapacete, capaceteUpdate);
     }
 }

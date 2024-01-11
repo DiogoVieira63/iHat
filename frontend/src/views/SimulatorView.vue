@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRaw} from 'vue'
+import { ref, computed, watch, toRaw } from 'vue'
 import MapEditor from '@/components/MapEditor.vue'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
@@ -39,9 +39,9 @@ const tempo = ref(1)
 const selected = ref<Array<number>>([])
 const capacetes = ref<Array<Capacete>>([])
 const taskName = ref('Tarefa')
-const addCapaceteTask = ref("")
+const addCapaceteTask = ref('')
 const mapList = ref<Array<Mapa>>([])
-const rangeMaps = ref<Array<{ x : number, y: number }>>([])
+const rangeMaps = ref<Array<{ x: number; y: number }>>([])
 const isLoaded = ref(false)
 
 const numberMaps = computed(() => {
@@ -52,7 +52,7 @@ const isSelectingPosition = ref(false)
 const inputsConstante: Record<string, Input> = {
     'Temperatura Corporal': {
         title: 'Temperatura Corporal',
-        range: [35, 42],
+        range: [34, 42],
         value: [36.5, 37.5],
         tipo: 'Variável'
     },
@@ -65,10 +65,10 @@ const inputsConstante: Record<string, Input> = {
     'Probabilidade de Queda': {
         title: 'Probabilidade de Queda',
         range: [0, 1],
-        value: [0.5, 0.5],
+        value: [0, 0],
         tipo: 'Variável'
     },
-    'Proximidade': {
+    Proximidade: {
         title: 'Proximidade',
         range: [0, 200],
         value: [0, 0],
@@ -97,12 +97,12 @@ const inputsConstante: Record<string, Input> = {
         range: [-1, 1],
         value: [0, 0],
         tipo: 'Variável'
-    },
-};
+    }
+}
 
 const resetInputs = () => {
     inputs.value = structuredClone(inputsConstante)
-    inputs.value['Posição do Capacete (Z)'] =  {
+    inputs.value['Posição do Capacete (Z)'] = {
         title: 'Posição do Capacete (Z)',
         range: [1, numberMaps.value],
         value: [1, 1],
@@ -114,8 +114,8 @@ const resetInputs = () => {
 
 const getObra = () => {
     return ObraService.getOneObra(route.params.id.toString()).then((answer) => {
-        if(answer.mapa) mapList.value = answer.mapa
-        if(answer.name) title.value = answer.name
+        if (answer.mapa) mapList.value = answer.mapa
+        if (answer.name) title.value = answer.name
     })
 }
 
@@ -126,14 +126,10 @@ const getCapacetesObra = () => {
             capacetes.value.push(capacete)
         })
     })
-
 }
 
-
-
-
-const setupMqtt = async() => {
-    //make this async 
+const setupMqtt = async () => {
+    //make this async
     if (!mqttStore.mqtt) {
         mqtt = new MqttService(undefined)
         mqttStore.setMqtt(mqtt)
@@ -142,7 +138,7 @@ const setupMqtt = async() => {
     }
 }
 
-onMounted(async() => {
+onMounted(async () => {
     const idObra = route.params.id as string
     taskStore.setActive(idObra)
     await Promise.all([getObra(), getCapacetesObra(), setupMqtt()])
@@ -157,7 +153,6 @@ const updateCapacete = (capacete: Capacete) => {
         return item
     })
 }
-
 
 const goToObraPage = () => {
     router.push('/obras/' + router.currentRoute.value.params.id)
@@ -184,7 +179,7 @@ const selectedCapacete = (id: number) => {
     const hasTask = taskStore.hasTask(id)
     if (hasTask) {
         const key = taskStore.taskByCapacete(id)
-        if(key){
+        if (key) {
             const task = taskStore.tasks[taskStore.active][key]
             editTask(task)
         }
@@ -194,7 +189,7 @@ const selectedCapacete = (id: number) => {
             taskStore.tasks[taskStore.active][taskEdit.value].isEdit = false
         }
         selected.value.push(id)
-        if (addCapaceteTask.value != "") {
+        if (addCapaceteTask.value != '') {
             const task = taskStore.tasks[taskStore.active][addCapaceteTask.value]
             task.capacetes.push(id)
         }
@@ -211,10 +206,10 @@ const unselectAll = () => {
     inputs.value = {}
 }
 
-const editTask = (task : Task) => {
+const editTask = (task: Task) => {
     inputs.value = structuredClone(toRaw(task.inputs))
     //clone selected array
-    selected.value = [...task.capacetes]    
+    selected.value = [...task.capacetes]
     taskName.value = task.title
     tempo.value = task.intervalSeconds
     if (taskEdit.value != null) {
@@ -224,27 +219,25 @@ const editTask = (task : Task) => {
         if (last == taskEdit.value) {
             task.isEdit = false
         }
-    }
-    else task.isEdit = true
+    } else task.isEdit = true
 }
 
 const taskEdit = computed(() => {
-    const editKey = Object.keys(taskStore.tasks).find(key => taskStore.tasks[key].isEdit);
-    return editKey || null;
+    const editKey = Object.keys(taskStore.tasks).find((key) => taskStore.tasks[key].isEdit)
+    return editKey || null
 })
 
 const changeAddCapaceteTask = (id: string) => {
-    if(id == addCapaceteTask.value) {
-        addCapaceteTask.value = ""
-    }
-    else {
+    if (id == addCapaceteTask.value) {
+        addCapaceteTask.value = ''
+    } else {
         const task = taskStore.tasks[taskStore.active][id]
         selected.value = [...task.capacetes]
         addCapaceteTask.value = id
     }
 }
 
-const selectPosition = (value : { [key: string] : number }) => {
+const selectPosition = (value: { [key: string]: number }) => {
     const posX = inputs.value['Posição do Capacete (X)']
     const posY = inputs.value['Posição do Capacete (Y)']
     posX.value = [value.x, value.x]
@@ -253,26 +246,26 @@ const selectPosition = (value : { [key: string] : number }) => {
     posY.tipo = 'Constante'
     const posZ = inputs.value['Posição do Capacete (Z)']
     posZ.value = [page.value, page.value]
+    isSelectingPosition.value = false
 }
 
-const changeSelectPosition = (value : boolean) => {
-    isSelectingPosition.value = value
+const changeSelectPosition = () => {
+    isSelectingPosition.value = !isSelectingPosition.value
 }
 
-const setMapSize = (index : number, value : { x : number, y : number }) => {
-    rangeMaps.value[index] = { x : Math.ceil(value.x) -1 , y : Math.ceil(value.y) -1}
-    if(index == page.value - 1 && !isInputsEmpty.value ) {
+const setMapSize = (index: number, value: { x: number; y: number }) => {
+    rangeMaps.value[index] = { x: Math.ceil(value.x) - 1, y: Math.ceil(value.y) - 1 }
+    if (index == page.value - 1 && !isInputsEmpty.value) {
         setInputMapSize(index)
     }
 }
-const setInputMapSize = (index : number) => {
+const setInputMapSize = (index: number) => {
     inputs.value['Posição do Capacete (X)']['range'] = [0, rangeMaps.value[index]['x']]
     inputs.value['Posição do Capacete (Y)']['range'] = [0, rangeMaps.value[index]['y']]
 }
 
-
-watch(page, (value) => { 
-    if(!isInputsEmpty.value) setInputMapSize(value - 1)
+watch(page, (value) => {
+    if (!isInputsEmpty.value) setInputMapSize(value - 1)
 })
 
 const isInputsEmpty = computed(() => {
@@ -280,18 +273,17 @@ const isInputsEmpty = computed(() => {
 })
 
 const points = computed(() => {
-    if(!isInputsEmpty.value) {
+    if (!isInputsEmpty.value) {
         return {
-            x : inputs.value['Posição do Capacete (X)'].value,
-            y : inputs.value['Posição do Capacete (Y)'].value,
+            x: inputs.value['Posição do Capacete (X)'].value,
+            y: inputs.value['Posição do Capacete (Y)'].value
         }
     }
     return {
-        x : [0, 0],
-        y : [0, 0],
+        x: [0, 0],
+        y: [0, 0]
     }
 })
-
 </script>
 <template>
     <page-layout>
@@ -302,16 +294,19 @@ const points = computed(() => {
                     :loading="!isLoaded"
                     type="card, image"
                 >
-                    <template v-for="(map, index) in mapList" :key="map.name">
-                        <map-editor 
-                            :active="index == page - 1" 
-                            :edit="true" 
-                            :svg="map.svg" 
+                    <template
+                        v-for="(map, index) in mapList"
+                        :key="map.name"
+                    >
+                        <map-editor
+                            :active="index == page - 1"
+                            :edit="isSelectingPosition"
+                            :svg="map.svg"
                             :zones="map.zonas"
                             :capacetes-position="capacetes"
                             :capacetes-selected="selected"
                             :isSelectingPosition="isSelectingPosition"
-                            :pointSelected = "points"
+                            :pointSelected="points"
                             @update:zones="map.zonas = $event"
                             @selectCapacete="selectedCapacete"
                             @update::capacete="updateCapacete($event)"
@@ -321,8 +316,15 @@ const points = computed(() => {
                             @mapSize="setMapSize(index, $event)"
                         ></map-editor>
                     </template>
-                    <v-row class="d-flex justify-center mt-5" v-if="mapList.length > 1">
-                        <v-pagination v-model="page" :length="mapList.length" :total-visible="5" />
+                    <v-row
+                        class="d-flex justify-center mt-5"
+                        v-if="mapList.length > 1"
+                    >
+                        <v-pagination
+                            v-model="page"
+                            :length="mapList.length"
+                            :total-visible="5"
+                        />
                     </v-row>
                 </v-skeleton-loader>
             </template>
@@ -333,40 +335,40 @@ const points = computed(() => {
                 >
                 </v-skeleton-loader>
                 <div v-else>
-                <v-row class="d-flex justify-end my-2">
-                    <v-btn
-                        rounded="xl"
-                        size="large"
-                        variant="flat"
-                        color="primary"
-                        @click="goToObraPage"
-                    >
-                        Página Obra
-                    </v-btn>
-                </v-row>
-                <TaskInput 
-                    :inputs="inputs"
-                    :tempo="tempo"
-                    :taskName="taskName"
-                    :capacetes="capacetes"
-                    :selected="selected"
-                    :isAdding="addCapaceteTask != ''"
-                    @update:inputs="inputs = $event"
-                    @update:tempo="tempo = Number($event)"
-                    @update:taskName="taskName = $event"
-                    @update:selected="selected = $event"
-                    @selectCapacete="selectedCapacete"
-                    @selectAll="selectAll"
-                    @unselectAll="unselectAll"
-                    @selectPosition="changeSelectPosition"
-                />
-                <TaskHistory 
-                    :addCapaceteTask="addCapaceteTask"
-                    @edit="editTask"
-                    @addCapaceteTask="changeAddCapaceteTask"
-                />
-            </div>
-
+                    <v-row class="d-flex justify-end my-2">
+                        <v-btn
+                            rounded="xl"
+                            size="large"
+                            variant="flat"
+                            color="primary"
+                            @click="goToObraPage"
+                        >
+                            Página Obra
+                        </v-btn>
+                    </v-row>
+                    <TaskInput
+                        :inputs="inputs"
+                        :tempo="tempo"
+                        :taskName="taskName"
+                        :capacetes="capacetes"
+                        :selected="selected"
+                        :isAdding="addCapaceteTask != ''"
+                        :isSelectingPosition="isSelectingPosition"
+                        @update:inputs="inputs = $event"
+                        @update:tempo="tempo = Number($event)"
+                        @update:taskName="taskName = $event"
+                        @update:selected="selected = $event"
+                        @selectCapacete="selectedCapacete"
+                        @selectAll="selectAll"
+                        @unselectAll="unselectAll"
+                        @selectPosition="changeSelectPosition"
+                    />
+                    <TaskHistory
+                        :addCapaceteTask="addCapaceteTask"
+                        @edit="editTask"
+                        @addCapaceteTask="changeAddCapaceteTask"
+                    />
+                </div>
             </template>
         </ObraLayout>
     </page-layout>

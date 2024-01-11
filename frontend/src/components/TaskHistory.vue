@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { useTaskStore } from '@/store'
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { ref, onMounted } from 'vue'
-import { Task } from '@/store';
-import { useMQTTStore } from '@/store';
-import { MqttService } from '@/services/mqtt';
-import Confirmation from './Confirmation.vue';
-
+import { Task } from '@/store'
+import { useMQTTStore } from '@/store'
+import { MqttService } from '@/services/mqtt'
+import ConfirmationDialog from './ConfirmationDialog.vue'
 
 const mqttStore = useMQTTStore()
 let mqtt: MqttService | null = null
-
 
 onMounted(() => {
     if (!mqttStore.mqtt) {
@@ -24,12 +22,11 @@ onMounted(() => {
 const props = defineProps({
     addCapaceteTask: {
         type: String,
-        default: ""
+        default: ''
     }
 })
 
-
-const emit = defineEmits(['edit','addCapaceteTask'])
+const emit = defineEmits(['edit', 'addCapaceteTask'])
 
 const taskStore = useTaskStore()
 const tab = ref('Ativas')
@@ -38,33 +35,44 @@ const cancelEditTask = (index: number | string) => {
     taskStore.tasks[taskStore.active][index].isEdit = false
 }
 const taskLength = computed(() => {
-    if(!taskStore.tasks[taskStore.active]) return 0
-    return Object.values(taskStore.tasks[taskStore.active]).filter((task) => task.status === tab.value).length
+    if (!taskStore.tasks[taskStore.active]) return 0
+    return Object.values(taskStore.tasks[taskStore.active]).filter(
+        (task) => task.status === tab.value
+    ).length
 })
 
-
 const taskAtivasLength = computed(() => {
-    if(!taskStore.tasks[taskStore.active]) return 0
-    return Object.values(taskStore.tasks[taskStore.active]).filter((task) => task.status === 'Running').length
+    if (!taskStore.tasks[taskStore.active]) return 0
+    return Object.values(taskStore.tasks[taskStore.active]).filter(
+        (task) => task.status === 'Running'
+    ).length
 })
 
 const taskStoppedLength = computed(() => {
-    if(!taskStore.tasks[taskStore.active]) return 0
-    return Object.values(taskStore.tasks[taskStore.active]).filter((task) => task.status === 'Stopped').length
+    if (!taskStore.tasks[taskStore.active]) return 0
+    return Object.values(taskStore.tasks[taskStore.active]).filter(
+        (task) => task.status === 'Stopped'
+    ).length
 })
 
 const taskFinishedLength = computed(() => {
-    if(!taskStore.tasks[taskStore.active]) return 0
-    return Object.values(taskStore.tasks[taskStore.active]).filter((task) => task.status === 'Finished').length
+    if (!taskStore.tasks[taskStore.active]) return 0
+    return Object.values(taskStore.tasks[taskStore.active]).filter(
+        (task) => task.status === 'Finished'
+    ).length
 })
-
 
 const taskEmpty = (task: Task) => {
     return task.capacetes.length === 0
 }
 
 const formatDate = (date: Date) => {
-    return date.toLocaleTimeString('pt-pt', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return date.toLocaleTimeString('pt-pt', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    })
 }
 
 const description = (task: Task) => {
@@ -79,7 +87,7 @@ const description = (task: Task) => {
     }
 }
 
-const iconAction = (status : string) => {
+const iconAction = (status: string) => {
     switch (status) {
         case 'Running':
             return 'mdi-pause'
@@ -90,7 +98,7 @@ const iconAction = (status : string) => {
     }
 }
 
-const colorAction = (status : string) => {
+const colorAction = (status: string) => {
     switch (status) {
         case 'Running':
             return 'error'
@@ -100,7 +108,7 @@ const colorAction = (status : string) => {
             return 'warning'
     }
 }
-const titleAction = (status : string) => {
+const titleAction = (status: string) => {
     switch (status) {
         case 'Running':
             return 'Suspender'
@@ -111,78 +119,95 @@ const titleAction = (status : string) => {
     }
 }
 
-
-const functionAction = (status : string, task : Task, confirmation : boolean) => {
-    if(!confirmation) return
+const functionAction = (status: string, task: Task, ConfirmationDialog: boolean) => {
+    if (!ConfirmationDialog) return
     switch (status) {
         case 'Running':
             task.suspend()
+            if (mqtt) taskStore.suspendTask(mqtt, task)
             break
         case 'Stopped':
-            if(mqtt) task.play(mqtt)
-            break
         case 'Finished':
-            if(mqtt) {
-                taskStore.stopTaskByCapacetes(task.capacetes)
+            if (mqtt) {
+                taskStore.stopTaskByCapacetes(task.capacetes, mqtt)
                 task.play(mqtt)
             }
             break
     }
 }
 
-const removeCapacete = (task : Task, capacete: number,confirmation : boolean) => {
-    if(!confirmation) return
-    task.removeCapacete(capacete)
+const removeCapacete = (task: Task, capacete: number, ConfirmationDialog: boolean) => {
+    if (!ConfirmationDialog) return
+    if (mqtt) task.removeCapacete(capacete, mqtt)
 }
 
-const removeTask = (index: string, confirmation : boolean) => {
-    if(!confirmation) return
+const removeTask = (index: string, ConfirmationDialog: boolean) => {
+    if (!ConfirmationDialog) return
     taskStore.removeTask(index)
 }
 
 const tasks = computed(() => {
-    if(!taskStore.tasks[taskStore.active]) return {}
-    return Object.fromEntries(Object.entries(taskStore.tasks[taskStore.active]).filter((task) => task[1].status === tab.value))
+    if (!taskStore.tasks[taskStore.active]) return {}
+    return Object.fromEntries(
+        Object.entries(taskStore.tasks[taskStore.active]).filter(
+            (task) => task[1].status === tab.value
+        )
+    )
 })
 
 const isAddCapaceteTask = computed(() => {
     return props.addCapaceteTask != ''
 })
-
 </script>
 <template>
-    <v-card class="my-4" rounded="xl" color="grey-lighten-5">
+    <v-card
+        class="my-4"
+        rounded="xl"
+        color="grey-lighten-5"
+    >
         <v-card-title>
-            <v-tabs 
+            <v-tabs
                 v-model="tab"
                 bg-color="grey-lighten-1"
                 color="black"
-                grow 
+                grow
                 class="rounded-xl"
             >
-                <v-tab value="Running" >Ativas     
-                    <sup>{{ taskAtivasLength }}</sup>   
+                <v-tab value="Running"
+                    >Ativas
+                    <sup>{{ taskAtivasLength }}</sup>
                 </v-tab>
-                <v-tab value="Stopped" >Suspensas  
+                <v-tab value="Stopped"
+                    >Suspensas
                     <sup>{{ taskStoppedLength }}</sup>
                 </v-tab>
-                <v-tab value="Finished">Unidade
-                    <sup>{{ taskFinishedLength }} </sup> 
+                <v-tab value="Finished"
+                    >Unidade
+                    <sup>{{ taskFinishedLength }} </sup>
                 </v-tab>
             </v-tabs>
         </v-card-title>
         <v-card-text>
-            <v-alert  
+            <v-alert
                 v-if="taskLength == 0"
                 type="info"
                 rounded="xl"
             >
                 Nenhuma tarefa nesta categoria.
             </v-alert>
-            <v-list lines="two" bg-color="transparent">
-                <v-list-group v-for="(task, key) in tasks" :key="key">
+            <v-list
+                lines="two"
+                bg-color="transparent"
+            >
+                <v-list-group
+                    v-for="(task, key) in tasks"
+                    :key="key"
+                >
                     <template #activator="{ props, isOpen }">
-                        <v-list-item :key="key" v-if="task.status == tab" >
+                        <v-list-item
+                            :key="key"
+                            v-if="task.status == tab"
+                        >
                             <v-list-item-title>{{ task.title }}</v-list-item-title>
                             <v-list-item-subtitle style="line-height: normal">
                                 {{ description(task) }}
@@ -196,7 +221,7 @@ const isAddCapaceteTask = computed(() => {
                                     v-bind="props"
                                 />
 
-                                <confirmation
+                                <ConfirmationDialog
                                     title="Remover Tarefa"
                                     :function="removeTask"
                                     :function-params="[key]"
@@ -214,7 +239,7 @@ const isAddCapaceteTask = computed(() => {
                                     <template #message>
                                         Tem a certeza que pretende remover a Tarefa?
                                     </template>
-                                </confirmation>
+                                </ConfirmationDialog>
                             </template>
                             <template #prepend>
                                 <v-btn
@@ -235,7 +260,7 @@ const isAddCapaceteTask = computed(() => {
                                     density="compact"
                                     @click="emit('edit', task)"
                                 />
-                                <confirmation
+                                <ConfirmationDialog
                                     :title="titleAction(task.status) + ' Tarefa'"
                                     :function="functionAction"
                                     :function-params="[task.status, task]"
@@ -254,7 +279,7 @@ const isAddCapaceteTask = computed(() => {
                                     <template #message>
                                         Tem a certeza que pretende completer a ação?
                                     </template>
-                                </confirmation>
+                                </ConfirmationDialog>
                             </template>
                         </v-list-item>
                     </template>
@@ -265,13 +290,18 @@ const isAddCapaceteTask = computed(() => {
                         :title="capacete"
                     >
                         <template #prepend>
-                            <img src="/helmet.svg" width="30px" height="30px" class="mr-2" />
+                            <img
+                                src="/helmet.svg"
+                                width="30px"
+                                height="30px"
+                                class="mr-2"
+                            />
                         </template>
                         <template #append>
-                            <confirmation
+                            <ConfirmationDialog
                                 title="Remover o Capacete"
                                 :function="removeCapacete"
-                                :function-params="[task,capacete]"
+                                :function-params="[task, capacete]"
                             >
                                 <template #button="{ prop }">
                                     <v-btn
@@ -284,9 +314,10 @@ const isAddCapaceteTask = computed(() => {
                                     />
                                 </template>
                                 <template #message>
-                                    Tem a certeza que pretende remove o Capacete <b>{{ capacete }}</b> desta tarefa?
+                                    Tem a certeza que pretende remove o Capacete
+                                    <b>{{ capacete }}</b> desta tarefa?
                                 </template>
-                            </confirmation>
+                            </ConfirmationDialog>
                         </template>
                     </v-list-item>
                     <v-list-item v-if="tab != 'Running'">
@@ -294,12 +325,16 @@ const isAddCapaceteTask = computed(() => {
                             <v-btn
                                 class="mr-2"
                                 variant="flat"
-                                :icon="isAddCapaceteTask? 'mdi-close' : 'mdi-plus'"
+                                :icon="isAddCapaceteTask ? 'mdi-close' : 'mdi-plus'"
                                 density="compact"
                                 :color="isAddCapaceteTask ? 'error' : 'success'"
                                 @click="emit('addCapaceteTask', key)"
                             />
-                            {{ isAddCapaceteTask ? 'Terminar Adição de Capacete' : 'Adicionar Capacete' }}
+                            {{
+                                isAddCapaceteTask
+                                    ? 'Terminar Adição de Capacete'
+                                    : 'Adicionar Capacete'
+                            }}
                         </v-list-item-title>
                     </v-list-item>
                 </v-list-group>

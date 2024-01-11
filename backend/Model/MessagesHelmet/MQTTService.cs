@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using iHat.MensagensCapacete.Values;
 using iHat.Model.Mapas;
 using SignalR.Hubs;
+using ZstdSharp.Unsafe;
 
 namespace iHat.MQTTService;
 
@@ -35,6 +36,9 @@ public class MQTTService {
     private MensagemCapaceteService _mensagemCapaceteService;
     private IMapaService _mapsService;
     private ManageNotificationClients _manageNotificationClients;
+
+    private readonly string PairingMessageType = "Pairing";
+    private readonly string DisconnectMessageType = "Disconnect";
     
 
     public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService,
@@ -116,13 +120,13 @@ public class MQTTService {
         _logger.LogWarning("Received application message. {0}. Topic: {1}", payload, eventArgs.ApplicationMessage.Topic);
     
 
+        if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_PairingTopic)){
+            await HandlePairingMessage(payload);
+        }
         if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_BasicTopic)){
             await HandleMessageFromCapacetes(payload);
         }
         
-        if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_PairingTopic)){
-            await HandlePairingMessage(payload);
-        }
     }
 
     public async Task HandleMessageFromCapacetes(string payload){
@@ -188,7 +192,6 @@ public class MQTTService {
                 }
 
                 var log = new Log(type, DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
-                // var log = new Log(DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
                 await _logsService.Add(log);
 
                 // Notify Frontend
@@ -201,9 +204,21 @@ public class MQTTService {
                 await NotifyCapacete(messageJson.NCapacete);
             }
 
-            var found = await CheckSeCapaceteEstaZonaRisco(obra, messageJson.Location);           
+            var found = await CheckSeCapaceteEstaZonaRisco(obra, messageJson.Location);     
+            _logger.LogWarning("Capacete Dentro da Zona de Risco: "+found);      
             if(found){
+                // Notify Helmet
                 await NotifyCapacete(messageJson.NCapacete);
+
+                var log = new Log("Grave", DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, "InsideZonaRisco");
+                await _logsService.Add(log);
+
+                // Notify Frontend
+                if(log.IdObra != null){
+                    var listaLogs = await _logsService.GetLogsOfObra(log.IdObra);
+                    await _manageNotificationClients.NotifyClientsObraWithAllLogs(log.IdObra, listaLogs);
+                }
+                await _manageNotificationClients.NotifyClientsObraCapaceteDentroZonaRisco(obra.Id!, messageJson.NCapacete);
             }
         }catch(Exception e){
             Console.WriteLine(e.Message);
@@ -212,20 +227,38 @@ public class MQTTService {
 
     public async Task HandlePairingMessage(string payload){
         JObject jsonObject = JObject.Parse(payload);
+        JToken? type = jsonObject["type"];
         JToken? nCapacete = jsonObject["nCapacete"];
         JToken? idTrabalhador = jsonObject["idTrabalhador"];
         JToken? obra = jsonObject["obra"];
     
-        if(nCapacete != null && idTrabalhador != null){
-            int nCap = (int) nCapacete;
-            string idTrab = (string) idTrabalhador;
-            try{
-                await _capacetesService.AssociarTrabalhadorCapacete(nCap, idTrab);
+        if(type == null || nCapacete == null || idTrabalhador == null)
+            return;
+
+        if(type != null && nCapacete != null && idTrabalhador != null){
+
+            string typeString = (string)type;
+
+            if(typeString.Equals(this.PairingMessageType)){
+                int nCap = (int) nCapacete;
+                string idTrab = (string) idTrabalhador;
+                try{
+                    await _capacetesService.AssociarTrabalhadorCapacete(nCap, idTrab);
+                }
+                catch(Exception e){
+                    _logger.LogWarning(e.Message);
+                }
             }
-            catch(Exception e){
-                _logger.LogWarning(e.Message);
+            else if (typeString.Equals(this.DisconnectMessageType)){
+                int nCap = (int) nCapacete;
+                string idTrab = (string) idTrabalhador;
+                try{
+                    await _capacetesService.DesassociarTrabalhadorCapacete(nCap, idTrab);
+                }
+                catch(Exception e){
+                    _logger.LogWarning(e.Message);
+                }
             }
-            
         }
     }
 
@@ -252,15 +285,17 @@ public class MQTTService {
 
     public async Task<bool> CheckSeCapaceteEstaZonaRisco(Obra obra, Location location){
         var naZona = false;
-
         var mapas = obra.Mapa;
 
         foreach (var mapaId in mapas){
             var mapa = await _mapsService.GetMapaById(mapaId);
+
             if(mapa != null && mapa.Floor == location.Z){
                 var zonasRisco = mapa.Zonas;
+
                 foreach(var zona in zonasRisco){
-                    naZona &= zona.InsideZonaRisco(location.X, location.Y);
+                    var inside = zona.InsideZonaRisco(location.X, location.Y);
+                    naZona|= inside;
                 }
             }        
         }
@@ -285,7 +320,6 @@ public class MQTTService {
             .Build();
 
         await _mqttClient.PublishAsync(message);
-    
-    }
 
+    }
 }

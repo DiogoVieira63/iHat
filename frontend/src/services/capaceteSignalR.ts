@@ -2,18 +2,17 @@
 import type { MensagemCapacete } from '@/interfaces';
 import * as signalR from '@microsoft/signalr';
 
-
 export class CapaceteSignalRService {
-    connection : signalR.HubConnection
+    connection: signalR.HubConnection
 
-    constructor(idCapacete: string){
+    constructor(idCapacete: string) {
         this.connection = new signalR.HubConnectionBuilder()
             .configureLogging(signalR.LogLevel.Debug)
-            .withUrl("http://localhost:5069/helmetdata?capacete_id=" + idCapacete, {
-              skipNegotiation: true,
-              transport: signalR.HttpTransportType.WebSockets
+            .withUrl('http://localhost:5069/helmetdata?capacete_id=' + idCapacete, {
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets
             })
-            .build();
+            .build()
     }
 
 
@@ -38,6 +37,5 @@ export class CapaceteSignalRService {
             callback(updatedCapaceteData);
         });
     }
-
 
 }

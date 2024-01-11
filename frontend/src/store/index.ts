@@ -5,7 +5,7 @@ import { MqttService } from '@/services/mqtt'
 
 type Status = 'Stopped' | 'Running' | 'Finished'
 
-export class Task  {
+export class Task {
     title: string
     inputs: Record<string, Input>
     intervalId?: NodeJS.Timeout
@@ -15,7 +15,12 @@ export class Task  {
     status: Status
     time: Date
 
-    constructor(title: string, inputs: Record<string, Input>, intervalSeconds: number, capacetes: Array<number>) {
+    constructor(
+        title: string,
+        inputs: Record<string, Input>,
+        intervalSeconds: number,
+        capacetes: Array<number>
+    ) {
         this.title = title
         this.inputs = inputs
         this.intervalSeconds = intervalSeconds
@@ -25,47 +30,45 @@ export class Task  {
         this.time = new Date()
     }
 
-    suspend(){
+    suspend() {
         this.status = 'Stopped'
         this.time = new Date()
         clearInterval(this.intervalId)
     }
 
-    play(mqtt : MqttService){
+    play(mqtt: MqttService) {
         const { intervalSeconds } = this
         const func = () => envio(mqtt, this)
         func()
-        if(intervalSeconds != 0){
+        if (intervalSeconds != 0) {
             const intervalId = setInterval(func, intervalSeconds * 1000)
             this.intervalId = intervalId
             this.status = 'Running'
-        }
-        else{
+        } else {
             this.status = 'Finished'
         }
         this.time = new Date()
     }
 
-    edit(mqtt: MqttService, title: string, inputs: Record<string, Input>, intervalSeconds: number){
+    edit(mqtt: MqttService, title: string, inputs: Record<string, Input>, intervalSeconds: number) {
         clearInterval(this.intervalId)
         this.title = title
         this.inputs = inputs
         this.intervalSeconds = intervalSeconds
         this.isEdit = false
-        if(this.status == 'Running') this.play(mqtt)
+        if (this.status == 'Running') this.play(mqtt)
     }
 
-    removeCapacete(idCapacete: number){
+    removeCapacete(idCapacete: number, mqtt: MqttService) {
         const index = this.capacetes.indexOf(idCapacete)
-        if(index != -1){
+        if (index != -1) {
             this.capacetes.splice(index, 1)
+            disconnect(mqtt, idCapacete)
         }
-        if(this.capacetes.length == 0){
+        if (this.capacetes.length == 0) {
             this.suspend()
         }
     }
-    
-
 }
 
 interface DataMQTT {
@@ -85,7 +88,6 @@ interface DataMQTT {
     }
 }
 
-
 const random = (min: number, max: number) => {
     return Math.random() * (max - min) + min
 }
@@ -101,7 +103,7 @@ const envio = (mqtt: MqttService, task: Task) => {
                 }
             } else {
                 let value = random(item.value[0], item.value[1])
-                if (item.title == 'Probabilidade de Queda') value = random(0,1) <= value ? 1 : 0
+                if (item.title == 'Probabilidade de Queda') value = random(0, 1) <= value ? 1 : 0
                 return {
                     title: item.title,
                     value: value
@@ -137,7 +139,7 @@ const envio = (mqtt: MqttService, task: Task) => {
             Location: {
                 X: newInput['Posição do Capacete (X)'],
                 Y: newInput['Posição do Capacete (Y)'],
-                Z: newInput['Posição do Capacete (Z)']
+                Z: newInput['Posição do Capacete (Z)'] -1
             },
             Gases: {
                 Metano: newInput['Gases Tóxicos (Metano)'].toFixed(1),
@@ -148,17 +150,27 @@ const envio = (mqtt: MqttService, task: Task) => {
     }
 }
 
-const pairing = (mqtt: MqttService, nCapacete: number, idObra : string) => {
-    
-    const mensagem ={
+const pairing = (mqtt: MqttService, nCapacete: number, idObra: string) => {
+    const mensagem = {
+        type: 'Pairing',
         nCapacete: nCapacete,
         obra: idObra,
-        trabalhador: "T" + nCapacete
+        idTrabalhador: 'T' + nCapacete
     }
 
     mqtt.publish('ihat/obras', JSON.stringify(mensagem))
 }
 
+const disconnect = (mqtt: MqttService, nCapacete: number) => {
+    const mensagem = {
+        type: 'Disconnect',
+        nCapacete: nCapacete,
+        obra: '',
+        idTrabalhador: 'T' + nCapacete
+    }
+
+    mqtt.publish('ihat/obras', JSON.stringify(mensagem))
+}
 
 export const useMQTTStore = defineStore('mqtt', {
     state: () => ({
@@ -173,52 +185,64 @@ export const useMQTTStore = defineStore('mqtt', {
 
 export const useTaskStore = defineStore('taskMQTT', {
     state: () => ({
-        tasks: {} as { [idObra: string]: { [idTask: string] : Task} },
-        active: "" as string
+        tasks: {} as { [idObra: string]: { [idTask: string]: Task } },
+        active: '' as string
     }),
     actions: {
-        setActive(idObra : string){
+        setActive(idObra: string) {
             this.active = idObra
-            if(!this.tasks[idObra]) {
+            if (!this.tasks[idObra]) {
                 this.tasks[idObra] = {}
             }
         },
-        addTask(mqtt: MqttService, task: Task) {            
-            for (const idCapacete of task.capacetes){
+        suspendTask(mqtt: MqttService, task: Task) {
+            for (const idCapacete of task.capacetes) {
+                disconnect(mqtt, idCapacete)
+            }
+            task.suspend()
+        },
+        addTask(mqtt: MqttService, task: Task) {
+            for (const idCapacete of task.capacetes) {
                 pairing(mqtt, idCapacete, this.active)
             }
-            task.play(mqtt)
+            setTimeout(() => {
+                task.play(mqtt)
+            }
+            , 2000)
             this.tasks[this.active][Date.now()] = task
             //this.tasks.push(task)
         },
         hasTask(idCapacete: number) {
-            return Object.values(this.tasks[this.active]).some((task) => task.status =="Running" && task.capacetes.includes(idCapacete))
+            return Object.values(this.tasks[this.active]).some(
+                (task) => task.status == 'Running' && task.capacetes.includes(idCapacete)
+            )
         },
         taskByCapacete(idCapacete: number) {
             //return key of task
-            return Object.keys(this.tasks[this.active]).find((key) => this.tasks[this.active][key].capacetes.includes(idCapacete))
+            return Object.keys(this.tasks[this.active]).find((key) =>
+                this.tasks[this.active][key].capacetes.includes(idCapacete)
+            )
         },
         removeTask(index: string) {
             const task = this.tasks[this.active][index]
             if (task) {
                 clearInterval(task.intervalId)
                 delete this.tasks[this.active][index]
-            }
-            else{
-                console.log("Não existe tarefa com esse id", index)
+            } else {
+                console.log('Não existe tarefa com esse id', index)
             }
         },
         possibleStoppedTasks(capacetes: Array<number>) {
-            return Object.values(this.tasks[this.active]).filter((task) =>{
-                if(task.status == 'Running')
+            return Object.values(this.tasks[this.active]).filter((task) => {
+                if (task.status == 'Running')
                     return task.capacetes.some((capacete) => capacetes.includes(capacete))
             })
         },
-        stopTaskByCapacetes(capacetes: Array<number>) {
+        stopTaskByCapacetes(capacetes: Array<number>, mqtt: MqttService) {
             Object.values(this.tasks[this.active]).forEach((task) => {
-                if(task.status == 'Running'){
+                if (task.status == 'Running') {
                     if (task.capacetes.some((capacete) => capacetes.includes(capacete)))
-                        task.suspend()
+                        this.suspendTask(mqtt, task)
                 }
             })
         }

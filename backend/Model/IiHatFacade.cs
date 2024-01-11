@@ -27,6 +27,8 @@ public interface IiHatFacade{
 
     Task<List<Log>> GetLogs(string idObra);
 
+    Task<List<Log>> GetLogsByDate(string idObra, DateTime date);
+
     Task AddLogs(Log logs);
 
     Task ChangeStatusCapacete(int nCapacete, string newStatus);

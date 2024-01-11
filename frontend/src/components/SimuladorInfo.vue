@@ -8,7 +8,7 @@
         <strong>Como funciona?</strong>
         <br />
         <br />
-        <strong>1.</strong> Selecione um ou mais capacetes no mapa
+        <strong>1.</strong> Selecione um ou mais capacetes no botão em baixo
         <br />
         <strong>2.</strong> Selecione os valores que deseja enviar para o(s) capacete(s)
         <br />
@@ -32,6 +32,11 @@
             <li><strong>Constante</strong> - Envia um valor constante definido</li>
             <li><strong>Variável</strong> - Envia um valor aleatório entre o intervalo definido</li>
         </ul>
+        <br />
+        <span>
+            <v-icon class="mr-2 text-red">mdi-alert-circle-outline</v-icon>
+            Caso a página seja atualizada, as Tarefas serão eliminadas.
+        </span>
     </div>
 </template>
 

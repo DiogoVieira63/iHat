@@ -31,4 +31,8 @@ public sealed class ManageNotificationClients{
     public async Task NotifyClientsCapaceteWithLastMessage(int nCapacete, MensagemCapacete lastReceivedMessage){
         await _dadosCapaceteHub.Clients.Group(nCapacete.ToString()).SendAsync("UpdateDadosCapacete", lastReceivedMessage);
     }
+
+    public async Task NotifyClientsObraCapaceteDentroZonaRisco(string obraId, int nCapacete){
+        await _obrasHub.Clients.Group(obraId).SendAsync("UpdateCapaceteDentroZonaRisco", nCapacete);
+    }
 }

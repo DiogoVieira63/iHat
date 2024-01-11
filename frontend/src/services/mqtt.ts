@@ -9,7 +9,7 @@ export class MqttService {
             const options: IClientOptions = {
                 clientId: 'admin',
                 username: 'admin',
-                password: 'password',
+                password: 'password'
             }
             console.log('Connecting to MQTT broker...')
 

@@ -30,12 +30,12 @@ const submit = handleSubmit((values, actions) => {
 
     CapaceteService.addOneCapacete(Capacete)
         .then(() => {
-                dialogCapacete.value = false
-                id.value.value = ''
-                id.errorMessage.value = ''
-                emit('update')
-            })
-            .catch((error) => {
+            dialogCapacete.value = false
+            id.value.value = ''
+            id.errorMessage.value = ''
+            emit('update')
+        })
+        .catch((error) => {
             actions.setFieldError('id', 'Capacete já existe')
             console.log(error)
         })
