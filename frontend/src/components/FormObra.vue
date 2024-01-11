@@ -5,7 +5,6 @@ import { object, string } from 'yup'
 import { ObraService } from '@/services/http'
 import FormMapa from '@/components/FormMapa.vue'
 
-
 const dialog = ref(false)
 
 interface FormObra {
@@ -24,20 +23,19 @@ const idObra = ref('')
 
 const emit = defineEmits(['update'])
 
-
-const submit = handleSubmit((values,actions) => {
+const submit = handleSubmit((values, actions) => {
     const obra = {
-        name: values.nomeObra,
+        name: values.nomeObra
     }
-    ObraService.addOneObra(obra).
-        then((res_idObra) => {
+    ObraService.addOneObra(obra)
+        .then((res_idObra) => {
             idObra.value = res_idObra
             notSubmited.value = false
             emit('update')
             resetForm()
         })
         .catch((error) => {
-            actions.setFieldError("nomeObra","Erro na criação da Obra.")
+            actions.setFieldError('nomeObra', 'Erro na criação da Obra.')
             console.log(error)
         })
 })
@@ -50,8 +48,6 @@ const close = () => {
 </script>
 
 <template>
-
-
     <v-row justify="center">
         <v-dialog
             v-model="dialog"
@@ -105,10 +101,12 @@ const close = () => {
                                 >Submit</v-btn
                             >
                         </v-form>
-                        <FormMapa 
-                            v-else :id-obra="idObra"
+                        <FormMapa
+                            v-else
+                            :id-obra="idObra"
                             :canCancel="false"
-                            @update="close" />
+                            @update="close"
+                        />
                     </v-container>
                 </v-card-text>
             </v-card>

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using iHat.Model.Zonas;
 using iHat.Model.Mapas;
+using Microsoft.AspNetCore.Identity;
 
 namespace iHat.Model.Obras;
 
@@ -33,8 +34,8 @@ public class ObrasService: IObrasService{
         return obras;
     }
 
-    public async Task<Obra?> GetConstructionById(string idObra){
-        var obras = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
+    public async Task<Obra?> GetConstructionById(string id){
+        var obras = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
         return obras;
     }
 
@@ -49,27 +50,17 @@ public class ObrasService: IObrasService{
         return newObra.Id;
     }
 
-    
-
-
-
-    public async Task RemoveObraByIdAsync(string obraId)
+    public async Task RemoveObraByIdAsync(string id)
     {
-        var filter = Builders<Obra>.Filter.Eq(o => o.Id, obraId);
-
-        await _obraCollection.DeleteOneAsync(filter);
+        await _obraCollection.DeleteOneAsync(o => o.Id == id);
     }
-
 
     public async Task AlteraEstadoObra(string id, string estado)
     {
         var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-
         if (obra == null)
-        {
-            Console.WriteLine("[iHatFacade] Obra não existe.");
-            return;
-        }
+            throw new Exception("Obra não encontrada.");
+        
 
 
         obra.Status = estado;
@@ -83,6 +74,11 @@ public class ObrasService: IObrasService{
             Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
         }
     }
+
+
+
+
+
 
     public async Task UpdateNomeObra(string idObra, string nome)
     {
@@ -212,9 +208,8 @@ public class ObrasService: IObrasService{
         if (obra.Mapa.Contains(idMapa)){
             var mapa = await _mapaCollection.Find(x => x.Id == idMapa).FirstOrDefaultAsync() ?? throw new Exception("Mapa não encontrada.");
             if (mapa is not null){
-                mapa.Zonas = zonas;
                 var mapaFilter = Builders<Mapa>.Filter.Eq(x => x.Id, idMapa);
-                var mapaUpdate = Builders<Mapa>.Update.Set(x => x.Zonas, mapa.Zonas);
+                var mapaUpdate = Builders<Mapa>.Update.Set(x => x.Zonas, zonas);
                 await _mapaCollection.UpdateOneAsync(mapaFilter, mapaUpdate);
 
                 // var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, idObra);

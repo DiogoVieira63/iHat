@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using iHat.MensagensCapacete.Values;
 using iHat.Model.Mapas;
 using SignalR.Hubs;
+using ZstdSharp.Unsafe;
 
 namespace iHat.MQTTService;
 
@@ -118,13 +119,12 @@ public class MQTTService {
         var payload = Encoding.UTF8.GetString(eventArgs.ApplicationMessage.PayloadSegment);
         _logger.LogWarning("Received application message. {0}. Topic: {1}", payload, eventArgs.ApplicationMessage.Topic);
     
+        if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_PairingTopic)){
+            await HandlePairingMessage(payload);
+        }
 
         if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_BasicTopic)){
             await HandleMessageFromCapacetes(payload);
-        }
-        
-        if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_PairingTopic)){
-            await HandlePairingMessage(payload);
         }
     }
 
@@ -160,7 +160,7 @@ public class MQTTService {
             await _manageNotificationClients.NotifyClientsCapaceteWithLastMessage(messageJson.NCapacete, messageJson);
 
 
-            var obra = await _obrasService.GetObraWithCapaceteId(capacete.NCapacete);
+            var obra = await _obrasService.GetObraWithCapaceteId(capacete.Numero);
             if(obra == null){
                 return;
             }
@@ -191,7 +191,6 @@ public class MQTTService {
                 }
 
                 var log = new Log(type, DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
-                // var log = new Log(DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, messageRe.Item2);
                 await _logsService.Add(log);
 
                 // Notify Frontend
@@ -204,9 +203,21 @@ public class MQTTService {
                 await NotifyCapacete(messageJson.NCapacete);
             }
 
-            var found = await CheckSeCapaceteEstaZonaRisco(obra, messageJson.Location);           
+            var found = await CheckSeCapaceteEstaZonaRisco(obra, messageJson.Location);     
+            _logger.LogWarning("Capacete Dentro da Zona de Risco: "+found);      
             if(found){
+                // Notify Helmet
                 await NotifyCapacete(messageJson.NCapacete);
+
+                var log = new Log("Grave", DateTime.Now, obra.Id, messageJson.NCapacete, capacete.Trabalhador, "InsideZonaRisco");
+                await _logsService.Add(log);
+
+                // Notify Frontend
+                if(log.IdObra != null){
+                    var listaLogs = await _logsService.GetLogsOfObra(log.IdObra);
+                    await _manageNotificationClients.NotifyClientsObraWithAllLogs(log.IdObra, listaLogs);
+                }
+                await _manageNotificationClients.NotifyClientsObraCapaceteDentroZonaRisco(obra.Id!, messageJson.NCapacete);
             }
         }catch(Exception e){
             Console.WriteLine(e.Message);
@@ -220,9 +231,12 @@ public class MQTTService {
         JToken? idTrabalhador = jsonObject["idTrabalhador"];
         JToken? obra = jsonObject["obra"];
     
+        if(type == null || nCapacete == null || idTrabalhador == null)
+            return;
+
         if(type != null && nCapacete != null && idTrabalhador != null){
 
-            string typeString = (string) type;
+            string typeString = (string)type;
 
             if(typeString.Equals(this.PairingMessageType)){
                 int nCap = (int) nCapacete;
@@ -251,7 +265,7 @@ public class MQTTService {
         // Primeira op: Notificar apenas com a nova localização recebida...
         var dict = new Dictionary<int, Location>
         {
-            { capacete.NCapacete, messageJson.Location }
+            { capacete.Numero, messageJson.Location }
         };
         await _manageNotificationClients.NotifyClientsObraWithSingleLocation(obra.Id!, dict);        
 
@@ -270,15 +284,17 @@ public class MQTTService {
 
     public async Task<bool> CheckSeCapaceteEstaZonaRisco(Obra obra, Location location){
         var naZona = false;
-
         var mapas = obra.Mapa;
 
         foreach (var mapaId in mapas){
             var mapa = await _mapsService.GetMapaById(mapaId);
+
             if(mapa != null && mapa.Floor == location.Z){
                 var zonasRisco = mapa.Zonas;
+
                 foreach(var zona in zonasRisco){
-                    naZona &= zona.InsideZonaRisco(location.X, location.Y);
+                    var inside = zona.InsideZonaRisco(location.X, location.Y);
+                    naZona|= inside;
                 }
             }        
         }
@@ -303,7 +319,6 @@ public class MQTTService {
             .Build();
 
         await _mqttClient.PublishAsync(message);
-    
-    }
 
+    }
 }
