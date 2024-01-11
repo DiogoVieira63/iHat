@@ -3,16 +3,39 @@ namespace iHat.Model.Capacetes;
 public interface ICapacetesService{
 
     /**
-    * Função que permite obter todos os capacetes do sistema.
-    * Returns: uma lista dos Capacetes
+    Função que permite obter todos os capacetes do sistema.
+    Returns: uma lista dos Capacetes
     */
     Task<List<Capacete>> GetAll();
 
     /**
-    * Função que permite obter o capacete com o número de Capacete "nCapacete" indicado
-    * Returns: Devolve o Capacete ou nulo
+    Função que permite obter o capacete com o número de Capacete "nCapacete" indicado
+    Returns: Devolve o Capacete ou nulo
     */
     Task<Capacete?> GetById(int nCapacete);
+
+    /*
+    Função que permite obter todo os Capacetes de uma lista de números de capacetes
+    Returns: Uma lista com os capacetes que encontrou
+    */
+    Task<List<Capacete>> GetAllHelmetsFromList(List<int> listNCapacetes);
+
+    /*
+    Função que permite obter uma lista de todos os capacetes livres.
+    Returns: Uma lista dos capacetes com Status Livre.
+    */
+    Task<List<Capacete>> GetFreeHelmets();
+
+    /*
+    Função que verifica se existe um capacete com o numero "nCapacate"
+    Returns: true se encontrou o capacete
+    */
+    Task<bool> CheckIfCapaceteExists(int nCapacete);
+
+    /*
+    Função que permite consultar se um capacete está a ser utilizado
+    */
+    Task<string> CheckIfHelmetIfBeingUsed(int nCapacete);
 
     /**
     * Função que permite adicionar um novo Capacete com o número "nCapacete" ao sistema.
@@ -20,29 +43,12 @@ public interface ICapacetesService{
     * Exception: Devolve uma exceção se um Capacete com o mesmo número "nCapacete" já existir.
     */
     Task Add(int nCapacete);
-
-
-
-
-
-
-
-
-
-
-    Task<List<Capacete>> GetAllHelmetsFromList(List<int> listNCapacetes);
-
+    
     Task AddCapaceteToObra(int nCapacete);
-
-    Task<bool> CheckIfCapaceteExists(int nCapacete);
-
-    Task<bool> CheckIfHelmetIfBeingUsed(int nCapacete);
 
     Task UpdateCapaceteStatusToLivre(int nCapacete);
 
     Task UpdateCapaceteStatus(int nCapacete, string status);
-
-    Task<List<Capacete>> GetFreeHelmets();
 
     Task AssociarTrabalhadorCapacete(int nCapacete, string idTrabalhador);
 

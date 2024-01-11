@@ -6,35 +6,32 @@ namespace iHat.Model.Capacetes;
 
 public class CapacetesServiceTests{
     
-        private static ICapacetesService? Setup(){
-            var config = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json")
-                    .AddEnvironmentVariables() 
-                    .Build();
+    private static ICapacetesService? Setup(){
+        var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables() 
+                .Build();
     
-            var databaseSettings =  (DatabaseSettings?) config.GetValue(typeof(DatabaseSettings), "Database" );
-            if(databaseSettings == null){
-                return null;
-            }
-            IOptions<DatabaseSettings> options1 = Options.Create<DatabaseSettings>(databaseSettings);
-            
-            var logger = Mock.Of<ILogger<CapacetesService>>();
-    
-            var capaceteService = new CapacetesService(options1, logger);
-    
-            return capaceteService;
+        var databaseSettings =  (DatabaseSettings?) config.GetValue(typeof(DatabaseSettings), "Database" );
+        if(databaseSettings == null){
+            return null;
         }
+        IOptions<DatabaseSettings> options1 = Options.Create<DatabaseSettings>(databaseSettings);
+            
+        var logger = Mock.Of<ILogger<CapacetesService>>();
+        var capaceteService = new CapacetesService(options1, logger);
+    
+        return capaceteService;
+    }
     
     [Fact]
     public async void Test_AddCapacete(){
         var nCapacete = 1;
-        // var status = "Livre";
 
         // Arrange
         var capaceteService = Setup();
         if(capaceteService == null)
             return;
-
         var allPreviousCapacetes = await capaceteService.GetAll();
 
         // Act
@@ -42,11 +39,8 @@ public class CapacetesServiceTests{
 
         // Assert [Se já existir um valor antes na lista, esta não deverá ter sido adicionada]
         var allAfterCapacetes = await capaceteService.GetAll();
-
-        var expectedValue = allPreviousCapacetes.Find(capacete => capacete.NCapacete == nCapacete) == null;
-
-        var addedCapacete = allAfterCapacetes.Find(capacete => capacete.NCapacete == nCapacete) != null;
-
+        var expectedValue = allPreviousCapacetes.Find(capacete => capacete.Numero == nCapacete) == null;
+        var addedCapacete = allAfterCapacetes.Find(capacete => capacete.Numero == nCapacete) != null;
         addedCapacete.Equals(expectedValue);
     }
 
@@ -122,7 +116,7 @@ public class CapacetesServiceTests{
 
     [Fact]
     public async void Test_GetAllHelmetsFromList(){
-        var listNCapacetes = new List<int>{1,2,3};
+        var listNumeros = new List<int>{1,2,3};
 
         // Arrange
         var capaceteService = Setup();
@@ -130,7 +124,7 @@ public class CapacetesServiceTests{
             return;
 
         // Act
-        var capacetes = await capaceteService.GetAllHelmetsFromList(listNCapacetes);
+        var capacetes = await capaceteService.GetAllHelmetsFromList(listNumeros);
 
         // Assert
         Assert.NotNull(capacetes);
@@ -138,7 +132,7 @@ public class CapacetesServiceTests{
     
     [Fact]
     public async void Test_GetAllHelmetsFromList_FailBecauseTheCapaceteDoesNotExist(){
-        var listNCapacetes = new List<int>{1,2,3};
+        var listNumeros = new List<int>{1,2,3};
 
         // Arrange
         var capaceteService = Setup();
@@ -146,7 +140,7 @@ public class CapacetesServiceTests{
             return;
 
         // Act
-        var capacetes = await capaceteService.GetAllHelmetsFromList(listNCapacetes);
+        var capacetes = await capaceteService.GetAllHelmetsFromList(listNumeros);
 
         // Assert
         Assert.NotNull(capacetes);
