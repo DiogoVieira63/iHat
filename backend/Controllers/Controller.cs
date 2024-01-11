@@ -377,8 +377,6 @@ public class IHatController : ControllerBase{
     //fazer o Update Zonas de Risco (idObra, {idMapa: List[Zona]})
     [HttpPatch("constructions/{idObra}/map/{idMapa}/zonas")]
     public async Task<IActionResult> UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
-        Console.WriteLine("Update Zonas de Risco POST Request");
-
         try
         {
             await _facade.UpdateZonasRiscoObra(idObra, idMapa, zonas);

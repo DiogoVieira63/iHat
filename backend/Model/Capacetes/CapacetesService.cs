@@ -96,6 +96,9 @@ public class CapacetesService: ICapacetesService{
 
         var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Trabalhador, idTrabalhador);
         await _capaceteCollection.UpdateOneAsync(x => x.NCapacete == nCapacete, capaceteUpdate);
+
+        capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, Capacete.EmUso);
+        await _capaceteCollection.UpdateOneAsync(x => x.NCapacete == nCapacete, capaceteUpdate);
     }
 
     public async Task DesassociarTrabalhadorCapacete(int nCapacete, string idTrabalhador){
@@ -110,6 +113,9 @@ public class CapacetesService: ICapacetesService{
         }
         
         var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Trabalhador, null);
+        await _capaceteCollection.UpdateOneAsync(x => x.NCapacete == nCapacete, capaceteUpdate);
+
+        capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, Capacete.AssociadoObra);
         await _capaceteCollection.UpdateOneAsync(x => x.NCapacete == nCapacete, capaceteUpdate);
     }
 }

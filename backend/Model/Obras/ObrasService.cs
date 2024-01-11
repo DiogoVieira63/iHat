@@ -237,9 +237,8 @@ public class ObrasService: IObrasService{
         if (obra.Mapa.Contains(idMapa)){
             var mapa = await _mapaCollection.Find(x => x.Id == idMapa).FirstOrDefaultAsync() ?? throw new Exception("Mapa não encontrada.");
             if (mapa is not null){
-                mapa.Zonas = zonas;
                 var mapaFilter = Builders<Mapa>.Filter.Eq(x => x.Id, idMapa);
-                var mapaUpdate = Builders<Mapa>.Update.Set(x => x.Zonas, mapa.Zonas);
+                var mapaUpdate = Builders<Mapa>.Update.Set(x => x.Zonas, zonas);
                 await _mapaCollection.UpdateOneAsync(mapaFilter, mapaUpdate);
 
                 // var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, idObra);

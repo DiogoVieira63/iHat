@@ -50,6 +50,10 @@ public class Log
                 Mensagem = "Warning: High concentration of harmful gases detected!";
                 break;
 
+            case "InsideZonaRisco":
+                Mensagem = "Warning: Inside Risk Zone";
+                break;
+
             default:
                 break;
         }
