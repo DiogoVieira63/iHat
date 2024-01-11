@@ -319,8 +319,8 @@ public class IHatController : ControllerBase{
     public async Task<ActionResult<List<Log>>> GetLogs(string idObra){
         Console.WriteLine("Get Logs GET Request");
 
-        // var lista = await _facade.GetLogs(idObra);
-        var lista = await _facade.GetLogsByDate(idObra, DateTime.Today);
+        var lista = await _facade.GetLogs(idObra);
+        // var lista = await _facade.GetLogsByDate(idObra, DateTime.Today);
 
         if(lista == null){
             return NotFound();

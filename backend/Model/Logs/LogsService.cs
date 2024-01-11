@@ -25,7 +25,7 @@ public class LogsService: ILogsService{
     }
 
     public async Task<List<Log>> GetLogsOfObra(string idObra){
-        return await _logsCollection.Find(x => x.IdObra == idObra).ToListAsync();
+        return await _logsCollection.Find(x => x.IdObra == idObra && x.Timestamp == DateTime.Today).ToListAsync();
     }
 
     public async Task Add(Log log){

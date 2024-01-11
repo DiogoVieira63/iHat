@@ -51,7 +51,7 @@ public class LogsServiceTests{
         await logsService.Add(log1);
         await logsService.Add(log2);
 
-        var logs = await logsService.GetLogsOfObraByDate(idObra, DateTime.Today);
+        var logs = await logsService.GetLogsOfObra(idObra);
         Assert.True(logs.Count == 1);
     }
 }
