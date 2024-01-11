@@ -319,7 +319,8 @@ public class IHatController : ControllerBase{
     public async Task<ActionResult<List<Log>>> GetLogs(string idObra){
         Console.WriteLine("Get Logs GET Request");
 
-        var lista = await _facade.GetLogs(idObra);
+        // var lista = await _facade.GetLogs(idObra);
+        var lista = await _facade.GetLogsByDate(idObra, DateTime.Today);
 
         if(lista == null){
             return NotFound();
@@ -329,20 +330,20 @@ public class IHatController : ControllerBase{
     }
 
     //REVER
-    [HttpGet("logs/{idObra}/{date}")]
-    public async Task<ActionResult<List<Log>>> GetLogsByDate(string idObra, string date){
-        Console.WriteLine("Get Logs By Date GET Request");
+    // [HttpGet("logs/{idObra}/{date}")]
+    // public async Task<ActionResult<List<Log>>> GetLogsByDate(string idObra, string date){
+    //     Console.WriteLine("Get Logs By Date GET Request");
 
-        DateTime date1 = DateTime.Parse(date);
+    //     DateTime date1 = DateTime.Parse(date);
 
-        var lista = await _facade.GetLogsByDate(idObra, date1);
+    //     var lista = await _facade.GetLogsByDate(idObra, date1);
 
-        if(lista == null){
-            return NotFound();
-        }
+    //     if(lista == null){
+    //         return NotFound();
+    //     }
 
-        return lista;
-    }
+    //     return lista;
+    // }
     
 
     [HttpPost("logs")]

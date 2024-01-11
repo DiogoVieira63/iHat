@@ -512,7 +512,7 @@ public class ObrasServiceTests{
         var nameObra = "Obra5";
         var zonasRisco = new List<ZonasRisco>{
             new ZonasRisco(1){
-                Zonas = new List<Point>{
+                Points = new List<Point>{
                     new Point(992.9577606666666, 709.2555433333333),
                     new Point(947.823317, 947.823317),
                     new Point(1373.3766429999998, 702.8077656666666)

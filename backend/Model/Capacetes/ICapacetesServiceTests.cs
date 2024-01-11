@@ -406,6 +406,8 @@ public class CapacetesServiceTests{
             return;
 
         await capaceteService.AssociarTrabalhadorCapacete(nCapacete, idTrabalhador);
+        // var capacete = await capaceteService.GetById(nCapacete);
+        // Assert.Equal(idTrabalhador, capacete?.Trabalhador);
         // Act
         await capaceteService.DesassociarTrabalhadorCapacete(nCapacete, idTrabalhador);
         // Assert

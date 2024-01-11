@@ -28,23 +28,30 @@ public class LogsServiceTests{
     [Fact]
     public async void Test_AddLog(){
         var type = "Alerta";
-        var timestamp = DateTime.Now;
+        var timestamp = DateTime.Today;
         var idObra = "1";
         var idCapacete = 1;
         var idTrabalhador = "1";
         var tipo = "Fall";
+
+        var type1 = "Grave";
+        var timestamp1 = DateTime.Parse("03/01/2024");
+        var idCapacete1 = 2;
+        var idTrabalhador1 = "2";
+        var tipo1 = "Fall";
 
         // Arrange
         var logsService = Setup();
         if(logsService == null)
             return;
 
-        var log = new Log(type, timestamp, idObra, idCapacete, idTrabalhador, tipo);
-
+        var log1 = new Log(type, timestamp, idObra, idCapacete, idTrabalhador, tipo);
+        var log2 = new Log(type1, timestamp1, idObra, idCapacete1, idTrabalhador1, tipo1);
         // Act
-        await logsService.Add(log);
+        await logsService.Add(log1);
+        await logsService.Add(log2);
 
-        var logs = await logsService.GetLogsOfObra(idObra);
-        Assert.True(logs.Count > 0);
+        var logs = await logsService.GetLogsOfObraByDate(idObra, DateTime.Today);
+        Assert.True(logs.Count == 1);
     }
 }
