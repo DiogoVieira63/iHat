@@ -120,13 +120,13 @@ public class MQTTService {
         _logger.LogWarning("Received application message. {0}. Topic: {1}", payload, eventArgs.ApplicationMessage.Topic);
     
 
+        if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_PairingTopic)){
+            await HandlePairingMessage(payload);
+        }
         if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_BasicTopic)){
             await HandleMessageFromCapacetes(payload);
         }
         
-        if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_PairingTopic)){
-            await HandlePairingMessage(payload);
-        }
     }
 
     public async Task HandleMessageFromCapacetes(string payload){
