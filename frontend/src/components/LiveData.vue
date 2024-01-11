@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import  type { PropType } from 'vue'
+import { useDisplay } from 'vuetify'
 import type { MensagemCapacete, Gases, ValueObject } from '@/interfaces';
 
-// const liveData = ref([
-//     { type: 'heart-rate', value: 80, severity: 'normal' },
-//     { type: 'temperature', value: 37.0, severity: 'normal' },
-//     { type: 'gases', value: 'Moderate', severity: 'slightly_bad' },
-//     { type: 'fall-detection', value: 'Yes', severity: 'bad' }
-// ])
+const { mdAndDown , xs} = useDisplay()
 
 const props = defineProps({
     idCapacete: {
@@ -109,25 +105,28 @@ const getColor = (key: string, value: boolean | ValueObject | Gases) => {
         height="auto"
     >
         <template v-slot:title>
-            <h2>Capacete {{ props.idCapacete }} - Live Data</h2>
+            <h3 v-if="mdAndDown">Capacete {{ props.idCapacete }} - Live Data</h3>
+            <h2 v-else>Capacete {{ props.idCapacete }} - Live Data</h2>
         </template>
 
-        <v-row class="px-16 py-8">
+        <v-row class="px-4 py-4">
             <v-col
                 v-for="(value, key, index) in filteredMensagemCapacete()"
                 :key="index"
                 cols="12"
                 md="6"
+                align="center"
             >
                 <!-- Ajeitar caso sejam precisos mais dados -->
                 <v-card
-                    class="mx-4 my-6"
                     :color="getColor(key, value)"
                     :prepend-icon="getIcon(key)"
                     height="250px"
+                    :max-width="mdAndDown ? '750px' : '30vw'"
                 >
                     <template v-slot:title>
-                        <h3>{{ getTitle(key) }}</h3>
+                        <h5 v-if="mdAndDown" style="text-align: left;">{{ getTitle(key) }}</h5>
+                        <h4 v-else style="text-align: left;">{{ getTitle(key) }}</h4>
                     </template>
                     <v-card-text class="text-center">
                         <div
@@ -148,12 +147,6 @@ const getColor = (key: string, value: boolean | ValueObject | Gases) => {
                             <v-chip v-if="dictKey==='monoxidoCarbono'" class="custom-chip-size">
                                 <b>CO  : {{ dictValue }}</b>
                             </v-chip>
-                            <!-- <p v-if="dictKey==='metano'" class="my-4">
-                                <b>CH₄: {{ dictValue }}</b>
-                            </p>
-                            <p v-if="dictKey==='metano'" class="my-4">
-                                <b>CO  : {{ dictValue }}</b>
-                            </p> -->
                         </div>
                         <div
                             v-else
@@ -182,8 +175,9 @@ const getColor = (key: string, value: boolean | ValueObject | Gases) => {
     height: 65%;
 }
 .custom-chip-size {
-    font-size: 30px !important; 
-    width: 200px; 
+    font-size: 25px !important; 
+    min-width: 125px !important;
+    width: 15vw; 
     height: 75px !important;
     justify-content: center;
     align-items: center;

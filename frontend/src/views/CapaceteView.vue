@@ -12,7 +12,6 @@ const route = useRoute()
 const idCapacete: string = route.params.id.toString()
 const dadosCapacetes = ref<Array<MensagemCapacete>>([])
 const mensagemCapacete = ref<MensagemCapacete>()
-// const ultimaMensagem = ref<MensagemCapacete>()
 const signalRService = ref<CapaceteSignalRService>(new CapaceteSignalRService(idCapacete))
 
 const updateCapaceteData = (msgCapacete: MensagemCapacete) => {
@@ -42,7 +41,6 @@ onMounted(async () => {
     ])
     if (!mensagemCapacete.value){
         getUltimaMensagemFromDadosCapacete()
-        console.log("ola get ultima")
     }
     signalRService.value.updateCapaceteData(updateCapaceteData);
 });

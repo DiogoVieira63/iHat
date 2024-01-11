@@ -131,8 +131,8 @@ const envio = (mqtt: MqttService, task: Task) => {
         const dataMQTT: DataMQTT = {
             HelmetNB: idCapacete,
             Fall: newInput['Probabilidade de Queda'] == 1,
-            BodyTemperature: newInput['Temperatura Corporal'],
-            Heartrate: newInput['Ritmo Cardíaco'],
+            BodyTemperature: newInput['Temperatura Corporal'].toFixed(1),
+            Heartrate: newInput['Ritmo Cardíaco'].toFixed(0),
             Proximity: newInput['Proximidade'],
             Location: {
                 X: newInput['Posição do Capacete (X)'],
@@ -140,8 +140,8 @@ const envio = (mqtt: MqttService, task: Task) => {
                 Z: newInput['Posição do Capacete (Z)']
             },
             Gases: {
-                Metano: newInput['Gases Tóxicos (Metano)'],
-                MonoxidoCarbono: newInput['Gases Tóxicos (Monóxido de Carbono)']
+                Metano: newInput['Gases Tóxicos (Metano)'].toFixed(1),
+                MonoxidoCarbono: newInput['Gases Tóxicos (Monóxido de Carbono)'].toFixed(1)
             }
         }
         mqtt.publish('my/topic', JSON.stringify(dataMQTT))

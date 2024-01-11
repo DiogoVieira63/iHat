@@ -10,9 +10,6 @@ const props = defineProps({
     }
 })
 
-const items = [{message: 'Home', time: '5pm', description: "...", type: "informative" }, {message: 'Home 2', time: '10pm', description: "...", type: "alert"}, {message: 'Home 2', time: '10pm', description: "...", type: "alertDanger"}, {message: 'Home 2', time: '10pm', description: "...", type: "informative"}, {message: 'Home 2', time: '10pm', description: "...", type: "alert"}, {message: 'Home 2', time: '10pm', description: "...", type: "alertDanger"}, {message: 'Home 2', time: '10pm', description: "...", type: "informative"}, {message: 'Home 2', time: '10pm', description: "...", type: "alert"}, {message: 'Home 2', time: '10pm', description: "...", type: "alertDanger"}, {message: 'Home 2', time: '10pm', description: "...", type: "informative"}, {message: 'Home 2', time: '10pm', description: "...", type: "alertDanger"}]
-
-
 const getIcon = (type: string) => {
   switch (type) {
     // case 'informative':
