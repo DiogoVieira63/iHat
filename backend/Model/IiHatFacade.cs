@@ -25,11 +25,17 @@ public interface IiHatFacade{
 
     Task UpdateNomeObra(string idObra, string nome);
 
+    
+
     Task<List<Log>> GetLogs(string idObra);
 
     Task<List<Log>> GetLogsByDate(string idObra, DateTime date);
 
+    Task<List<Log>> GetDailyLogsCapacete(string idobra, int nCapacete);
+
     Task AddLogs(Log logs);
+
+    
 
     Task ChangeStatusCapacete(int nCapacete, string newStatus);
 

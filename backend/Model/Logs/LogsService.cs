@@ -25,15 +25,21 @@ public class LogsService: ILogsService{
     }
 
     public async Task<List<Log>> GetLogsOfObra(string idObra){
-        //return await _logsCollection.Find(x => x.IdObra == idObra && x.Timestamp == DateTime.Today).ToListAsync();
         return await _logsCollection.Find(x => x.IdObra == idObra).ToListAsync();
+    }
+
+
+    public async Task<List<Log>> GetLogsOfObraByDate(string idObra, DateTime date){
+        return await _logsCollection.Find(x => x.IdObra == idObra && x.Timestamp.Date == date.Date).ToListAsync();
+    }
+
+    public async Task<List<Log>> GetDailyLogsCapacete(string idObra, int nCapacete){
+        var logs = await _logsCollection.Find(x => x.IdObra == idObra && x.IdCapacete == nCapacete && x.Timestamp.Date == DateTime.Today.Date).ToListAsync();
+        return logs;
     }
 
     public async Task Add(Log log){
         await _logsCollection.InsertOneAsync(log);
     }
 
-    public async Task<List<Log>> GetLogsOfObraByDate(string idObra, DateTime date){
-        return await _logsCollection.Find(x => x.IdObra == idObra && x.Timestamp == date.Date).ToListAsync();
-    }
 }
