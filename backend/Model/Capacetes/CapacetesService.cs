@@ -64,24 +64,45 @@ public class CapacetesService: ICapacetesService{
         await _capaceteCollection.InsertOneAsync(capacete);
     }
 
+    public async Task AddCapaceteToObra(int nCapacete, string obraId){
+        var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync() ?? throw new Exception("Capacete não encontrado.");
+        
+        if(!capacete.CanBeAddedToObra()){
+            throw new Exception("Capacete já está associado a uma obra.");
+        }
 
+        var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Obra, obraId);
+        await _capaceteCollection.UpdateOneAsync(x => x.Numero == nCapacete, capaceteUpdate);
+    }
 
-    public async Task AddCapaceteToObra(int nCapacete){
-        await UpdateCapaceteStatus(nCapacete, Capacete.EmUso);
+    public async Task RemoveCapaceteFromObra(int nCapacete, string obraId){
+        var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync() ?? throw new Exception("Capacete não encontrado.");
+        
+        if(capacete.Obra == null){
+            throw new Exception("Capacete não está associado a nenhuma obra.");
+        }
+
+        if(capacete.Obra != obraId){
+            throw new Exception("Capacete não está associado à obra indicada.");
+        }
+
+        var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Obra, null);
+        await _capaceteCollection.UpdateOneAsync(x => x.Numero == nCapacete, capaceteUpdate);
     }
 
 
-    
-
     public async Task UpdateCapaceteStatus(int nCapacete, string status){
-        var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync();
-        if(capacete == null) throw new Exception("Capacete não encontrado.");
-
+        var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync() ?? throw new Exception("Capacete não encontrado.");
         var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, status);
         await _capaceteCollection.UpdateOneAsync(x => x.Numero == nCapacete, capaceteUpdate);
     }
 
     public async Task UpdateCapaceteStatusToLivre(int nCapacete){
+        var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync() ?? throw new Exception("Capacete não encontrado.");
+
+        if(!capacete.CanUpdateStatusToLivre())
+            throw new Exception("Não pode colocar o estado do Capacete a Livre");
+
         await UpdateCapaceteStatus(nCapacete, Capacete.Livre);
     }
 
