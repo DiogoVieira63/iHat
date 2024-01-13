@@ -11,7 +11,7 @@ public class ObrasService: IObrasService{
     public readonly IMongoCollection<Obra> _obraCollection;
     private readonly ILogger<ObrasService> _logger;
 
-    public readonly IMongoCollection<Mapa> _mapaCollection;
+    // public readonly IMongoCollection<Mapa> _mapaCollection;
 
     public ObrasService(IOptions<DatabaseSettings> iHatDatabaseSettings, ILogger<ObrasService> logger){
         var mongoClient = new MongoClient(
@@ -23,8 +23,8 @@ public class ObrasService: IObrasService{
         _obraCollection = mongoDatabase.GetCollection<Obra>(
             iHatDatabaseSettings.Value.ObrasCollectionName);
 
-        _mapaCollection = mongoDatabase.GetCollection<Mapa>(
-            iHatDatabaseSettings.Value.MapasCollectionName);
+        /*_mapaCollection = mongoDatabase.GetCollection<Mapa>(
+            iHatDatabaseSettings.Value.MapasCollectionName);*/
 
         _logger = logger;
     }
@@ -128,13 +128,17 @@ public class ObrasService: IObrasService{
         await _obraCollection.UpdateOneAsync(x => x.Id == id, obraUpdate);
     }
 
-    
-
-
-
+    public async Task<bool> UpdateZonasRiscoObra(string idObra, string idMapa){
+        var obra =  await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
+        if(!obra.Mapa.Contains(idMapa))
+            return false;
+        if(!obra.CanChangeMap())
+            return false;
+        return true;
+    }
 
     //rever
-    public async Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
+    /*public async Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
         var obra =  await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
         if (obra.Mapa.Contains(idMapa)){
             var mapa = await _mapaCollection.Find(x => x.Id == idMapa).FirstOrDefaultAsync() ?? throw new Exception("Mapa não encontrada.");
@@ -149,6 +153,6 @@ public class ObrasService: IObrasService{
         }else{
             throw new Exception("Mapa não encontrado.");
         }
-    }  
+    }*/
     
 }

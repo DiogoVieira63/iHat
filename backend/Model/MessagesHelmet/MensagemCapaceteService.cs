@@ -27,7 +27,7 @@ public class MensagemCapaceteService {
         await _mensagemcapaceteCollection.InsertOneAsync(mensagem);
     }
 
-    public async Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete){
+    public async Task<List<MensagemCapacete>> GetUltimosDadosDoCapacete(int nCapacete){
         var sortDefinition = Builders<MensagemCapacete>.Sort.Descending("timestamp");
         var listaMensagemCapacete = await _mensagemcapaceteCollection.Find(x => x.NCapacete == nCapacete).Sort(sortDefinition).ToListAsync();
         var moreRecentMensagens = listaMensagemCapacete.Take(20).ToList();

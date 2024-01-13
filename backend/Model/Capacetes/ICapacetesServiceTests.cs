@@ -30,8 +30,9 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
+
+
         var allPreviousCapacetes = await capaceteService.GetAll();
 
         // Act
@@ -191,7 +192,7 @@ public class CapacetesServiceTests{
             return;
 
         // Act
-        var capacete = await capaceteService.CheckIfHelmetIfBeingUsed(nCapacete);
+        var capacete = await capaceteService.CheckIfCapaceteIsBeingUsed(nCapacete);
 
         // Assert
         Assert.False(capacete);
@@ -208,7 +209,7 @@ public class CapacetesServiceTests{
             return;
 
         // Act
-        var capacete = await capaceteService.CheckIfHelmetIfBeingUsed(nCapacete);
+        var capacete = await capaceteService.CheckIfCapaceteIsBeingUsed(nCapacete);
 
         // Assert
         Assert.False(capacete);

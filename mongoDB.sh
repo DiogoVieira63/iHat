@@ -10,8 +10,6 @@ OBRAS_COLLECTION="Obras"
 CAPACETES_COLLECTION="Capacetes"
 LOGS_COLLECTION="Logs"
 MENSAGENS_CAPACETE_COLLECTION="MensagensCapacete"
-
-ZONAS_RISCO_COLLECTION="ZonasRisco"
 MAPAS_COLLECTION="Mapas"
 
 # Connect to MongoDB
@@ -100,8 +98,6 @@ db.${MENSAGENS_CAPACETE_COLLECTION}.insertMany( [
         Gases: { Metano: 0, MonoxidoCarbono: 0 }
   }
 ] )
-
-db.createCollection("${ZONAS_RISCO_COLLECTION}")
 
 db.createCollection("${MAPAS_COLLECTION}")
 

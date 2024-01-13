@@ -18,7 +18,7 @@ public class ObrasDTO
     {
         Id = obra.Id;
         IdResponsavel = obra.IdResponsavel;
-        Name = obra.Name;
+        Name = obra.Nome;
         Mapa = listaMapas;
         Capacetes = obra.Capacetes;
         Status = obra.Status;

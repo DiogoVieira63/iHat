@@ -43,7 +43,6 @@ builder.Services.AddSingleton<ICapacetesService, CapacetesService>();
 builder.Services.AddSingleton<ILogsService, LogsService>();
 builder.Services.AddSingleton<IMapaService, MapaService>();
 builder.Services.AddSingleton<MensagemCapaceteService>();
-builder.Services.AddSingleton<IZonasService,ZonasService> ();
 builder.Services.AddSingleton<IiHatFacade, iHatFacade>();
 builder.Services.AddSingleton<ManageNotificationClients>();
 builder.Services.AddSingleton<MQTTService>();

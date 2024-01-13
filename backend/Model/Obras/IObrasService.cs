@@ -79,9 +79,14 @@ public interface IObrasService{
     */
     Task UpdateNomeObra(string idObra, string nome);
 
+    /*
+    Função que verifica se as zonas de risco de uma obra podem ser atualizadas.
+    Para tal verifica se o estado da obra permite que as Zonas de Risco sejam atualizadas.
+    Verifica também se o idMapa está presente na lista de mapas da obra.
+    Returns: True se as Zonas de Risco puderem ser atualizadas. Retorna False otherwise.
+    */
+    Task<bool> UpdateZonasRiscoObra(string idObra, string idMapa);
+    // Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas);
 
-    
-    
-    Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas);
 }
     

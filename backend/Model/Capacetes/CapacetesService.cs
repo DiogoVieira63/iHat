@@ -67,7 +67,7 @@ public class CapacetesService: ICapacetesService{
 
 
     public async Task AddCapaceteToObra(int nCapacete){
-        await UpdateCapaceteStatus(nCapacete, );
+        await UpdateCapaceteStatus(nCapacete, Capacete.EmUso);
     }
 
 

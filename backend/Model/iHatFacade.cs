@@ -132,11 +132,11 @@ public class iHatFacade: IiHatFacade{
         if(!existsCapacete)
             throw new Exception("Capacete não encontrado.");
 
-        var capaceteIsBeingUsed = await icapacetes.CheckIfHelmetIfBeingUsed(nCapacete);
+        var capaceteIsBeingUsed = await icapacetes.CheckIfCapaceteIsBeingUsed(nCapacete);
         if(!capaceteIsBeingUsed)
             throw new Exception("Capacete não pode ser removido da obra, pois não está em uso.");
 
-        await iobras.DeleteCapaceteToObra(nCapacete, idObra);
+        await iobras.RemoveCapaceteToObra(nCapacete, idObra);
 
         await icapacetes.UpdateCapaceteStatusToLivre(nCapacete);
 
@@ -153,12 +153,12 @@ public class iHatFacade: IiHatFacade{
     }
 
     public async Task AlteraEstadoObra(string id, string estado){
-        await iobras.AlteraEstadoObra(id, estado);
+        await iobras.UpdateEstadoObra(id, estado);
         
         if(estado == "Finalizada" || estado == "Cancelada"){
             var capacetes = await GetAllCapacetesdaObra(id);
             foreach(var capacete in capacetes){
-                await icapacetes.UpdateCapaceteStatusToLivre(capacete.NCapacete);
+                await icapacetes.UpdateCapaceteStatusToLivre(capacete.Numero);
             }
         }
     }
@@ -205,7 +205,12 @@ public class iHatFacade: IiHatFacade{
     }
 
     public async Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
-        await iobras.UpdateZonasRiscoObra(idObra, idMapa, zonas);
+        // await iobras.UpdateZonasRiscoObra(idObra, idMapa, zonas);
+
+        if(!await iobras.UpdateZonasRiscoObra(idObra, idMapa)){
+            throw new Exception("Não é possível atualizar as zonas de risco deste Mapa.");
+        }
+        await imapas.UpdateZonasPerigoOfMapa(idMapa, zonas);       
     }
 
 

@@ -7,15 +7,17 @@ using iHat.Model.Obras;
 using iHat.Model.Zonas;
 
 public interface IiHatFacade{
+
+    // Obras
     Task<string?> NewConstruction(string name, IFormFile? mapa, int idResponsavel);
 
     Task<List<Obra>?> GetObras(int idResponsavel);    
 
-    Task RemoveObraById(string obraId);
-
     Task<Obra> GetConstructionById(string id);
 
     Task<List<Capacete>> GetAllCapacetesdaObra(string idObra);
+
+    Task RemoveObraById(string obraId);
 
     Task DeleteCapaceteToObra(int nCapacete, string idObra);
 
@@ -25,21 +27,25 @@ public interface IiHatFacade{
 
     Task UpdateNomeObra(string idObra, string nome);
 
-    Task<List<Log>> GetLogs(string idObra);
 
-    Task<List<Log>> GetLogsByDate(string idObra, DateTime date);
-
-    Task AddLogs(Log logs);
-
-    Task ChangeStatusCapacete(int nCapacete, string newStatus);
+    // Capacetes
 
     Task<List<Capacete>> GetAllCapacetes();
 
     Task<Capacete?> GetCapacete(int nCapacete);
 
+    Task<List<Capacete>> GetFreeHelmets();
+
+    Task ChangeStatusCapacete(int nCapacete, string newStatus);
+
     Task AddCapacete(int nCapacete );
 
-    Task<List<Capacete>> GetFreeHelmets();
+    Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete);
+
+    Task<Dictionary<int, Location>> GetLastLocationCapacetesObra(string obraId);
+
+
+    // Mapa
 
     Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas);
 
@@ -47,9 +53,15 @@ public interface IiHatFacade{
 
     Task AddMapa(string idObra, IFormFile mapaFile);
 
-    Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete);
-
     Task UpdateMapaFloorNumber(string idObra, Dictionary<string, int> newFloors);
 
-    Task<Dictionary<int, Location>> GetLastLocationCapacetesObra(string obraId);
+
+    // Logs
+
+    Task<List<Log>> GetLogs(string idObra);
+
+    Task<List<Log>> GetLogsByDate(string idObra, DateTime date);
+
+    Task AddLogs(Log logs);
+
 }

@@ -2,6 +2,7 @@ using Xunit;
 using Moq;
 using Microsoft.Extensions.Options;
 using iHat.Model.Zonas;
+using Microsoft.Extensions.Configuration;
 
 namespace iHat.Model.Obras;
 
@@ -13,14 +14,29 @@ public class ObrasServiceTests{
                  .AddEnvironmentVariables() 
                  .Build();
 
-        var databaseSettings =  (DatabaseSettings?) config.GetValue(typeof(DatabaseSettings), "Database" );
+        var s = config.GetSection("Database");
+
+        var serviceProvider = new ServiceCollection()
+            .Configure<DatabaseSettings>(config.GetSection("Database"))
+            .BuildServiceProvider();
+
+        if(serviceProvider == null){
+            Console.WriteLine("service Provider is null");
+        }
+
+        // Obter as configurações vinculadas
+        var databaseSettings = serviceProvider.GetRequiredService<DatabaseSettings>();
+
+        
+
+        // var databaseSettings = (DatabaseSettings?) config.GetValue(typeof(DatabaseSettings), "Database");
         if(databaseSettings == null){
+            Console.WriteLine("DatabaseSettings is null");
+
             return null;
         }
         IOptions<DatabaseSettings> options1 = Options.Create<DatabaseSettings>(databaseSettings);
-        
         var logger = Mock.Of<ILogger<ObrasService>>();
-
         var obraService = new ObrasService(options1, logger);
 
         return obraService;
@@ -33,8 +49,7 @@ public class ObrasServiceTests{
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         var allPreviousObras = await obraService.GetObrasOfResponsavel(idResponsavel);
 
@@ -44,9 +59,9 @@ public class ObrasServiceTests{
         // Assert [Se já existir um valor antes na lista, esta não deverá ter sido adicionada]
         var allAfterObras = await obraService.GetObrasOfResponsavel(idResponsavel);
 
-        var expectedValue = allPreviousObras.Find(obra => obra.Name == nameObra) == null;
+        var expectedValue = allPreviousObras.Find(obra => obra.Nome == nameObra) == null;
 
-        var addedObra = allAfterObras.Find(obra => obra.Name == nameObra) != null;
+        var addedObra = allAfterObras.Find(obra => obra.Nome == nameObra) != null;
 
         addedObra.Equals(expectedValue);
     }
@@ -118,14 +133,14 @@ public class ObrasServiceTests{
 
         // Assert - Verificar se a Obra foi adicionada
         var allObras = await obraService.GetObrasOfResponsavel(idResponsavel1);
-        var addedObra = allObras.Find(obra => obra.Name == nameObra1) != null;
+        var addedObra = allObras.Find(obra => obra.Nome == nameObra1) != null;
         addedObra.Equals(true);
 
         // Act - Remover a Obra
         await obraService.RemoveObraByIdAsync(obra1);
         // Assert - Verificar se a Obra foi removida
         allObras = await obraService.GetObrasOfResponsavel(idResponsavel1);
-        addedObra = allObras.Find(obra => obra.Name == nameObra1) != null;
+        addedObra = allObras.Find(obra => obra.Nome == nameObra1) != null;
         addedObra.Equals(false);
     }
 
@@ -144,14 +159,14 @@ public class ObrasServiceTests{
 
         // Assert - Verificar se a Obra foi adicionada
         var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        var addedObra = allObras.Find(obra => obra.Nome == nameObra) != null;
         addedObra.Equals(true);
 
         // Act - Remover a Obra
         await obraService.RemoveObraByIdAsync(obra);
         // Assert - Verificar se a Obra foi removida
         allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        addedObra = allObras.Find(obra => obra.Nome == nameObra) != null;
         addedObra.Equals(false);
 
         // Act - Remover a Obra
@@ -178,14 +193,14 @@ public class ObrasServiceTests{
 
         // Assert - Verificar se a Obra foi adicionada
         var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        var addedObra = allObras.Find(obra => obra.Nome == nameObra) != null;
         addedObra.Equals(true);
 
         // Act - Alterar o estado da Obra
-        await obraService.AlteraEstadoObra(obra, "Cancelada");
+        await obraService.UpdateEstadoObra(obra, "Cancelada");
         // Assert - Verificar se o estado da Obra foi alterado
         allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var obraAlterada = allObras.Find(obra => obra.Name == nameObra && obra.Status == "Cancelada") != null;
+        var obraAlterada = allObras.Find(obra => obra.Nome == nameObra && obra.Status == "Cancelada") != null;
         obraAlterada.Equals(true);
     }
 
@@ -204,18 +219,18 @@ public class ObrasServiceTests{
 
         // Assert - Verificar se a Obra foi adicionada
         var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        var addedObra = allObras.Find(obra => obra.Nome == nameObra) != null;
         addedObra.Equals(true);
 
         // Act - Alterar o estado da Obra
-        await obraService.AlteraEstadoObra(obra, "Cancelada");
+        await obraService.UpdateEstadoObra(obra, "Cancelada");
         // Assert - Verificar se o estado da Obra foi alterado
         allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var obraAlterada = allObras.Find(obra => obra.Name == nameObra && obra.Status == "Cancelada") != null;
+        var obraAlterada = allObras.Find(obra => obra.Nome == nameObra && obra.Status == "Cancelada") != null;
         obraAlterada.Equals(true);
 
         // Act - Alterar o estado da Obra
-        Action act = () => obraService.AlteraEstadoObra(obra, "Cancelada");
+        Action act = () => obraService.UpdateEstadoObra(obra, "Cancelada");
         
         //assert
         Exception exception = Assert.Throws<Exception>(act);
@@ -239,14 +254,14 @@ public class ObrasServiceTests{
 
         // Assert - Verificar se a Obra foi adicionada
         var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        var addedObra = allObras.Find(obra => obra.Nome == nameObra) != null;
         addedObra.Equals(true);
 
         // Act - Alterar o nome da Obra
         await obraService.UpdateNomeObra(obra, newNameObra);
         // Assert - Verificar se o nome da Obra foi alterado
         allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var obraAlterada = allObras.Find(obra => obra.Name == newNameObra) != null;
+        var obraAlterada = allObras.Find(obra => obra.Nome == newNameObra) != null;
         obraAlterada.Equals(true);
     }
 
@@ -266,14 +281,14 @@ public class ObrasServiceTests{
 
         // Assert - Verificar se a Obra foi adicionada
         var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        var addedObra = allObras.Find(obra => obra.Nome == nameObra) != null;
         addedObra.Equals(true);
 
         // Act - Alterar o nome da Obra
         await obraService.UpdateNomeObra(obra, newNameObra);
         // Assert - Verificar se o nome da Obra foi alterado
         allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var obraAlterada = allObras.Find(obra => obra.Name == newNameObra) != null;
+        var obraAlterada = allObras.Find(obra => obra.Nome == newNameObra) != null;
         obraAlterada.Equals(true);
 
         // Act - Alterar o nome da Obra
@@ -406,7 +421,7 @@ public class ObrasServiceTests{
 
         // Assert - Verificar se a Obra foi adicionada
         var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        var addedObra = allObras.Find(obra => obra.Nome == nameObra) != null;
         addedObra.Equals(true);
 
         // Act - Verificar se a Obra existe
@@ -429,7 +444,7 @@ public class ObrasServiceTests{
 
         // Assert - Verificar se a Obra foi adicionada
         var allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
-        var addedObra = allObras.Find(obra => obra.Name == nameObra) != null;
+        var addedObra = allObras.Find(obra => obra.Nome == nameObra) != null;
         addedObra.Equals(true);
 
         // Act - Verificar se a Obra existe
@@ -462,7 +477,7 @@ public class ObrasServiceTests{
         await obraService.AddCapaceteToObra(idCapacete1, obra);
         await obraService.AddCapaceteToObra(idCapacete2, obra);
         // Assert - Remover um Capacete da Obra
-        await obraService.DeleteCapaceteToObra(idCapacete1, obra);
+        await obraService.RemoveCapaceteToObra(idCapacete1, obra);
         // Assert - Verificar se o Capacete foi removido da Obra
         var allCapacetes = await obraService.GetAllCapacetesOfObra(obra);
         var capacete1 = allCapacetes.Find(capacete => capacete == idCapacete1) != null;
@@ -489,7 +504,7 @@ public class ObrasServiceTests{
         await obraService.AddCapaceteToObra(idCapacete1, obra);
         await obraService.AddCapaceteToObra(idCapacete2, obra);
         // Assert - Remover um Capacete da Obra
-        await obraService.DeleteCapaceteToObra(idCapacete1, obra);
+        await obraService.RemoveCapaceteToObra(idCapacete1, obra);
         // Assert - Verificar se o Capacete foi removido da Obra
         var allCapacetes = await obraService.GetAllCapacetesOfObra(obra);
         var capacete1 = allCapacetes.Find(capacete => capacete == idCapacete1) != null;
@@ -498,7 +513,7 @@ public class ObrasServiceTests{
         capacete2.Equals(true);
 
         // Act - Remover um Capacete da Obra
-        Action act = () => obraService.DeleteCapaceteToObra(idCapacete1, obra);
+        Action act = () => obraService.RemoveCapaceteToObra(idCapacete1, obra);
         
         //assert
         Exception exception = Assert.Throws<Exception>(act);
