@@ -312,15 +312,10 @@ public class IHatController : ControllerBase{
     }
 
 
+    [HttpGet("logs/daily/{idObra}")]
+    public async Task<ActionResult<List<Log>>> GetDailyLogs(string idObra){
 
-
-
-    [HttpGet("logs/{idObra}")]
-    public async Task<ActionResult<List<Log>>> GetLogs(string idObra){
-        Console.WriteLine("Get Logs GET Request");
-
-        var lista = await _facade.GetLogs(idObra);
-        // var lista = await _facade.GetLogsByDate(idObra, DateTime.Today);
+        var lista = await _facade.GetLogsByDate(idObra, DateTime.Today);
 
         if(lista == null){
             return NotFound();
@@ -329,21 +324,23 @@ public class IHatController : ControllerBase{
         return lista;
     }
 
-    //REVER
-    // [HttpGet("logs/{idObra}/{date}")]
-    // public async Task<ActionResult<List<Log>>> GetLogsByDate(string idObra, string date){
-    //     Console.WriteLine("Get Logs By Date GET Request");
 
-    //     DateTime date1 = DateTime.Parse(date);
+    [HttpGet("logs/{idObra}/{nCapacete}")]
+    public async Task<ActionResult<List<Log>>> GetDailyLogsCapacete(string idObra, string nCapacete){
 
-    //     var lista = await _facade.GetLogsByDate(idObra, date1);
+        int nCap = int.Parse(nCapacete);
+        var lista = await _facade.GetDailyLogsCapacete(idObra, nCap);
+        return lista;
+    }
 
-    //     if(lista == null){
-    //         return NotFound();
-    //     }
 
-    //     return lista;
-    // }
+    [HttpGet("logs/{idObra}")]
+    public async Task<ActionResult<List<Log>>> GetLogs(string idObra){
+
+        var lista = await _facade.GetLogs(idObra);
+        return lista;
+    }
+
     
 
     [HttpPost("logs")]

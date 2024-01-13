@@ -196,8 +196,17 @@ public class MQTTService {
 
                 // Notify Frontend
                 if(log.IdObra != null){
-                    var listaLogs = await _logsService.GetLogsOfObra(log.IdObra);
+
+                    // Notifica a página da obra
+                    var listaLogs = await _logsService.GetLogsOfObraByDate(log.IdObra, DateTime.Today);
                     await _manageNotificationClients.NotifyClientsObraWithAllLogs(log.IdObra, listaLogs);
+
+                    //Notifica a página do capacete
+                    if(log.IdCapacete != null){
+                        var listaLogsCapacete = await _logsService.GetDailyLogsCapacete(log.IdObra, log.IdCapacete ?? -1);
+                        await _manageNotificationClients.NotifyClientsCapaceteWithLogs(log.IdCapacete ?? -1, listaLogsCapacete);
+                    }
+                        
                 }
                 
                 // Notify Helmet

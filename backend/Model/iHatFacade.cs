@@ -175,6 +175,11 @@ public class iHatFacade: IiHatFacade{
         return await ilogs.GetLogsOfObraByDate(idObra, date);
     }
 
+    public async Task<List<Log>> GetDailyLogsCapacete(string idObra, int nCapacete){
+        return await ilogs.GetDailyLogsCapacete(idObra, nCapacete);
+    }
+
+
     public async Task AddLogs(Log logs){
         await ilogs.Add(logs);
     }

@@ -27,12 +27,17 @@ public sealed class ManageNotificationClients{
     public async Task NotifyClientsObraWithAllLogs(string obraId, List<Log> allLogs){
         await _obrasHub.Clients.Group(obraId).SendAsync("UpdateLogs", allLogs);
     }
+
+    public async Task NotifyClientsObraCapaceteDentroZonaRisco(string obraId, int nCapacete){
+        await _obrasHub.Clients.Group(obraId).SendAsync("UpdateCapaceteDentroZonaRisco", nCapacete);
+    }
     
     public async Task NotifyClientsCapaceteWithLastMessage(int nCapacete, MensagemCapacete lastReceivedMessage){
         await _dadosCapaceteHub.Clients.Group(nCapacete.ToString()).SendAsync("UpdateDadosCapacete", lastReceivedMessage);
     }
 
-    public async Task NotifyClientsObraCapaceteDentroZonaRisco(string obraId, int nCapacete){
-        await _obrasHub.Clients.Group(obraId).SendAsync("UpdateCapaceteDentroZonaRisco", nCapacete);
+    public async Task NotifyClientsCapaceteWithLogs(int nCapacete, List<Log> dailyLogs){
+        await _dadosCapaceteHub.Clients.Group(nCapacete.ToString()).SendAsync("UpdateLogsCapacete", dailyLogs);
     }
+
 }
