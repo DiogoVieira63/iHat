@@ -140,6 +140,7 @@ const getColor = (key: string, value: boolean | ValueObject | Gases) => {
                         <div
                             v-else-if="key === 'gases'"
                             v-for="(dictValue, dictKey) in value"
+                            :key="dictKey"
                         >
                             <v-chip v-if="dictKey==='metano'" class="custom-chip-size my-4">
                                 <b>CH₄: {{ dictValue }}</b>
