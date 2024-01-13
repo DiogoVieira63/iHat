@@ -1,4 +1,3 @@
-using iHat.Model.MensagensCapacete;
 using Microsoft.AspNetCore.SignalR;
 
 namespace SignalR.Hubs;
@@ -35,10 +34,5 @@ public sealed class DadosCapaceteHub : Hub {
         }
         else 
             throw new Exception("Cancelling subscription for log's updates failed: 'capacete_id' is a mandatory parameter.");
-    }
-
-    // Notifica os clientes com os dados da última mensagem do capaceteId recebida
-    public async Task NotifyClientGroups(string capaceteId, MensagemCapacete mensagem){
-        await Clients.Group(capaceteId).SendAsync("UpdateDadosCapacete", mensagem);
     }
 }
