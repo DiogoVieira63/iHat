@@ -33,9 +33,10 @@ public interface ICapacetesService{
     Task<bool> CheckIfCapaceteExists(int nCapacete);
 
     /*
-    Função que permite consultar se um capacete está a ser utilizado
+    Função que permite consultar se um capacete está a ser utilizado.
+    i.e. verifica se o capacete está no estado "EmUso" e se tem um trabahador associado
     */
-    Task<string> CheckIfHelmetIfBeingUsed(int nCapacete);
+    Task<bool> CheckIfCapaceteIsBeingUsed(int nCapacete);
 
     /**
     * Função que permite adicionar um novo Capacete com o número "nCapacete" ao sistema.
@@ -43,6 +44,8 @@ public interface ICapacetesService{
     * Exception: Devolve uma exceção se um Capacete com o mesmo número "nCapacete" já existir.
     */
     Task Add(int nCapacete);
+    
+
     
     Task AddCapaceteToObra(int nCapacete);
 
