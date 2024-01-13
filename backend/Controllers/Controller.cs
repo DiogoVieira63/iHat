@@ -221,7 +221,7 @@ public class IHatController : ControllerBase{
     }
     
     // Permite retornar os últimos 20 dados recebidos do capacete
-    [HttpGet("helmets/data/{id}")]
+    [HttpGet("helmets/{id}/data")]
     public async Task<ActionResult<List<MensagemCapacete>?>> GetHelmetData(string id){
         int nCapacete = int.Parse(id);
         var capacetedata = await _facade.GetUltimosDadosDoCapacete(nCapacete);

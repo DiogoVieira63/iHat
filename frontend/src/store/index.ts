@@ -133,8 +133,8 @@ const envio = (mqtt: MqttService, task: Task) => {
         const dataMQTT: DataMQTT = {
             HelmetNB: idCapacete,
             Fall: newInput['Probabilidade de Queda'] == 1,
-            BodyTemperature: newInput['Temperatura Corporal'],
-            Heartrate: newInput['Ritmo Cardíaco'],
+            BodyTemperature: newInput['Temperatura Corporal'].toFixed(1),
+            Heartrate: newInput['Ritmo Cardíaco'].toFixed(0),
             Proximity: newInput['Proximidade'],
             Location: {
                 X: newInput['Posição do Capacete (X)'],
@@ -142,8 +142,8 @@ const envio = (mqtt: MqttService, task: Task) => {
                 Z: newInput['Posição do Capacete (Z)'] -1
             },
             Gases: {
-                Metano: newInput['Gases Tóxicos (Metano)'],
-                MonoxidoCarbono: newInput['Gases Tóxicos (Monóxido de Carbono)']
+                Metano: newInput['Gases Tóxicos (Metano)'].toFixed(1),
+                MonoxidoCarbono: newInput['Gases Tóxicos (Monóxido de Carbono)'].toFixed(1)
             }
         }
         mqtt.publish('my/topic', JSON.stringify(dataMQTT))
@@ -155,7 +155,7 @@ const pairing = (mqtt: MqttService, nCapacete: number, idObra: string) => {
         type: 'Pairing',
         nCapacete: nCapacete,
         obra: idObra,
-        trabalhador: 'T' + nCapacete
+        idTrabalhador: 'T' + nCapacete
     }
 
     mqtt.publish('ihat/obras', JSON.stringify(mensagem))
@@ -166,7 +166,7 @@ const disconnect = (mqtt: MqttService, nCapacete: number) => {
         type: 'Disconnect',
         nCapacete: nCapacete,
         obra: '',
-        trabalhador: 'T' + nCapacete
+        idTrabalhador: 'T' + nCapacete
     }
 
     mqtt.publish('ihat/obras', JSON.stringify(mensagem))
@@ -205,7 +205,10 @@ export const useTaskStore = defineStore('taskMQTT', {
             for (const idCapacete of task.capacetes) {
                 pairing(mqtt, idCapacete, this.active)
             }
-            task.play(mqtt)
+            setTimeout(() => {
+                task.play(mqtt)
+            }
+            , 2000)
             this.tasks[this.active][Date.now()] = task
             //this.tasks.push(task)
         },

@@ -123,6 +123,9 @@ public class MQTTService {
             await HandlePairingMessage(payload);
         }
 
+        if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_PairingTopic)){
+            await HandlePairingMessage(payload);
+        }
         if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_BasicTopic)){
             await HandleMessageFromCapacetes(payload);
         }

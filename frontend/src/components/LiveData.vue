@@ -1,32 +1,44 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import  type { PropType } from 'vue'
+import { useDisplay } from 'vuetify'
+import type { MensagemCapacete, Gases, ValueObject } from '@/interfaces';
 
-const route = useRoute()
+const { mdAndDown , xs} = useDisplay()
 
-const routeId = ref('')
-const liveData = ref([
-    { type: 'heart-rate', value: 80, severity: 'normal' },
-    { type: 'temperature', value: 37.0, severity: 'normal' },
-    { type: 'gases', value: 'Moderate', severity: 'slightly_bad' },
-    { type: 'fall-detection', value: 'Yes', severity: 'bad' }
-])
-
-onMounted(() => {
-    if (typeof route.params.id === 'string') {
-        routeId.value = route.params.id
+const props = defineProps({
+    idCapacete: {
+        type: String,
+        required: true
+    },
+    mensagemCapacete: {
+        type: Object as PropType<MensagemCapacete>,
+        required: true,
     }
 })
 
+const filteredMensagemCapacete = () => {
+    if (props.mensagemCapacete){
+        const { fall, bodyTemperature, heartrate, gases } = props.mensagemCapacete;
+
+        const filteredData = {
+            fall,
+            bodyTemperature,
+            heartrate,
+            gases
+        };
+        return filteredData;
+    }
+}
+
 const getIcon = (type: string) => {
     switch (type) {
-        case 'heart-rate':
+        case 'heartrate':
             return 'mdi-heart-pulse'
-        case 'temperature':
+        case 'bodyTemperature':
             return 'mdi-thermometer'
         case 'gases':
             return 'mdi-cloud-alert'
-        case 'fall-detection':
+        case 'fall':
             return 'mdi-ambulance'
         default:
             return ''
@@ -35,29 +47,55 @@ const getIcon = (type: string) => {
 
 const getTitle = (type: string) => {
     switch (type) {
-        case 'heart-rate':
+        case 'heartrate':
             return 'Frequência Cardíaca'
-        case 'temperature':
+        case 'bodyTemperature':
             return 'Temperatura Corporal'
         case 'gases':
             return 'Gases Tóxicos'
-        case 'fall-detection':
+        case 'fall':
             return 'Indicador de Queda'
         default:
             return ''
     }
 }
 
-const getColor = (severity: string) => {
-    //var red = '#fd5050'
+// const getColor = (severity: string) => {
+//     //var red = '#fd5050'
+//     var red = '#ff9999'
+//     var yellow = '#fcff99'
+//     var green = '#a6ffbe'
+
+//     if (severity === 'bad') return red
+//     else if (severity === 'slightly_bad') return yellow
+//     else if (severity === 'normal') return green
+// }
+
+//TEMPORARIO, DEPOIS POSSIVELMENTE VITR ANÁLISE FEITA DO BACK NO OBJETO.
+//ALGO DESTE TIPO:
+// 
+const getColor = (key: string, value: boolean | ValueObject | Gases) => {
     var red = '#ff9999'
-    var yellow = '#fcff99'
     var green = '#a6ffbe'
 
-    if (severity === 'bad') return red
-    else if (severity === 'slightly_bad') return yellow
-    else if (severity === 'normal') return green
+    if (key === 'fall'){
+        if (value) return red
+        else return green
+    }
+    else if (key === 'heartrate'){
+        if (typeof value === 'object' && 'value' in value && (value.value<60 || value.value>180)) return red
+        else return green
+    }
+    else if (key === 'bodyTemperature'){
+        if (typeof value === 'object' && 'value' in value && (value.value<34.5 || value.value>37.4)) return red
+        else return green
+    }
+    else if (key === 'gases'){
+        if (typeof value === 'object' && 'metano' in value && 'monoxidoCarbono' in value && (value.metano > 0 || value.monoxidoCarbono>0)) return red
+        else return green
+    }
 }
+
 </script>
 <template>
     <v-card
@@ -67,38 +105,59 @@ const getColor = (severity: string) => {
         height="auto"
     >
         <template v-slot:title>
-            <h2>Capacete {{ routeId }} - Live Data</h2>
+            <h3 v-if="mdAndDown">Capacete {{ props.idCapacete }} - Live Data</h3>
+            <h2 v-else>Capacete {{ props.idCapacete }} - Live Data</h2>
         </template>
 
-        <v-row class="px-16 py-8">
+        <v-row class="px-4 py-4">
             <v-col
-                v-for="(item, index) in liveData"
+                v-for="(value, key, index) in filteredMensagemCapacete()"
                 :key="index"
                 cols="12"
                 md="6"
+                align="center"
             >
                 <!-- Ajeitar caso sejam precisos mais dados -->
                 <v-card
-                    class="mx-4 my-6"
-                    :color="getColor(item.severity)"
-                    :prepend-icon="getIcon(item.type)"
+                    :color="getColor(key, value)"
+                    :prepend-icon="getIcon(key)"
                     height="250px"
+                    :max-width="mdAndDown ? '750px' : '30vw'"
                 >
                     <template v-slot:title>
-                        <h3>{{ getTitle(item.type) }}</h3>
+                        <h5 v-if="mdAndDown" style="text-align: left;">{{ getTitle(key) }}</h5>
+                        <h4 v-else style="text-align: left;">{{ getTitle(key) }}</h4>
                     </template>
                     <v-card-text class="text-center">
                         <div
-                            v-if="item.type === 'temperature'"
-                            class="text-h3"
+                            v-if="key === 'fall'"
                         >
-                            <b>{{ item.value }}&deg;C</b>
+                            <v-chip class="custom-chip-size">
+                                <b v-if="value == true"> Queda Detetada</b>
+                                <b v-else> - </b>
+                            </v-chip>
+                        </div>
+                        <div
+                            v-else-if="key === 'gases'"
+                            v-for="(dictValue, dictKey) in value"
+                        >
+                            <v-chip v-if="dictKey==='metano'" class="custom-chip-size my-4">
+                                <b>CH₄: {{ dictValue }}</b>
+                            </v-chip>
+                            <v-chip v-if="dictKey==='monoxidoCarbono'" class="custom-chip-size">
+                                <b>CO  : {{ dictValue }}</b>
+                            </v-chip>
                         </div>
                         <div
                             v-else
+                            v-for="(dictValue, dictKey) in value"
                             class="text-h3"
                         >
-                            <b>{{ item.value }}</b>
+                            <v-chip class="custom-chip-size">
+                                <b v-if="key==='bodyTemperature'">{{ dictValue }}&deg;C</b>
+                                <b v-else-if="key==='heartrate'">{{ dictValue }} bpm</b>
+                                <b v-else>{{ dictValue }}</b> 
+                            </v-chip>
                         </div>
                     </v-card-text>
                 </v-card>
@@ -113,6 +172,15 @@ const getColor = (severity: string) => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 60%;
+    height: 65%;
 }
+.custom-chip-size {
+    font-size: 25px !important; 
+    min-width: 125px !important;
+    width: 15vw; 
+    height: 75px !important;
+    justify-content: center;
+    align-items: center;
+}
+
 </style>
