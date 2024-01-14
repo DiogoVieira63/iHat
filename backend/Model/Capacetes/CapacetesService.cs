@@ -43,13 +43,20 @@ public class CapacetesService: ICapacetesService{
     }
 
     public async Task<List<Capacete>> GetFreeHelmets(){
-        return await _capaceteCollection.Find(x => x.Status == Capacete.Livre).ToListAsync();
+        return await _capaceteCollection.Find(x => x.Status == Capacete.Livre && x.Obra == null && x.Trabalhador == null).ToListAsync();
     }
 
     public async Task<bool> CheckIfCapaceteExists(int nCapacete){
         var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync();
         return capacete != null;
     }
+
+
+    public async Task<bool> CheckIfCapaceteIsInObra(int nCapacete, string idObra){
+        var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync() ?? throw new Exception("Capacete não encontrado.");
+        return capacete.Obra == idObra;
+    }
+
 
     public async Task<bool> CheckIfCapaceteIsBeingUsed(int nCapacete){
         var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync() ?? throw new Exception("Capacete não encontrado.");
@@ -88,13 +95,31 @@ public class CapacetesService: ICapacetesService{
 
         var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Obra, null);
         await _capaceteCollection.UpdateOneAsync(x => x.Numero == nCapacete, capaceteUpdate);
+
+        if(capacete.Trabalhador != null) {
+            capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Trabalhador, null);
+            await _capaceteCollection.UpdateOneAsync(x => x.Numero == nCapacete, capaceteUpdate);
+        }
+
+        if(capacete.Status == Capacete.EmUso){
+            capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, Capacete.Livre);
+            await _capaceteCollection.UpdateOneAsync(x => x.Numero == nCapacete, capaceteUpdate);
+        }
     }
 
 
-    public async Task UpdateCapaceteStatus(int nCapacete, string status){
+    public async Task UpdateCapaceteStatus(int nCapacete, string newStatus){
         var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync() ?? throw new Exception("Capacete não encontrado.");
-        var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, status);
-        await _capaceteCollection.UpdateOneAsync(x => x.Numero == nCapacete, capaceteUpdate);
+        
+        if(newStatus == Capacete.NaoOperacional){
+            var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, newStatus);
+            await _capaceteCollection.UpdateOneAsync(x => x.Numero == nCapacete, capaceteUpdate);
+        }
+
+        else if (newStatus == Capacete.Livre && capacete.Status != Capacete.EmUso){
+            var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Status, newStatus);
+            await _capaceteCollection.UpdateOneAsync(x => x.Numero == nCapacete, capaceteUpdate);
+        }
     }
 
     public async Task UpdateCapaceteStatusToLivre(int nCapacete){

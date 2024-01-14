@@ -81,7 +81,7 @@ public interface IiHatFacade{
     */
     Task<List<Capacete>> GetFreeHelmets();
 
-    Task UpdateCapaceteStatus(int nCapacete, string newStatus);
+    Task UpdateCapaceteStatusFromToNaoOperacional(int nCapacete, string newStatus);
 
     /*
     Função que permite adicionar um novo Capacete com o número "nCapacete".

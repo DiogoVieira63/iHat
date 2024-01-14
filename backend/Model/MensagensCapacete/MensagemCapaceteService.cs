@@ -1,13 +1,9 @@
-using System.Collections;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using SignalR.Hubs;
-using System.Linq;
 using iHat.MensagensCapacete.Values;
 
 namespace iHat.Model.MensagensCapacete;
-public class MensagemCapaceteService {
+public class MensagemCapaceteService : IMensagemCapaceteService {
 
     public readonly IMongoCollection<MensagemCapacete> _mensagemcapaceteCollection;
 

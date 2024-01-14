@@ -1,4 +1,4 @@
-namespace iHat.MQTTService;
+namespace iHat.Model.MQTTService;
 
 public class MQTTBackgroundService: BackgroundService
 {

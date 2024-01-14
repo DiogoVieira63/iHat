@@ -21,7 +21,7 @@ public interface ICapacetesService{
     Task<List<Capacete>> GetAllHelmetsFromList(List<int> listNCapacetes);
 
     /*
-    Função que permite obter uma lista de todos os capacetes livres.
+    Função que permite obter uma lista de todos os capacetes livres e que não estão associados a nenhuma obra.
     Returns: Uma lista dos capacetes com Status Livre.
     */
     Task<List<Capacete>> GetFreeHelmets();
@@ -31,6 +31,12 @@ public interface ICapacetesService{
     Returns: true se encontrou o capacete
     */
     Task<bool> CheckIfCapaceteExists(int nCapacete);
+
+    /*
+    Função que verifica se um capacete está numa obra {obraId}
+    Returns: True se a obra do capacete for igual à obraId
+    */
+    Task<bool> CheckIfCapaceteIsInObra(int nCapacete, string idObra);
 
     /*
     Função que permite consultar se um capacete está a ser utilizado.
@@ -55,7 +61,7 @@ public interface ICapacetesService{
 
     /*
     Função que permite remover a obra do Capacete.
-    Levanta exceção se o capacete não estiver associado a nenhuma obra e se o capacete não estiver associado à obra indicada ou se não encontrar o capacete
+    Exceção: se o capacete não estiver associado a nenhuma obra e se o capacete não estiver associado à obra indicada ou se não encontrar o capacete
     */
     Task RemoveCapaceteFromObra(int nCapacete, string obraId);
 

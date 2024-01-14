@@ -13,7 +13,7 @@ using iHat.Model.Mapas;
 using SignalR.Hubs;
 using ZstdSharp.Unsafe;
 
-namespace iHat.MQTTService;
+namespace iHat.Model.MQTTService;
 
 public class MQTTService {
 

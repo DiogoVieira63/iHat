@@ -84,12 +84,12 @@ public class ObrasService: IObrasService{
         await _obraCollection.UpdateOneAsync(x => x.Id == idObra, update);
     }
 
-    public async Task RemoveObraByIdAsync(string id)
+    public async Task RemoveObraById(string id)
     {
         await _obraCollection.DeleteOneAsync(o => o.Id == id);
     }
 
-    public async Task RemoveCapaceteToObra(int nCapacete, string idObra){
+    public async Task RemoveCapaceteFromObra(int nCapacete, string idObra){
         var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
         
         if(!obra.CanAddCapacete())

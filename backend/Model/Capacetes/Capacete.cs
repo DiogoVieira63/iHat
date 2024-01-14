@@ -29,7 +29,7 @@ public class Capacete
     }
 
     public bool CanBeAddedToObra(){
-        return Status == Livre && Obra == null;
+        return Status == Livre && Obra == null && Trabalhador == null;
     }
 
     public bool CanRemoveTrabalhador(string trabalhador){

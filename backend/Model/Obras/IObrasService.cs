@@ -56,14 +56,14 @@ public interface IObrasService{
     /*
     Função que permite remover a obra com o id indicado
     */
-    Task RemoveObraByIdAsync(string obraId);
+    Task RemoveObraById(string obraId);
 
     /*
     Função que permite remover um numero de capacete da lista de capacetes da obra "idObra"
     Exceção: se a obra não for encontrada
     Exceção: se o estado atual da obra não permitir remover um capacete da lista
     */
-    Task RemoveCapaceteToObra(int nCapacete, string idObra);
+    Task RemoveCapaceteFromObra(int nCapacete, string idObra);
 
     /*
     Função que permite atualizar o estado de uma obra.

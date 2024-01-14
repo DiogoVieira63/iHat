@@ -15,10 +15,10 @@ public class iHatFacade: IiHatFacade{
     private readonly ICapacetesService icapacetes;
     private readonly ILogsService ilogs;
     private readonly IMapaService imapas;
-    private readonly MensagemCapaceteService _mensagemCapaceteService;
+    private readonly IMensagemCapaceteService _mensagemCapaceteService;
     private readonly ILogger<iHatFacade> _logger;
     
-    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService,  MensagemCapaceteService mensagemCapaceteService, ILogger<iHatFacade> logger){
+    public iHatFacade(IObrasService obrasService, ICapacetesService capacetesService, ILogsService logsService, IMapaService mapasService, IMensagemCapaceteService mensagemCapaceteService, ILogger<iHatFacade> logger){
         iobras = obrasService;
         icapacetes = capacetesService;
         ilogs = logsService;
@@ -115,30 +115,34 @@ public class iHatFacade: IiHatFacade{
     }
 
 
-    // ------------------------
+    
     public async Task RemoveObraById(string obraId){
+        // Obtem a lista dos capacetes da Obra
+        var capacetes = await GetAllCapacetesdaObra(obraId);
 
-        await iobras.RemoveObraByIdAsync(obraId);
-        // var capacetes = await GetAllCapacetesdaObra(obraId);
-        // foreach(var capacete in capacetes){
-        //     await icapacetes.UpdateCapaceteStatusToLivre(capacete.NCapacete);
-        // }
+        // Remove a obra do sistema
+        await iobras.RemoveObraById(obraId);
+
+        // Remove a obra do Capacete
+        foreach(var capacete in capacetes){
+            await icapacetes.RemoveCapaceteFromObra(capacete.Numero, obraId);
+        }
     }
 
     public async Task RemoveCapaceteFromObra(int nCapacete, string idObra){
-        var existsCapacete = await icapacetes.CheckIfCapaceteExists(nCapacete);
-        if(!existsCapacete)
-            throw new Exception("Capacete não encontrado.");
+        var capaceteIsInObra = await icapacetes.CheckIfCapaceteIsInObra(nCapacete, idObra);
+        if(!capaceteIsInObra)
+            throw new Exception("Capacete não pode ser removido da obra, pois não está a ser usado na obra.");
 
-        var capaceteIsBeingUsed = await icapacetes.CheckIfCapaceteIsBeingUsed(nCapacete);
-        if(!capaceteIsBeingUsed)
-            throw new Exception("Capacete não pode ser removido da obra, pois não está em uso.");
+        var capaceteIsInUsed = await icapacetes.CheckIfCapaceteIsBeingUsed(nCapacete);
+        if(capaceteIsInUsed)
+            throw new Exception("Capacete está a ser utilizado e não pode ser removida da obra.");
 
-        await iobras.RemoveCapaceteToObra(nCapacete, idObra);
-
-        await icapacetes.UpdateCapaceteStatusToLivre(nCapacete);
-
+        await iobras.RemoveCapaceteFromObra(nCapacete, idObra);
+        await icapacetes.RemoveCapaceteFromObra(nCapacete, idObra);
     }
+
+    
 
     public async Task AddCapaceteToObra(int nCapacete, string idObra){
         var existsObra = await iobras.CheckIfObraExists(idObra);
@@ -149,6 +153,8 @@ public class iHatFacade: IiHatFacade{
         }
     }
 
+    // ------------------------
+    
     public async Task UpdateEstadoObra(string id, string estado){
         await iobras.UpdateEstadoObra(id, estado);
         
@@ -180,7 +186,7 @@ public class iHatFacade: IiHatFacade{
     }
 
     // ------------------------
-    public async Task UpdateCapaceteStatus(int nCapacete, string newStatus){
+    public async Task UpdateCapaceteStatusFromToNaoOperacional(int nCapacete, string newStatus){
         await icapacetes.UpdateCapaceteStatus(nCapacete, newStatus);
     }
 
@@ -192,15 +198,16 @@ public class iHatFacade: IiHatFacade{
 
 
 
-    // ------------------------
     public async Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete){
         return await _mensagemCapaceteService.GetUltimosDadosDoCapacete(nCapacete);
     }
+
 
     public async Task<Dictionary<int, Location>> GetLastLocationCapacetesObra(string obraId){
         
         var listaCapacetes = await iobras.GetAllCapacetesOfObra(obraId);
         var allCapacetesLocation = new Dictionary<int, Location>();
+        
         foreach(var id in listaCapacetes){
             var loc = await _mensagemCapaceteService.GetLastLocation(id);
             if (loc != null)
@@ -209,8 +216,7 @@ public class iHatFacade: IiHatFacade{
         return allCapacetesLocation;
     }
 
-    // ------------------------
-
+    
     public async Task<List<Mapa>> GetMapasFromList(List<string> listaMapasIds){
         var results = new List<Mapa>();
         
