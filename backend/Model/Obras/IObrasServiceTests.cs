@@ -544,7 +544,7 @@ public class ObrasServiceTests{
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>{idMapa});
         // Assert - Alterar as Zonas de Risco da Obra
-        await obraService.UpdateZonasRiscoObra(obra, idMapa, zonasRisco);
+        await obraService.UpdateZonasRiscoObra(obra, idMapa);
 
         // Assert - Verificar se as Zonas de Risco foram alteradas
         var allMapas = await obraService.GetConstructionById(obra);

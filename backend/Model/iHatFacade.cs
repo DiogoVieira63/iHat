@@ -5,7 +5,6 @@ using System.IO.Compression;
 using iHat.Model.Mapas;
 using iHat.Model.Zonas;
 using iHat.Model.MensagensCapacete;
-using System.ComponentModel;
 using iHat.MensagensCapacete.Values;
 
 namespace iHat.Model.iHatFacade;
@@ -98,16 +97,25 @@ public class iHatFacade: IiHatFacade{
         return id;
     }
 
+
+
+
     public async Task<List<Obra>?> GetObras(int idResponsavel){
-
         var obras = await iobras.GetObrasOfResponsavel(idResponsavel);
-
-        if(obras == null){
-            Console.WriteLine("[iHatFacade] Lista de obras vazia.");
-        }
-
         return obras;
     }
+
+    public async Task<Obra?> GetConstructionById(string idObra){
+        return await iobras.GetConstructionById(idObra);
+    }
+
+    public async Task<List<Capacete>> GetAllCapacetesdaObra(string idObra){
+        var listaNCapacetes = await iobras.GetAllCapacetesOfObra(idObra);
+        return await icapacetes.GetAllHelmetsFromList(listaNCapacetes);
+    }
+
+
+    // ------------------------
     public async Task RemoveObraById(string obraId){
 
         await iobras.RemoveObraByIdAsync(obraId);
@@ -117,17 +125,7 @@ public class iHatFacade: IiHatFacade{
         // }
     }
 
-    public async Task<Obra> GetConstructionById(string idObra){
-        return await iobras.GetConstructionById(idObra);
-    }
-
-
-    public async Task<List<Capacete>> GetAllCapacetesdaObra(string idObra){
-        var listaNCapacetes = await iobras.GetAllCapacetesOfObra(idObra);
-        return await icapacetes.GetAllHelmetsFromList(listaNCapacetes);
-    }
-
-    public async Task DeleteCapaceteToObra(int nCapacete, string idObra){
+    public async Task RemoveCapaceteFromObra(int nCapacete, string idObra){
         var existsCapacete = await icapacetes.CheckIfCapaceteExists(nCapacete);
         if(!existsCapacete)
             throw new Exception("Capacete não encontrado.");
@@ -142,17 +140,16 @@ public class iHatFacade: IiHatFacade{
 
     }
 
-    // Talvez esta função devesse ser considerada uma zona critica, uma vez que estas funções deveriam ser realizadas uma a seguir às outras
     public async Task AddCapaceteToObra(int nCapacete, string idObra){
         var existsObra = await iobras.CheckIfObraExists(idObra);
         if(existsObra){
             // if the helmet doesn't exist, this function will return and exception and stop
-            await icapacetes.AddCapaceteToObra(nCapacete);
+            await icapacetes.AddCapaceteToObra(nCapacete, idObra);
             await iobras.AddCapaceteToObra(nCapacete, idObra);
         }
     }
 
-    public async Task AlteraEstadoObra(string id, string estado){
+    public async Task UpdateEstadoObra(string id, string estado){
         await iobras.UpdateEstadoObra(id, estado);
         
         if(estado == "Finalizada" || estado == "Cancelada"){
@@ -162,31 +159,13 @@ public class iHatFacade: IiHatFacade{
             }
         }
     }
-
+    // ------------------------
+    
     public async Task UpdateNomeObra(string idObra, string nome){
         await iobras.UpdateNomeObra(idObra, nome);
     }
 
-    public async Task<List<Log>> GetLogs(string idObra){
-        return await ilogs.GetLogsOfObra(idObra);
-    }
 
-    public async Task<List<Log>> GetLogsByDate(string idObra, DateTime date){
-        return await ilogs.GetLogsOfObraByDate(idObra, date);
-    }
-
-    public async Task AddLogs(Log logs){
-        await ilogs.Add(logs);
-    }
-
-
-    public async Task ChangeStatusCapacete(int nCapacete, string newStatus){
-        await icapacetes.UpdateCapaceteStatus(nCapacete, newStatus);
-    }
-
-
-
-    // VERIFICADAS CAPACETES
 
     public async Task<List<Capacete>> GetAllCapacetes(){
         return await icapacetes.GetAll();
@@ -196,25 +175,43 @@ public class iHatFacade: IiHatFacade{
         return await icapacetes.GetById(nCapacete);
     }
 
+    public async Task<List<Capacete>> GetFreeHelmets(){
+        return await icapacetes.GetFreeHelmets();
+    }
+
+    // ------------------------
+    public async Task UpdateCapaceteStatus(int nCapacete, string newStatus){
+        await icapacetes.UpdateCapaceteStatus(nCapacete, newStatus);
+    }
+
+    // ------------------------
+
     public async Task AddCapacete(int nCapacete){
         await icapacetes.Add(nCapacete);
     }
 
-     public async Task<List<Capacete>> GetFreeHelmets(){
-        return await icapacetes.GetFreeHelmets();
+
+
+    // ------------------------
+    public async Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete){
+        return await _mensagemCapaceteService.GetUltimosDadosDoCapacete(nCapacete);
     }
 
-    public async Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
-        // await iobras.UpdateZonasRiscoObra(idObra, idMapa, zonas);
-
-        if(!await iobras.UpdateZonasRiscoObra(idObra, idMapa)){
-            throw new Exception("Não é possível atualizar as zonas de risco deste Mapa.");
+    public async Task<Dictionary<int, Location>> GetLastLocationCapacetesObra(string obraId){
+        
+        var listaCapacetes = await iobras.GetAllCapacetesOfObra(obraId);
+        var allCapacetesLocation = new Dictionary<int, Location>();
+        foreach(var id in listaCapacetes){
+            var loc = await _mensagemCapaceteService.GetLastLocation(id);
+            if (loc != null)
+                allCapacetesLocation.Add(id, loc);
         }
-        await imapas.UpdateZonasPerigoOfMapa(idMapa, zonas);       
+        return allCapacetesLocation;
     }
 
+    // ------------------------
 
-    public async Task<List<Mapa>> GetMapasDaObra(List<string> listaMapasIds){
+    public async Task<List<Mapa>> GetMapasFromList(List<string> listaMapasIds){
         var results = new List<Mapa>();
         
         foreach(string id in listaMapasIds){
@@ -226,6 +223,18 @@ public class iHatFacade: IiHatFacade{
         return results;
     }
 
+    public async Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
+        var canUpdateZonasRisco = await iobras.UpdateZonasRiscoObra(idObra, idMapa);
+        if(!canUpdateZonasRisco){
+            // Estado da obra não permite atualizar as zonas de risco
+            // O idMapa não está na lista de mapas da obra {idObra}
+            throw new Exception("Não é possível atualizar as zonas de risco deste Mapa.");
+        }
+        await imapas.UpdateZonasPerigoOfMapa(idMapa, zonas);       
+    }
+
+
+    // ------------------------
     public async Task AddMapa(string idObra, IFormFile mapaFile){
         var listaSvgDBIds = new List<string>();
         var listaSvg = await requestHTTP(mapaFile);                   
@@ -243,9 +252,7 @@ public class iHatFacade: IiHatFacade{
         await imapas.RemoveMapas(listaMapasAnteriores);
     }
 
-    public async Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete){
-        return await _mensagemCapaceteService.GetUltimosDadosDoCapacete(nCapacete);
-    }
+    
 
     public async Task UpdateMapaFloorNumber(string idObra, Dictionary<string, int> newFloors){
         
@@ -276,18 +283,20 @@ public class iHatFacade: IiHatFacade{
             await imapas.UpdateFloorNumber(pair.Key, pair.Value);
         }
         
-        // 
+         
     }
 
-    public async Task<Dictionary<int, Location>> GetLastLocationCapacetesObra(string obraId){
-        
-        var listaCapacetes = await iobras.GetAllCapacetesOfObra(obraId);
-        var allCapacetesLocation = new Dictionary<int, Location>();
-        foreach(var id in listaCapacetes){
-            var loc = await _mensagemCapaceteService.GetLastLocation(id);
-            if (loc != null)
-                allCapacetesLocation.Add(id, loc);
-        }
-        return allCapacetesLocation;
+    // ------------------------
+
+    public async Task<List<Log>> GetLogs(string idObra){
+        return await ilogs.GetLogsOfObra(idObra);
+    }
+
+    public async Task<List<Log>> GetLogsByDate(string idObra, DateTime date){
+        return await ilogs.GetLogsOfObraByDate(idObra, date);
+    }
+
+    public async Task AddLogs(Log log){
+        await ilogs.Add(log);
     }
 }

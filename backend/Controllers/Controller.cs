@@ -1,18 +1,16 @@
 using FormEncode.Models;
-using iHat.Model.iHatFacade;
 using iHat.Model.Obras;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
 using iHat.Model.Zonas;
 using Microsoft.AspNetCore.Mvc;
 using iHat.Model.MensagensCapacete;
-using Microsoft.AspNetCore.Identity;
 using iHat.MensagensCapacete.Values;
 
 namespace iHat.Controllers;
 
 [ApiController]
-[Route("[controller]")] // mudar este nome....
+[Route("[controller]")] 
 public class IHatController : ControllerBase{
 
     private readonly ILogger<IHatController> _logger;
@@ -23,6 +21,9 @@ public class IHatController : ControllerBase{
         _logger = logger;
     }
 
+    /// <summary>
+    /// Regista um novo Responsável de Obra
+    /// </summary>
     [HttpPost("register")]
     public void RegisterUser(){
 
@@ -33,6 +34,13 @@ public class IHatController : ControllerBase{
 
     }
 
+    /// <summary>
+    /// Permite alterar o Status de uma obra
+    /// </summary>
+    /// <param name="id">Id da obra a atualizar</param>
+    /// <param name="state">Novo estado da obra</param>
+    /// <response code="200">Alterou o estado da obra</response>
+    /// <response code="400">O pedido não possui um estado válido ou se falhar ao alterar o estado</response>
     [HttpPatch("constructions/{id}/state")]
     public async Task<IActionResult> AlteraEstadoObra(string id, [FromBody] string state) {
         if (string.IsNullOrEmpty(state)) {
@@ -40,7 +48,7 @@ public class IHatController : ControllerBase{
         }
 
         try{
-            await _facade.AlteraEstadoObra(id, state);
+            await _facade.UpdateEstadoObra(id, state);
         }
         catch (Exception e){
             return BadRequest(e.Message);
@@ -48,6 +56,7 @@ public class IHatController : ControllerBase{
 
         return Ok();
     }
+
 
     [HttpPatch("constructions/{id}")]
     public async Task<IActionResult> UpdateNomeObra(string id, [FromBody] string name ) {
@@ -95,15 +104,20 @@ public class IHatController : ControllerBase{
 
     [HttpGet("constructions/{id}")]
     public async Task<ActionResult<ObrasDTO>> GetConstruction(string id){
-        if (id != null){
-            var obras = await _facade.GetConstructionById(id);
-            var mapas = await _facade.GetMapasDaObra(obras.Mapa);
-            var dto = new ObrasDTO(obras, mapas);
-            return dto;
+        if(id == null){
+            _logger.LogWarning("Parameter 'id' needs to be defined.");
+            return BadRequest("Parameter 'id' needs to be defined.");
         }
-        else{
+            
+        var obras = await _facade.GetConstructionById(id);
+        if(obras == null){
+            _logger.LogWarning("Obra {0} not found.", id);
             return NotFound();
         }
+
+        var mapas = await _facade.GetMapasFromList(obras.Mapa);
+        var dto = new ObrasDTO(obras, mapas);
+        return dto;
     }
 
     [HttpGet("constructions")]
@@ -190,7 +204,7 @@ public class IHatController : ControllerBase{
         try
         {
             int nCapacete = Int32.Parse(idCapacete);
-            await _facade.DeleteCapaceteToObra(nCapacete, idObra);
+            await _facade.RemoveCapaceteFromObra(nCapacete, idObra);
             return Ok(); // Retorna uma resposta de sucesso            
         }
         catch (Exception e)
@@ -265,7 +279,7 @@ public class IHatController : ControllerBase{
 
         try
         {
-            await _facade.DeleteCapaceteToObra(idCapacete, idObra);
+            await _facade.RemoveCapaceteFromObra(idCapacete, idObra);
             return Ok(); // Retorna uma resposta de sucesso            
         }
         catch (Exception e)
@@ -301,8 +315,8 @@ public class IHatController : ControllerBase{
 
         try
         {
-            int nCapacete = Int32.Parse(idCapacete);
-            await _facade.ChangeStatusCapacete(nCapacete, newStatus);
+            int nCapacete = int.Parse(idCapacete);
+            await _facade.UpdateCapaceteStatus(nCapacete, newStatus);
             return Ok(); // Retorna uma resposta de sucesso
         }
         catch (Exception e)

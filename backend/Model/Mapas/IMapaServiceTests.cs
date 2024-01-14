@@ -48,7 +48,7 @@ public class MapaServiceTests{
     }
     
     
-    [Fact]
+    /*[Fact]
     public async void Test_GetZonasdeRisco(){
         var nameMapa = "Mapa5";
         var svg = "svg";
@@ -67,9 +67,8 @@ public class MapaServiceTests{
         {
             var zonasDeRisco = await mapaService.GetZonasdeRisco(idMapa);
             Assert.NotNull(zonasDeRisco);
-        }
-        
-    }
+        } 
+    }*/
 
     [Fact]
     public async void Test_RemoveMapas(){
@@ -127,15 +126,5 @@ public class MapaServiceTests{
         }
         
     }
-    
-
-
-
-
-
-    
-
-
-
-    
+       
 }

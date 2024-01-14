@@ -29,27 +29,27 @@ public interface IObrasService{
 
     /*
     Função que retorna uma lista dos números de todos os capacetes da obra "id"
-    Levanta uma exceção se não encontrar a obra com "id"
+    Exceção: se não encontrar a obra com "id"
     */
     Task<List<int>> GetAllCapacetesOfObra(string id);
 
     /*
     Função que permite adicionar uma obra
-    Levanta uma exceção se uma obra com o mesmo nome já existir
+    Exceção: se uma obra com o mesmo nome já existir
     */
     Task<string?> AddObra(string name, int idResponsavel, List<string> mapa);
 
     /*
     Função que permite adicionar a lista dos ids dos mapas à obra "id".
-    Levanta uma exceção se a obra não for encontrada
-    Levanta uma exceção se o estado atual da obra não permitir atualizar a lista de mapas
+    Exceção: se a obra não for encontrada
+    Exceção: se o estado atual da obra não permitir atualizar a lista de mapas
     */
     Task<List<string>> AddListaMapaToObra(string id, List<string> mapas);
 
     /*
     Função que permite adicionar o id do Capacete à lista de capacetes da obra.
-    Levanta uma exceção se a obra não for encontrada
-    Levanta uma exceção se o estado atual da obra não permitir adicionar um capacete
+    Exceção: se a obra não for encontrada
+    Exceção: se o estado atual da obra não permitir adicionar um capacete
     */
     Task AddCapaceteToObra(int idCapacete, string idObra);
 
@@ -60,24 +60,24 @@ public interface IObrasService{
 
     /*
     Função que permite remover um numero de capacete da lista de capacetes da obra "idObra"
-    Levanta uma exceção se a obra não for encontrada
-    Levanta uma exceção se o estado atual da obra não permitir remover um capacete da lista
+    Exceção: se a obra não for encontrada
+    Exceção: se o estado atual da obra não permitir remover um capacete da lista
     */
     Task RemoveCapaceteToObra(int nCapacete, string idObra);
 
     /*
     Função que permite atualizar o estado de uma obra.
-    Levanta uma exceção se a obra "id" não for encontrada.
-    Levanta uma exceção se o estado da obra for "Finalizada" ou "EmCurso".
+    Exceção: se a obra "id" não for encontrada.
+    Exceção: se o estado da obra for "Finalizada" ou "Cancelada".
     */
     Task UpdateEstadoObra(string id, string estado);
 
     /*
     Função que permite atualizar o nome de uma obra.
-    Levanta uma exceção se a obra "id" não for encontrada.
-    Levanta uma exceção se o estado da obra for "Finalizada" ou "EmCurso".
+    Exceção: se a obra "id" não for encontrada.
+    Exceção: se o estado da obra for "Finalizada" ou "Cancelada".
     */
-    Task UpdateNomeObra(string idObra, string nome);
+    Task UpdateNomeObra(string id, string nome);
 
     /*
     Função que verifica se as zonas de risco de uma obra podem ser atualizadas.

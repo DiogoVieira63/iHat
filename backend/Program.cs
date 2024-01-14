@@ -5,10 +5,10 @@ using iHat.Model.Capacetes;
 using iHat.Model.Logs;
 using iHat.Model.MensagensCapacete;
 using iHat.MQTTService;
-using iHat.Model.Zonas;
 using Microsoft.AspNetCore.Http.Features;
 using iHat.Model.Mapas;
 using SignalR.Hubs;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,12 +48,19 @@ builder.Services.AddSingleton<ManageNotificationClients>();
 builder.Services.AddSingleton<MQTTService>();
 builder.Services.AddHostedService<MQTTBackgroundService>();
 builder.Services.AddSignalR();
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    options.SwaggerDoc("v1", new OpenApiInfo{
+        Version = "v1",
+        Title = "iHat Backend"
+    });
+});
 
 var app = builder.Build();
 app.UseCors("MyPolicy");
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.MapControllers();
 app.MapHub<ObrasHub>("obra");
 app.MapHub<DadosCapaceteHub>("helmetdata");
