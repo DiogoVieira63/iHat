@@ -31,10 +31,14 @@ public sealed class ManageNotificationClients{
     }
 
     /*
-    Função que notifica todos os clientes do grupo {obraId} do hub ObrasHub com os todos os logs do dia da obra {obraId}
+    Função que notifica todos os clientes do grupo {obraId} do hub ObrasHub com o último log da obra {obraId}
     */
-    public async Task NotifyClientsObraWithAllLogs(string obraId, List<Log> allLogs){
+    public async Task NotifyClientsObraWithLastLogs(string obraId, Log allLogs){
         await _obrasHub.Clients.Group(obraId).SendAsync("UpdateLogs", allLogs);
+    }
+
+    public async Task NotifyClientsCapaceteWithLastLog(int nCapacete, Log dailyLogs){
+        await _dadosCapaceteHub.Clients.Group(nCapacete.ToString()).SendAsync("UpdateLogsCapacete", dailyLogs);
     }
 
     /*
@@ -50,5 +54,11 @@ public sealed class ManageNotificationClients{
     public async Task NotifyClientsCapaceteWithLastMessage(int nCapacete, MensagemCapacete lastReceivedMessage){
         await _dadosCapaceteHub.Clients.Group(nCapacete.ToString()).SendAsync("UpdateDadosCapacete", lastReceivedMessage);
     }
+
+
+
+
+    
+
 
 }

@@ -9,7 +9,7 @@ using iHat.MensagensCapacete.Values;
 
 namespace iHat.Model.iHatFacade;
 
-public class iHatFacade: IiHatFacade{
+public class iHatFacade: IiHatFacade {
 
     private readonly IObrasService iobras;
     private readonly ICapacetesService icapacetes;
@@ -275,6 +275,14 @@ public class iHatFacade: IiHatFacade{
 
     public async Task<List<Log>> GetLogsByDate(string idObra, DateTime date){
         return await ilogs.GetLogsOfObraByDate(idObra, date);
+    }
+
+    public async Task<List<Log>> GetDailyLogsCapacete(string idObra, int nCapacete){
+        return await ilogs.GetDailyLogsCapacete(idObra, nCapacete);
+    }
+
+    public async Task MarkLogAsSeen(string id){
+        await ilogs.MarkLogAsSeen(id);
     }
 
     public async Task AddLogs(Log log){

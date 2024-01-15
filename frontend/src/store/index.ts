@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia'
 import type { Input } from '@/views/SimulatorView.vue'
 import { MqttService } from '@/services/mqtt'
+import mqtt from 'mqtt'
 
 type Status = 'Stopped' | 'Running' | 'Finished'
 
@@ -158,6 +159,8 @@ const pairing = (mqtt: MqttService, nCapacete: number, idObra: string) => {
         idTrabalhador: 'T' + nCapacete
     }
 
+
+
     mqtt.publish('ihat/obras', JSON.stringify(mensagem))
 }
 
@@ -186,6 +189,7 @@ export const useMQTTStore = defineStore('mqtt', {
 export const useTaskStore = defineStore('taskMQTT', {
     state: () => ({
         tasks: {} as { [idObra: string]: { [idTask: string]: Task } },
+        messages: {} as { [idObra: string]: Array<{idCapacete: number, message: string, time: Date}> },
         active: '' as string
     }),
     actions: {
@@ -193,6 +197,9 @@ export const useTaskStore = defineStore('taskMQTT', {
             this.active = idObra
             if (!this.tasks[idObra]) {
                 this.tasks[idObra] = {}
+            }
+            if (!this.messages[idObra]) {
+                this.messages[idObra] = []
             }
         },
         suspendTask(mqtt: MqttService, task: Task) {
@@ -204,6 +211,9 @@ export const useTaskStore = defineStore('taskMQTT', {
         addTask(mqtt: MqttService, task: Task) {
             for (const idCapacete of task.capacetes) {
                 pairing(mqtt, idCapacete, this.active)
+                mqtt.subscribe('my/topic/'+ idCapacete, (topic, message) => {
+                    this.messages[this.active].push({message: message.toString(), time: new Date(), idCapacete: idCapacete})
+                })
             }
             setTimeout(() => {
                 task.play(mqtt)
@@ -223,11 +233,14 @@ export const useTaskStore = defineStore('taskMQTT', {
                 this.tasks[this.active][key].capacetes.includes(idCapacete)
             )
         },
-        removeTask(index: string) {
+        removeTask(index: string, mqtt: MqttService) {
             const task = this.tasks[this.active][index]
             if (task) {
                 clearInterval(task.intervalId)
                 delete this.tasks[this.active][index]
+                for (const idCapacete of task.capacetes) {
+                    disconnect(mqtt, idCapacete)
+                }
             } else {
                 console.log('Não existe tarefa com esse id', index)
             }

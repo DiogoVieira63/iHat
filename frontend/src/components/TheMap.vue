@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, toRaw } from 'vue'
+import { ref } from 'vue'
 import MapEditor from '@/components/MapEditor.vue'
 import ConfirmationDialog from './ConfirmationDialog.vue'
 import { useDisplay } from 'vuetify'
@@ -54,13 +54,22 @@ const saveEdit = async (ConfirmationDialog: boolean) => {
 const addMapa = ref(false)
 const emit = defineEmits(['update', 'selectCapacete'])
 
-const capacetesMap = computed(() => {
+// const capacetesMap = computed(() => {
+//     return props.capacetesPosition.filter((capacete) => {
+//         if (capacete.position) {
+//             return capacete.position.z == page.value -1
+//         }
+//     })
+// })
+
+const capacetesMap = (floor : number) => {
     return props.capacetesPosition.filter((capacete) => {
         if (capacete.position) {
-            return capacete.position.z == page.value -1
+            return capacete.position.z == floor && capacete.status == 'Em Uso'
         }
     })
-})
+}
+
 </script>
 <template>
     <template v-if="props.mapList.length > 0">
@@ -74,7 +83,7 @@ const capacetesMap = computed(() => {
                 :edit="edit"
                 :svg="map.svg"
                 :zones="map.zonas"
-                :capacetes-position="capacetesMap"
+                :capacetes-position="capacetesMap(map.floor)"
                 :capacetesSelected="[props.capacetesSelected]"
                 :haveToolbar="true"
                 @update:zones="map.zonas = $event"

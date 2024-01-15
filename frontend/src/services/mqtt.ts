@@ -39,4 +39,19 @@ export class MqttService {
             }
         })
     }
+
+    async subscribe(topic: string, callback: (topic: string, message: string) => void) {
+        this.client.subscribe(topic, (err) => {
+            if (err) {
+                console.error(`Failed to subscribe: ${err}`)
+            }
+            else{
+                console.log(`Subscribed to ${topic}`)
+            }
+        })
+
+        this.client.on('message', (topic, message) => {
+            callback(topic, message.toString())
+        })
+    }
 }

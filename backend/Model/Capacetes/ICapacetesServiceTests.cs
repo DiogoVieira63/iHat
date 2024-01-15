@@ -32,7 +32,6 @@ public class CapacetesServiceTests{
         var capaceteService = Setup();
         Assert.NotNull(capaceteService);
 
-
         var allPreviousCapacetes = await capaceteService.GetAll();
 
         // Act

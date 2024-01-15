@@ -62,24 +62,25 @@ db.${CAPACETES_COLLECTION}.insertMany( [
     {
         "NCapacete":5,
         "Status":"Livre",
-        "Trabalhador":""
+        "Trabalhador":null
     },
     {
         "NCapacete":6,
         "Status":"Livre",
-        "Trabalhador":""
+        "Trabalhador":null
     },
     {
         "NCapacete":7,
         "Status":"Livre",
-        "Trabalhador":""
+        "Trabalhador":null
     },
     {
         "NCapacete":8,
         "Status":"Livre",
-        "Trabalhador":""
+        "Trabalhador":null
     }
-] )
+  ]
+)
 
 db.createCollection("${LOGS_COLLECTION}")
 

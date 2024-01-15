@@ -31,6 +31,11 @@ public class ObrasService: IObrasService{
         return obra != null;
     }
 
+    public async Task<bool> CheckIfMapaCanBeChanged(string id){
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
+        return obra.CanChangeMap();
+    }
+
     public async Task<List<Obra>> GetObrasOfResponsavel(int idResponsavel){
         var obras = await _obraCollection.Find(x => x.IdResponsavel == idResponsavel).ToListAsync();
         return obras;

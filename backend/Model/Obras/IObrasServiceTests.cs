@@ -137,7 +137,7 @@ public class ObrasServiceTests{
         addedObra.Equals(true);
 
         // Act - Remover a Obra
-        await obraService.RemoveObraByIdAsync(obra1);
+        await obraService.RemoveObraById(obra1);
         // Assert - Verificar se a Obra foi removida
         allObras = await obraService.GetObrasOfResponsavel(idResponsavel1);
         addedObra = allObras.Find(obra => obra.Nome == nameObra1) != null;
@@ -163,14 +163,14 @@ public class ObrasServiceTests{
         addedObra.Equals(true);
 
         // Act - Remover a Obra
-        await obraService.RemoveObraByIdAsync(obra);
+        await obraService.RemoveObraById(obra);
         // Assert - Verificar se a Obra foi removida
         allObras = await obraService.GetObrasOfResponsavel(idResponsavel);
         addedObra = allObras.Find(obra => obra.Nome == nameObra) != null;
         addedObra.Equals(false);
 
         // Act - Remover a Obra
-        Action act = () => obraService.RemoveObraByIdAsync(obra);
+        Action act = () => obraService.RemoveObraById(obra);
         
         //assert
         Exception exception = Assert.Throws<Exception>(act);
@@ -477,7 +477,7 @@ public class ObrasServiceTests{
         await obraService.AddCapaceteToObra(idCapacete1, obra);
         await obraService.AddCapaceteToObra(idCapacete2, obra);
         // Assert - Remover um Capacete da Obra
-        await obraService.RemoveCapaceteToObra(idCapacete1, obra);
+        await obraService.RemoveCapaceteFromObra(idCapacete1, obra);
         // Assert - Verificar se o Capacete foi removido da Obra
         var allCapacetes = await obraService.GetAllCapacetesOfObra(obra);
         var capacete1 = allCapacetes.Find(capacete => capacete == idCapacete1) != null;
@@ -504,7 +504,7 @@ public class ObrasServiceTests{
         await obraService.AddCapaceteToObra(idCapacete1, obra);
         await obraService.AddCapaceteToObra(idCapacete2, obra);
         // Assert - Remover um Capacete da Obra
-        await obraService.RemoveCapaceteToObra(idCapacete1, obra);
+        await obraService.RemoveCapaceteFromObra(idCapacete1, obra);
         // Assert - Verificar se o Capacete foi removido da Obra
         var allCapacetes = await obraService.GetAllCapacetesOfObra(obra);
         var capacete1 = allCapacetes.Find(capacete => capacete == idCapacete1) != null;
@@ -513,7 +513,7 @@ public class ObrasServiceTests{
         capacete2.Equals(true);
 
         // Act - Remover um Capacete da Obra
-        Action act = () => obraService.RemoveCapaceteToObra(idCapacete1, obra);
+        Action act = () => obraService.RemoveCapaceteFromObra(idCapacete1, obra);
         
         //assert
         Exception exception = Assert.Throws<Exception>(act);

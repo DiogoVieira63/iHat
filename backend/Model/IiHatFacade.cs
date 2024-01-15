@@ -69,10 +69,7 @@ public interface IiHatFacade{
     Exceção: se não encontrar uma obra {idObra} 
     Exceção: se o estado da obra for "Finalizada" ou "Cancelada"
     */
-    Task UpdateNomeObra(string idObra, string nome);
-
-
-    // Capacetes
+    Task UpdateNomeObra(string idObra, string nome);   
 
     /*
     Função que permite obter todos os capacetes presentes no sistema.
@@ -171,5 +168,9 @@ public interface IiHatFacade{
     Função que permite adicionar um novo log
     */
     Task AddLogs(Log log);
+
+    Task<List<Log>> GetDailyLogsCapacete(string idobra, int nCapacete);
+
+    Task MarkLogAsSeen(string id);
 
 }
