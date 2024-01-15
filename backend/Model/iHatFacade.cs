@@ -184,6 +184,10 @@ public class iHatFacade: IiHatFacade{
         await ilogs.Add(logs);
     }
 
+    public async Task MarkLogAsSeen(string id){
+        await ilogs.MarkLogAsSeen(id);
+    }
+
 
     public async Task ChangeStatusCapacete(int nCapacete, string newStatus){
         await icapacetes.UpdateCapaceteStatus(nCapacete, newStatus);

@@ -12,7 +12,7 @@ using iHat.MensagensCapacete.Values;
 namespace iHat.Controllers;
 
 [ApiController]
-[Route("[controller]")] // mudar este nome....
+[Route("[controller]")]
 public class IHatController : ControllerBase{
 
     private readonly ILogger<IHatController> _logger;
@@ -355,6 +355,17 @@ public class IHatController : ControllerBase{
         catch (Exception e)
         {
             return BadRequest(e.Message); // Retorna uma resposta de erro com a mensagem da exceção
+        }
+    }
+
+    [HttpPatch("logs/{idLog}")]
+    public async Task<IActionResult> MarkLogAsSeen(string idLog){
+        try{
+            await MarkLogAsSeen(idLog);
+            return Ok();
+        }
+        catch(Exception e){
+            return BadRequest(e.Message);
         }
     }
 

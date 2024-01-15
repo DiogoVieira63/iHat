@@ -35,6 +35,8 @@ public interface IiHatFacade{
 
     Task AddLogs(Log logs);
 
+    Task MarkLogAsSeen(string id);
+
     
 
     Task ChangeStatusCapacete(int nCapacete, string newStatus);
