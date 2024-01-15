@@ -100,7 +100,7 @@ public class iHatFacade: IiHatFacade {
 
 
 
-    public async Task<List<Obra>?> GetObras(int idResponsavel){
+    public async Task<List<Obra>> GetObras(int idResponsavel){
         var obras = await iobras.GetObrasOfResponsavel(idResponsavel);
         return obras;
     }

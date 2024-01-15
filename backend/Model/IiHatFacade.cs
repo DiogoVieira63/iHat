@@ -17,7 +17,7 @@ public interface IiHatFacade{
     Função que permite obter todas as obras geridas pelo {idResponsavel}
     Returns: uma lista de obras ou uma lista vazia
     */
-    Task<List<Obra>?> GetObras(int idResponsavel);    
+    Task<List<Obra>> GetObras(int idResponsavel);    
 
     /*
     Função que permite obter a obra identificada por {id}
@@ -28,7 +28,7 @@ public interface IiHatFacade{
     /*
     Função que permite obter a lista de todos os Capacetes da obra {idObra}
     Returns: A lista de Capacetes da obra.
-    Levanta uma exceção se não encontrar a Obra {idObra}
+    Exceção: se não encontrar a Obra {idObra}
     */
     Task<List<Capacete>> GetAllCapacetesdaObra(string idObra);
 

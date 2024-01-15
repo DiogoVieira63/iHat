@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http.Features;
 using iHat.Model.Mapas;
 using SignalR.Hubs;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +57,9 @@ builder.Services.AddSwaggerGen(options => {
         Version = "v1",
         Title = "iHat Backend"
     });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 var app = builder.Build();

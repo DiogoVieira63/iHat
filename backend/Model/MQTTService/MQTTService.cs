@@ -33,7 +33,7 @@ public class MQTTService {
     private ICapacetesService _capacetesService;
     private IObrasService _obrasService;
     private ILogsService _logsService;
-    private MensagemCapaceteService _mensagemCapaceteService;
+    private IMensagemCapaceteService _mensagemCapaceteService;
     private IMapaService _mapsService;
     private ManageNotificationClients _manageNotificationClients;
 
@@ -42,7 +42,7 @@ public class MQTTService {
     
 
     public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService,
-                       ILogsService logsService, MensagemCapaceteService mensagemCapaceteService, IMapaService mapsService,
+                       ILogsService logsService, IMensagemCapaceteService mensagemCapaceteService, IMapaService mapsService,
                        ManageNotificationClients manageNotificationClients){
 
         _logger = logger;

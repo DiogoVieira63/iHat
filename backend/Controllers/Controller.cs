@@ -6,6 +6,7 @@ using iHat.Model.Zonas;
 using Microsoft.AspNetCore.Mvc;
 using iHat.Model.MensagensCapacete;
 using iHat.MensagensCapacete.Values;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace iHat.Controllers;
 
@@ -35,15 +36,18 @@ public class IHatController : ControllerBase{
     }
 
     /// <summary>
-    /// Permite alterar o Status de uma obra
+    /// Endpoint que permite alterar o Status de uma Obra "id" para o estado "status"
     /// </summary>
     /// <param name="id">Id da obra a atualizar</param>
     /// <param name="state">Novo estado da obra</param>
     /// <response code="200">Alterou o estado da obra</response>
-    /// <response code="400">O pedido não possui um estado válido ou se falhar ao alterar o estado</response>
+    /// <response code="400">O pedido recebido não possui um estado válido, 
+    /// falhou ao alterar o estado: estado atual da obra é "Finalizada" ou "Cancelada",
+    /// ou não a obra "id" não foi encontrada </response>
     [HttpPatch("constructions/{id}/state")]
     public async Task<IActionResult> AlteraEstadoObra(string id, [FromBody] string state) {
         if (string.IsNullOrEmpty(state)) {
+            _logger.LogWarning("Cannot change to empty state");
             return BadRequest("Cannot change to empty state");
         }
 
@@ -53,14 +57,22 @@ public class IHatController : ControllerBase{
         catch (Exception e){
             return BadRequest(e.Message);
         }
-
         return Ok();
     }
 
-
+    /// <summary>
+    /// Endpoint que permite atualizar o nome da obra "id" para "name"
+    /// </summary>
+    /// <param name="id">Id da obra a atualizar</param>
+    /// <param name="name">Novo nome da obra</param>
+    /// <response code="200">O nome da obra foi atualizado</response>
+    /// <response code="400">O pedido não foi executado, 
+    /// porque o novo nome não é válido, ou a Obra "id" não foi encontrada,
+    /// ou o estado da Obra é "Finalizada" ou "Cancelada"</response>
     [HttpPatch("constructions/{id}")]
     public async Task<IActionResult> UpdateNomeObra(string id, [FromBody] string name ) {
         if (string.IsNullOrEmpty(name)) {
+            _logger.LogWarning("New name cannot be empty");
             return BadRequest("New name cannot be empty");
         }
 
@@ -68,40 +80,53 @@ public class IHatController : ControllerBase{
             await _facade.UpdateNomeObra(id, name);
         }
         catch (Exception e){
+            _logger.LogWarning(e.Message);
             return BadRequest(e.Message);
         }
 
         return Ok();
     }
 
-    // The dictionary newFloors must have all the maps'ids in Keys;
-    // There shouldn't be any Values of the Dictionary repeated.
-    [HttpPatch("map/{idObra}")]
-    public async Task<IActionResult> UpdateMapaFloorNumber(string idObra, [FromBody] Dictionary<string, int> newFloors){
-        foreach(var ids in newFloors)
-            _logger.LogWarning(ids.Key);
-        await _facade.UpdateMapaFloorNumber(idObra, newFloors);
-        return Ok();
-    }
-
+    
+    /// <summary>
+    /// Endpoint que permite obter as últimas localizações de todos os capacetes da Obra "id".
+    /// </summary>
+    /// <param name="id">Id da obra</param>
+    /// <returns>Dicionário (numero Capacete, ultima localização do Capacete)</returns>
     [HttpGet("constructions/{id}/helmets/location")]
     public async Task<Dictionary<int, Location>> GetLastLocationCapacetesObra(string id){
-
         var lista = await _facade.GetLastLocationCapacetesObra(id);
         return lista;
     }
 
+    /// <summary>
+    /// Endpoint que permite obter todos os capacetes da obra "id"
+    /// </summary>
+    /// <param name="id">Id da Obra</param>
+    /// <response code="200">A lista dos Capacetes da Obra</response>
+    /// <response code="400">O pedido falhou, porque a obra não foi encontrada</response>
     [HttpGet("constructions/{id}/helmets")]
     public async Task<ActionResult<List<Capacete>>> GetAllHelmetsFromObra(string id){
-        var lista = await _facade.GetAllCapacetesdaObra(id);
-
-        if(lista == null){
-            return NotFound();
+        try{
+            var lista = await _facade.GetAllCapacetesdaObra(id);
+            return Ok(lista);
         }
-
-        return lista;
+        catch(Exception e){
+            _logger.LogWarning(e.Message);
+            return BadRequest(e.Message);
+        }
     }
 
+    /// <summary>
+    /// Endpoint que permite obter a obra "id"
+    /// </summary>
+    /// <param name="id">Id da Obra a obter</param>
+    /// <returns>ObraDTO com a informação da Obra "id"</returns>
+    /// <response code="200">Obtem a informação da Obra</response>
+    /// <response code="400"> Não encontrou a obra, 
+    /// porque "id" não é um parametro válido,
+    /// ou porque não encontrou a obra </response>
+    
     [HttpGet("constructions/{id}")]
     public async Task<ActionResult<ObrasDTO>> GetConstruction(string id){
         if(id == null){
@@ -120,12 +145,22 @@ public class IHatController : ControllerBase{
         return dto;
     }
 
+    /// <summary>
+    /// Endpoint que retorna uma lista de todas as obras do sistema
+    /// </summary>
+    /// <returns>Uma lista com as obras</returns>
     [HttpGet("constructions")]
     public async Task<ActionResult<List<Obra>?>> GetConstructions(){
         var lista = await _facade.GetObras(1);
         return lista == null ? NotFound() : lista;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="idObra"></param>
+    /// <param name="idCapacete"></param>
+    /// <returns></returns>
     [HttpPost("constructions/{idObra}/helmets/{idCapacete}")]
     public async Task<IActionResult> AddHelmetToObra(string idObra, string idCapacete){
         try
@@ -410,5 +445,13 @@ public class IHatController : ControllerBase{
         }
     }
 
-   
-    }    
+    // The dictionary newFloors must have all the maps'ids in Keys;
+    // There shouldn't be any Values of the Dictionary repeated.
+    [HttpPatch("map/{idObra}")]
+    public async Task<IActionResult> UpdateMapaFloorNumber(string idObra, [FromBody] Dictionary<string, int> newFloors){
+        foreach(var ids in newFloors)
+            _logger.LogWarning(ids.Key);
+        await _facade.UpdateMapaFloorNumber(idObra, newFloors);
+        return Ok();
+    }
+}    
