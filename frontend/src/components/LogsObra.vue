@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import type { Log } from '@/interfaces'
 import type { PropType } from 'vue'
+import { computed, ref } from 'vue';
 
 const props = defineProps({
     logs: {
         type: Array as PropType<Array<Log>>,
         required: true
+    },
+    capaceteSelected: {
+        type: Number,
+        default: null
     }
 })
+
+const emit = defineEmits(['selectCapacete'])
 
 const getIcon = (type: string) => {
     switch (type) {
@@ -40,25 +47,52 @@ const formatTimestamp = (timestamp: Date) => {
 
     return `${day}-${month}-${year} @ ${hours}:${minutes}:${seconds}`
 }
+
+const logsFiltered = computed(()=>{
+    if (!props.capaceteSelected) return props.logs
+    return props.logs.filter((item)=> {
+        return item.idCapacete == props.capaceteSelected
+    })    
+})
+
+// const logsFiltered = computed(()=>{
+//     if (!props.capaceteSelected) return props.logs.slice(-length.value)
+//     return props.logs.slice(-length.value).filter((item)=> {
+//         return item.idCapacete == props.capaceteSelected
+//     })    
+// })
+
+// const logsConst = 1
+// const length = ref(logsConst)
+
+// const load = async ({done} : { done: (status: any) => void }) => {
+//     setTimeout(() => {
+//         length.value+= logsConst;
+//         done('ok');
+//     }, 2000);
+// }
+
 </script>
 
+
 <template>
-    <v-container v-if="props.logs.length > 0">
+    <v-container v-if="logsFiltered.length > 0">
         <v-infinite-scroll
             height="35vh"
+            width="100%"
             side="end"
             class="ma-12"
         >
-            <v-timeline align="start">
+        <v-timeline>
                 <v-timeline-item
-                    v-for="log in props.logs"
+                    v-for="log in logsFiltered"
                     :key="log.id"
                     :dot-color="getColor(log.type)"
                     size="large"
                     :icon="getIcon(log.type)"
                     class="me-4"
                 >
-                    <v-card>
+                    <v-card style="cursor: pointer;" @click="emit('selectCapacete',log.idCapacete)">
                         <v-card-title :class="'bg-' + getColor(log.type)">
                             <h2 class="font-weight-light">
                                 {{ log.type }}
@@ -90,7 +124,7 @@ const formatTimestamp = (timestamp: Date) => {
                     </template>
                 </v-timeline-item>
             </v-timeline>
-        </v-infinite-scroll>
+         </v-infinite-scroll>
     </v-container>
     <v-container v-else>
         <v-sheet
@@ -104,7 +138,7 @@ const formatTimestamp = (timestamp: Date) => {
                 type="info"
                 class="mx-4 rounded-pill"
             >
-                Não existem logs para esta obra
+                Não existem logs para {{ capaceteSelected ? `o capacete ${capaceteSelected}`: 'esta obra'  }}
             </v-alert>
         </v-sheet>
     </v-container>

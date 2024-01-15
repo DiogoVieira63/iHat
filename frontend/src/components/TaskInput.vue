@@ -170,7 +170,7 @@ const selectPosition = () => {
 
 const capacetesLivres = computed(() => {
     //return props.capacetes
-    return props.capacetes.filter((capacete) => capacete.status == 'Livre')
+    return props.capacetes.filter((capacete) => capacete.status == 'Livre' || capacete.status == 'Associado à Obra')
 })
 </script>
 <template>

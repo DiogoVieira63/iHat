@@ -326,7 +326,11 @@ const selectCapacete = (idCapacete: number) => {
                 </v-skeleton-loader>
             </template>
             <template #logs>
-                <LogsObra :logs="logs"></LogsObra>
+                <LogsObra 
+                    :logs="logs"
+                    :capacete-selected="capacetesSelected"
+                    @selectCapacete="selectCapacete"
+                ></LogsObra>
             </template>
         </ObraLayout>
     </PageLayout>

@@ -12,7 +12,7 @@ export interface Mapa {
     id: string
     name: string
     svg: string
-    Floor: number
+    floor: number
     zonas: Array<Zone>
 }
 
