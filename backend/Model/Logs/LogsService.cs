@@ -42,4 +42,12 @@ public class LogsService: ILogsService{
         await _logsCollection.InsertOneAsync(log);
     }
 
+    public async Task MarkLogAsSeen(string idLog){
+        var log = await _logsCollection.Find(x => x.Id == idLog).FirstOrDefaultAsync() ?? throw new Exception("Log "+idLog+" não encontrado.");
+
+        var capaceteUpdate = Builders<Log>.Update.Set(x => x.Vista, true);
+        await _logsCollection.UpdateOneAsync(x => x.Id == idLog, capaceteUpdate);
+    }
+
+
 }

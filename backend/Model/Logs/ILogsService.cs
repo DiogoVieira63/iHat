@@ -9,5 +9,7 @@ public interface ILogsService{
     Task<List<Log>> GetDailyLogsCapacete(string idObra, int Capacete);
 
     Task Add(Log log);
+    
+    Task MarkLogAsSeen(string logId);
 
 }

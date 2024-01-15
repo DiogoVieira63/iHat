@@ -15,6 +15,7 @@ public class Log
     public int? IdCapacete {get; set;}
     public string? IdTrabalhador {get; set;}
     public string? Mensagem {get; set;}
+    public bool Vista {get; set;}
 
     /*public Log(DateTime Timestamp, string? idObra, int idCapacete, string idTrabalhador, string mensagem )
     {
@@ -32,6 +33,7 @@ public class Log
         IdObra = idObra;
         IdCapacete = idCapacete;
         IdTrabalhador = idTrabalhador;
+        Vista = false;
 
         switch(tipo){
             case "Fall":
