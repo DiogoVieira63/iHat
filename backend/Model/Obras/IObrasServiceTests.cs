@@ -13,7 +13,7 @@ public class ObrasServiceTests{
                  .AddEnvironmentVariables() 
                  .Build();
 
-        var databaseSettings =  (DatabaseSettings?) config.GetValue(typeof(DatabaseSettings), "Database" );
+        var databaseSettings = config.GetSection("Database").Get<DatabaseSettings>();
         if(databaseSettings == null){
             return null;
         }
@@ -33,8 +33,7 @@ public class ObrasServiceTests{
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         var allPreviousObras = await obraService.GetObrasOfResponsavel(idResponsavel);
 

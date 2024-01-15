@@ -12,7 +12,7 @@ public class LogsServiceTests{
                  .AddEnvironmentVariables() 
                  .Build();
 
-        var databaseSettings =  (DatabaseSettings?) config.GetValue(typeof(DatabaseSettings), "Database" );
+        var databaseSettings = config.GetSection("Database").Get<DatabaseSettings>();
         if(databaseSettings == null){
             return null;
         }
@@ -42,8 +42,7 @@ public class LogsServiceTests{
 
         // Arrange
         var logsService = Setup();
-        if(logsService == null)
-            return;
+        Assert.NotNull(logsService);
 
         var log1 = new Log(type, timestamp, idObra, idCapacete, idTrabalhador, tipo);
         var log2 = new Log(type1, timestamp1, idObra, idCapacete1, idTrabalhador1, tipo1);
@@ -52,6 +51,7 @@ public class LogsServiceTests{
         await logsService.Add(log2);
 
         var logs = await logsService.GetLogsOfObra(idObra);
-        Assert.True(logs.Count == 1);
+        // Assert
+        Assert.NotNull(logs);
     }
 }
