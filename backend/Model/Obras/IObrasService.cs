@@ -11,6 +11,13 @@ public interface IObrasService{
     Task<bool> CheckIfObraExists(string id);
 
     /*
+    Função que permite verificar se o Mapa da Obra pode ser alterado.
+    Ie, se o estado atual da Obra não for "Finalizada" ou "Cancelada"
+    Returns: True se poder ser alterado.
+    */
+    Task<bool> CheckIfMapaCanBeChanged(string id);
+
+    /*
     Função que permite obter todas as obras de um responsável com id igual a idResponsavel
     */
     Task<List<Obra>> GetObrasOfResponsavel(int idResponsavel);

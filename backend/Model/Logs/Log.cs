@@ -8,13 +8,13 @@ public class Log
     [BsonId] // Primary key
     [BsonRepresentation(BsonType.ObjectId)] // permite passar uma variável do tipo ObjectId como string
     public string? Id {get; set;}
-
     public string Type {get; set;} // tipo de gravidade
     public DateTime Timestamp {get; set;}
     public string? IdObra {get; set;}
     public int? IdCapacete {get; set;}
     public string? IdTrabalhador {get; set;}
     public string? Mensagem {get; set;}
+    public bool Vista {get; set;}
 
     /*public Log(DateTime Timestamp, string? idObra, int idCapacete, string idTrabalhador, string mensagem )
     {
@@ -25,13 +25,14 @@ public class Log
         Mensagem = mensagem;
     }*/
 
-    public Log( String type, DateTime timestamp, string? idObra, int idCapacete, string idTrabalhador, string tipo){
+    public Log( string type, DateTime timestamp, string? idObra, int idCapacete, string idTrabalhador, string tipo){
         
         Type = type;
         Timestamp = timestamp;
         IdObra = idObra;
         IdCapacete = idCapacete;
         IdTrabalhador = idTrabalhador;
+        Vista = false;
 
         switch(tipo){
             case "Fall":
@@ -58,11 +59,6 @@ public class Log
                 break;
         }
 
-
-
-
-
     }
-
 }
 

@@ -114,8 +114,6 @@ public class iHatFacade: IiHatFacade{
         return await icapacetes.GetAllHelmetsFromList(listaNCapacetes);
     }
 
-
-    
     public async Task RemoveObraById(string obraId){
         // Obtem a lista dos capacetes da Obra
         var capacetes = await GetAllCapacetesdaObra(obraId);
@@ -142,18 +140,13 @@ public class iHatFacade: IiHatFacade{
         await icapacetes.RemoveCapaceteFromObra(nCapacete, idObra);
     }
 
-    
-
     public async Task AddCapaceteToObra(int nCapacete, string idObra){
         var existsObra = await iobras.CheckIfObraExists(idObra);
         if(existsObra){
-            // if the helmet doesn't exist, this function will return and exception and stop
             await icapacetes.AddCapaceteToObra(nCapacete, idObra);
             await iobras.AddCapaceteToObra(nCapacete, idObra);
         }
     }
-
-    // ------------------------
     
     public async Task UpdateEstadoObra(string id, string estado){
         await iobras.UpdateEstadoObra(id, estado);
@@ -161,17 +154,14 @@ public class iHatFacade: IiHatFacade{
         if(estado == "Finalizada" || estado == "Cancelada"){
             var capacetes = await GetAllCapacetesdaObra(id);
             foreach(var capacete in capacetes){
-                await icapacetes.UpdateCapaceteStatusToLivre(capacete.Numero);
+                await icapacetes.RemoveCapaceteFromObra(capacete.Numero, id);
             }
         }
     }
-    // ------------------------
     
     public async Task UpdateNomeObra(string idObra, string nome){
         await iobras.UpdateNomeObra(idObra, nome);
     }
-
-
 
     public async Task<List<Capacete>> GetAllCapacetes(){
         return await icapacetes.GetAll();
@@ -185,23 +175,17 @@ public class iHatFacade: IiHatFacade{
         return await icapacetes.GetFreeHelmets();
     }
 
-    // ------------------------
     public async Task UpdateCapaceteStatusFromToNaoOperacional(int nCapacete, string newStatus){
         await icapacetes.UpdateCapaceteStatus(nCapacete, newStatus);
     }
-
-    // ------------------------
 
     public async Task AddCapacete(int nCapacete){
         await icapacetes.Add(nCapacete);
     }
 
-
-
     public async Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete){
         return await _mensagemCapaceteService.GetUltimosDadosDoCapacete(nCapacete);
     }
-
 
     public async Task<Dictionary<int, Location>> GetLastLocationCapacetesObra(string obraId){
         
@@ -216,7 +200,6 @@ public class iHatFacade: IiHatFacade{
         return allCapacetesLocation;
     }
 
-    
     public async Task<List<Mapa>> GetMapasFromList(List<string> listaMapasIds){
         var results = new List<Mapa>();
         
@@ -239,9 +222,13 @@ public class iHatFacade: IiHatFacade{
         await imapas.UpdateZonasPerigoOfMapa(idMapa, zonas);       
     }
 
-
-    // ------------------------
     public async Task AddMapa(string idObra, IFormFile mapaFile){
+
+        var canChangeMapa = await iobras.CheckIfMapaCanBeChanged(idObra);
+        if(!canChangeMapa){
+            throw new Exception("Estado atual da Obra não permite alterar o Mapa");
+        }
+
         var listaSvgDBIds = new List<string>();
         var listaSvg = await requestHTTP(mapaFile);                   
 
@@ -258,17 +245,9 @@ public class iHatFacade: IiHatFacade{
         await imapas.RemoveMapas(listaMapasAnteriores);
     }
 
-    
-
     public async Task UpdateMapaFloorNumber(string idObra, Dictionary<string, int> newFloors){
-        
-        // check if idMapas are in Obra
-        var obra = await iobras.GetConstructionById(idObra);
+        var obra = await iobras.GetConstructionById(idObra) ?? throw new Exception("Obra " +idObra+ " não encontrada.");
         var idMapas = obra.Mapa;
-
-        foreach(var i in idMapas)
-            Console.WriteLine(i);
-
 
         if(idMapas.Except(newFloors.Keys).ToList().Count != 0){
             throw new Exception("Todos os ids dos mapas de uma obra devem estar presentes no valor enviado no HTTP Request");
@@ -287,12 +266,8 @@ public class iHatFacade: IiHatFacade{
 
         foreach(var pair in newFloors){
             await imapas.UpdateFloorNumber(pair.Key, pair.Value);
-        }
-        
-         
+        }         
     }
-
-    // ------------------------
 
     public async Task<List<Log>> GetLogs(string idObra){
         return await ilogs.GetLogsOfObra(idObra);

@@ -55,21 +55,28 @@ public interface ICapacetesService{
     /*
     Função que permite adicionar um capacete a uma obra.
     ie. adiciona uma obraId à obra
-    Levanta uma exceção se o estado do capacete não for "Livre" e se o valor de "Obra" for diferente de null.
+    Exceção: se o estado do capacete não for "Livre" e se o valor de "Obra" não for null.
     */    
     Task AddCapaceteToObra(int nCapacete, string obraId);
 
     /*
     Função que permite remover a obra do Capacete.
+    Remove, também, a Obra do Capacete, o Trabalhador do Capacete e coloca o Estado do Capacete a Livre
     Exceção: se o capacete não estiver associado a nenhuma obra e se o capacete não estiver associado à obra indicada ou se não encontrar o capacete
     */
     Task RemoveCapaceteFromObra(int nCapacete, string obraId);
 
+    /*
+    Função que permite atualizar o Status do Capacete para Não Operacional, ou de Não Operacional para Livre.
+    Esta função permite que o estado do Capacete seja atualizado para não operacional a partir de qualquer estado.
+    Permite também atualizar de Não Operacional para Livre
+    Exceção: Se não encontrar o Capacete {nCapacete}
+    */
     Task UpdateCapaceteStatus(int nCapacete, string status);
 
     /*
     Função que permite mudar o Status do "nCapacete" para Livre.
-    Levanta uma exceção se não poder mudar o estado do Capacete para Livre ou se não encontrar o capacete
+    Exceção: se não poder mudar o estado do Capacete para Livre ou se não encontrar o capacete
     */
     Task UpdateCapaceteStatusToLivre(int nCapacete);
 
