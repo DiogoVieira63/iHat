@@ -29,7 +29,7 @@ public class CapacetesServiceTests{
     
     [Fact]
     public async void Test_AddCapacete(){
-        var nCapacete = 1;
+        var nCapacete = 3;
         // var status = "Livre";
 
         // Arrange
@@ -55,17 +55,14 @@ public class CapacetesServiceTests{
 
     [Fact]
     public async void Test_AddCapacete_FailBecauseTheCapaceteAlreadyExists(){
-        var nCapacete = 1;
+        var nCapacete = 12;
         // var status = "Livre";
 
         // Arrange
         var capaceteService = Setup();
         Assert.NotNull(capaceteService);
 
-        try{
-            await capaceteService.Add(nCapacete);
-        }
-        catch(Exception){}
+        await capaceteService.Add(nCapacete);
 
         // Act
         Action act = () => capaceteService.Add(nCapacete);

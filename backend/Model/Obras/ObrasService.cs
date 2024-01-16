@@ -149,7 +149,10 @@ public class ObrasService: IObrasService{
     }
 
     public async Task<List<string>> AddListaMapaToObra(string id, List<string> mapas){
-        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        if (obra == null){
+            throw new InvalidOperationException("Obra não encontrada.");
+        }
         var listaPreviousMapas = obra.Mapa;
         var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, id);
         var obraUpdate = Builders<Obra>.Update.Set(x => x.Mapa, mapas);

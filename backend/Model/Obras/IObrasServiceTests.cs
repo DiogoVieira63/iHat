@@ -28,8 +28,8 @@ public class ObrasServiceTests{
 
     [Fact]
     public async void Test_AddObra(){
-        var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var idResponsavel = 2;
+        var nameObra = "Obra7";
 
         // Arrange
         var obraService = Setup();
@@ -58,8 +58,7 @@ public class ObrasServiceTests{
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         try{
             await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -79,12 +78,10 @@ public class ObrasServiceTests{
     [Fact]
     // Acho que este teste não é preciso, porque a função GetObra consiste apenas numa chamada a uma função da biblioteca MongoDb.Driver 
     public async void Test_GetConstructionById(){
-        var idResponsavel = 1;
+        var idResponsavel = 2;
     
         var obrasService = Setup();
-        if(obrasService == null){
-            return;
-        }
+        Assert.NotNull(obrasService);
 
         var allObras = await obrasService.GetObrasOfResponsavel(idResponsavel);
         if(allObras.Count > 0){
@@ -101,15 +98,14 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_RemoveObraByIdAsync(){
         var idResponsavel1 = 1;
-        var nameObra1 = "Obra5";
+        var nameObra1 = "Obra8";
 
         var idResponsavel2 = 2;
-        var nameObra2 = "Obra6";
+        var nameObra2 = "Obra9";
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
         
         // Act - Adicionar uma Obra
         var obra1 = await obraService.AddObra(nameObra1, idResponsavel1, new List<string>());
@@ -131,12 +127,11 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_RemoveObraByIdAsync_FailBecauseTheObraDoesNotExist(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "5Obra";
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -165,12 +160,11 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_AlteraEstadoObra(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra10";
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -191,12 +185,11 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_AlteraEstadoObra_FailBecauseTheObraDoesNotExist(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra555";
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -225,13 +218,12 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_UpdateNomeObra(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
-        var newNameObra = "Obra6";
+        var nameObra = "Obra_n5";
+        var newNameObra = "Obra_5";
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -252,13 +244,12 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_UpdateNomeObra_FailBecauseTheObraDoesNotExist(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
-        var newNameObra = "Obra6";
+        var nameObra = "Obra155";
+        var newNameObra = "Obra_155";
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -287,13 +278,12 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_GetObraWithCapaceteId(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra12";
         var idCapacete = 1;
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -307,13 +297,12 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_GetObraWithCapaceteId_FailBecauseTheObraDoesNotExist(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra53";
         var idCapacete = 1;
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -335,14 +324,13 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_GetAllCapacetesOfObra(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra_54";
         var idCapacete1 = 1;
         var idCapacete2 = 2;
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -360,14 +348,13 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_GetAllCapacetesOfObra_FailBecauseTheObraDoesNotExist(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra63";
         var idCapacete1 = 1;
         var idCapacete2 = 2;
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -393,12 +380,11 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_CheckIfObraExists(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra59";
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -416,12 +402,11 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_CheckIfObraExists_FailBecauseTheObraDoesNotExist(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra33";
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
 
         // Act - Adicionar uma Obra
         await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -447,14 +432,13 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_DeleteCapaceteToObra(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra81";
         var idCapacete1 = 1;
         var idCapacete2 = 2;
         var capacetesInicialmenteNaObra = new List<int>{idCapacete1, idCapacete2};
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
         
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -474,14 +458,13 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_DeleteCapaceteToObra_FailBecauseTheObraDoesNotExist(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra11111";
         var idCapacete1 = 1;
         var idCapacete2 = 2;
         var capacetesInicialmenteNaObra = new List<int>{idCapacete1, idCapacete2};
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
         
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -508,9 +491,9 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_UpdateZonasRiscoObra(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra625";
         var zonasRisco = new List<ZonasRisco>{
-            new ZonasRisco("1"){
+            new ZonasRisco("a1b2c3d4e5f6a1b2c3d4e5f6"){
                 Points = new List<Point>{
                     new Point(992.9577606666666, 709.2555433333333),
                     new Point(947.823317, 947.823317),
@@ -518,12 +501,11 @@ public class ObrasServiceTests{
                 }
             }
         };
-        var idMapa = "Mapa1";
+        var idMapa = "a1b2c3d4e5f6a1b2c3d4e5f6";
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
         
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>{idMapa});
@@ -543,13 +525,12 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_AddListaMapaToObra(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
-        var mapas = new List<string>{"Mapa1", "Mapa2"};
+        var nameObra = "Obra135";
+        var mapas = new List<string>{"a1b2c3d4e5f6a1b2c3d4e5f6", "a1b2c3d4e5f6a1b2c3d4e5f7"};
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
         
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
@@ -566,13 +547,12 @@ public class ObrasServiceTests{
     [Fact]
     public async void Test_AddListaMapaToObra_FailBecauseTheObraDoesNotExist(){
         var idResponsavel = 1;
-        var nameObra = "Obra5";
+        var nameObra = "Obra4321568";
         var mapas = new List<string>{"Mapa1", "Mapa2"};
 
         // Arrange
         var obraService = Setup();
-        if(obraService == null)
-            return;
+        Assert.NotNull(obraService);
         
         // Act - Adicionar uma Obra
         var obra = await obraService.AddObra(nameObra, idResponsavel, new List<string>());
