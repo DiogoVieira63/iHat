@@ -12,7 +12,7 @@ public class MapaServiceTests{
                  .AddEnvironmentVariables() 
                  .Build();
 
-        var databaseSettings =  (DatabaseSettings?) config.GetValue(typeof(DatabaseSettings), "Database" );
+        var databaseSettings = config.GetSection("Database").Get<DatabaseSettings>();
         if(databaseSettings == null){
             return null;
         }
@@ -33,8 +33,7 @@ public class MapaServiceTests{
 
         // Arrange
         var mapaService = Setup();
-        if (mapaService == null)
-            return;
+        Assert.NotNull(mapaService);
 
         // Act
         var idMapa = await mapaService.Add(nameMapa, svg, floor);
@@ -56,8 +55,7 @@ public class MapaServiceTests{
 
         // Arrange
         var mapaService = Setup();
-        if (mapaService == null)
-            return;
+        Assert.NotNull(mapaService);
 
         // Act
         var idMapa = await mapaService.Add(nameMapa, svg, floor);
@@ -84,8 +82,7 @@ public class MapaServiceTests{
 
         // Arrange
         var mapaService = Setup();
-        if (mapaService == null)
-            return;
+        Assert.NotNull(mapaService);
 
         // Act
         var idMapa1 = await mapaService.Add(nameMapa1, svg1, floor1);
@@ -98,7 +95,8 @@ public class MapaServiceTests{
             var mapa1 = await mapaService.GetMapaById(idMapa1);
             var mapa2 = await mapaService.GetMapaById(idMapa2);
             Assert.Null(mapa1);
-            Assert.Null(mapa2);
+            Assert.NotNull(mapa2);
+           
         }
     }
 
@@ -112,8 +110,7 @@ public class MapaServiceTests{
 
         // Arrange
         var mapaService = Setup();
-        if (mapaService == null)
-            return;
+        Assert.NotNull(mapaService);
 
         // Act
         var idMapa = await mapaService.Add(nameMapa, svg, floor);
