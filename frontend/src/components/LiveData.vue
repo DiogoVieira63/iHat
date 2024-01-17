@@ -30,10 +30,10 @@ const filteredMensagemCapacete = () => {
     }
     else {
         return {
-            "fall": "-",
-            "bodyTemperature": {"value": "-"},
-            "heartrate": {"value": "-"},
-            "gases": {"metano": "-", "monoxidoCarbono": "-"}
+            "fall": null,
+            "bodyTemperature": {"value": null},
+            "heartrate": {"value": null},
+            "gases": {"metano": null, "monoxidoCarbono": null}
         } 
     }
 }
@@ -82,10 +82,19 @@ const getTitle = (type: string) => {
 //TEMPORARIO, DEPOIS POSSIVELMENTE VITR ANÁLISE FEITA DO BACK NO OBJETO.
 //ALGO DESTE TIPO:
 // 
-const getColor = (key: string, value: boolean | ValueObject | Gases) => {
+
+interface auxType {
+    value: string;
+}
+
+const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
     var red = '#ff9999'
     var green = '#a6ffbe'
+    var grey = '#f6f6f6'
 
+    if  (value === null || 
+        (typeof value === 'object' && 'value' in value && value.value === null) || 
+        (typeof value === 'object' && 'metano' in value && 'monoxidoCarbono' in value && (value.metano === null || value.monoxidoCarbono === null)) ) return grey
     if (key === 'fall'){
         if (value) return red
         else return green
@@ -150,10 +159,12 @@ const getColor = (key: string, value: boolean | ValueObject | Gases) => {
                             :key="dictKey"
                         >
                             <v-chip v-if="dictKey==='metano'" class="custom-chip-size my-4">
-                                <b>CH₄: {{ dictValue }}</b>
+                                <b v-if="dictValue !== null">CH₄: {{ dictValue }}</b>
+                                <b v-else>CH₄: - </b>
                             </v-chip>
                             <v-chip v-if="dictKey==='monoxidoCarbono'" class="custom-chip-size">
-                                <b>CO  : {{ dictValue }}</b>
+                                <b v-if="dictValue !== null" >CO  : {{ dictValue }}</b>
+                                <b v-else >CO  : -</b>
                             </v-chip>
                         </div>
                         <div
@@ -162,8 +173,9 @@ const getColor = (key: string, value: boolean | ValueObject | Gases) => {
                             class="text-h3"
                         >
                             <v-chip class="custom-chip-size">
-                                <b v-if="key==='bodyTemperature' && dictValue !== '-'">{{ dictValue }}&deg;C</b>
-                                <b v-else-if="key==='heartrate' && dictValue !== '-'">{{ dictValue }} bpm</b>
+                                <b v-if="key==='bodyTemperature' && dictValue !== null">{{ dictValue }}&deg;C</b>
+                                <b v-else-if="key==='heartrate' && dictValue !== null">{{ dictValue }} bpm</b>
+                                <b v-else-if="dictValue === null"> - </b> 
                                 <b v-else>{{ dictValue }}</b> 
                             </v-chip>
                         </div>
