@@ -10,7 +10,9 @@ public interface IiHatFacade{
 
     // Obras
 
-
+    // Função que permite criar uma nova Obra com {name}, {mapa} e {idResponsavel}
+    // Returns: Id da Obra criada
+    // Exceção: Existe uma Obra com o mesmo nome.
     Task<string?> NewConstruction(string name, IFormFile? mapa, int idResponsavel);
 
     /*
@@ -100,7 +102,7 @@ public interface IiHatFacade{
     /*
     Função que permite adicionar um novo Capacete com o número "nCapacete".
     O estado inicial deste capacete será "Livre"  e não estará associado a nenhum trabalhador e a nenhuma obra
-    Exception: Devolbe uma exceção se um Capacete com o mesmo número "nCapacete" já existir.
+    Exception: Devolve uma exceção se um Capacete com o mesmo número "nCapacete" já existir.
     */
     Task AddCapacete(int nCapacete );
 
@@ -108,7 +110,7 @@ public interface IiHatFacade{
     Função que permite obter as últimas 20 mensagens recebidas do Capacete {nCapacete}
     Returns: Uma lista de MensagensCapacete
     */
-    Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete);
+    Task<List<MensagemCapacete>> GetUltimosDadosDoCapacete(int nCapacete);
 
     /*
     Função que permite obter as últimas localizações de todos os capacetes da Obra {obraId}
@@ -169,8 +171,18 @@ public interface IiHatFacade{
     */
     Task AddLogs(Log log);
 
-    Task<List<Log>> GetDailyLogsCapacete(string idobra, int nCapacete);
+    /*
+    Função que permite obter os Logs do Capacete {nCapacete}
+    Returns: A lista de Logs
+    Exceção: Se não encontrar o capacete {nCapacete}
+    Exceção: Se o capacete não estiver associado a nenhuma obra.
+    */
+    Task<List<Log>> GetDailyLogsCapacete(int nCapacete);
 
+    /*
+    Função que atualiza o valor de Vista do Log {logId}
+    Exceção: Se não encontrar o Log {logId}
+    */
     Task MarkLogAsSeen(string id);
 
 }

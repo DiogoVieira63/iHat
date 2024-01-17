@@ -12,11 +12,13 @@ public class CapacetesServiceTests{
                 .AddEnvironmentVariables() 
                 .Build();
     
-        var databaseSettings =  (DatabaseSettings?) config.GetValue(typeof(DatabaseSettings), "Database" );
-        if(databaseSettings == null){
-            return null;
-        }
-        IOptions<DatabaseSettings> options1 = Options.Create<DatabaseSettings>(databaseSettings);
+            var databaseSettings = config.GetSection("Database").Get<DatabaseSettings>();
+            // Console.WriteLine($"Database Settings: {databaseSettings}");
+
+            if(databaseSettings == null){
+                return null;
+            }
+            IOptions<DatabaseSettings> options1 = Options.Create<DatabaseSettings>(databaseSettings);
             
         var logger = Mock.Of<ILogger<CapacetesService>>();
         var capaceteService = new CapacetesService(options1, logger);
@@ -26,11 +28,14 @@ public class CapacetesServiceTests{
     
     [Fact]
     public async void Test_AddCapacete(){
-        var nCapacete = 1;
+        var nCapacete = 3;
+        // var status = "Livre";
 
         // Arrange
         var capaceteService = Setup();
         Assert.NotNull(capaceteService);
+        // if(capaceteService == null)
+        //     return;
 
         var allPreviousCapacetes = await capaceteService.GetAll();
 
@@ -46,18 +51,14 @@ public class CapacetesServiceTests{
 
     [Fact]
     public async void Test_AddCapacete_FailBecauseTheCapaceteAlreadyExists(){
-        var nCapacete = 1;
+        var nCapacete = 12;
         // var status = "Livre";
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
-        try{
-            await capaceteService.Add(nCapacete);
-        }
-        catch(Exception){}
+        await capaceteService.Add(nCapacete);
 
         // Act
         Action act = () => capaceteService.Add(nCapacete);
@@ -70,8 +71,7 @@ public class CapacetesServiceTests{
     public async void Test_GetAll(){
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         var allCapacetes = await capaceteService.GetAll();
@@ -87,8 +87,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         var capacete = await capaceteService.GetById(nCapacete);
@@ -99,19 +98,19 @@ public class CapacetesServiceTests{
 
     [Fact]
     public async void Test_GetById_FailBecauseTheCapaceteDoesNotExist(){
-        var nCapacete = 1;
+        var nCapacete = 3;
         // var status = "Livre";
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         var capacete = await capaceteService.GetById(nCapacete);
 
-        // Assert
+        // verificar que o capacete nao existe
         Assert.Null(capacete);
+    
     }
 
     [Fact]
@@ -120,8 +119,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+       Assert.NotNull(capaceteService);
 
         // Act
         var capacetes = await capaceteService.GetAllHelmetsFromList(listNumeros);
@@ -132,15 +130,14 @@ public class CapacetesServiceTests{
     
     [Fact]
     public async void Test_GetAllHelmetsFromList_FailBecauseTheCapaceteDoesNotExist(){
-        var listNumeros = new List<int>{1,2,3};
+        var listNCapacetes = new List<int>{1,2,3,4};
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
-        var capacetes = await capaceteService.GetAllHelmetsFromList(listNumeros);
+        var capacetes = await capaceteService.GetAllHelmetsFromList(listNCapacetes);
 
         // Assert
         Assert.NotNull(capacetes);
@@ -153,8 +150,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+       Assert.NotNull(capaceteService);
 
         // Act
         var capacete = await capaceteService.CheckIfCapaceteExists(nCapacete);
@@ -165,13 +161,12 @@ public class CapacetesServiceTests{
 
     [Fact]
     public async void Test_CheckIfCapaceteExists_FailBecauseTheCapaceteDoesNotExist(){
-        var nCapacete = 1;
+        var nCapacete = 2;
         // var status = "Livre";
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         var capacete = await capaceteService.CheckIfCapaceteExists(nCapacete);
@@ -187,8 +182,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         var capacete = await capaceteService.CheckIfCapaceteIsBeingUsed(nCapacete);
@@ -204,8 +198,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         var capacete = await capaceteService.CheckIfCapaceteIsBeingUsed(nCapacete);
@@ -255,8 +248,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         await capaceteService.UpdateCapaceteStatus(nCapacete, status);
@@ -273,8 +265,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         Action act = () => capaceteService.UpdateCapaceteStatus(nCapacete, status);
@@ -287,8 +278,7 @@ public class CapacetesServiceTests{
     public async void Test_GetFreeHelmets(){
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         var capacetes = await capaceteService.GetFreeHelmets();
@@ -304,8 +294,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         await capaceteService.AssociarTrabalhadorCapacete(nCapacete, idTrabalhador);
@@ -322,8 +311,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         Action act = () => capaceteService.AssociarTrabalhadorCapacete(nCapacete, idTrabalhador);
@@ -339,8 +327,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         await capaceteService.AssociarTrabalhadorCapacete(nCapacete, idTrabalhador);
@@ -359,8 +346,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         Action act = () => capaceteService.AssociarTrabalhadorCapacete(nCapacete, idTrabalhador);
@@ -376,8 +362,7 @@ public class CapacetesServiceTests{
 
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         // Act
         await capaceteService.AssociarTrabalhadorCapacete(nCapacete, idTrabalhador);
@@ -396,8 +381,7 @@ public class CapacetesServiceTests{
         string idTrabalhador = "1";
         // Arrange
         var capaceteService = Setup();
-        if(capaceteService == null)
-            return;
+        Assert.NotNull(capaceteService);
 
         await capaceteService.AssociarTrabalhadorCapacete(nCapacete, idTrabalhador);
         // var capacete = await capaceteService.GetById(nCapacete);

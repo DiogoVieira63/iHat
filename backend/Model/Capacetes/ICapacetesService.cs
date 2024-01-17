@@ -26,6 +26,8 @@ public interface ICapacetesService{
     */
     Task<List<Capacete>> GetFreeHelmets();
 
+    Task <string?> GetObraIdOfCapacete(int nCapacete);
+
     /*
     Função que verifica se existe um capacete com o numero "nCapacate"
     Returns: true se encontrou o capacete

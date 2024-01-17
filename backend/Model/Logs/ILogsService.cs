@@ -26,7 +26,7 @@ public interface ILogsService{
     Task Add(Log log);
 
     /*
-    Função que atualiza o Log {logId} para atualizar o valor de Vista para True.
+    Função que atualiza o valor de Vista do Log {logId} para True.
     Exceção: Se não encontrar o Log {logId}
     */
     Task MarkLogAsSeen(string logId);

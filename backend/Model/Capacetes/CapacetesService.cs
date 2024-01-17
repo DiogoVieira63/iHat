@@ -46,6 +46,11 @@ public class CapacetesService: ICapacetesService{
         return await _capaceteCollection.Find(x => x.Status == Capacete.Livre && x.Obra == null && x.Trabalhador == null).ToListAsync();
     }
 
+    public async Task <string?> GetObraIdOfCapacete(int nCapacete){
+        var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync() ?? throw new Exception("Capacete não encontrado.");
+        return capacete.Obra;
+    }
+
     public async Task<bool> CheckIfCapaceteExists(int nCapacete){
         var capacete = await _capaceteCollection.Find(x => x.Numero == nCapacete).FirstOrDefaultAsync();
         return capacete != null;

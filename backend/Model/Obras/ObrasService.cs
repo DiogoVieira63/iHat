@@ -20,9 +20,6 @@ public class ObrasService: IObrasService{
         _obraCollection = mongoDatabase.GetCollection<Obra>(
             iHatDatabaseSettings.Value.ObrasCollectionName);
 
-        /*_mapaCollection = mongoDatabase.GetCollection<Mapa>(
-            iHatDatabaseSettings.Value.MapasCollectionName);*/
-
         _logger = logger;
     }
 

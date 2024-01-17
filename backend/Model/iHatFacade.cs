@@ -183,7 +183,7 @@ public class iHatFacade: IiHatFacade {
         await icapacetes.Add(nCapacete);
     }
 
-    public async Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete){
+    public async Task<List<MensagemCapacete>> GetUltimosDadosDoCapacete(int nCapacete){
         return await _mensagemCapaceteService.GetUltimosDadosDoCapacete(nCapacete);
     }
 
@@ -277,7 +277,8 @@ public class iHatFacade: IiHatFacade {
         return await ilogs.GetLogsOfObraByDate(idObra, date);
     }
 
-    public async Task<List<Log>> GetDailyLogsCapacete(string idObra, int nCapacete){
+    public async Task<List<Log>> GetDailyLogsCapacete(int nCapacete){
+        var idObra = await icapacetes.GetObraIdOfCapacete(nCapacete) ?? throw new Exception("Capacete não está associado a nenhuma obra.");
         return await ilogs.GetDailyLogsCapacete(idObra, nCapacete);
     }
 

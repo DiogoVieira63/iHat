@@ -75,11 +75,20 @@ const getCapacetesObra = () => {
     })
 }
 
+const ordenaLogsMaisMenosRecente = () => {
+    logs.value = logs.value.sort(function (a, b) {
+            if (a.timestamp < b.timestamp) return 1
+            else if (a.timestamp > b.timestamp) return -1
+            else return 0
+    })
+}
+
 const getLogsObra = () => {
     return ObraService.getLogsObra(idObra).then((answer) => {
         answer.forEach((log) => {
             logs.value.push(log)
         })
+        ordenaLogsMaisMenosRecente()
     })
 }
 
@@ -112,6 +121,7 @@ const updateCapacetePosition = (id: number, pos: Position) => {
 
 const updateLogs = (updatedLogs: Array<Log>) => {
     logs.value = updatedLogs
+    ordenaLogsMaisMenosRecente()
 }
 
 onMounted(async () => {

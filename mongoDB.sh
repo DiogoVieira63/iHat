@@ -21,63 +21,75 @@ db.createCollection("${OBRAS_COLLECTION}")
 
 db.${OBRAS_COLLECTION}.insertMany( [
     {
+        "_id": ObjectId("000000000000000000000001"),
         "IdResponsavel":1,
-        "Name":"Primeira Obra",
+        "Nome":"Primeira Obra",
         "Mapa": [],
         "Capacetes":[],
         "Status":"Pendente"
     },
     {
+        "_id": ObjectId("000000000000000000000002"),
         "IdResponsavel":1,
-        "Name":"Segunda Obra",
+        "Nome":"Segunda Obra",
         "Mapa": [],
         "Capacetes":[1,2,3,4],
         "Status":"Em Curso"
     }
 ] )
 
+
 db.createCollection("${CAPACETES_COLLECTION}")
 
 db.${CAPACETES_COLLECTION}.insertMany( [
     {
-        "NCapacete":1,
+        "Numero":1,
         "Status":"Em Uso",
         "Trabalhador":"a01",
+        "Obra":"000000000000000000000002"
     },
     {
-        "NCapacete":2,
+        "Numero":2,
         "Status":"Livre",
         "Trabalhador": null,
+        "Obra":"000000000000000000000002"
     },
     {
-        "NCapacete":3,
+        "Numero":3,
         "Status":"Em Uso",
         "Trabalhador":"a02",
+        "Obra":"000000000000000000000002"
     },
     {
-        "NCapacete":4,
+        "Numero":4,
         "Status":"Em Uso",
-        "Trabalhador":"a03"
+        "Trabalhador":"a03",
+        "Obra":"000000000000000000000002"
     },
     {
-        "NCapacete":5,
+        "Numero":5,
         "Status":"Livre",
-        "Trabalhador":null
+        "Trabalhador":null,
+        "Obra":null
     },
     {
-        "NCapacete":6,
+        "Numero":6,
         "Status":"Livre",
-        "Trabalhador":null
+        "Trabalhador":null,
+        "Obra":null
+
     },
     {
-        "NCapacete":7,
+        "Numero":7,
         "Status":"Livre",
-        "Trabalhador":null
+        "Trabalhador":null,
+        "Obra":null
     },
     {
-        "NCapacete":8,
+        "Numero":8,
         "Status":"Livre",
-        "Trabalhador":null
+        "Trabalhador":null,
+        "Obra":null
     }
   ]
 )
