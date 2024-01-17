@@ -7,7 +7,7 @@ export class CapaceteSignalRService {
 
     constructor(idCapacete: string) {
         this.connection = new signalR.HubConnectionBuilder()
-            .configureLogging(signalR.LogLevel.Debug)
+            .configureLogging(signalR.LogLevel.None)
             .withUrl('http://localhost:5069/helmetdata?capacete_id=' + idCapacete, {
                 skipNegotiation: true,
                 transport: signalR.HttpTransportType.WebSockets

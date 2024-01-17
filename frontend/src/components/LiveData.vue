@@ -28,6 +28,14 @@ const filteredMensagemCapacete = () => {
         };
         return filteredData;
     }
+    else {
+        return {
+            "fall": "-",
+            "bodyTemperature": {"value": "-"},
+            "heartrate": {"value": "-"},
+            "gases": {"metano": "-", "monoxidoCarbono": "-"}
+        } 
+    }
 }
 
 const getIcon = (type: string) => {
@@ -100,7 +108,6 @@ const getColor = (key: string, value: boolean | ValueObject | Gases) => {
 <template>
     <v-card
         class="mx-auto"
-        color="#f6f6f6"
         prepend-icon="mdi-hard-hat"
         height="auto"
     >
@@ -132,7 +139,7 @@ const getColor = (key: string, value: boolean | ValueObject | Gases) => {
                         <div
                             v-if="key === 'fall'"
                         >
-                            <v-chip class="custom-chip-size">
+                            <v-chip class="custom-chip-size" >
                                 <b v-if="value == true"> Queda Detetada</b>
                                 <b v-else> - </b>
                             </v-chip>
@@ -155,8 +162,8 @@ const getColor = (key: string, value: boolean | ValueObject | Gases) => {
                             class="text-h3"
                         >
                             <v-chip class="custom-chip-size">
-                                <b v-if="key==='bodyTemperature'">{{ dictValue }}&deg;C</b>
-                                <b v-else-if="key==='heartrate'">{{ dictValue }} bpm</b>
+                                <b v-if="key==='bodyTemperature' && dictValue !== '-'">{{ dictValue }}&deg;C</b>
+                                <b v-else-if="key==='heartrate' && dictValue !== '-'">{{ dictValue }} bpm</b>
                                 <b v-else>{{ dictValue }}</b> 
                             </v-chip>
                         </div>
@@ -178,7 +185,7 @@ const getColor = (key: string, value: boolean | ValueObject | Gases) => {
 .custom-chip-size {
     font-size: 25px !important; 
     min-width: 125px !important;
-    width: 15vw; 
+    width: fit-content; 
     height: 75px !important;
     justify-content: center;
     align-items: center;
