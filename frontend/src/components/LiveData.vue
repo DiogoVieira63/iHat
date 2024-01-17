@@ -83,10 +83,6 @@ const getTitle = (type: string) => {
 //ALGO DESTE TIPO:
 // 
 
-interface auxType {
-    value: string;
-}
-
 const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
     var red = '#ff9999'
     var green = '#a6ffbe'
