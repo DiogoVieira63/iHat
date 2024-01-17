@@ -6,11 +6,11 @@ namespace iHat.Model.Capacetes;
 
 public class CapacetesServiceTests{
     
-        private static ICapacetesService? Setup(){
-            var config = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json")
-                    .AddEnvironmentVariables() 
-                    .Build();
+    private static ICapacetesService? Setup(){
+        var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables() 
+                .Build();
     
             var databaseSettings = config.GetSection("Database").Get<DatabaseSettings>();
             // Console.WriteLine($"Database Settings: {databaseSettings}");
@@ -20,12 +20,11 @@ public class CapacetesServiceTests{
             }
             IOptions<DatabaseSettings> options1 = Options.Create<DatabaseSettings>(databaseSettings);
             
-            var logger = Mock.Of<ILogger<CapacetesService>>();
+        var logger = Mock.Of<ILogger<CapacetesService>>();
+        var capaceteService = new CapacetesService(options1, logger);
     
-            var capaceteService = new CapacetesService(options1, logger);
-    
-            return capaceteService;
-        }
+        return capaceteService;
+    }
     
     [Fact]
     public async void Test_AddCapacete(){
@@ -45,11 +44,8 @@ public class CapacetesServiceTests{
 
         // Assert [Se já existir um valor antes na lista, esta não deverá ter sido adicionada]
         var allAfterCapacetes = await capaceteService.GetAll();
-
-        var expectedValue = allPreviousCapacetes.Find(capacete => capacete.NCapacete == nCapacete) == null;
-
-        var addedCapacete = allAfterCapacetes.Find(capacete => capacete.NCapacete == nCapacete) != null;
-
+        var expectedValue = allPreviousCapacetes.Find(capacete => capacete.Numero == nCapacete) == null;
+        var addedCapacete = allAfterCapacetes.Find(capacete => capacete.Numero == nCapacete) != null;
         addedCapacete.Equals(expectedValue);
     }
 
@@ -119,14 +115,14 @@ public class CapacetesServiceTests{
 
     [Fact]
     public async void Test_GetAllHelmetsFromList(){
-        var listNCapacetes = new List<int>{1,2,3};
+        var listNumeros = new List<int>{1,2,3};
 
         // Arrange
         var capaceteService = Setup();
        Assert.NotNull(capaceteService);
 
         // Act
-        var capacetes = await capaceteService.GetAllHelmetsFromList(listNCapacetes);
+        var capacetes = await capaceteService.GetAllHelmetsFromList(listNumeros);
 
         // Assert
         Assert.NotNull(capacetes);
@@ -189,7 +185,7 @@ public class CapacetesServiceTests{
         Assert.NotNull(capaceteService);
 
         // Act
-        var capacete = await capaceteService.CheckIfHelmetIfBeingUsed(nCapacete);
+        var capacete = await capaceteService.CheckIfCapaceteIsBeingUsed(nCapacete);
 
         // Assert
         Assert.False(capacete);
@@ -205,7 +201,7 @@ public class CapacetesServiceTests{
         Assert.NotNull(capaceteService);
 
         // Act
-        var capacete = await capaceteService.CheckIfHelmetIfBeingUsed(nCapacete);
+        var capacete = await capaceteService.CheckIfCapaceteIsBeingUsed(nCapacete);
 
         // Assert
         Assert.False(capacete);

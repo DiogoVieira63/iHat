@@ -1,13 +1,9 @@
-using System.Collections;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using SignalR.Hubs;
-using System.Linq;
 using iHat.MensagensCapacete.Values;
 
 namespace iHat.Model.MensagensCapacete;
-public class MensagemCapaceteService {
+public class MensagemCapaceteService : IMensagemCapaceteService {
 
     public readonly IMongoCollection<MensagemCapacete> _mensagemcapaceteCollection;
 
@@ -27,7 +23,7 @@ public class MensagemCapaceteService {
         await _mensagemcapaceteCollection.InsertOneAsync(mensagem);
     }
 
-    public async Task<List<MensagemCapacete>?> GetUltimosDadosDoCapacete(int nCapacete){
+    public async Task<List<MensagemCapacete>> GetUltimosDadosDoCapacete(int nCapacete){
         var sortDefinition = Builders<MensagemCapacete>.Sort.Descending("timestamp");
         var listaMensagemCapacete = await _mensagemcapaceteCollection.Find(x => x.NCapacete == nCapacete).Sort(sortDefinition).ToListAsync();
         var moreRecentMensagens = listaMensagemCapacete.Take(20).ToList();

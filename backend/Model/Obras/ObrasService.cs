@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using iHat.Model.Zonas;
-using iHat.Model.Mapas;
 
 namespace iHat.Model.Obras;
 
@@ -10,11 +8,7 @@ public class ObrasService: IObrasService{
     public readonly IMongoCollection<Obra> _obraCollection;
     private readonly ILogger<ObrasService> _logger;
 
-    public readonly IMongoCollection<Mapa> _mapaCollection;
-
-    public readonly IMongoCollection<ZonasRisco> _zonaRiscoCollection; 
-
-
+    // public readonly IMongoCollection<Mapa> _mapaCollection;
 
     public ObrasService(IOptions<DatabaseSettings> iHatDatabaseSettings, ILogger<ObrasService> logger){
         var mongoClient = new MongoClient(
@@ -26,216 +20,124 @@ public class ObrasService: IObrasService{
         _obraCollection = mongoDatabase.GetCollection<Obra>(
             iHatDatabaseSettings.Value.ObrasCollectionName);
 
-        _mapaCollection = mongoDatabase.GetCollection<Mapa>(
-            iHatDatabaseSettings.Value.MapasCollectionName);
-
-        _zonaRiscoCollection = mongoDatabase.GetCollection<ZonasRisco>(
-            iHatDatabaseSettings.Value.ZonasRiscoCollectionName);
-
         _logger = logger;
     }
 
+    public async Task<bool> CheckIfObraExists(string id){
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        return obra != null;
+    }
+
+    public async Task<bool> CheckIfMapaCanBeChanged(string id){
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
+        return obra.CanChangeMap();
+    }
 
     public async Task<List<Obra>> GetObrasOfResponsavel(int idResponsavel){
         var obras = await _obraCollection.Find(x => x.IdResponsavel == idResponsavel).ToListAsync();
-
-        if (obras.Count == 0)
-        {
-            // Nenhum resultado encontrado, retornar uma lista vazia ou fazer outra ação apropriada.
-            return new List<Obra>();
-        }
         return obras;
     }
 
-    public async Task<string?> AddObra(string name, int idResponsavel, List<string> mapa){
-
-        /*if (status != "Planeada"){
-            _logger.LogInformation("Status of the new Construction is different from \"Planeada\".");
-        }*/
-
-        var newObra = new Obra(name, idResponsavel, mapa);
-
-        var checkIfConstructionSameName = 
-            await _obraCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
-
-        if(checkIfConstructionSameName != null){
-            throw new Exception("Construction with this name already exists.");
-        }
-
-        try{
-            await _obraCollection.InsertOneAsync(newObra);
-            return newObra.Id;
-        }
-        catch (Exception e){
-            throw new Exception(e.Message);
-        }
-    }
-
-    public async Task<Obra> GetConstructionById(string idObra){
-        var obras = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
+    public async Task<Obra?> GetConstructionById(string id){
+        var obras = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
         return obras;
     }
-
-
-
-    public async Task RemoveObraByIdAsync(string obraId)
-    {
-        var filter = Builders<Obra>.Filter.Eq(o => o.Id, obraId);
-
-        await _obraCollection.DeleteOneAsync(filter);
-    }
-
-
-    public async Task AlteraEstadoObra(string id, string estado)
-    {
-        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-
-        if (obra == null)
-        {
-            Console.WriteLine("[iHatFacade] Obra não existe.");
-            return;
-        }
-
-
-        obra.Status = estado;
-
-        try{
-            _obraCollection.ReplaceOne(x => x.Id == id, obra);
-        }
-        catch (Exception ex)
-        {
-
-            Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
-        }
-    }
-
-    public async Task UpdateNomeObra(string idObra, string nome)
-    {
-        var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
-
-        if (obra == null)
-        {
-            Console.WriteLine("[iHatFacade] Obra não existe.");
-            return;
-        }
-
-        obra.Name = nome;
-
-        try
-        {
-            await _obraCollection.ReplaceOneAsync(x => x.Id == idObra, obra);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erro ao atualizar a obra: {ex.Message}");
-        }
-    }
-
 
     public async Task<Obra?> GetObraWithCapaceteId(int nCapaceteToFind){
         var obra = await _obraCollection.Find(o => o.Capacetes.Contains(nCapaceteToFind)).FirstOrDefaultAsync();
         return obra;
     }
 
-
-
-    public async Task<List<int>> GetAllCapacetesOfObra(string idObra){
-        var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
-        if (obra == null){
-            throw new Exception("Obra não encontrada.");
-        }
-
+    public async Task<List<int>> GetAllCapacetesOfObra(string id){
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
         return obra.Capacetes;
     }
 
+    public async Task<string?> AddObra(string name, int idResponsavel, List<string> mapa){
+        var checkIfConstructionSameName = await _obraCollection.Find(x => x.Nome == name).FirstOrDefaultAsync();
+        if(checkIfConstructionSameName != null){
+            throw new Exception("Construction with this name already exists.");
+        }
+
+        var newObra = new Obra(name, idResponsavel, mapa);
+        await _obraCollection.InsertOneAsync(newObra);
+        return newObra.Id;
+    }
+
     public async Task<List<string>> AddListaMapaToObra(string id, List<string> mapas){
-        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-        if (obra == null){
-            throw new InvalidOperationException("Obra não encontrada.");
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
+        if(!obra.CanChangeMap()){
+            throw new Exception("Estado atual não permite atualizar o mapa.");
         }
         var listaPreviousMapas = obra.Mapa;
-        var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, id);
         var obraUpdate = Builders<Obra>.Update.Set(x => x.Mapa, mapas);
-        await _obraCollection.UpdateOneAsync(obraFilter, obraUpdate);
+        await _obraCollection.UpdateOneAsync(x => x.Id == id, obraUpdate);
         return listaPreviousMapas;
     }
 
-
-
-
-
-
-
-
-
-        /*
-        public async Task DeleteCapaceteToObra(string id, string idObra){
-            var capacete = await _capaceteCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-
-            if (capacete != null)
-            {
-                if (capacete.Status == "Em uso")
-                {
-                    var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
-                    if (obra != null)
-                    {
-                        obra.Capacetes.Remove(id);
-
-                        // Atualize a coleção de obras
-                        var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, idObra);
-                        var obraUpdate = Builders<Obra>.Update.Set(x => x.Capacetes, obra.Capacetes);
-                        await _obraCollection.UpdateOneAsync(obraFilter, obraUpdate);
-
-                        // Atualize a coleção de capacetes
-                        // var capaceteFilter = Builders<Capacete>.Filter.Eq(x => x.Id, id);
-                        // var capaceteUpdate = Builders<Capacete>.Update.Set(x => x.Obra, null);
-                        // await _capaceteCollection.UpdateOneAsync(capaceteFilter, capaceteUpdate);
-                        var capaceteFilter = Builders<Capacete>.Filter.Eq(x => x.Id, id);
-                        await _capaceteCollection.DeleteOneAsync(capaceteFilter);
-                    }
-                    else
-                    {
-                        throw new Exception("Obra não encontrada.");
-                    }
-                }
-                else
-                {
-                    throw new Exception("Capacete não pode ser removido da obra, pois não está em uso.");
-                }
-            }
-            else
-            {
-                throw new Exception("Capacete não encontrado.");
-            }
-        }*/
-
-    public async Task<bool> CheckIfObraExists(string idObra){
-        var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
-        return obra != null;
-    }
-
     public async Task AddCapaceteToObra(int idCapacete, string idObra){
-        var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync();
-        obra.Capacetes.Add(idCapacete);
+        var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
         
-        var filter = Builders<Obra>.Filter.Eq(x => x.Id, idObra);
+        if (!obra.CanAddCapacete())
+            throw new Exception("Estado atual da obra não permite adicionar um novo capacete");
+
+        obra.Capacetes.Add(idCapacete);
         var update = Builders<Obra>.Update.Set(x => x.Capacetes, obra.Capacetes);
-        await _obraCollection.UpdateOneAsync(filter, update);
+        await _obraCollection.UpdateOneAsync(x => x.Id == idObra, update);
     }
 
-    public async Task DeleteCapaceteToObra(int nCapacete, string idObra){
-        
+    public async Task RemoveObraById(string id)
+    {
+        await _obraCollection.DeleteOneAsync(o => o.Id == id);
+    }
+
+    public async Task RemoveCapaceteFromObra(int nCapacete, string idObra){
         var obra = await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
+        
+        if(!obra.CanAddCapacete())
+            throw new Exception("Estado atual da obra não permite alterar a lista de capacetes.");
+        
         obra.Capacetes.Remove(nCapacete);
 
-        var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, idObra);
         var obraUpdate = Builders<Obra>.Update.Set(x => x.Capacetes, obra.Capacetes);
-        await _obraCollection.UpdateOneAsync(obraFilter, obraUpdate);
+        await _obraCollection.UpdateOneAsync(x => x.Id == idObra, obraUpdate);
+    }
+
+    public async Task UpdateEstadoObra(string id, string estado)
+    {
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
+        
+        if (!obra.CanChangeStatus())
+            throw new Exception("Estado atual da obra não permite atualizar para novo estado.");
+
+        var obraUpdate = Builders<Obra>.Update.Set(x => x.Status, estado);
+        await _obraCollection.UpdateOneAsync(x => x.Id == id, obraUpdate);
+    }
+
+    public async Task UpdateNomeObra(string id, string nome)
+    {
+        var obra = await _obraCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        if (obra == null)
+            throw new Exception("Obra não encontrada.");
+
+        if(!obra.CanChangeName())
+            throw new Exception("Estado atual da obra não permite que atualizar o nome.");
     
+        var obraUpdate = Builders<Obra>.Update.Set(x => x.Nome, nome);
+        await _obraCollection.UpdateOneAsync(x => x.Id == id, obraUpdate);
+    }
+
+    public async Task<bool> UpdateZonasRiscoObra(string idObra, string idMapa){
+        var obra =  await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
+        if(!obra.Mapa.Contains(idMapa))
+            return false;
+        if(!obra.CanChangeMap())
+            return false;
+        return true;
     }
 
     //rever
-    public async Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
+    /*public async Task UpdateZonasRiscoObra(string idObra, string idMapa, List<ZonasRisco> zonas){
         var obra =  await _obraCollection.Find(x => x.Id == idObra).FirstOrDefaultAsync() ?? throw new Exception("Obra não encontrada.");
         if (obra.Mapa.Contains(idMapa)){
             var mapa = await _mapaCollection.Find(x => x.Id == idMapa).FirstOrDefaultAsync() ?? throw new Exception("Mapa não encontrada.");
@@ -244,15 +146,12 @@ public class ObrasService: IObrasService{
                 var mapaUpdate = Builders<Mapa>.Update.Set(x => x.Zonas, zonas);
                 await _mapaCollection.UpdateOneAsync(mapaFilter, mapaUpdate);
 
-                // var obraFilter = Builders<Obra>.Filter.Eq(x => x.Id, idObra);
-                // var obraUpdate = Builders<Obra>.Update.Set(x => x.Mapa, obra.Mapa);
-                // await _obraCollection.UpdateOneAsync(obraFilter, obraUpdate);
-                }else{
-                    throw new Exception("Mapa não encontrado.");
-                }
+            }else{
+                throw new Exception("Mapa não encontrado.");
+            }
         }else{
             throw new Exception("Mapa não encontrado.");
         }
-    }  
+    }*/
     
 }
