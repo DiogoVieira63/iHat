@@ -110,8 +110,8 @@ const updateCapacetePosition = (id: number, pos: Position) => {
     })
 }
 
-const updateLogs = (updatedLogs: Array<Log>) => {
-    logs.value = updatedLogs
+const updateLogs = (newLog: Log) => {
+    logs.value.push(newLog)
 }
 
 onMounted(async () => {
@@ -326,9 +326,10 @@ const selectCapacete = (idCapacete: number) => {
                 </v-skeleton-loader>
             </template>
             <template #logs>
-                <LogsObra 
+                <LogsObra
                     :logs="logs"
                     :capacete-selected="capacetesSelected"
+                    :focus="route.query['log']"
                     @selectCapacete="selectCapacete"
                 ></LogsObra>
             </template>

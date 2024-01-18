@@ -3,7 +3,7 @@ import type { PropType } from 'vue'
 
 const props = defineProps({
     logs: {
-        type: Array as PropType<Array<{message: string, time: Date, idCapacete: number}>>,
+        type: Array as PropType<Array<{ message: string; time: Date; idCapacete: number }>>,
         required: true
     },
     capaceteSelected: {
@@ -26,12 +26,10 @@ const formatTimestamp = (timestamp: Date) => {
 }
 
 const emit = defineEmits(['selectCapacete'])
-
 </script>
 <template>
     <v-container v-if="props.logs.length > 0">
-        
-            <!-- <v-virtual-scroll
+        <!-- <v-virtual-scroll
                 :height="300"
                 :items="props.logs"
             >
@@ -68,26 +66,25 @@ const emit = defineEmits(['selectCapacete'])
               </template>
             </v-virtual-scroll> -->
 
-
-
         <v-infinite-scroll
             height="35vh"
             side="end"
-            >
+        >
             <v-timeline align="start">
                 <v-timeline-item
-                    v-for="(log,index) in props.logs"
+                    v-for="(log, index) in props.logs"
                     :key="index"
                     size="large"
                     class="me-4"
                     icon="mdi-alert-outline"
                     dot-color="error"
                 >
-                    <v-card style="cursor: pointer;" @click="emit('selectCapacete',log.idCapacete)">
+                    <v-card
+                        style="cursor: pointer"
+                        @click="emit('selectCapacete', log.idCapacete)"
+                    >
                         <v-card-title class="bg-error">
-                            <h2 class="font-weight-light">
-                                Alerta
-                            </h2>
+                            <h2 class="font-weight-light">Alerta</h2>
                         </v-card-title>
                         <v-card-text class="py-2">
                             <v-list-item class="w-100">
@@ -109,8 +106,7 @@ const emit = defineEmits(['selectCapacete'])
                     </template>
                 </v-timeline-item>
             </v-timeline>
-            <template #loading>
-            </template>
+            <template #loading> </template>
         </v-infinite-scroll>
     </v-container>
     <v-container v-else>
@@ -125,7 +121,8 @@ const emit = defineEmits(['selectCapacete'])
                 type="info"
                 class="mx-4 rounded-pill"
             >
-                Não existem logs para {{ capaceteSelected ? `o capacete ${capaceteSelected}`: 'esta obra'  }}
+                Não existem logs para
+                {{ capaceteSelected ? `o capacete ${capaceteSelected}` : 'esta obra' }}
             </v-alert>
         </v-sheet>
     </v-container>

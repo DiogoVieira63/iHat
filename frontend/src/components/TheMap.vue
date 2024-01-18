@@ -62,14 +62,13 @@ const emit = defineEmits(['update', 'selectCapacete'])
 //     })
 // })
 
-const capacetesMap = (floor : number) => {
+const capacetesMap = (floor: number) => {
     return props.capacetesPosition.filter((capacete) => {
         if (capacete.position) {
             return capacete.position.z == floor && capacete.status == 'Em Uso'
         }
     })
 }
-
 </script>
 <template>
     <template v-if="props.mapList.length > 0">

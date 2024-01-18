@@ -143,7 +143,7 @@ const removeCapacete = (task: Task, capacete: number, ConfirmationDialog: boolea
 
 const removeTask = (index: string, ConfirmationDialog: boolean) => {
     if (!ConfirmationDialog) return
-    if(mqtt)taskStore.removeTask(index,mqtt)
+    if (mqtt) taskStore.removeTask(index, mqtt)
 }
 
 const tasks = computed(() => {

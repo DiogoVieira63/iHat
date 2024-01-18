@@ -2,10 +2,10 @@
 import PageLayout from '@/components/Layouts/PageLayout.vue'
 import ExampleGraph from '@/components/ExampleGraph.vue'
 import LiveData from '@/components/LiveData.vue'
-import { ref, onMounted , onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { CapaceteSignalRService } from '@/services/capaceteSignalR'
-import type { MensagemCapacete } from '@/interfaces';
+import type { MensagemCapacete } from '@/interfaces'
 import { CapaceteService } from '@/services/http'
 
 const route = useRoute()
@@ -15,7 +15,7 @@ const mensagemCapacete = ref<MensagemCapacete>()
 const signalRService = ref<CapaceteSignalRService>(new CapaceteSignalRService(idCapacete))
 
 const updateCapaceteData = (msgCapacete: MensagemCapacete) => {
-    mensagemCapacete.value = msgCapacete 
+    mensagemCapacete.value = msgCapacete
 }
 
 const getDadosCapacete = () => {
@@ -29,26 +29,22 @@ const getDadosCapacete = () => {
 const getUltimaMensagemFromDadosCapacete = () => {
     let latestMessage = dadosCapacetes.value.reduce((prev, current) =>
         prev.timestamp > current.timestamp ? prev : current
-    );
+    )
 
-    mensagemCapacete.value = latestMessage;
+    mensagemCapacete.value = latestMessage
 }
 
 onMounted(async () => {
-    await Promise.all([
-        signalRService.value.start(),
-        getDadosCapacete()
-    ])
-    if (!mensagemCapacete.value){
+    await Promise.all([signalRService.value.start(), getDadosCapacete()])
+    if (!mensagemCapacete.value) {
         getUltimaMensagemFromDadosCapacete()
     }
-    signalRService.value.updateCapaceteData(updateCapaceteData);
-});
+    signalRService.value.updateCapaceteData(updateCapaceteData)
+})
 
 onUnmounted(() => {
-    signalRService.value.close();
-});
-
+    signalRService.value.close()
+})
 </script>
 
 <template>
@@ -61,7 +57,11 @@ onUnmounted(() => {
                 cols="12"
                 lg="6"
             >
-                <LiveData v-if="mensagemCapacete" :idCapacete="idCapacete" :mensagemCapacete="(mensagemCapacete as MensagemCapacete)"/>
+                <LiveData
+                    v-if="mensagemCapacete"
+                    :idCapacete="idCapacete"
+                    :mensagemCapacete="mensagemCapacete as MensagemCapacete"
+                />
             </v-col>
             <v-col
                 cols="12"

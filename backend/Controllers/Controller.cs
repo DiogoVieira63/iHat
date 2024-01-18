@@ -361,7 +361,7 @@ public class IHatController : ControllerBase{
     [HttpPatch("logs/{idLog}")]
     public async Task<IActionResult> MarkLogAsSeen(string idLog){
         try{
-            await MarkLogAsSeen(idLog);
+            await _facade.MarkLogAsSeen(idLog);
             return Ok();
         }
         catch(Exception e){

@@ -10,7 +10,6 @@ import { CapaceteService, ObraService } from '@/services/http'
 import type { Header } from '@/interfaces'
 import DataTable from '@/components/DataTable.vue'
 
-
 const obras = ref<Array<Obra>>([])
 const capacetes = ref<Array<Capacete>>([])
 const tab = ref('obras')

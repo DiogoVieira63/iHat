@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { Log } from '@/interfaces'
 import type { PropType } from 'vue'
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref} from 'vue'
+
+
 
 const props = defineProps({
     logs: {
@@ -11,10 +13,24 @@ const props = defineProps({
     capaceteSelected: {
         type: Number,
         default: null
+    },
+    focus:{
+        type: String,
+        required: false
     }
 })
 
 const emit = defineEmits(['selectCapacete'])
+const id = ref([])
+
+
+onMounted(()=>{
+    if (props.focus){
+        console.log(id.value.length)
+        const elem = id.value.find((elem) => elem == props.focus)
+        console.log(elem)
+    }
+})
 
 const getIcon = (type: string) => {
     switch (type) {
@@ -48,18 +64,18 @@ const formatTimestamp = (timestamp: Date) => {
     return `${day}-${month}-${year} @ ${hours}:${minutes}:${seconds}`
 }
 
-const logsFiltered = computed(()=>{
+const logsFiltered = computed(() => {
     if (!props.capaceteSelected) return props.logs
-    return props.logs.filter((item)=> {
+    return props.logs.filter((item) => {
         return item.idCapacete == props.capaceteSelected
-    })    
+    })
 })
 
 // const logsFiltered = computed(()=>{
 //     if (!props.capaceteSelected) return props.logs.slice(-length.value)
 //     return props.logs.slice(-length.value).filter((item)=> {
 //         return item.idCapacete == props.capaceteSelected
-//     })    
+//     })
 // })
 
 // const logsConst = 1
@@ -71,9 +87,7 @@ const logsFiltered = computed(()=>{
 //         done('ok');
 //     }, 2000);
 // }
-
 </script>
-
 
 <template>
     <v-container v-if="logsFiltered.length > 0">
@@ -83,7 +97,7 @@ const logsFiltered = computed(()=>{
             side="end"
             class="ma-12"
         >
-        <v-timeline>
+            <v-timeline>
                 <v-timeline-item
                     v-for="log in logsFiltered"
                     :key="log.id"
@@ -92,7 +106,11 @@ const logsFiltered = computed(()=>{
                     :icon="getIcon(log.type)"
                     class="me-4"
                 >
-                    <v-card style="cursor: pointer;" @click="emit('selectCapacete',log.idCapacete)">
+                    <v-card
+                        style="cursor: pointer"
+                        @click="emit('selectCapacete', log.idCapacete)"
+                        ref="id"
+                    >
                         <v-card-title :class="'bg-' + getColor(log.type)">
                             <h2 class="font-weight-light">
                                 {{ log.type }}
@@ -124,7 +142,7 @@ const logsFiltered = computed(()=>{
                     </template>
                 </v-timeline-item>
             </v-timeline>
-         </v-infinite-scroll>
+        </v-infinite-scroll>
     </v-container>
     <v-container v-else>
         <v-sheet
@@ -138,7 +156,8 @@ const logsFiltered = computed(()=>{
                 type="info"
                 class="mx-4 rounded-pill"
             >
-                Não existem logs para {{ capaceteSelected ? `o capacete ${capaceteSelected}`: 'esta obra'  }}
+                Não existem logs para
+                {{ capaceteSelected ? `o capacete ${capaceteSelected}` : 'esta obra' }}
             </v-alert>
         </v-sheet>
     </v-container>
