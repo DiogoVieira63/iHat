@@ -129,13 +129,9 @@ const logsFiltered = computed(() => {
                     </template>
                 </v-timeline-item>
             </v-timeline>
-<<<<<<< HEAD
-        </v-infinite-scroll>
-=======
             <template #loading>
             </template>
          </v-infinite-scroll>
->>>>>>> main
     </v-container>
     <v-container v-else>
         <v-sheet

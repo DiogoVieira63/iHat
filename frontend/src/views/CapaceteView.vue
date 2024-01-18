@@ -95,16 +95,8 @@ onUnmounted(() => {
                 cols="12"
                 lg="6"
             >
-<<<<<<< HEAD
-                <LiveData
-                    v-if="mensagemCapacete"
-                    :idCapacete="idCapacete"
-                    :mensagemCapacete="mensagemCapacete as MensagemCapacete"
-                />
-=======
                 <LiveData :idCapacete="idCapacete" :mensagemCapacete="(mensagemCapacete as MensagemCapacete)"/>
                 <LogsPageCapacete :logs="logsCapacete" />
->>>>>>> main
             </v-col>
             <v-col
                 cols="12"

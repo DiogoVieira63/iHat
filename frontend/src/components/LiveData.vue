@@ -163,15 +163,10 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
                         </h4>
                     </template>
                     <v-card-text class="text-center">
-<<<<<<< HEAD
-                        <div v-if="key === 'fall'">
-                            <v-chip class="custom-chip-size">
-=======
                         <div
                             v-if="key === 'fall'"
                         >
                             <v-chip class="custom-chip-size" >
->>>>>>> main
                                 <b v-if="value == true"> Queda Detetada</b>
                                 <b v-else> - </b>
                             </v-chip>
@@ -181,45 +176,23 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
                             v-for="(dictValue, dictKey) in value"
                             :key="dictKey"
                         >
-<<<<<<< HEAD
                             <v-chip
                                 v-if="dictKey === 'metano'"
                                 class="custom-chip-size my-4"
                             >
-                                <b>CH₄: {{ dictValue }}</b>
-                            </v-chip>
-                            <v-chip
-                                v-if="dictKey === 'monoxidoCarbono'"
-                                class="custom-chip-size"
-                            >
-                                <b>CO : {{ dictValue }}</b>
-=======
-                            <v-chip v-if="dictKey==='metano'" class="custom-chip-size my-4">
-                                <b v-if="dictValue !== null">CH₄: {{ dictValue }}</b>
-                                <b v-else>CH₄: - </b>
-                            </v-chip>
-                            <v-chip v-if="dictKey==='monoxidoCarbono'" class="custom-chip-size">
                                 <b v-if="dictValue !== null" >CO  : {{ dictValue }}</b>
                                 <b v-else >CO  : -</b>
->>>>>>> main
                             </v-chip>
                         </div>
                         <div
                             v-else
-                            v-for="(dictValue, dictKey) in value"
                             class="text-h3"
                         >
                             <v-chip class="custom-chip-size">
-<<<<<<< HEAD
-                                <b v-if="key === 'bodyTemperature'">{{ dictValue }}&deg;C</b>
-                                <b v-else-if="key === 'heartrate'">{{ dictValue }} bpm</b>
-                                <b v-else>{{ dictValue }}</b>
-=======
                                 <b v-if="key==='bodyTemperature' && dictValue !== null">{{ dictValue }}&deg;C</b>
                                 <b v-else-if="key==='heartrate' && dictValue !== null">{{ dictValue }} bpm</b>
                                 <b v-else-if="dictValue === null"> - </b> 
                                 <b v-else>{{ dictValue }}</b> 
->>>>>>> main
                             </v-chip>
                         </div>
                     </v-card-text>
@@ -240,11 +213,7 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
 .custom-chip-size {
     font-size: 25px !important;
     min-width: 125px !important;
-<<<<<<< HEAD
-    width: 15vw;
-=======
     width: fit-content; 
->>>>>>> main
     height: 75px !important;
     justify-content: center;
     align-items: center;
