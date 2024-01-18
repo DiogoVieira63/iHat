@@ -78,4 +78,5 @@ export interface Log {
     idCapacete?: number
     idTrabalhador?: string
     mensagem: string
+    vista: boolean
 }

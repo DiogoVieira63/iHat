@@ -119,9 +119,13 @@ const updateCapacetePosition = (id: number, pos: Position) => {
     })
 }
 
-const updateLogs = (updatedLogs: Array<Log>) => {
-    logs.value = updatedLogs
-    ordenaLogsMaisMenosRecente()
+// const updateLogs = (updatedLogs: Array<Log>) => {
+//     logs.value = updatedLogs
+//     ordenaLogsMaisMenosRecente()
+// }
+
+const updateLogs = (updatedLog: Log) => {
+    logs.value = [updatedLog, ...logs.value];
 }
 
 onMounted(async () => {

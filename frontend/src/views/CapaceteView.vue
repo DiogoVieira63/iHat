@@ -23,8 +23,8 @@ const updateCapaceteData = (msgCapacete: MensagemCapacete) => {
 }
 
 const updateCapaceteLogs = (newLog: Log) => {
-    logsCapacete.value.push(newLog)
-    console.log("OLAAAAA", logsCapacete.value)
+    // logsCapacete.value.push(newLog)
+    logsCapacete.value = [newLog, ...logsCapacete.value];
 }
 
 const getDadosCapacete = () => {
