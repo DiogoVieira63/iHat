@@ -8,7 +8,7 @@ public class ObrasDTO
 {
     public string? Id { get; set; }
     public int IdResponsavel { get; set; }
-    public string Name { get; set; }
+    public string Nome { get; set; }
     public List<Mapa> Mapa { get; set; }
     public List<int> Capacetes { get; set; }
     public string Status { get; set; } // Finalizada; Pendente; Em Curso; Planeada; Cancelada
@@ -18,7 +18,7 @@ public class ObrasDTO
     {
         Id = obra.Id;
         IdResponsavel = obra.IdResponsavel;
-        Name = obra.Nome;
+        Nome = obra.Nome;
         Mapa = listaMapas;
         Capacetes = obra.Capacetes;
         Status = obra.Status;

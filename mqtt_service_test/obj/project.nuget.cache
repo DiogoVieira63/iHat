@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "5pbtPNcFlBLerI6ruaOjzJzfKAGx9CIquVk8N02SxnQZdhl52NV4HioXYo8xAsKzLAdRTQgbyhCYOy8NFrD59Q==",
+  "success": true,
+  "projectFilePath": "/home/edu/Desktop/iHat/mqtt_service_test/mqtt_service_test.csproj",
+  "expectedPackageFiles": [
+    "/home/edu/.nuget/packages/mqttnet/4.3.1.873/mqttnet.4.3.1.873.nupkg.sha512",
+    "/home/edu/.nuget/packages/mqttnet.extensions.managedclient/4.3.1.873/mqttnet.extensions.managedclient.4.3.1.873.nupkg.sha512",
+    "/home/edu/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

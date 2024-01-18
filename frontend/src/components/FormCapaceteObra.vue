@@ -47,10 +47,10 @@ const close = () => {
 const capacetesLivresWithTitle = () => {
     capacetesLivres.value = capacetesLivres.value.map((item) => ({
         ...item,
-        title: `Capacete ${item.nCapacete}`
+        title: `Capacete ${item.numero}`
     }))
     capacetesLivres.value = capacetesLivres.value.sort((a, b) => {
-        return a.nCapacete - b.nCapacete
+        return a.numero - b.numero
     })
     return capacetesLivres.value
 }
@@ -109,7 +109,7 @@ const capacetesLivresWithTitle = () => {
                             transition="false"
                             variant="solo"
                             item-title="title"
-                            item-value="nCapacete"
+                            item-value="numero"
                         ></v-autocomplete>
                         <v-btn
                             type="submit"

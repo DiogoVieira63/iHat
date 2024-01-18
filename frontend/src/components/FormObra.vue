@@ -25,7 +25,7 @@ const emit = defineEmits(['update'])
 
 const submit = handleSubmit((values, actions) => {
     const obra = {
-        name: values.nomeObra
+        nome: values.nomeObra
     }
     ObraService.addOneObra(obra)
         .then((res_idObra) => {

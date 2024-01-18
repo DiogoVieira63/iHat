@@ -50,7 +50,7 @@ public class PublisherService{
         var result = new JObject
         {
             { "type", "Pairing" },
-            { "nCapacete", "2" },
+            { "numero", "2" },
             { "idTrabalhador", "a02" },
             { "obra", "6590435fe8796e8765a895f0" }
         };        

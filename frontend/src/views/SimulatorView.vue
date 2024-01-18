@@ -117,7 +117,7 @@ const resetInputs = () => {
 const getObra = () => {
     return ObraService.getOneObra(route.params.id.toString()).then((answer) => {
         if (answer.mapa) mapList.value = answer.mapa
-        if (answer.name) title.value = answer.name
+        if (answer.nome) title.value = answer.nome
     })
 }
 
@@ -149,7 +149,7 @@ onMounted(async () => {
 
 const updateCapacete = (capacete: Capacete) => {
     capacetes.value = capacetes.value.map((item) => {
-        if (item.nCapacete === capacete.nCapacete) {
+        if (item.numero === capacete.numero) {
             return capacete
         }
         return item
@@ -199,7 +199,7 @@ const selectedCapacete = (id: number) => {
 }
 
 const selectAll = () => {
-    selected.value = capacetes.value.map((item) => item.nCapacete)
+    selected.value = capacetes.value.map((item) => item.numero)
     resetInputs()
 }
 
@@ -419,7 +419,7 @@ const logsFiltered = computed(() => {
                                                 color="info"
                                             >
                                                 <v-chip
-                                                    v-for="option in capacetes.map((capacete) => capacete.nCapacete)"
+                                                    v-for="option in capacetes.map((capacete) => capacete.numero)"
                                                     filter
                                                     variant="outlined"
                                                     :value="option"

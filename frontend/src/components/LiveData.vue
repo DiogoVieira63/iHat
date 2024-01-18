@@ -3,7 +3,7 @@ import  type { PropType } from 'vue'
 import { useDisplay } from 'vuetify'
 import type { MensagemCapacete, Gases, ValueObject } from '@/interfaces';
 
-const { mdAndDown , xs} = useDisplay()
+const { mdAndDown } = useDisplay()
 
 const props = defineProps({
     idCapacete: {

@@ -427,17 +427,17 @@ const capacetesLivres = computed(() => {
                                 <v-list>
                                     <v-list-item
                                         class="d-flex justify-center"
-                                        v-for="{ nCapacete } in capacetesLivres"
-                                        :key="nCapacete"
+                                        v-for="{ numero } in capacetesLivres"
+                                        :key="numero"
                                     >
                                         <v-btn
                                             color="info"
                                             class="mx-2"
                                             icon
-                                            :variant="isSelected(nCapacete) ? 'flat' : 'outlined'"
-                                            @click="changeSelected(nCapacete)"
+                                            :variant="isSelected(numero) ? 'flat' : 'outlined'"
+                                            @click="changeSelected(numero)"
                                         >
-                                            {{ nCapacete }}
+                                            {{ numero }}
                                         </v-btn>
                                     </v-list-item>
                                 </v-list>

@@ -22,7 +22,7 @@ const emit = defineEmits(['update'])
 
 const submit = handleSubmit((values, actions) => {
     const Capacete: Capacete = {
-        nCapacete: Number(values.id),
+        numero: Number(values.id),
         status: 'Disponivel',
         info: '',
         trabalhador: ''
