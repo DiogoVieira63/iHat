@@ -34,7 +34,7 @@ export class ObraService {
 
     static addOneObra(body: Obra): Promise<string> {
         const formData = new FormData()
-        formData.append('name', body.name)
+        formData.append('nome', body.nome)
         return axios
             .post(`${url}/constructions`, formData)
             .then((response) => {
@@ -119,6 +119,15 @@ export class ObraService {
             .catch((error) => console.error('Error:', error))
     }
 
+    static getLogsDiariosObra(idObra: string): Promise<Log[]> {
+        return axios
+            .get(`${url}/logs/daily/${idObra}`)
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => console.error('Error:', error))
+    }
+
     static getLocationCapacetes(idObra: string): Promise<Record<string, Position>> {
         return axios
             .get(`${url}/constructions/${idObra}/helmets/location`)
@@ -197,6 +206,15 @@ export class CapaceteService {
             .patch(`${url}/helmets/${idCapacete}/newStatus`, state, {
                 headers: { 'Content-Type': 'application/json' }
             })
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => console.error('Error:', error))
+    }
+
+    static getLogsCapaceteObra(numero: string): Promise<Log[]> {
+        return axios
+            .get(`${url}/logs/helmet/${numero}`)
             .then((response) => {
                 return response.data
             })

@@ -1,5 +1,5 @@
 // Import the SignalR library
-import type { MensagemCapacete } from '@/interfaces';
+import type { MensagemCapacete, Log } from '@/interfaces';
 import * as signalR from '@microsoft/signalr';
 
 export class CapaceteSignalRService {
@@ -35,6 +35,13 @@ export class CapaceteSignalRService {
         this.connection.on("UpdateDadosCapacete", (updatedCapaceteData) => {
             console.log("Received message:", updatedCapaceteData);
             callback(updatedCapaceteData);
+        });
+    }
+
+    updateCapaceteLogs(callback: (updatedCapaceteLogs: Log) => void) {
+        this.connection.on("UpdateLogsCapacete", (updatedCapaceteLogs) => {
+            console.log("Received new Log:", updatedCapaceteLogs);
+            callback(updatedCapaceteLogs);
         });
     }
 

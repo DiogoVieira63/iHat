@@ -39,10 +39,16 @@ export class ObraSignalRService {
         })
     }
 
-    handleIncomingLogs(callback: (updatedLogs: Array<Log>) => void) {
-        this.connection.on('UpdateLogs', (updatedLogs) => {
-            console.log('Received logs:', updatedLogs)
-            callback(updatedLogs)
+    // handleIncomingLogs(callback: (updatedLogs: Array<Log>) => void) {
+    //     this.connection.on('UpdateLogs', (updatedLogs) => {
+    //         console.log('Received logs:', updatedLogs)
+    //         callback(updatedLogs)
+    //     })
+    // }
+    handleIncomingLogs(callback: (updatedLog: Log) => void) {
+        this.connection.on('UpdateLogs', (updatedLog) => {
+            console.log('Received new Log from obra:', updatedLog)
+            callback(updatedLog)
         })
     }
 }
