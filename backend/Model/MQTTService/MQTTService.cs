@@ -239,7 +239,7 @@ public class MQTTService {
     public async Task HandlePairingMessage(string payload){
         JObject jsonObject = JObject.Parse(payload);
         JToken? type = jsonObject["type"];
-        JToken? nCapacete = jsonObject["nCapacete"];
+        JToken? nCapacete = jsonObject["numero"];
         JToken? idTrabalhador = jsonObject["idTrabalhador"];
         JToken? obra = jsonObject["obra"];
     

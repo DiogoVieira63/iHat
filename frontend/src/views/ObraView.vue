@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import PageLayout from '@/components/Layouts/PageLayout.vue'
-import { ref, onMounted, nextTick, onUnmounted, computed} from 'vue'
+import { ref, onMounted, nextTick, onUnmounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
-import type { Capacete, Header} from '@/interfaces'
+import type { Capacete, Header } from '@/interfaces'
 import { CapaceteService, ObraService } from '@/services/http'
 import type { Mapa, Position } from '@/interfaces'
 import LogsObra from '@/components/LogsObra.vue'
@@ -31,13 +31,14 @@ const signalRService = ref<ObraSignalRService>(new ObraSignalRService(idObra))
 const isLoaded = ref(false)
 const notificacoesStore = useNotificacoesStore()
 
-
-const logs = computed (() => {
-    return notificacoesStore.notificacoes.filter((item) => {
-        return item.idObra == idObra
-    }).slice().reverse()
+const logs = computed(() => {
+    return notificacoesStore.notificacoes
+        .filter((item) => {
+            return item.idObra == idObra
+        })
+        .slice()
+        .reverse()
 })
-
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
@@ -92,7 +93,6 @@ const getCapacetesObra = () => {
 //         }
 //     })
 
-
 //     return ObraService.getLogsObra(idObra).then((answer) => {
 //         answer.forEach((log) => {
 //             logs.value.push(log)
@@ -107,13 +107,10 @@ const getCapacetesObra = () => {
 //     })
 // }
 
-
 const getLastLocationObra = () => {
     return ObraService.getLocationCapacetes(idObra).then((answer) => {
         Object.keys(answer).forEach((key) => {
-            const capacete = capacetes.value.find(
-                (capacete) => capacete.numero === parseInt(key)
-            )
+            const capacete = capacetes.value.find((capacete) => capacete.numero === parseInt(key))
             if (capacete) {
                 capacete.position = answer[key]
             }
@@ -284,13 +281,7 @@ const selectCapacete = (idCapacete: number) => {
                                 <v-select
                                     rounded="t-xl"
                                     label="Estado da Obra"
-                                    :items="[
-                                        'Planeada',
-                                        'Em Curso',
-                                        'Pendente',
-                                        'Finalizada',
-                                        'Cancelada'
-                                    ]"
+                                    :items="['Em Curso', 'Pendente', 'Finalizada', 'Cancelada']"
                                     :model-value="estadoObra"
                                     @update:model-value="
                                         (value) => {

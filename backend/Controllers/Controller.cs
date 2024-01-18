@@ -235,8 +235,8 @@ public class IHatController : ControllerBase{
             string? id = null;
             try{
                 var idResponsavel = 1;
-                if(form.Name != null)
-                    id = await _facade.NewConstruction(form.Name, null, idResponsavel);
+                if(form.Nome != null)
+                    id = await _facade.NewConstruction(form.Nome, null, idResponsavel);
                 else
                     throw new Exception("Nome da nova Obra tem de ser indicado");
             }
@@ -293,7 +293,7 @@ public class IHatController : ControllerBase{
     public async Task<IActionResult> NewHelmet(NewHelmetForm form){ 
         try
         {   
-            await _facade.AddCapacete(form.NCapacete);
+            await _facade.AddCapacete(form.Numero);
             return Ok();
         }
         catch (Exception e)
