@@ -221,7 +221,7 @@ export const useTaskStore = defineStore('taskMQTT', {
             }
             setTimeout(() => {
                 task.play(mqtt)
-            }, 2000)
+            }, 1000)
             this.tasks[this.active][Date.now()] = task
             //this.tasks.push(task)
         },

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Log } from '@/interfaces'
 import type { PropType } from 'vue'
-import { computed, onMounted, ref} from 'vue'
+import { computed } from 'vue'
 
 
 
@@ -13,24 +13,11 @@ const props = defineProps({
     capaceteSelected: {
         type: Number,
         default: null
-    },
-    focus:{
-        type: String,
-        required: false
     }
 })
 
 const emit = defineEmits(['selectCapacete'])
-const id = ref([])
 
-
-onMounted(()=>{
-    if (props.focus){
-        console.log(id.value.length)
-        const elem = id.value.find((elem) => elem == props.focus)
-        console.log(elem)
-    }
-})
 
 const getIcon = (type: string) => {
     switch (type) {
@@ -109,7 +96,6 @@ const logsFiltered = computed(() => {
                     <v-card
                         style="cursor: pointer"
                         @click="emit('selectCapacete', log.idCapacete)"
-                        ref="id"
                     >
                         <v-card-title :class="'bg-' + getColor(log.type)">
                             <h2 class="font-weight-light">

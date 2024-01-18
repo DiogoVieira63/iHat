@@ -9,33 +9,36 @@ import { LogService } from '@/services/http'
 const router = useRouter()
 const notificacoesStore = useNotificacoesStore()
 
-const notificacoes = computed(() => {
-    return notificacoesStore.notificacoes
-})
 
 
 const titleNotificacao = (idObra : string) => {
     return `Alerta - ${notificacoesStore.namesObras[idObra]}`
 }
 
-const formatData = (dataString: any) => {
-    const data = new Date(dataString)
-    const hora = data.getHours()
-    const minuto = data.getMinutes()
-    const segundo = data.getSeconds()
-    return `${hora}:${minuto}:${segundo}`
+const formatData = (timestamp: Date) => {
+    const stringDate = timestamp.toString()
+    const date = new Date(stringDate)
+    const hours = date.getHours().toString().padStart(2, '0')
+    const minutes = date.getMinutes().toString().padStart(2, '0')
+    const seconds = date.getSeconds().toString().padStart(2, '0')
+
+    return `${hours}:${minutes}:${seconds}`
 }
+
 
 const seenNotificacao = async (log: Log) => {
     if (log.vista) return
     log.vista = true
-    console.log(log.id + ' seen!')
     await LogService.seenLog(log.id as string)
 }
 
-const goToObraPage = (idObra : string,idLog : string) => {
-    router.push({path: `/obras/${idObra}`, query:{log: idLog}})
+const goToObraPage = (idObra : string) => {
+    router.push({path: `/obras/${idObra}`})
 }
+
+const notificacoes = computed(() => {
+    return notificacoesStore.notificacoes.slice().reverse()
+})
 
 </script>
 <template>
@@ -80,14 +83,14 @@ const goToObraPage = (idObra : string,idLog : string) => {
                     >
                         Nenhuma notificação para mostrar
                     </v-alert>
-                    <divv-else >
+                    <div v-else >
                         <v-sheet
                             v-for="(item, index) in notificacoes"
                             :key="index"
                         >
                             <v-card
                                 style="cursor: pointer;"
-                                @click="goToObraPage(item.idObra,item.id)"
+                                @click="goToObraPage(item.idObra)"
                                 @mouseenter="seenNotificacao(item)"
                                 :title="titleNotificacao(item.idObra)"
                                 :subtitle="`Capacete ${item.idCapacete}`"
@@ -98,7 +101,7 @@ const goToObraPage = (idObra : string,idLog : string) => {
                             </v-card>
                             <v-divider />
                         </v-sheet>
-                    </divv-else>
+                    </div>
                 </v-sheet>
             </v-menu>
         </template>

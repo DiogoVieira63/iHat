@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageLayout from '@/components/Layouts/PageLayout.vue'
-import { ref, onMounted, nextTick, onUnmounted } from 'vue'
+import { ref, onMounted, nextTick, onUnmounted, computed} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
@@ -13,6 +13,7 @@ import { ObraSignalRService } from '@/services/obraSignalR'
 import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
 import DataTable from '@/components/DataTable.vue'
 import TheMap from '@/components/TheMap.vue'
+import { useNotificacoesStore } from '@/store/notifications'
 
 const router = useRouter()
 const route = useRoute()
@@ -25,10 +26,18 @@ const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('')
 const newEstado = ref('')
 const mapList = ref<Array<Mapa>>([])
-const logs = ref<Array<Log>>([])
 const idObra: string = route.params.id.toString()
 const signalRService = ref<ObraSignalRService>(new ObraSignalRService(idObra))
 const isLoaded = ref(false)
+const notificacoesStore = useNotificacoesStore()
+
+
+const logs = computed (() => {
+    return notificacoesStore.notificacoes.filter((item) => {
+        return item.idObra == idObra
+    })
+})
+
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
@@ -75,13 +84,21 @@ const getCapacetesObra = () => {
     })
 }
 
-const getLogsObra = () => {
-    return ObraService.getLogsObra(idObra).then((answer) => {
-        answer.forEach((log) => {
-            logs.value.push(log)
-        })
-    })
-}
+// const getLogsObra = () => {
+//     logs.value = []
+//     notificacoesStore.notificacoes.forEach((notificacao) => {
+//         if (notificacao.idObra === idObra) {
+//             logs.value.push(notificacao)
+//         }
+//     })
+
+
+//     return ObraService.getLogsObra(idObra).then((answer) => {
+//         answer.forEach((log) => {
+//             logs.value.push(log)
+//         })
+//     })
+// }
 
 const getLastLocationObra = () => {
     return ObraService.getLocationCapacetes(idObra).then((answer) => {
@@ -110,21 +127,20 @@ const updateCapacetePosition = (id: number, pos: Position) => {
     })
 }
 
-const updateLogs = (newLog: Log) => {
-    logs.value.push(newLog)
-}
+// const updateLogs = (newLog: Log) => {
+//     logs.value.push(newLog)
+// }
 
 onMounted(async () => {
     await Promise.all([
         getObra(),
         getCapacetesObra(),
-        getLogsObra(),
         getLastLocationObra(),
         signalRService.value.start()
     ])
-
+    // getLogsObra()
     signalRService.value.updateCapacetePosition(updateCapacetePosition)
-    signalRService.value.handleIncomingLogs(updateLogs)
+    // signalRService.value.handleIncomingLogs(updateLogs)
     isLoaded.value = true
 })
 
@@ -329,7 +345,6 @@ const selectCapacete = (idCapacete: number) => {
                 <LogsObra
                     :logs="logs"
                     :capacete-selected="capacetesSelected"
-                    :focus="route.query['log']"
                     @selectCapacete="selectCapacete"
                 ></LogsObra>
             </template>

@@ -4,6 +4,7 @@ import { useNotificacoesStore } from '@/store/notifications'
 import type { Obra, Log } from '@/interfaces'
 import { ObraService } from './services/http'
 import { ObraSignalRService } from '@/services/obraSignalR'
+import { onUnmounted } from 'vue'
 
 const obras = ref<Array<Obra>>([])
 const connections = ref<Array<ObraSignalRService>>([])
@@ -50,6 +51,13 @@ onMounted(async () => {
         }
     }
 })
+
+onUnmounted(() => {
+    connections.value.forEach((connection) => {
+        connection.close()
+    })
+})
+
 </script>
 <template>
     <router-view />
