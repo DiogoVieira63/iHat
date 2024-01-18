@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import  type { PropType } from 'vue'
 import { useDisplay } from 'vuetify'
-import type { MensagemCapacete, Gases, ValueObject } from '@/interfaces'
+import type { MensagemCapacete, Gases, ValueObject } from '@/interfaces';
 
-const { mdAndDown, xs } = useDisplay()
+const { mdAndDown } = useDisplay()
 
 const props = defineProps({
     idCapacete: {
@@ -12,21 +12,21 @@ const props = defineProps({
     },
     mensagemCapacete: {
         type: Object as PropType<MensagemCapacete>,
-        required: true
+        required: true,
     }
 })
 
 const filteredMensagemCapacete = () => {
-    if (props.mensagemCapacete) {
-        const { fall, bodyTemperature, heartrate, gases } = props.mensagemCapacete
+    if (props.mensagemCapacete){
+        const { fall, bodyTemperature, heartrate, gases } = props.mensagemCapacete;
 
         const filteredData = {
             fall,
             bodyTemperature,
             heartrate,
             gases
-        }
-        return filteredData
+        };
+        return filteredData;
     }
     else {
         return {
@@ -81,7 +81,7 @@ const getTitle = (type: string) => {
 
 //TEMPORARIO, DEPOIS POSSIVELMENTE VITR ANÁLISE FEITA DO BACK NO OBJETO.
 //ALGO DESTE TIPO:
-//
+// 
 
 const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
     var red = '#ff9999'
@@ -94,33 +94,21 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
     if (key === 'fall'){
         if (value) return red
         else return green
-    } else if (key === 'heartrate') {
-        if (
-            typeof value === 'object' &&
-            'value' in value &&
-            (value.value < 60 || value.value > 180)
-        )
-            return red
+    }
+    else if (key === 'heartrate'){
+        if (typeof value === 'object' && 'value' in value && (value.value<60 || value.value>180)) return red
         else return green
-    } else if (key === 'bodyTemperature') {
-        if (
-            typeof value === 'object' &&
-            'value' in value &&
-            (value.value < 34.5 || value.value > 37.4)
-        )
-            return red
+    }
+    else if (key === 'bodyTemperature'){
+        if (typeof value === 'object' && 'value' in value && (value.value<34.5 || value.value>37.4)) return red
         else return green
-    } else if (key === 'gases') {
-        if (
-            typeof value === 'object' &&
-            'metano' in value &&
-            'monoxidoCarbono' in value &&
-            (value.metano > 0 || value.monoxidoCarbono > 0)
-        )
-            return red
+    }
+    else if (key === 'gases'){
+        if (typeof value === 'object' && 'metano' in value && 'monoxidoCarbono' in value && (value.metano > 0 || value.monoxidoCarbono>0)) return red
         else return green
     }
 }
+
 </script>
 <template>
     <v-card
@@ -149,18 +137,8 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
                     :max-width="mdAndDown ? '750px' : '30vw'"
                 >
                     <template v-slot:title>
-                        <h5
-                            v-if="mdAndDown"
-                            style="text-align: left"
-                        >
-                            {{ getTitle(key) }}
-                        </h5>
-                        <h4
-                            v-else
-                            style="text-align: left"
-                        >
-                            {{ getTitle(key) }}
-                        </h4>
+                        <h5 v-if="mdAndDown" style="text-align: left;">{{ getTitle(key) }}</h5>
+                        <h4 v-else style="text-align: left;">{{ getTitle(key) }}</h4>
                     </template>
                     <v-card-text class="text-center">
                         <div
@@ -176,16 +154,18 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
                             v-for="(dictValue, dictKey) in value"
                             :key="dictKey"
                         >
-                            <v-chip
-                                v-if="dictKey === 'metano'"
-                                class="custom-chip-size my-4"
-                            >
+                            <v-chip v-if="dictKey==='metano'" class="custom-chip-size my-4">
+                                <b v-if="dictValue !== null">CH₄: {{ dictValue }}</b>
+                                <b v-else>CH₄: - </b>
+                            </v-chip>
+                            <v-chip v-if="dictKey==='monoxidoCarbono'" class="custom-chip-size">
                                 <b v-if="dictValue !== null" >CO  : {{ dictValue }}</b>
                                 <b v-else >CO  : -</b>
                             </v-chip>
                         </div>
                         <div
                             v-else
+                            v-for="(dictValue, dictKey) in value"
                             class="text-h3"
                         >
                             <v-chip class="custom-chip-size">
@@ -211,11 +191,12 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
     height: 65%;
 }
 .custom-chip-size {
-    font-size: 25px !important;
+    font-size: 25px !important; 
     min-width: 125px !important;
     width: fit-content; 
     height: 75px !important;
     justify-content: center;
     align-items: center;
 }
+
 </style>

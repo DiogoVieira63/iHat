@@ -293,7 +293,7 @@ public class IHatController : ControllerBase{
     public async Task<IActionResult> NewHelmet(NewHelmetForm form){ 
         try
         {   
-            await _facade.AddCapacete(form.NCapacete);
+            await _facade.AddCapacete(form.Numero);
             return Ok();
         }
         catch (Exception e)
