@@ -13,7 +13,7 @@ using iHat.Model.Mapas;
 using SignalR.Hubs;
 using ZstdSharp.Unsafe;
 
-namespace iHat.MQTTService;
+namespace iHat.Model.MQTTService;
 
 public class MQTTService {
 
@@ -33,7 +33,7 @@ public class MQTTService {
     private ICapacetesService _capacetesService;
     private IObrasService _obrasService;
     private ILogsService _logsService;
-    private MensagemCapaceteService _mensagemCapaceteService;
+    private IMensagemCapaceteService _mensagemCapaceteService;
     private IMapaService _mapsService;
     private ManageNotificationClients _manageNotificationClients;
 
@@ -42,7 +42,7 @@ public class MQTTService {
     
 
     public MQTTService(ILogger<MQTTService> logger, ICapacetesService capacetesService, IObrasService obrasService,
-                       ILogsService logsService, MensagemCapaceteService mensagemCapaceteService, IMapaService mapsService,
+                       ILogsService logsService, IMensagemCapaceteService mensagemCapaceteService, IMapaService mapsService,
                        ManageNotificationClients manageNotificationClients){
 
         _logger = logger;
@@ -119,6 +119,9 @@ public class MQTTService {
         var payload = Encoding.UTF8.GetString(eventArgs.ApplicationMessage.PayloadSegment);
         _logger.LogWarning("Received application message. {0}. Topic: {1}", payload, eventArgs.ApplicationMessage.Topic);
     
+        if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_PairingTopic)){
+            await HandlePairingMessage(payload);
+        }
 
         if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_PairingTopic)){
             await HandlePairingMessage(payload);
@@ -126,7 +129,6 @@ public class MQTTService {
         if(payload != null && eventArgs.ApplicationMessage.Topic.Equals(_BasicTopic)){
             await HandleMessageFromCapacetes(payload);
         }
-        
     }
 
     public async Task HandleMessageFromCapacetes(string payload){
@@ -161,7 +163,7 @@ public class MQTTService {
             await _manageNotificationClients.NotifyClientsCapaceteWithLastMessage(messageJson.NCapacete, messageJson);
 
 
-            var obra = await _obrasService.GetObraWithCapaceteId(capacete.NCapacete);
+            var obra = await _obrasService.GetObraWithCapaceteId(capacete.Numero);
             if(obra == null){
                 return;
             }
@@ -275,7 +277,7 @@ public class MQTTService {
         // Primeira op: Notificar apenas com a nova localização recebida...
         var dict = new Dictionary<int, Location>
         {
-            { capacete.NCapacete, messageJson.Location }
+            { capacete.Numero, messageJson.Location }
         };
         await _manageNotificationClients.NotifyClientsObraWithSingleLocation(obra.Id!, dict);        
 

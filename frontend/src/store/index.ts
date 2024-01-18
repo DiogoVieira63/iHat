@@ -151,23 +151,23 @@ const envio = (mqtt: MqttService, task: Task) => {
     }
 }
 
-const pairing = (mqtt: MqttService, nCapacete: number, idObra: string) => {
+const pairing = (mqtt: MqttService, numero: number, idObra: string) => {
     const mensagem = {
         type: 'Pairing',
-        nCapacete: nCapacete,
+        numero: numero,
         obra: idObra,
-        idTrabalhador: 'T' + nCapacete
+        idTrabalhador: 'T' + numero
     }
 
     mqtt.publish('ihat/obras', JSON.stringify(mensagem))
 }
 
-const disconnect = (mqtt: MqttService, nCapacete: number) => {
+const disconnect = (mqtt: MqttService, numero: number) => {
     const mensagem = {
         type: 'Disconnect',
-        nCapacete: nCapacete,
+        numero: numero,
         obra: '',
-        idTrabalhador: 'T' + nCapacete
+        idTrabalhador: 'T' + numero
     }
 
     mqtt.publish('ihat/obras', JSON.stringify(mensagem))

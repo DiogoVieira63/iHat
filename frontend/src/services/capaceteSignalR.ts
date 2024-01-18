@@ -1,13 +1,13 @@
 // Import the SignalR library
-import type { MensagemCapacete } from '@/interfaces'
-import * as signalR from '@microsoft/signalr'
+import type { MensagemCapacete, Log} from '@/interfaces';
+import * as signalR from '@microsoft/signalr';
 
 export class CapaceteSignalRService {
     connection: signalR.HubConnection
 
     constructor(idCapacete: string) {
         this.connection = new signalR.HubConnectionBuilder()
-            .configureLogging(signalR.LogLevel.Debug)
+            .configureLogging(signalR.LogLevel.None)
             .withUrl('http://localhost:5069/helmetdata?capacete_id=' + idCapacete, {
                 skipNegotiation: true,
                 transport: signalR.HttpTransportType.WebSockets
@@ -38,4 +38,11 @@ export class CapaceteSignalRService {
             callback(updatedCapaceteData)
         })
     }
+    updateCapaceteLogs(callback: (updatedCapaceteLogs: Log) => void) {
+        this.connection.on("UpdateLogsCapacete", (updatedCapaceteLogs) => {
+            console.log("Received new Log:", updatedCapaceteLogs);
+            callback(updatedCapaceteLogs);
+        });
+    }
+
 }

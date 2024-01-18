@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
-import type { Capacete, Header, Log } from '@/interfaces'
+import type { Capacete, Header} from '@/interfaces'
 import { CapaceteService, ObraService } from '@/services/http'
 import type { Mapa, Position } from '@/interfaces'
 import LogsObra from '@/components/LogsObra.vue'
@@ -35,7 +35,7 @@ const notificacoesStore = useNotificacoesStore()
 const logs = computed (() => {
     return notificacoesStore.notificacoes.filter((item) => {
         return item.idObra == idObra
-    })
+    }).slice().reverse()
 })
 
 
@@ -65,7 +65,7 @@ const saveTitle = () => {
 const getObra = () => {
     return ObraService.getOneObra(idObra).then((answer) => {
         if (answer.mapa) mapList.value = answer.mapa
-        if (answer.name) title.value = answer.name
+        if (answer.nome) title.value = answer.nome
         if (answer.status) estadoObra.value = answer.status
     })
 }
@@ -78,7 +78,7 @@ const getCapacetesObra = () => {
             capacetes.value.push(capacete)
         })
         capacetes.value = capacetes.value.sort((a, b) => {
-            return a.nCapacete - b.nCapacete
+            return a.numero - b.numero
         })
         list.value = capacetes.value
     })
@@ -99,12 +99,20 @@ const getCapacetesObra = () => {
 //         })
 //     })
 // }
+// const ordenaLogsMaisMenosRecente = () => {
+//     logs.value = logs.value.sort(function (a, b) {
+//             if (a.timestamp < b.timestamp) return 1
+//             else if (a.timestamp > b.timestamp) return -1
+//             else return 0
+//     })
+// }
+
 
 const getLastLocationObra = () => {
     return ObraService.getLocationCapacetes(idObra).then((answer) => {
         Object.keys(answer).forEach((key) => {
             const capacete = capacetes.value.find(
-                (capacete) => capacete.nCapacete === parseInt(key)
+                (capacete) => capacete.numero === parseInt(key)
             )
             if (capacete) {
                 capacete.position = answer[key]
@@ -115,7 +123,7 @@ const getLastLocationObra = () => {
 
 const updateCapacetePosition = (id: number, pos: Position) => {
     capacetes.value = capacetes.value.map((item) => {
-        if (item.nCapacete === id) {
+        if (item.numero === id) {
             item.position = {
                 x: pos.x,
                 y: pos.y,
@@ -129,6 +137,10 @@ const updateCapacetePosition = (id: number, pos: Position) => {
 
 // const updateLogs = (newLog: Log) => {
 //     logs.value.push(newLog)
+// }
+// const updateLogs = (updatedLogs: Array<Log>) => {
+//     logs.value = updatedLogs
+//     ordenaLogsMaisMenosRecente()
 // }
 
 onMounted(async () => {
@@ -149,7 +161,7 @@ onUnmounted(() => {
 })
 
 const headers: Array<Header> = [
-    { key: 'nCapacete', name: 'Id', params: ['sort'] },
+    { key: 'numero', name: 'Id', params: ['sort'] },
     { key: 'status', name: 'Estado', params: ['filter', 'sort'] },
     { key: 'Actions', name: 'Actions', params: [] }
 ]
@@ -165,7 +177,7 @@ function removeCapacete(id: string) {
 }
 
 const changeEstadoCapacete = async (row: { [key: string]: string }, value: string) => {
-    await CapaceteService.changeEstadoCapacete(Number(row['nCapacete']), value)
+    await CapaceteService.changeEstadoCapacete(Number(row['numero']), value)
         .then(() => {
             getCapacetesObra()
         })
@@ -316,7 +328,7 @@ const selectCapacete = (idCapacete: number) => {
                         :list="list"
                         :headers="headers"
                         :selected="{
-                            key: 'nCapacete',
+                            key: 'numero',
                             value: capacetesSelected
                         }"
                     >
@@ -325,9 +337,9 @@ const selectCapacete = (idCapacete: number) => {
                         </template>
                         <template #row="{ row }">
                             <RowObra
-                                :selected="capacetesSelected == row['nCapacete']"
+                                :selected="capacetesSelected == row['numero']"
                                 :row="row"
-                                @removeCapacete="(nCapacete) => removeCapacete(nCapacete)"
+                                @removeCapacete="(numero) => removeCapacete(numero)"
                                 @changeStatus="(value) => changeEstadoCapacete(row, value)"
                                 @selectCapacete="selectCapacete"
                             />

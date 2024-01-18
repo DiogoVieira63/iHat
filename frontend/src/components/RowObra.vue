@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import ConfirmationDialog from './ConfirmationDialog.vue'
 
 interface Props {
-    row: { [nCapacete: string]: string }
+    row: { [numero: string]: string }
     selected: boolean
 }
 
@@ -16,8 +16,8 @@ const router = useRouter()
 const dialog = ref(false)
 const removeDialog = ref(false)
 
-function changePage(nCapacete: string) {
-    router.push({ path: `/capacetes/${nCapacete}` })
+function changePage(numero: string) {
+    router.push({ path: `/capacetes/${numero}` })
 }
 
 function changeStatus(ConfirmationDialog: boolean) {
@@ -33,7 +33,7 @@ function newStatus(Status: string) {
 
 function removeCapacete(ConfirmationDialog: boolean) {
     removeDialog.value = false
-    if (ConfirmationDialog) emit('removeCapacete', props.row.nCapacete)
+    if (ConfirmationDialog) emit('removeCapacete', props.row.numero)
 }
 
 function isInUso() {
@@ -43,9 +43,9 @@ function isInUso() {
 <template>
     <td
         style="cursor: pointer"
-        @click="emit('selectCapacete', props.row.nCapacete)"
+        @click="emit('selectCapacete', props.row.numero)"
     >
-        {{ props.row['nCapacete'] }}
+        {{ props.row['numero'] }}
     </td>
     <td>
         <ConfirmationDialog
@@ -71,7 +71,7 @@ function isInUso() {
             </template>
             <template v-slot:message>
                 Tem a certeza que pretende alterar o Status do
-                <strong> Capacete {{ props.row.nCapacete }}</strong> de
+                <strong> Capacete {{ props.row.numero }}</strong> de
                 <span class="font-weight-bold text-red">{{
                     props.row['status'] == 'Associado à Obra' ? 'Livre' : props.row['status']
                 }}</span>
@@ -85,7 +85,7 @@ function isInUso() {
         <v-btn
             color="grey"
             variant="text"
-            @click="changePage(props.row.nCapacete)"
+            @click="changePage(props.row.numero)"
         >
             <v-icon>mdi-eye</v-icon>
         </v-btn>
@@ -105,7 +105,7 @@ function isInUso() {
             </template>
             <template v-slot:message>
                 Tem a certeza que pretende remover o
-                <strong> Capacete {{ props.row.nCapacete }}</strong> da obra?
+                <strong> Capacete {{ props.row.numero }}</strong> da obra?
             </template>
         </ConfirmationDialog>
     </td>

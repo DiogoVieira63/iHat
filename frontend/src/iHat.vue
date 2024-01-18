@@ -25,8 +25,8 @@ const getObras = () => {
             obras.value.push(obra)
         })
         obras.value = obras.value.sort(function (a, b) {
-            if (a.name < b.name) return -1
-            else if (a.name > b.name) return 1
+            if (a.nome < b.nome) return -1
+            else if (a.nome > b.nome) return 1
             else return 0
         })
     })
@@ -42,7 +42,7 @@ onMounted(async () => {
         notificacoesStore.first = false
         for (const obra of obras.value) {
             const idObra = obra.id as string
-            notificacoesStore.namesObras[idObra] = obra.name
+            notificacoesStore.namesObras[idObra] = obra.nome
             await getLogsObra(idObra)
             const signalRService = new ObraSignalRService(idObra)
             await signalRService.start()

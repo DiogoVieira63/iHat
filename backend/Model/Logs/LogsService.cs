@@ -1,14 +1,11 @@
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using SignalR.Hubs;
 
 namespace iHat.Model.Logs;
 
 public class LogsService: ILogsService{
 
-    public readonly IMongoCollection<Log> _logsCollection;
-
+    private readonly IMongoCollection<Log> _logsCollection;
     private readonly ILogger<LogsService> _logger;
     
     public LogsService(IOptions<DatabaseSettings> iHatDatabaseSettings, ILogger<LogsService> logger){
@@ -27,7 +24,6 @@ public class LogsService: ILogsService{
     public async Task<List<Log>> GetLogsOfObra(string idObra){
         return await _logsCollection.Find(x => x.IdObra == idObra).ToListAsync();
     }
-
 
     public async Task<List<Log>> GetLogsOfObraByDate(string idObra, DateTime date){
         return await _logsCollection.Find(x => x.IdObra == idObra && x.Timestamp.Date == date.Date).ToListAsync();

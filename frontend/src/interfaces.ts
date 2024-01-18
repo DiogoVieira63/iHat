@@ -1,11 +1,10 @@
 export interface Obra {
     id?: string
     idResponsavel?: number
-    name: string
-    zonas?: Array<string> // temporario
-    capacetes?: Array<string> //temporario
-    status?: string
+    nome: string
     mapa?: Array<Mapa>
+    capacetes?: Array<number>
+    status?: string
 }
 
 export interface Mapa {
@@ -28,10 +27,11 @@ export interface Point {
 
 export interface Capacete {
     id?: string
-    nCapacete: number
+    numero: number
     status: string
     info?: string
     trabalhador?: string
+    obra?: string
     position?: Position
 }
 

@@ -117,7 +117,7 @@ const resetInputs = () => {
 const getObra = () => {
     return ObraService.getOneObra(route.params.id.toString()).then((answer) => {
         if (answer.mapa) mapList.value = answer.mapa
-        if (answer.name) title.value = answer.name
+        if (answer.nome) title.value = answer.nome
     })
 }
 
@@ -149,7 +149,7 @@ onMounted(async () => {
 
 const updateCapacete = (capacete: Capacete) => {
     capacetes.value = capacetes.value.map((item) => {
-        if (item.nCapacete === capacete.nCapacete) {
+        if (item.numero === capacete.numero) {
             return capacete
         }
         return item
@@ -199,7 +199,7 @@ const selectedCapacete = (id: number) => {
 }
 
 const selectAll = () => {
-    selected.value = capacetes.value.map((item) => item.nCapacete)
+    selected.value = capacetes.value.map((item) => item.numero)
     resetInputs()
 }
 
@@ -411,23 +411,21 @@ const logsFiltered = computed(() => {
                                 class="mx-auto"
                             >
                                 <v-card-text>
-                                    <v-chip-group
-                                        v-model="logSelected"
-                                        column
-                                        color="info"
-                                    >
-                                        <v-chip
-                                            v-for="option in capacetes.map(
-                                                (capacete) => capacete.nCapacete
-                                            )"
-                                            filter
-                                            variant="outlined"
-                                            :value="option"
-                                            :key="option"
+                                        <v-chip-group
+                                            v-model="logSelected"
+                                            column
+                                            color="info"
                                         >
-                                            {{ option }}
-                                        </v-chip>
-                                    </v-chip-group>
+                                            <v-chip
+                                                v-for="option in capacetes.map((capacete) => capacete.numero)"
+                                                filter
+                                                variant="outlined"
+                                                :value="option"
+                                                :key="option"
+                                            >
+                                                {{ option }}
+                                            </v-chip>
+                                        </v-chip-group>
                                 </v-card-text>
                             </v-card>
                         </v-menu>

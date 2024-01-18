@@ -415,15 +415,15 @@ const pointSelectedString = computed(() => {
                         @update:isDrag="drag = $event"
                     />
                     <image
-                        v-for="{ position, nCapacete } in props.capacetesPosition"
-                        :key="nCapacete"
-                        @click="emit('selectCapacete', nCapacete)"
+                        v-for="{ position, numero } in props.capacetesPosition"
+                        :key="numero"
+                        @click="emit('selectCapacete', numero)"
                         :x="position ? position['x'] / scaleSVG - 20 : -300"
                         :y="position ? position['y'] / scaleSVG - 20 : -300"
                         :width="40 / scaleSVG"
                         :height="40 / scaleSVG"
                         :href="
-                            props.capacetesSelected?.includes(nCapacete)
+                            props.capacetesSelected?.includes(numero)
                                 ? '/helmet2_selected.svg'
                                 : '/helmet2.svg'
                         "

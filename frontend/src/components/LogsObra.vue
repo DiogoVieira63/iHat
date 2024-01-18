@@ -111,11 +111,12 @@ const logsFiltered = computed(() => {
                                     <v-avatar image="/helmet.svg"></v-avatar>
                                 </template>
                                 <v-list-item-title>
-                                    <b>Id Trabalhador:</b>
-                                    {{ log.idTrabalhador }}</v-list-item-title
+                                    <b>Id Capacete:</b> {{ log.idCapacete }}
+                                </v-list-item-title
                                 >
-                                <v-list-item-subtitle
-                                    ><b>Id Capacete:</b> {{ log.idCapacete }}</v-list-item-subtitle
+                                <v-list-item-subtitle>
+                                    <b>Id Trabalhador:</b> {{ log.idTrabalhador }}
+                                </v-list-item-subtitle
                                 >
                             </v-list-item>
                         </v-card-actions>
@@ -128,7 +129,13 @@ const logsFiltered = computed(() => {
                     </template>
                 </v-timeline-item>
             </v-timeline>
+<<<<<<< HEAD
         </v-infinite-scroll>
+=======
+            <template #loading>
+            </template>
+         </v-infinite-scroll>
+>>>>>>> main
     </v-container>
     <v-container v-else>
         <v-sheet

@@ -23,7 +23,7 @@ const getCapacetes = () => {
             capacetes.value.push(capacete)
         })
         capacetes.value = capacetes.value.sort((a, b) => {
-            return a.nCapacete - b.nCapacete
+            return a.numero - b.numero
         })
     })
 }
@@ -35,8 +35,8 @@ const getObras = () => {
             obras.value.push(obra)
         })
         obras.value = obras.value.sort(function (a, b) {
-            if (a.name < b.name) return -1
-            else if (a.name > b.name) return 1
+            if (a.nome < b.nome) return -1
+            else if (a.nome > b.nome) return 1
             else return 0
         })
     })
@@ -51,12 +51,12 @@ const headers: ComputedRef<Array<Header>> = computed(() => {
     let value: Array<Header> = []
     if (tab.value === 'obras') {
         value = [
-            { key: 'name', name: 'Nome', params: ['sort'] },
+            { key: 'nome', name: 'Nome', params: ['sort'] },
             { key: 'status', name: 'Estado', params: ['filter', 'sort'] }
         ]
     } else if (tab.value === 'capacetes') {
         value = [
-            { key: 'nCapacete', name: 'Id', params: ['sort'] },
+            { key: 'numero', name: 'Id', params: ['sort'] },
             { key: 'status', name: 'Estado', params: ['filter', 'sort'] }
         ]
     }
@@ -118,7 +118,7 @@ function changePage(id: string) {
                             <td
                                 v-for="{ key } in headers"
                                 :key="key"
-                                @click="changePage(row['nCapacete'] ? row['nCapacete'] : row['id'])"
+                                @click="changePage(row['numero'] ? row['numero'] : row['id'])"
                             >
                                 {{ row[key] }}
                             </td>
