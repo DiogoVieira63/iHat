@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Obra, Capacete, Log, Position , MensagemCapacete} from '@/interfaces'
+import type { Obra, Capacete, Log, Position, MensagemCapacete } from '@/interfaces'
 const url = `http://localhost:5069/ihat`
 
 // Obras
@@ -199,7 +199,7 @@ export class CapaceteService {
             })
             .catch((error) => console.error('Error:', error))
     }
-  
+
     static changeEstadoCapacete(idCapacete: number, state: string): Promise<void> {
         console.log('Change Status', idCapacete, state)
         return axios
@@ -215,6 +215,18 @@ export class CapaceteService {
     static getLogsCapaceteObra(numero: string): Promise<Log[]> {
         return axios
             .get(`${url}/logs/helmet/${numero}`)
+            .then((response) => {
+                return response.data
+            })
+            .catch((error) => console.error('Error:', error))
+    }
+}
+
+
+export class LogService {
+    static seenLog(id: string): Promise<void> {
+        return axios
+            .patch(`${url}/logs/${id}`)
             .then((response) => {
                 return response.data
             })

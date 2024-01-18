@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref} from 'vue'
+import { ref } from 'vue'
 import type { Capacete } from '@/interfaces'
 import { CapaceteService, ObraService } from '@/services/http'
 

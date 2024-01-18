@@ -44,8 +44,7 @@ export class MqttService {
         this.client.subscribe(topic, (err) => {
             if (err) {
                 console.error(`Failed to subscribe: ${err}`)
-            }
-            else{
+            } else {
                 console.log(`Subscribed to ${topic}`)
             }
         })

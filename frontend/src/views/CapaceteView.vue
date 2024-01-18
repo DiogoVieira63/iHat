@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PageLayout from '@/components/Layouts/PageLayout.vue'
 import LiveData from '@/components/LiveData.vue'
-import { ref, onMounted , onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { CapaceteSignalRService } from '@/services/capaceteSignalR'
 import type { MensagemCapacete, Log } from '@/interfaces';
@@ -61,9 +61,9 @@ const getLogsCapacete = () => {
 const getUltimaMensagemFromDadosCapacete = () => {
     let latestMessage = dadosCapacete.value.reduce((prev, current) =>
         prev.timestamp > current.timestamp ? prev : current
-    );
+    )
 
-    mensagemCapacete.value = latestMessage;
+    mensagemCapacete.value = latestMessage
 }
 
 onMounted(async () => {
@@ -80,9 +80,8 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-    signalRService.value.close();
-});
-
+    signalRService.value.close()
+})
 </script>
 
 <template>

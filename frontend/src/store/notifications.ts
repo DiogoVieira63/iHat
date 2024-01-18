@@ -1,28 +1,20 @@
-// src/store/index.ts
 import { defineStore } from 'pinia'
-
-export class Notification {
-    title: string
-    time: Date
-    seen: boolean
-
-    constructor(title: string) {
-        this.title = title
-        this.time = new Date()
-        this.seen = false
-    }
-}
-
-export const notificacoes = defineStore('notificacoes', {
+import type { Log } from '@/interfaces'
+export const useNotificacoesStore = defineStore('notificacoes', {
     state: () => ({
-        notificacoes: [] as Array<Notification>,
+        notificacoes: [] as Array<Log>,
+        namesObras: {} as Record<string, string>,
+        first: true
     }),
     actions: {
-        addNotification(title: string) {
-            this.notificacoes.push(new Notification(title))
+        addNotification(log: Log) {
+            this.notificacoes.push(log)
         },
         removeNotification(index: number) {
             this.notificacoes.splice(index, 1)
+        },
+        unseenNotifications() {
+            return this.notificacoes.filter((notification) => !notification.vista)
         }
     }
 })

@@ -294,7 +294,6 @@ const logsFiltered = computed(() => {
         return item.idCapacete == logSelected.value
     })
 })
-
 </script>
 <template>
     <page-layout>
@@ -381,79 +380,86 @@ const logsFiltered = computed(() => {
                     />
                 </div>
             </template>
-            <template #logs> 
+            <template #logs>
                 <v-sheet
-                    width="80%"     
+                    width="80%"
                     border="md"
                     class="mx-auto my-6 rounded-xl"
                 >
-                    <v-row class="d-flex justify-center my-6" >
-                            <v-spacer></v-spacer>
-                            <h1 class="text-center text-h4 ">
-                                {{ logSelected ? `Alertas do capacete ${logSelected}` : 'Alertas'   }}
-                            </h1>
-                            <v-spacer></v-spacer>
-                            <v-menu
-                                v-model="filterMenu"
-                                :close-on-content-click="false"
-                                location="end"
+                    <v-row class="d-flex justify-center my-6">
+                        <v-spacer></v-spacer>
+                        <h1 class="text-center text-h4">
+                            {{ logSelected ? `Alertas do capacete ${logSelected}` : 'Alertas' }}
+                        </h1>
+                        <v-spacer></v-spacer>
+                        <v-menu
+                            v-model="filterMenu"
+                            :close-on-content-click="false"
+                            location="end"
+                        >
+                            <template #activator="{ props }">
+                                <v-btn
+                                    variant="flat"
+                                    color="primary"
+                                    v-bind="props"
+                                    icon="mdi-filter"
+                                    class="mr-8"
+                                ></v-btn>
+                            </template>
+                            <v-card
+                                max-width="200"
+                                class="mx-auto"
                             >
-                                <template #activator="{ props }">
-                                    <v-btn
-                                        variant="flat"
-                                        color="primary"
-                                        v-bind="props"
-                                        icon="mdi-filter"
-                                        class="mr-8"
-                                    ></v-btn>
-                                </template>
-                                <v-card
-                                    max-width="200"
-                                    class="mx-auto"
-                                >
-                                    <v-card-text>
-
-                                            <v-chip-group
-                                                v-model="logSelected"
-                                                column
-                                                color="info"
+                                <v-card-text>
+                                        <v-chip-group
+                                            v-model="logSelected"
+                                            column
+                                            color="info"
+                                        >
+                                            <v-chip
+                                                v-for="option in capacetes.map((capacete) => capacete.numero)"
+                                                filter
+                                                variant="outlined"
+                                                :value="option"
+                                                :key="option"
                                             >
-                                                <v-chip
-                                                    v-for="option in capacetes.map((capacete) => capacete.numero)"
-                                                    filter
-                                                    variant="outlined"
-                                                    :value="option"
-                                                    :key="option"
-                                                >
-                                                    {{ option }}
-                                                </v-chip>
-                                            </v-chip-group>
-                                    </v-card-text>
-                                </v-card>
-                            </v-menu>
+                                                {{ option }}
+                                            </v-chip>
+                                        </v-chip-group>
+                                </v-card-text>
+                            </v-card>
+                        </v-menu>
                         <v-col cols="12">
                             <LogsCapacete
-                                v-if="taskStore.messages[taskStore.active] && taskStore.messages[taskStore.active].length > 0"
+                                v-if="
+                                    taskStore.messages[taskStore.active] &&
+                                    taskStore.messages[taskStore.active].length > 0
+                                "
                                 :logs="logsFiltered"
                                 @selectCapacete="logSelected = $event"
-                                >
+                            >
                             </LogsCapacete>
-                            <v-sheet v-else class="pa-6 my-6 d-flex justify-center rounded-xl">
+                            <v-sheet
+                                v-else
+                                class="pa-6 my-6 d-flex justify-center rounded-xl"
+                            >
                                 <v-alert
                                     dense
                                     type="info"
                                     class="mx-4 rounded-pill"
-                                    >
-                                    {{ logSelected ? `Não existem logs para o capacete ${logSelected}` : 'Selecione um capacete'  }}
+                                >
+                                    {{
+                                        logSelected
+                                            ? `Não existem logs para o capacete ${logSelected}`
+                                            : 'Selecione um capacete'
+                                    }}
                                 </v-alert>
                             </v-sheet>
                         </v-col>
-                    </v-row>  
+                    </v-row>
                 </v-sheet>
             </template>
         </ObraLayout>
     </page-layout>
 </template>
-<style scoped>
-
-</style>
+<style scoped></style>

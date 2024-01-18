@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import PageLayout from '@/components/Layouts/PageLayout.vue'
-import { ref, onMounted, nextTick, onUnmounted } from 'vue'
+import { ref, onMounted, nextTick, onUnmounted, computed} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RowObra from '@/components/RowObra.vue'
 import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
-import type { Capacete, Header, Log } from '@/interfaces'
+import type { Capacete, Header} from '@/interfaces'
 import { CapaceteService, ObraService } from '@/services/http'
 import type { Mapa, Position } from '@/interfaces'
 import LogsObra from '@/components/LogsObra.vue'
@@ -13,6 +13,7 @@ import { ObraSignalRService } from '@/services/obraSignalR'
 import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
 import DataTable from '@/components/DataTable.vue'
 import TheMap from '@/components/TheMap.vue'
+import { useNotificacoesStore } from '@/store/notifications'
 
 const router = useRouter()
 const route = useRoute()
@@ -25,10 +26,18 @@ const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('')
 const newEstado = ref('')
 const mapList = ref<Array<Mapa>>([])
-const logs = ref<Array<Log>>([])
 const idObra: string = route.params.id.toString()
 const signalRService = ref<ObraSignalRService>(new ObraSignalRService(idObra))
 const isLoaded = ref(false)
+const notificacoesStore = useNotificacoesStore()
+
+
+const logs = computed (() => {
+    return notificacoesStore.notificacoes.filter((item) => {
+        return item.idObra == idObra
+    }).slice().reverse()
+})
+
 
 const toggleEditing = () => {
     isEditing.value = !isEditing.value
@@ -75,22 +84,29 @@ const getCapacetesObra = () => {
     })
 }
 
-const ordenaLogsMaisMenosRecente = () => {
-    logs.value = logs.value.sort(function (a, b) {
-            if (a.timestamp < b.timestamp) return 1
-            else if (a.timestamp > b.timestamp) return -1
-            else return 0
-    })
-}
+// const getLogsObra = () => {
+//     logs.value = []
+//     notificacoesStore.notificacoes.forEach((notificacao) => {
+//         if (notificacao.idObra === idObra) {
+//             logs.value.push(notificacao)
+//         }
+//     })
 
-const getLogsObra = () => {
-    return ObraService.getLogsObra(idObra).then((answer) => {
-        answer.forEach((log) => {
-            logs.value.push(log)
-        })
-        ordenaLogsMaisMenosRecente()
-    })
-}
+
+//     return ObraService.getLogsObra(idObra).then((answer) => {
+//         answer.forEach((log) => {
+//             logs.value.push(log)
+//         })
+//     })
+// }
+// const ordenaLogsMaisMenosRecente = () => {
+//     logs.value = logs.value.sort(function (a, b) {
+//             if (a.timestamp < b.timestamp) return 1
+//             else if (a.timestamp > b.timestamp) return -1
+//             else return 0
+//     })
+// }
+
 
 const getLastLocationObra = () => {
     return ObraService.getLocationCapacetes(idObra).then((answer) => {
@@ -119,26 +135,24 @@ const updateCapacetePosition = (id: number, pos: Position) => {
     })
 }
 
+// const updateLogs = (newLog: Log) => {
+//     logs.value.push(newLog)
+// }
 // const updateLogs = (updatedLogs: Array<Log>) => {
 //     logs.value = updatedLogs
 //     ordenaLogsMaisMenosRecente()
 // }
 
-const updateLogs = (updatedLog: Log) => {
-    logs.value = [updatedLog, ...logs.value];
-}
-
 onMounted(async () => {
     await Promise.all([
         getObra(),
         getCapacetesObra(),
-        getLogsObra(),
         getLastLocationObra(),
         signalRService.value.start()
     ])
-
+    // getLogsObra()
     signalRService.value.updateCapacetePosition(updateCapacetePosition)
-    signalRService.value.handleIncomingLogs(updateLogs)
+    // signalRService.value.handleIncomingLogs(updateLogs)
     isLoaded.value = true
 })
 
@@ -340,7 +354,7 @@ const selectCapacete = (idCapacete: number) => {
                 </v-skeleton-loader>
             </template>
             <template #logs>
-                <LogsObra 
+                <LogsObra
                     :logs="logs"
                     :capacete-selected="capacetesSelected"
                     @selectCapacete="selectCapacete"

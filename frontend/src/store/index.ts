@@ -140,7 +140,7 @@ const envio = (mqtt: MqttService, task: Task) => {
             Location: {
                 X: newInput['Posição do Capacete (X)'],
                 Y: newInput['Posição do Capacete (Y)'],
-                Z: newInput['Posição do Capacete (Z)'] -1
+                Z: newInput['Posição do Capacete (Z)'] - 1
             },
             Gases: {
                 Metano: newInput['Gases Tóxicos (Metano)'].toFixed(1),
@@ -158,8 +158,6 @@ const pairing = (mqtt: MqttService, numero: number, idObra: string) => {
         obra: idObra,
         idTrabalhador: 'T' + numero
     }
-
-
 
     mqtt.publish('ihat/obras', JSON.stringify(mensagem))
 }
@@ -189,7 +187,9 @@ export const useMQTTStore = defineStore('mqtt', {
 export const useTaskStore = defineStore('taskMQTT', {
     state: () => ({
         tasks: {} as { [idObra: string]: { [idTask: string]: Task } },
-        messages: {} as { [idObra: string]: Array<{idCapacete: number, message: string, time: Date}> },
+        messages: {} as {
+            [idObra: string]: Array<{ idCapacete: number; message: string; time: Date }>
+        },
         active: '' as string
     }),
     actions: {
@@ -211,14 +211,17 @@ export const useTaskStore = defineStore('taskMQTT', {
         addTask(mqtt: MqttService, task: Task) {
             for (const idCapacete of task.capacetes) {
                 pairing(mqtt, idCapacete, this.active)
-                mqtt.subscribe('my/topic/'+ idCapacete, (topic, message) => {
-                    this.messages[this.active].push({message: message.toString(), time: new Date(), idCapacete: idCapacete})
+                mqtt.subscribe('my/topic/' + idCapacete, (topic, message) => {
+                    this.messages[this.active].push({
+                        message: message.toString(),
+                        time: new Date(),
+                        idCapacete: idCapacete
+                    })
                 })
             }
             setTimeout(() => {
                 task.play(mqtt)
-            }
-            , 2000)
+            }, 1000)
             this.tasks[this.active][Date.now()] = task
             //this.tasks.push(task)
         },
