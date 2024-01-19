@@ -5,7 +5,6 @@ import { useRouter } from 'vue-router'
 const links: { [key: string]: string }= {
     'Home': '/', 
     'About Us': '/about', 
-    'Team': '/team',  
 }
 
 const linksImgs: { [key: string]: { url: string; image: string } } = {

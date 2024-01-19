@@ -8,7 +8,6 @@ import Simulator from '@/views/SimulatorView.vue'
 
 import type { RouteRecordRaw } from 'vue-router'
 import AboutView from '@/views/AboutView.vue'
-import TeamView from '@/views/TeamView.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -31,10 +30,6 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/about', 
         component: AboutView
-    },
-    {
-        path: '/team', 
-        component: TeamView
     },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }
 ]
