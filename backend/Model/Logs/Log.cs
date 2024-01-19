@@ -8,27 +8,31 @@ public class Log
     [BsonId] // Primary key
     [BsonRepresentation(BsonType.ObjectId)] // permite passar uma variável do tipo ObjectId como string
     public string? Id {get; set;}
-    public DateTime Timestap {get; set;}
+    public string Type {get; set;} // tipo de gravidade
+    public DateTime Timestamp {get; set;}
     public string? IdObra {get; set;}
     public int? IdCapacete {get; set;}
     public string? IdTrabalhador {get; set;}
     public string? Mensagem {get; set;}
+    public bool Vista {get; set;}
 
-    /*public Log(DateTime timestap, string? idObra, int idCapacete, string idTrabalhador, string mensagem )
+    /*public Log(DateTime Timestamp, string? idObra, int idCapacete, string idTrabalhador, string mensagem )
     {
-        Timestap = timestap;
+        Timestamp = Timestamp;
         IdObra = idObra;
         IdCapacete = idCapacete;
         IdTrabalhador = idTrabalhador;
         Mensagem = mensagem;
     }*/
 
-    public Log(DateTime timestap, string? idObra, int idCapacete, string idTrabalhador, string tipo){
-
-        Timestap = timestap;
+    public Log( string type, DateTime timestamp, string? idObra, int idCapacete, string idTrabalhador, string tipo){
+        
+        Type = type;
+        Timestamp = timestamp;
         IdObra = idObra;
         IdCapacete = idCapacete;
         IdTrabalhador = idTrabalhador;
+        Vista = false;
 
         switch(tipo){
             case "Fall":
@@ -47,15 +51,14 @@ public class Log
                 Mensagem = "Warning: High concentration of harmful gases detected!";
                 break;
 
+            case "InsideZonaRisco":
+                Mensagem = "Warning: Inside Risk Zone";
+                break;
+
             default:
                 break;
         }
 
-
-
-
-
     }
-
 }
 

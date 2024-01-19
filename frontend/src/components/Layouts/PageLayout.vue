@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
 import { useRouter } from 'vue-router'
+import TheAppBar from '@/components/TheAppBar.vue'
 
 const links: { [key: string]: string }= {
     'Home': '/', 
@@ -27,30 +28,7 @@ function navigateToLink(url: string) {
 
 <template>
     <v-app>
-        <v-app-bar
-            :elevation="3"
-            color="primary"
-            rounded
-            height="80"
-        >
-            <v-app-bar-nav-icon @click="router.push('/')">
-                <v-img
-                    src="/Hotpot.ico"
-                    alt="Image"
-                    width="60"
-                ></v-img>
-            </v-app-bar-nav-icon>
-            <v-app-bar-title><b>iHat</b></v-app-bar-title>
-            <template v-slot:append>
-                <v-btn
-                    icon="mdi-theme-light-dark"
-                    @click="toggleTheme"
-                ></v-btn>
-                <v-btn icon="mdi-heart"></v-btn>
-                <v-btn icon="mdi-magnify"></v-btn>
-                <v-btn icon="mdi-dots-vertical"></v-btn>
-            </template>
-        </v-app-bar>
+        <TheAppBar />
         <v-main>
             <slot></slot>
         </v-main>
@@ -112,19 +90,3 @@ function navigateToLink(url: string) {
         </v-footer>
     </v-app>
 </template>
-
-<style scoped>
-.v-footer--full-width {
-    width: 100%;
-    left: 0;
-    right: 0;
-    position: absolute;
-    bottom: 0;
-}
-
-.v-row--full-width {
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-}
-</style>

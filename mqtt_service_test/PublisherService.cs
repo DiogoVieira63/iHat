@@ -14,19 +14,17 @@ using Newtonsoft.Json.Linq;
 
 public class PublisherService{
 
-    static JObject getMessageContent(){
+    static JObject GetMessageContent(){
         var result = new JObject
         {
-            { "HelmetNB", "1" },
+            { "HelmetNB", 1 },
             { "TypeMessage", "ValueUpdate" },
-            { "Fall", "False" },
+            { "Fall", false },
             { "BodyTemperature", 38 },
             { "Heartrate", 100 },
             { "Proximity", "10" },
             { "Position", "?" }
         };
-
-
 
         JObject loc = new JObject
         {
@@ -47,6 +45,19 @@ public class PublisherService{
         return result;
     } 
 
+    
+    static JObject GetPairingContent(){
+        var result = new JObject
+        {
+            { "type", "Pairing" },
+            { "numero", "2" },
+            { "idTrabalhador", "a02" },
+            { "obra", "6590435fe8796e8765a895f0" }
+        };        
+        return result;
+    }
+
+
     static async Task Main(string[] args)
     {
         // Create an MQTT client instance
@@ -63,20 +74,27 @@ public class PublisherService{
         // Connect to the broker
         await mqttClient.ConnectAsync(options);
 
-        var messagePayload = getMessageContent();
-        
+        var messagePayload = GetMessageContent();
         string json = JsonConvert.SerializeObject(messagePayload);
-        byte[] serializedResult = System.Text.Encoding.UTF8.GetBytes(json);
-            
-
-        // Create and publish a message
+        byte[] serializedResult = Encoding.UTF8.GetBytes(json);
         var message = new MqttApplicationMessageBuilder()
-            .WithTopic("my/topic") // Replace with your desired topic
+            .WithTopic("my/topic")
             .WithPayload(serializedResult)
             .WithRetainFlag()
             .Build();
-
         await mqttClient.PublishAsync(message);
+
+        messagePayload = GetPairingContent();
+        json = JsonConvert.SerializeObject(messagePayload);
+        serializedResult = Encoding.UTF8.GetBytes(json);
+        message = new MqttApplicationMessageBuilder()
+            .WithTopic("ihat/obras")
+            .WithPayload(serializedResult)
+            .WithRetainFlag()
+            .Build();
+        await mqttClient.PublishAsync(message);
+
+
 
         // Disconnect from the broker
         await mqttClient.DisconnectAsync();

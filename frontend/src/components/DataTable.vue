@@ -12,6 +12,10 @@ const props = defineProps({
     headers: {
         type: Array as PropType<Array<Header>>,
         required: true
+    },
+    selected: {
+        type: Object as PropType<Record<string, number | string | undefined>>,
+        default: () => {}
     }
 })
 
@@ -116,6 +120,10 @@ const hasFilters = computed(() => {
     return Object.keys(filterOptions.value).length > 0
 })
 
+const hasElements = computed(() => {
+    return rowsPage.value.length > 0
+})
+
 const selectSort = (header: string) => {
     if (sort.value.column === header) {
         sort.value.direction = sort.value.direction === 'asc' ? 'desc' : 'asc'
@@ -145,23 +153,45 @@ watch(
         }
     }
 )
+
+watch(
+    () => props.selected,
+    (newValue) => {
+        if (newValue['key'] && newValue['value']) {
+            const index = rowsSorted.value.findIndex(
+                (row) => row[String(newValue['key'])] == newValue['value']
+            )
+            if (index >= 0) {
+                page.value = Math.ceil((index + 1) / maxPerPage.value)
+            }
+        }
+    }
+)
+
+const rowSelected = (row: { [id: string]: string }) => {
+    if (props.selected && props.selected['key'] && props.selected['value']) {
+        if (row[props.selected['key']] == props.selected['value']) return 'bg-grey-lighten-2'
+    }
+    return ''
+}
 </script>
 <template>
     <v-toolbar class="rounded-t-xl pr-2">
         <slot name="tabs"></slot>
         <v-spacer></v-spacer>
         <v-menu
-            v-if="hasFilters"
+            v-if="hasFilters && list.length > 0"
             v-model="filterMenu"
             :close-on-content-click="false"
             location="end"
         >
-            <template v-slot:activator="{ props }">
+            <template #activator="{ props }">
                 <v-btn
                     variant="flat"
                     color="primary"
                     v-bind="props"
                     icon="mdi-filter"
+                    class="mr-4"
                 ></v-btn>
             </template>
             <v-card
@@ -173,7 +203,7 @@ watch(
                         v-for="(value, key) in filterOptions"
                         :key="key"
                     >
-                        <h2 class="text-h6">{{ key }}</h2>
+                        <h2 class="text-h6">{{ filterName(String(key)) }}</h2>
                         <v-chip-group
                             v-model="filter[key]"
                             column
@@ -195,7 +225,10 @@ watch(
                 </v-card-text>
             </v-card>
         </v-menu>
-        <v-responsive max-width="400">
+        <v-responsive
+            max-width="400"
+            v-if="list.length > 0"
+        >
             <v-text-field
                 variant="outlined"
                 label="Search"
@@ -203,7 +236,7 @@ watch(
                 append-inner-icon="mdi-magnify"
                 single-line
                 hide-details
-                class="mx-5"
+                class="mr-4"
                 rounded="xl"
             ></v-text-field>
         </v-responsive>
@@ -211,12 +244,12 @@ watch(
             <slot name="add"></slot>
         </div>
     </v-toolbar>
-
     <v-table
         hover
-        v-if="rowsPage.length > 0"
+        v-if="hasElements"
         height="60vh"
         fixed-header
+        class="border-md rounded-b-xl"
     >
         <thead>
             <tr>
@@ -238,6 +271,7 @@ watch(
         <tbody>
             <tr
                 class="text-center"
+                :class="rowSelected(row)"
                 v-for="(row, rowIndex) in rowsPage"
                 :key="rowIndex"
             >
@@ -249,12 +283,22 @@ watch(
             </tr>
         </tbody>
     </v-table>
-    <v-alert
+    <v-sheet
         v-else
-        dense
-        type="info"
-        >No results found</v-alert
+        height="60vh"
+        class="d-flex align-center"
+        border
+        rounded="b-xl"
+        width="100%"
     >
+        <v-alert
+            dense
+            type="info"
+            class="mx-4 rounded-pill"
+        >
+            Nenhum elemento encontrado
+        </v-alert>
+    </v-sheet>
     <v-row class="mt-5">
         <v-spacer />
         <v-col

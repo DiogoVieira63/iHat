@@ -1,20 +1,58 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Capacete } from '@/interfaces'
+import { CapaceteService, ObraService } from '@/services/http'
+
+const props = defineProps({
+    idObra: {
+        type: String,
+        required: true
+    }
+})
 
 const id = ref([])
 const dialogCapacete = ref(false)
+const capacetesLivres = ref<Array<Capacete>>([])
 
-const items = ['Capacete 1', 'Capacete 2', 'Capacete 3']
+const getCapacetesLivres = () => {
+    capacetesLivres.value = []
+    CapaceteService.getCapacetesLivres().then((answer) => {
+        answer.forEach((capacete) => {
+            capacetesLivres.value.push(capacete)
+        })
+        capacetesLivresWithTitle()
+    })
+}
 
-const submit = () => {
-    alert(JSON.stringify(id.value, null, 2))
-    id.value = []
-    dialogCapacete.value = false
+const emit = defineEmits(['update'])
+
+const submit = async () => {
+    try {
+        for (const idCapacete of id.value) {
+            await ObraService.addCapaceteToObra(props.idObra, idCapacete)
+        }
+        emit('update')
+        id.value = []
+        dialogCapacete.value = false
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 const close = () => {
     id.value = []
     dialogCapacete.value = false
+}
+
+const capacetesLivresWithTitle = () => {
+    capacetesLivres.value = capacetesLivres.value.map((item) => ({
+        ...item,
+        title: `Capacete ${item.numero}`
+    }))
+    capacetesLivres.value = capacetesLivres.value.sort((a, b) => {
+        return a.numero - b.numero
+    })
+    return capacetesLivres.value
 }
 </script>
 
@@ -33,6 +71,7 @@ const close = () => {
                     icon="mdi-plus"
                     rounded="xl"
                     class="ma-1"
+                    @click="getCapacetesLivres"
                 >
                 </v-btn>
             </template>
@@ -55,7 +94,7 @@ const close = () => {
                     <v-card-text>
                         <v-autocomplete
                             v-model="id"
-                            :items="items"
+                            :items="capacetesLivres"
                             auto-select-first
                             density="comfortable"
                             menu-icon=""
@@ -69,6 +108,8 @@ const close = () => {
                             chips
                             transition="false"
                             variant="solo"
+                            item-title="title"
+                            item-value="numero"
                         ></v-autocomplete>
                         <v-btn
                             type="submit"

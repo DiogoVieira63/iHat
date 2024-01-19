@@ -49,7 +49,9 @@ def generate_floor_plans():
         svg_file.append(style)
         svg_file.append(group)
         # Write the SVG document to a file
-        output_file = os.path.join('svg_files', f'{group["ifc:name"]}.svg')
+        svg_file_name = f'{group["ifc:name"]}.svg'
+        svg_file_name = svg_file_name.replace('/', '_')
+        output_file = os.path.join('svg_files',svg_file_name)
         with open(output_file, 'w') as f:
             f.write(svg_file.prettify())
         

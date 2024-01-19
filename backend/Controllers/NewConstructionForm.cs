@@ -2,6 +2,6 @@ namespace FormEncode.Models;
 
 public class NewConstructionForm{
 
-    public string? Name {get; set;}
-    public IFormFile? Mapa {get; set;}
+    public string? Nome {get; set;}
+    // public IFormFile? Mapa {get; set;}
 }

@@ -1,22 +1,22 @@
 export interface Obra {
-    id?: string,
-    idResponsavel?: number,
-    name?: string,
-    zonas?: Array<string>, // temporario
-    mapa?: string, // temporário
-    capacetes?: Array<string>, //temporario
+    id?: string
+    idResponsavel?: number
+    nome: string
+    mapa?: Array<Mapa>
+    capacetes?: Array<number>
     status?: string
-    mapas: Array<Mapa>
 }
 
 export interface Mapa {
+    id: string
     name: string
     svg: string
-    zones: Array<Zone>
+    floor: number
+    zonas: Array<Zone>
 }
 
 export interface Zone {
-    id: number
+    id: string
     points: Array<Point>
 }
 
@@ -26,25 +26,57 @@ export interface Point {
 }
 
 export interface Capacete {
-  id?: string 
-  nCapacete: number,
-  status: string,
-  info?: string,
-  trabalhador?: string
-}
-
-export interface CapacetePost {
-    nCapacete: number;
-}
-
-export interface ObraPost {
-    name: string,
-    mapa: string,
+    id?: string
+    numero: number
     status: string
+    info?: string
+    trabalhador?: string
+    obra?: string
+    position?: Position
+}
+
+export interface ValueObject {
+    value: number
+}
+
+export interface Gases {
+    metano: number
+    monoxidoCarbono: number
+}
+
+export interface MensagemCapacete {
+    id?: string
+    timestamp: Date
+    nCapacete: number
+    type: string
+    fall: boolean
+    bodyTemperature: ValueObject
+    heartrate: ValueObject
+    proximity: number
+    position: Position
+    location: Position
+    gases: Gases
+}
+
+export interface Position {
+    x: number
+    y: number
+    z: number
 }
 
 export interface Header {
     name: string
     key: string
     params: Array<string>
+}
+
+export interface Log {
+    id: string
+    type: string
+    timestamp: Date
+    idObra: string
+    idCapacete?: number
+    idTrabalhador?: string
+    mensagem: string
+    vista: boolean
 }

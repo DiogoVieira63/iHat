@@ -4,23 +4,27 @@ using iHat.Model.Obras;
 using iHat.Model.Capacetes;
 using iHat.Model.Logs;
 using iHat.Model.MensagensCapacete;
-using iHat.MQTTService;
-using iHat.Model.Zonas;
+using iHat.Model.MQTTService;
 using Microsoft.AspNetCore.Http.Features;
 using iHat.Model.Mapas;
+using SignalR.Hubs;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("MyPolicy",
-    builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
+    options.AddPolicy(
+        "MyPolicy",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
 });
 
 
@@ -37,41 +41,32 @@ builder.Services.Configure<FormOptions>(options => {
 });
 
 builder.Services.AddSingleton<IObrasService, ObrasService>();
-
 builder.Services.AddSingleton<ICapacetesService, CapacetesService>();
-
 builder.Services.AddSingleton<ILogsService, LogsService>();
-
 builder.Services.AddSingleton<IMapaService, MapaService>();
-
-builder.Services.AddSingleton<MensagemCapaceteService>();
-
-builder.Services.AddSingleton<IZonasService,ZonasService> ();
-
+builder.Services.AddSingleton<IMensagemCapaceteService, MensagemCapaceteService>();
 builder.Services.AddSingleton<IiHatFacade, iHatFacade>();
-
+builder.Services.AddSingleton<ManageNotificationClients>();
 builder.Services.AddSingleton<MQTTService>();
 builder.Services.AddHostedService<MQTTBackgroundService>();
+builder.Services.AddSignalR();
 
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    options.SwaggerDoc("v1", new OpenApiInfo{
+        Version = "v1",
+        Title = "iHat Backend"
+    });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 var app = builder.Build();
-
-// No futuro é preciso tratar a questão do https (https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-7.0&tabs=visual-studio-code#test-the-project)
-
-// Configure the HTTP request pipeline.
-/*if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();*/
 app.UseCors("MyPolicy");
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.MapControllers();
-
+app.MapHub<ObrasHub>("obra");
+app.MapHub<DadosCapaceteHub>("helmetdata");
 app.Run();

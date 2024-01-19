@@ -13,8 +13,6 @@ public class DatabaseSettings
     public string LogsCollectionName { get; set;} = null!;
 
     public string MensagensCapaceteCollectionName { get; set; } = null!;
-
-    public string ZonasCollectionName { get; set; } = null!;
-
+    
     public string MapasCollectionName  { get; set; } = null!;
 }

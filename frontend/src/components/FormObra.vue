@@ -2,33 +2,42 @@
 import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate'
 import { object, string } from 'yup'
-import FormMapa from './FormMapa.vue'
+import { ObraService } from '@/services/http'
+import FormMapa from '@/components/FormMapa.vue'
 
 const dialog = ref(false)
 
-type Estado = 'Planeada' | 'Pendente' | 'Em curso'
-const estados: Estado[] = ['Planeada', 'Pendente', 'Em curso']
-
 interface FormObra {
     nomeObra: string
-    estado: Estado
 }
 
 const { handleSubmit, resetForm } = useForm<FormObra>({
     validationSchema: object({
-        nomeObra: string().min(2).required(),
-        estado: string().required()
+        nomeObra: string().min(2).required()
     })
 })
 
 const nomeObra = useField('nomeObra')
-const estado = useField<Estado>('estado')
 const notSubmited = ref(true)
+const idObra = ref('')
 
-const submit = handleSubmit((values) => {
-    notSubmited.value = false
-    alert(JSON.stringify(values, null, 2))
-    resetForm()
+const emit = defineEmits(['update'])
+
+const submit = handleSubmit((values, actions) => {
+    const obra = {
+        nome: values.nomeObra
+    }
+    ObraService.addOneObra(obra)
+        .then((res_idObra) => {
+            idObra.value = res_idObra
+            notSubmited.value = false
+            emit('update')
+            resetForm()
+        })
+        .catch((error) => {
+            actions.setFieldError('nomeObra', 'Erro na criação da Obra.')
+            console.log(error)
+        })
 })
 
 const close = () => {
@@ -55,7 +64,7 @@ const close = () => {
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
             </template>
-            <v-card>
+            <v-card rounded="xl">
                 <v-card-title>
                     <v-row class="mt-2">
                         <v-spacer></v-spacer>
@@ -78,39 +87,26 @@ const close = () => {
                             @submit.prevent="submit"
                             v-if="notSubmited"
                         >
-                            <v-row>
-                                <v-col
-                                    cols="12"
-                                    md="6"
-                                >
-                                    <v-text-field
-                                        v-model="nomeObra.value.value"
-                                        :error-messages="nomeObra.errorMessage.value"
-                                        label="Nome da Obra*"
-                                    ></v-text-field>
-                                </v-col>
-
-                                <v-col
-                                    cols="12"
-                                    md="6"
-                                >
-                                    <v-select
-                                        v-model="estado.value.value"
-                                        :error-messages="estado.errorMessage.value"
-                                        :items="estados"
-                                        label="Estado*"
-                                    ></v-select>
-                                </v-col>
-                            </v-row>
+                            <v-text-field
+                                v-model="nomeObra.value.value"
+                                :error-messages="nomeObra.errorMessage.value"
+                                label="Nome da Obra*"
+                            ></v-text-field>
                             <v-btn
                                 color="primary"
                                 type="submit"
                                 block
                                 class="mt-2"
+                                rounded="xl"
                                 >Submit</v-btn
                             >
                         </v-form>
-                        <FormMapa v-else />
+                        <FormMapa
+                            v-else
+                            :id-obra="idObra"
+                            :canCancel="false"
+                            @update="close"
+                        />
                     </v-container>
                 </v-card-text>
             </v-card>

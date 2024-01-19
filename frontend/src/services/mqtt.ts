@@ -7,11 +7,13 @@ export class MqttService {
     constructor(client: MqttClient | undefined) {
         if (client === undefined) {
             const options: IClientOptions = {
-                clientId: 'myUsername'
+                clientId: 'admin',
+                username: 'admin',
+                password: 'password'
             }
             console.log('Connecting to MQTT broker...')
 
-            this.client = mqtt.connect('ws://localhost:8883', options)
+            this.client = mqtt.connect('ws://localhost:9001', options)
 
             this.client.on('connect', () => {
                 console.log('Connected to MQTT broker')
@@ -35,6 +37,20 @@ export class MqttService {
             if (err) {
                 console.error(`Failed to publish: ${err}`)
             }
+        })
+    }
+
+    async subscribe(topic: string, callback: (topic: string, message: string) => void) {
+        this.client.subscribe(topic, (err) => {
+            if (err) {
+                console.error(`Failed to subscribe: ${err}`)
+            } else {
+                console.log(`Subscribed to ${topic}`)
+            }
+        })
+
+        this.client.on('message', (topic, message) => {
+            callback(topic, message.toString())
         })
     }
 }

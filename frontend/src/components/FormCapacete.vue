@@ -3,14 +3,15 @@ import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate'
 import { object, string } from 'yup'
 import type { Capacete } from '@/interfaces'
-import { CapaceteService } from '@/http_requests'
+import { CapaceteService } from '@/services/http'
+
 interface Form {
     id: string
 }
 
 const { handleSubmit } = useForm<Form>({
     validationSchema: object({
-        id: string().min(2).required()
+        id: string().min(1).required()
     })
 })
 
@@ -19,27 +20,23 @@ const dialogCapacete = ref(false)
 
 const emit = defineEmits(['update'])
 
-const submit = handleSubmit(async (values, actions) => {
+const submit = handleSubmit((values, actions) => {
     const Capacete: Capacete = {
-        NCapacete: Number(values.id),
-        Status: 'Disponivel',
-        Info: '',
-        Trabalhador: ''
+        numero: Number(values.id),
+        status: 'Disponivel',
+        info: '',
+        trabalhador: ''
     }
 
     CapaceteService.addOneCapacete(Capacete)
-        .then((success) => {
-            console.log('Success', success)
-            if (success) {
-                dialogCapacete.value = false
-                id.value.value = ''
-                id.errorMessage.value = ''
-                emit('update')
-            } else {
-                actions.setFieldError('id', 'Capacete já existe')
-            }
+        .then(() => {
+            dialogCapacete.value = false
+            id.value.value = ''
+            id.errorMessage.value = ''
+            emit('update')
         })
         .catch((error) => {
+            actions.setFieldError('id', 'Capacete já existe')
             console.log(error)
         })
 })
@@ -68,32 +65,19 @@ const submit = handleSubmit(async (values, actions) => {
                     </v-card-title>
                     <v-card-text>
                         <v-container>
-                            <v-row>
-                                <v-col
-                                    cols="12"
-                                    md="6"
-                                >
-                                    <v-text-field
-                                        v-model="id.value.value"
-                                        label="id do Capacete*"
-                                        :error-messages="id.errorMessage.value"
-                                    ></v-text-field>
-                                </v-col>
-                            </v-row>
+                            <v-text-field
+                                v-model="id.value.value"
+                                label="id do Capacete*"
+                                :error-messages="id.errorMessage.value"
+                            ></v-text-field>
                         </v-container>
-                        <v-alert
-                            color="info"
-                            icon="$info"
-                            text="* indicates required field"
+                        <v-btn
+                            type="submit"
+                            color="primary"
+                            block
+                            >Submit</v-btn
                         >
-                        </v-alert>
                     </v-card-text>
-                    <v-btn
-                        type="submit"
-                        block
-                        class="mt-2"
-                        >Submit</v-btn
-                    >
                 </v-form>
             </v-card>
         </v-dialog>

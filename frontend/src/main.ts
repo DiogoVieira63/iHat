@@ -39,6 +39,10 @@ const vuetify = createVuetify({
     }
 })
 
+// var corsOptions = {
+//     origin: "http://localhost:3000"
+//   };
+
 const app = createApp(App)
 app.use(VueApexCharts)
 app.use(vuetify)

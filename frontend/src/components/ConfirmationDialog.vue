@@ -12,7 +12,7 @@ const props = defineProps({
     },
     functionParams: {
         type: Array,
-        required: false,
+        required: false
     }
 })
 

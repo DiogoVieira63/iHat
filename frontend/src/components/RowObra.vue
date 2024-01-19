@@ -1,38 +1,39 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import Confirmation from './Confirmation.vue'
+import ConfirmationDialog from './ConfirmationDialog.vue'
 
 interface Props {
-    row: { [nCapacete: string]: string }
+    row: { [numero: string]: string }
+    selected: boolean
 }
 
 const props = defineProps<Props>()
 
-const emit = defineEmits(['removeCapacete', 'changeStatus'])
+const emit = defineEmits(['removeCapacete', 'changeStatus', 'selectCapacete'])
 
 const router = useRouter()
 const dialog = ref(false)
 const removeDialog = ref(false)
 
-function changePage(nCapacete: string) {
-    router.push({ path: `/capacetes/${nCapacete}` })
+function changePage(numero: string) {
+    router.push({ path: `/capacetes/${numero}` })
 }
 
-function changeStatus(confirmation: boolean) {
-    if (confirmation) {
+function changeStatus(ConfirmationDialog: boolean) {
+    if (ConfirmationDialog) {
         emit('changeStatus', newStatus(props.row.status))
     }
     dialog.value = false
 }
 
 function newStatus(Status: string) {
-    return Status === 'Livre' ? 'Não Operacional' : 'Livre'
+    return Status === 'Não Operacional' ? 'Livre' : 'Não Operacional'
 }
 
-function removeCapacete(confirmation: boolean) {
+function removeCapacete(ConfirmationDialog: boolean) {
     removeDialog.value = false
-    if (confirmation) emit('removeCapacete', props.row.nCapacete)
+    if (ConfirmationDialog) emit('removeCapacete', props.row.numero)
 }
 
 function isInUso() {
@@ -40,9 +41,14 @@ function isInUso() {
 }
 </script>
 <template>
-    <td @click="changePage(props.row.nCapacete)">{{ props.row['nCapacete'] }}</td>
+    <td
+        style="cursor: pointer"
+        @click="emit('selectCapacete', props.row.numero)"
+    >
+        {{ props.row['numero'] }}
+    </td>
     <td>
-        <confirmation
+        <ConfirmationDialog
             title="Confirmação"
             :function="changeStatus"
         >
@@ -52,7 +58,9 @@ function isInUso() {
                     class="mt-5 pa-0"
                     density="compact"
                     :items="['Livre', 'Não Operacional']"
-                    :model-value="props.row['status'] == 'Associado à Obra' ? 'Livre' : props.row['status']"
+                    :model-value="
+                        props.row['status'] == 'Associado à Obra' ? 'Livre' : props.row['status']
+                    "
                     @update:model-value="
                         (value) => {
                             if (value !== props.row['status']) open()
@@ -63,15 +71,25 @@ function isInUso() {
             </template>
             <template v-slot:message>
                 Tem a certeza que pretende alterar o Status do
-                <strong> Capacete {{ props.row.NCapacete }}</strong> de
-                <span class="font-weight-bold text-red">{{ props.row['status'] }}</span> para
+                <strong> Capacete {{ props.row.numero }}</strong> de
+                <span class="font-weight-bold text-red">{{
+                    props.row['status'] == 'Associado à Obra' ? 'Livre' : props.row['status']
+                }}</span>
+                para
                 <span class="font-weight-bold text-green">{{ newStatus(props.row['status']) }}</span
                 >?
             </template>
-        </confirmation>
+        </ConfirmationDialog>
     </td>
     <td>
-        <confirmation
+        <v-btn
+            color="grey"
+            variant="text"
+            @click="changePage(props.row.numero)"
+        >
+            <v-icon>mdi-eye</v-icon>
+        </v-btn>
+        <ConfirmationDialog
             title="Confirmação"
             :function="removeCapacete"
         >
@@ -87,8 +105,8 @@ function isInUso() {
             </template>
             <template v-slot:message>
                 Tem a certeza que pretende remover o
-                <strong> Capacete {{ props.row.nCapacete }}</strong> da obra?
+                <strong> Capacete {{ props.row.numero }}</strong> da obra?
             </template>
-        </confirmation>
+        </ConfirmationDialog>
     </td>
 </template>

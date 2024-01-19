@@ -5,9 +5,9 @@ namespace FormEncode.Models;
 
 public class NewHelmetForm{
 
-    public int NCapacete {get; set;}
+    public int Numero {get; set;}
 
-    public NewHelmetForm(int nCapacete){
-        NCapacete = nCapacete;
+    public NewHelmetForm(int numero){
+        Numero = numero;
     }
 }
