@@ -9,7 +9,6 @@ import type { Capacete, Header } from '@/interfaces'
 import { CapaceteService, ObraService } from '@/services/http'
 import type { Mapa, Position } from '@/interfaces'
 import LogsObra from '@/components/LogsObra.vue'
-import { ObraSignalRService } from '@/services/obraSignalR'
 import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
 import DataTable from '@/components/DataTable.vue'
 import TheMap from '@/components/TheMap.vue'
@@ -27,7 +26,6 @@ const estadoObra = ref('')
 const newEstado = ref('')
 const mapList = ref<Array<Mapa>>([])
 const idObra: string = route.params.id.toString()
-const signalRService = ref<ObraSignalRService>(new ObraSignalRService(idObra))
 const isLoaded = ref(false)
 const notificacoesStore = useNotificacoesStore()
 
@@ -68,6 +66,18 @@ const getObra = () => {
         if (answer.mapa) mapList.value = answer.mapa
         if (answer.nome) title.value = answer.nome
         if (answer.status) estadoObra.value = answer.status
+        if (estadoObra.value === 'Em Curso') {
+            if (!(idObra in notificacoesStore.connections)){
+                notificacoesStore.startConnection(idObra)
+            }
+            const connection  = notificacoesStore.connections[idObra]
+            connection.updateCapacetePosition(updateCapacetePosition)
+        }
+        else{
+            if (idObra in notificacoesStore.connections){
+                notificacoesStore.stopConnection(idObra)
+            }
+        }
     })
 }
 
@@ -85,27 +95,6 @@ const getCapacetesObra = () => {
     })
 }
 
-// const getLogsObra = () => {
-//     logs.value = []
-//     notificacoesStore.notificacoes.forEach((notificacao) => {
-//         if (notificacao.idObra === idObra) {
-//             logs.value.push(notificacao)
-//         }
-//     })
-
-//     return ObraService.getLogsObra(idObra).then((answer) => {
-//         answer.forEach((log) => {
-//             logs.value.push(log)
-//         })
-//     })
-// }
-// const ordenaLogsMaisMenosRecente = () => {
-//     logs.value = logs.value.sort(function (a, b) {
-//             if (a.timestamp < b.timestamp) return 1
-//             else if (a.timestamp > b.timestamp) return -1
-//             else return 0
-//     })
-// }
 
 const getLastLocationObra = () => {
     return ObraService.getLocationCapacetes(idObra).then((answer) => {
@@ -132,29 +121,20 @@ const updateCapacetePosition = (id: number, pos: Position) => {
     })
 }
 
-// const updateLogs = (newLog: Log) => {
-//     logs.value.push(newLog)
-// }
-// const updateLogs = (updatedLogs: Array<Log>) => {
-//     logs.value = updatedLogs
-//     ordenaLogsMaisMenosRecente()
-// }
-
 onMounted(async () => {
     await Promise.all([
         getObra(),
         getCapacetesObra(),
         getLastLocationObra(),
-        signalRService.value.start()
     ])
-    // getLogsObra()
-    signalRService.value.updateCapacetePosition(updateCapacetePosition)
-    // signalRService.value.handleIncomingLogs(updateLogs)
     isLoaded.value = true
 })
 
 onUnmounted(() => {
-    signalRService.value.close()
+    if (idObra in notificacoesStore.connections){
+        const connection  = notificacoesStore.connections[idObra]
+        connection.offCapacetePosition()
+    }
 })
 
 const headers: Array<Header> = [
@@ -221,36 +201,27 @@ const selectCapacete = (idCapacete: number) => {
         <ObraLayout>
             <template #map>
                 <v-row
-                    align="center"
-                    justify="start"
-                    class="mb-2"
+                    justify="center"
+                    class="my-3"
                 >
-                    <v-col
-                        cols="auto"
-                        v-bind:offset-lg="4"
+                    <div
+                        class="text-h4 text-lg-h3"
+                        v-if="!isEditing"
                     >
-                        <div
-                            class="text-h4 text-lg-h3"
-                            v-if="!isEditing"
-                        >
-                            {{ title }}
-                        </div>
+                        {{ title }}
+                    </div>
+                    <v-responsive
+                        v-else
+                        max-width="344"
+                    >
                         <v-text-field
-                            v-else
                             v-model="title"
-                            dense
                             @keydown.enter="saveTitle"
                             ref="textField"
-                            style="width: 300px"
+                            class="my-0"
                         ></v-text-field>
-                    </v-col>
-                    <v-col cols="auto">
-                        <v-btn
-                            density="compact"
-                            icon="mdi-pencil"
-                            @click="toggleEditing"
-                        ></v-btn>
-                    </v-col>
+                    </v-responsive>
+
                 </v-row>
                 <v-skeleton-loader
                     :loading="!isLoaded"
@@ -310,6 +281,14 @@ const selectCapacete = (idCapacete: number) => {
                     >
                         Simulador
                     </v-btn>
+                    <v-btn
+                        rounded="xl"
+                        variant="flat"
+                        color="primary"
+                        icon="mdi-pencil"
+                        @click="toggleEditing"
+                        class="ml-4"
+                    ></v-btn>
                 </v-row>
                 <v-skeleton-loader
                     :loading="!isLoaded"
