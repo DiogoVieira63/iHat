@@ -70,62 +70,60 @@ function changePage(id: string) {
 
 <template>
     <PageLayout>
-        <v-container>
-            <v-skeleton-loader
-                :loading="!isLoaded"
-                type="card, table"
+        <v-skeleton-loader
+            v-if="!isLoaded"
+            type="card, table"
+        >
+        </v-skeleton-loader>
+        <v-card
+            class="mx-auto my-10"
+            max-width="50vw"
+            variant="text"
+        >
+            <DataTable
+                :list="tab == 'capacetes' ? capacetes : obras"
+                :headers="headers"
             >
-                <v-card
-                    class="mx-auto"
-                    max-width="1500px"
-                    variant="text"
-                >
-                    <DataTable
-                        :list="tab == 'capacetes' ? capacetes : obras"
-                        :headers="headers"
+                <template v-slot:tabs>
+                    <v-tabs
+                        v-model="tab"
+                        class="rounded-t-xl align-start"
+                        bg-color="grey lighten-3"
+                        color="black"
+                        align-tabs="center"
                     >
-                        <template v-slot:tabs>
-                            <v-tabs
-                                v-model="tab"
-                                class="rounded-t-xl align-start"
-                                bg-color="grey lighten-3"
-                                color="black"
-                                align-tabs="center"
-                            >
-                                <v-tab
-                                    value="obras"
-                                    color="black"
-                                    >Obras</v-tab
-                                >
-                                <v-tab
-                                    value="capacetes"
-                                    color="black"
-                                    >capacetes</v-tab
-                                >
-                            </v-tabs>
-                        </template>
-                        <template v-slot:add>
-                            <FormObra
-                                v-if="tab == 'obras'"
-                                @update="getObras"
-                            />
-                            <FormCapacete
-                                v-else
-                                @update="getCapacetes"
-                            />
-                        </template>
-                        <template #row="{ row, headers }">
-                            <td
-                                v-for="{ key } in headers"
-                                :key="key"
-                                @click="changePage(row['numero'] ? row['numero'] : row['id'])"
-                            >
-                                {{ row[key] }}
-                            </td>
-                        </template>
-                    </DataTable>
-                </v-card>
-            </v-skeleton-loader>
-        </v-container>
+                        <v-tab
+                            value="obras"
+                            color="black"
+                            >Obras</v-tab
+                        >
+                        <v-tab
+                            value="capacetes"
+                            color="black"
+                            >capacetes</v-tab
+                        >
+                    </v-tabs>
+                </template>
+                <template v-slot:add>
+                    <FormObra
+                        v-if="tab == 'obras'"
+                        @update="getObras"
+                    />
+                    <FormCapacete
+                        v-else
+                        @update="getCapacetes"
+                    />
+                </template>
+                <template #row="{ row, headers }">
+                    <td
+                        v-for="{ key } in headers"
+                        :key="key"
+                        @click="changePage(row['numero'] ? row['numero'] : row['id'])"
+                    >
+                        {{ row[key] }}
+                    </td>
+                </template>
+            </DataTable>
+        </v-card>
     </PageLayout>
 </template>
