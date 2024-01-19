@@ -39,7 +39,10 @@ export class ObraSignalRService {
         })
     }
 
-
+    offCapacetePosition() {
+        this.connection.off('UpdateSingleLocation')
+    }
+    
     handleIncomingLogs(callback: (updatedLog: Log) => void) {
         this.connection.on('UpdateLogs', (updatedLog) => {
             callback(updatedLog)

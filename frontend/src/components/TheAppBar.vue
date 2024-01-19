@@ -5,9 +5,11 @@ import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import type { Log } from '@/interfaces'
 import { LogService } from '@/services/http'
+import { useTheme } from 'vuetify'
 
 const router = useRouter()
 const notificacoesStore = useNotificacoesStore()
+const theme = useTheme()
 
 
 
@@ -40,12 +42,16 @@ const notificacoes = computed(() => {
     return notificacoesStore.notificacoes.slice().reverse()
 })
 
+function toggleTheme() {
+    theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
+
+
 </script>
 <template>
     <v-app-bar
         :elevation="3"
-        color="primary"
-        rounded
+        color="secondary"
         height="80"
     >
         <v-app-bar-nav-icon @click="router.push('/')">
@@ -57,6 +63,12 @@ const notificacoes = computed(() => {
         </v-app-bar-nav-icon>
         <v-app-bar-title><b>iHat</b></v-app-bar-title>
         <template v-slot:append>
+            <v-btn
+                icon
+                @click="toggleTheme"
+            >
+                <v-icon>mdi-theme-light-dark</v-icon>
+            </v-btn>
             <v-menu
                 location="bottom"
                 max-height="600px"

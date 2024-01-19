@@ -29,43 +29,6 @@ const emit = defineEmits(['selectCapacete'])
 </script>
 <template>
     <v-container v-if="props.logs.length > 0">
-        <!-- <v-virtual-scroll
-                :height="300"
-                :items="props.logs"
-            >
-              <template v-slot:default="{ item }">
-                <v-timeline-item
-                        size="large"
-                        class="me-4"
-                    >
-                        <v-card >
-                            <v-card-title class="bg-red">
-                                <h2 class="font-weight-light">
-                                    Notificação
-                                </h2>
-                            </v-card-title>
-                            <v-card-text class="py-2">
-                                <v-list-item class="w-100">
-                                    <template v-slot:prepend>
-                                        <v-avatar image="/helmet.svg"></v-avatar>
-                                    </template>
-                                    <v-list-item-title>
-                                        <b>Id Capacete:</b>
-                                        {{ item.idCapacete }}</v-list-item-title
-                                    >
-                                </v-list-item>
-                            </v-card-text>
-                        </v-card>
-                        <template v-slot:opposite>
-                            <div
-                                class="pt-1 headline font-weight-bold"
-                                v-text="formatTimestamp(item.time)"
-                            ></div>
-                        </template>
-                    </v-timeline-item>
-              </template>
-            </v-virtual-scroll> -->
-
         <v-infinite-scroll
             height="35vh"
             side="end"
@@ -114,7 +77,7 @@ const emit = defineEmits(['selectCapacete'])
             height="35vh"
             width="400px"
             class="d-flex align-center mx-auto"
-            rounded="b-xl"
+            rounded="xl"
         >
             <v-alert
                 dense

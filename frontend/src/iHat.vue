@@ -32,22 +32,18 @@ const getObras = () => {
     })
 }
 
-const updateLogs = (newLog: Log) => {
-    notificacoesStore.addNotification(newLog)
-}
 
 onMounted(async () => {
     if (notificacoesStore.first) {
         await getObras()
         notificacoesStore.first = false
         for (const obra of obras.value) {
-            const idObra = obra.id as string
-            notificacoesStore.namesObras[idObra] = obra.nome
-            await getLogsObra(idObra)
-            const signalRService = new ObraSignalRService(idObra)
-            await signalRService.start()
-            signalRService.handleIncomingLogs(updateLogs)
-            connections.value.push(signalRService)
+            if (obra.status == 'Em Curso'){
+                const idObra = obra.id as string
+                notificacoesStore.namesObras[idObra] = obra.nome
+                await getLogsObra(idObra)
+                notificacoesStore.startConnection(idObra)
+            }
         }
     }
 })

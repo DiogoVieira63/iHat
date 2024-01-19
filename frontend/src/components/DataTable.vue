@@ -249,7 +249,7 @@ const rowSelected = (row: { [id: string]: string }) => {
         v-if="hasElements"
         height="60vh"
         fixed-header
-        class="border-md rounded-b-xl"
+        class="rounded-b-xl"
     >
         <thead>
             <tr>
@@ -299,6 +299,8 @@ const rowSelected = (row: { [id: string]: string }) => {
             Nenhum elemento encontrado
         </v-alert>
     </v-sheet>
+    <v-divider
+    />
     <v-row class="mt-5">
         <v-spacer />
         <v-col
@@ -308,7 +310,6 @@ const rowSelected = (row: { [id: string]: string }) => {
             <v-pagination
                 variant="flat"
                 active-color="primary"
-                v-if="numPages !== 1"
                 v-model="page"
                 :length="numPages"
             ></v-pagination>
@@ -318,7 +319,7 @@ const rowSelected = (row: { [id: string]: string }) => {
             md="3"
         >
             <v-select
-                v-if="list.length > 10"
+                :disabled="list.length <= 10"
                 dense
                 v-model="maxPerPage"
                 label="Elements per Page"

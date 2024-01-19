@@ -432,29 +432,11 @@ const logsFiltered = computed(() => {
                         <v-col cols="12">
                             <LogsCapacete
                                 v-if="
-                                    taskStore.messages[taskStore.active] &&
-                                    taskStore.messages[taskStore.active].length > 0
-                                "
+                                    taskStore.messages[taskStore.active]"
                                 :logs="logsFiltered"
                                 @selectCapacete="logSelected = $event"
                             >
                             </LogsCapacete>
-                            <v-sheet
-                                v-else
-                                class="pa-6 my-6 d-flex justify-center rounded-xl"
-                            >
-                                <v-alert
-                                    dense
-                                    type="info"
-                                    class="mx-4 rounded-pill"
-                                >
-                                    {{
-                                        logSelected
-                                            ? `Não existem logs para o capacete ${logSelected}`
-                                            : 'Selecione um capacete'
-                                    }}
-                                </v-alert>
-                            </v-sheet>
                         </v-col>
                     </v-row>
                 </v-sheet>

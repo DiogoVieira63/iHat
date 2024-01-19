@@ -374,7 +374,7 @@ const pointSelectedString = computed(() => {
                     :width="svgWidth"
                     :height="svgHeight"
                     v-bind:style="{ cursor: cursorType }"
-                    class="border"
+                    class="border bg-white"
                     v-resize="resizeSVG"
                     @mouseover="moveDrag"
                 >

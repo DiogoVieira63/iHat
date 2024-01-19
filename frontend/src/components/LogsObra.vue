@@ -136,9 +136,9 @@ const logsFiltered = computed(() => {
     <v-container v-else>
         <v-sheet
             height="35vh"
-            width="400px"
+            width="60vw"
             class="d-flex align-center mx-auto"
-            rounded="b-xl"
+            rounded="xl"
         >
             <v-alert
                 dense
