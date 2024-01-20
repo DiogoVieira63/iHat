@@ -1,4 +1,4 @@
-import type { MqttClient, IClientOptions } from 'mqtt'
+import type { IClientOptions, MqttClient } from 'mqtt'
 import mqtt from 'mqtt'
 
 export class MqttService {

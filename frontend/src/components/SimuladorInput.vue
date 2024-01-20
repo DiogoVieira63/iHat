@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import type { PropType } from 'vue';
+import { ref, watch} from 'vue';
 
 const props = defineProps({
     range: {
@@ -21,9 +22,29 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['updateValue'])
+const min = ref(props.value[0])
+const max = ref(props.value[1])
+const val = ref(props.value[0])
+
+watch(min, (value) => {
+    updatePosition(value, 0)
+})
+
+watch(max, (value) => {
+    updatePosition(value, 1)
+})
+
+watch(val, (value) => {
+    updateValue([value, value])
+})
 
 const updateValue = (value: [number, number]) => {
     emit('updateValue', value)
+}
+
+const updateMinMax = (value: [number, number]) => {
+    min.value = value[0]
+    max.value = value[1]
 }
 
 const updatePosition = (value: number, index: number) => {
@@ -43,7 +64,7 @@ const rules = {
     <template v-if="tipo == 'Variável'">
         <v-range-slider
             :model-value="props.value"
-            @update:model-value="updateValue"
+            @update:model-value="updateMinMax"
             thumb-label="always"
             class="mt-5"
             :step="props.step"
@@ -54,8 +75,7 @@ const rules = {
         <v-row>
             <v-col cols="6">
                 <v-text-field
-                    :model-value="props.value[0]"
-                    @update:model-value="updatePosition(Number($event), 0)"
+                    v-model="min"
                     single-line
                     :step="props.step"
                     type="number"
@@ -67,8 +87,7 @@ const rules = {
             </v-col>
             <v-col cols="6">
                 <v-text-field
-                    :model-value="props.value[1]"
-                    @update:model-value="updatePosition(Number($event), 1)"
+                    v-model="max"
                     single-line
                     :step="props.step"
                     type="number"
@@ -81,9 +100,16 @@ const rules = {
         </v-row>
     </template>
     <template v-else>
+        <v-slider
+            class="mt-5"
+            v-model="val"
+            :min="props.range[0]"
+            :max="props.range[1]"
+            :step="props.step"
+            thumb-label="always"
+        ></v-slider>
         <v-text-field
-            :model-value="props.value[0]"
-            @update:model-value="updateValue([Number($event), Number($event)])"
+            v-model="val"
             single-line
             :step="props.step"
             type="number"

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useSlots, computed, onMounted } from 'vue'
+import { computed, onMounted, ref, useSlots } from 'vue';
 const slots = useSlots()
 const titles = ref<Array<string>>([])
 const toggle = ref<Array<string>>([])

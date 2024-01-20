@@ -1,20 +1,17 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRaw } from 'vue'
-import MapEditor from '@/components/MapEditor.vue'
-import PageLayout from '@/components/Layouts/PageLayout.vue'
+import BaseLogs from '@/components/BaseLogs.vue'
 import ObraLayout from '@/components/Layouts/ObraLayout.vue'
-import { useRoute, useRouter } from 'vue-router'
-import { MqttService } from '@/services/mqtt'
-import { onMounted } from 'vue'
-import { useTaskStore } from '@/store'
-import { useMQTTStore } from '@/store'
+import PageLayout from '@/components/Layouts/PageLayout.vue'
+import LogsCapacete from '@/components/LogsCapacete.vue'
+import MapEditor from '@/components/MapEditor.vue'
 import TaskHistory from '@/components/TaskHistory.vue'
 import TaskInput from '@/components/TaskInput.vue'
-import { Task } from '@/store'
-import type { Mapa } from '@/interfaces'
+import type { Capacete, Mapa } from '@/interfaces'
 import { ObraService } from '@/services/http'
-import type { Capacete } from '@/interfaces'
-import LogsCapacete from '@/components/LogsCapacete.vue'
+import { MqttService } from '@/services/mqtt'
+import { Task, useMQTTStore, useTaskStore } from '@/store'
+import { computed, onMounted, ref, toRaw, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 export interface Input {
     title: string
@@ -111,7 +108,7 @@ const resetInputs = () => {
         step: 1,
         tipo: 'Constante'
     }
-    setInputMapSize(page.value - 1)
+    if(mapList.value.length > 0) setInputMapSize(page.value - 1)
 }
 
 const getObra = () => {
@@ -202,6 +199,12 @@ const selectAll = () => {
     selected.value = capacetes.value.map((item) => item.numero)
     resetInputs()
 }
+
+const selectAllLivres = () => {
+    selected.value = capacetes.value.filter((item)=> item.status == 'Livre').map((item) => item.numero)
+    resetInputs()
+}
+
 
 const unselectAll = () => {
     selected.value = []
@@ -301,9 +304,11 @@ const logsFiltered = computed(() => {
             <template #map>
                 <h1 class="text-center text-h3 mb-2">{{ title }}</h1>
                 <v-skeleton-loader
-                    :loading="!isLoaded"
+                    v-if="!isLoaded"
                     type="card, image"
                 >
+                </v-skeleton-loader>
+               <template v-if="mapList.length > 0">
                     <template
                         v-for="(map, index) in mapList"
                         :key="map.name"
@@ -326,17 +331,32 @@ const logsFiltered = computed(() => {
                             @mapSize="setMapSize(index, $event)"
                         ></map-editor>
                     </template>
-                    <v-row
-                        class="d-flex justify-center mt-5"
-                        v-if="mapList.length > 1"
-                    >
-                        <v-pagination
-                            v-model="page"
-                            :length="mapList.length"
-                            :total-visible="5"
-                        />
-                    </v-row>
-                </v-skeleton-loader>
+               </template>
+               <v-sheet
+                    v-else
+                    width="100%"
+                    height="900px"
+                    class="d-flex justify-center"
+                >
+                    <div class="d-flex align-center">
+                        <v-sheet
+                            class="d-flex flex-column"
+                            width="500px"
+                        >
+                            <p class="text-center text-h6">Não existem mapas para esta obra.</p>
+                        </v-sheet>
+                    </div>
+                </v-sheet>
+                <v-row
+                    class="d-flex justify-center mt-5"
+                    v-if="mapList.length > 1"
+                >
+                    <v-pagination
+                        v-model="page"
+                        :length="mapList.length"
+                        :total-visible="5"
+                    />
+                </v-row>
             </template>
             <template #content>
                 <v-skeleton-loader
@@ -369,7 +389,7 @@ const logsFiltered = computed(() => {
                         @update:taskName="taskName = $event"
                         @update:selected="selected = $event"
                         @selectCapacete="selectedCapacete"
-                        @selectAll="selectAll"
+                        @selectAllLivres="selectAllLivres"
                         @unselectAll="unselectAll"
                         @selectPosition="changeSelectPosition"
                     />
@@ -381,67 +401,20 @@ const logsFiltered = computed(() => {
                 </div>
             </template>
             <template #logs>
-                <v-sheet
-                    width="80%"
-                    border="md"
-                    class="mx-auto my-6 rounded-xl"
+                <BaseLogs
+                    :list="capacetes.map((capacete) => capacete.numero)"
+                    :selected="logSelected"
+                    @select="logSelected = $event"
+                    title="Selecionar Capacete"
                 >
-                    <v-row class="d-flex justify-center my-6">
-                        <v-spacer></v-spacer>
-                        <h1 class="text-center text-h4">
-                            {{ logSelected ? `Alertas do capacete ${logSelected}` : 'Alertas' }}
-                        </h1>
-                        <v-spacer></v-spacer>
-                        <v-menu
-                            v-model="filterMenu"
-                            :close-on-content-click="false"
-                            location="end"
-                        >
-                            <template #activator="{ props }">
-                                <v-btn
-                                    variant="flat"
-                                    color="primary"
-                                    v-bind="props"
-                                    icon="mdi-filter"
-                                    class="mr-8"
-                                ></v-btn>
-                            </template>
-                            <v-card
-                                max-width="200"
-                                class="mx-auto"
-                            >
-                                <v-card-text>
-                                        <v-chip-group
-                                            v-model="logSelected"
-                                            column
-                                            color="info"
-                                        >
-                                            <v-chip
-                                                v-for="option in capacetes.map((capacete) => capacete.numero)"
-                                                filter
-                                                variant="outlined"
-                                                :value="option"
-                                                :key="option"
-                                            >
-                                                {{ option }}
-                                            </v-chip>
-                                        </v-chip-group>
-                                </v-card-text>
-                            </v-card>
-                        </v-menu>
-                        <v-col cols="12">
-                            <LogsCapacete
-                                v-if="
-                                    taskStore.messages[taskStore.active]"
-                                :logs="logsFiltered"
-                                @selectCapacete="logSelected = $event"
-                            >
-                            </LogsCapacete>
-                        </v-col>
-                    </v-row>
-                </v-sheet>
+                    <LogsCapacete
+                        v-if="taskStore.messages[taskStore.active]"
+                        :logs="logsFiltered"
+                        @selectCapacete="logSelected = $event"
+                    >
+                    </LogsCapacete>
+                </BaseLogs>
             </template>
         </ObraLayout>
     </page-layout>
 </template>
-<style scoped></style>

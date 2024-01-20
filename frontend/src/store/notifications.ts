@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia'
 import type { Log } from '@/interfaces'
 import { ObraSignalRService } from '@/services/obraSignalR'
+import { defineStore } from 'pinia'
 export const useNotificacoesStore = defineStore('notificacoes', {
     state: () => ({
         notificacoes: [] as Array<Log>,

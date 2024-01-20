@@ -1,5 +1,5 @@
 // Import the SignalR library
-import type { MensagemCapacete, Log} from '@/interfaces';
+import type { Log, MensagemCapacete } from '@/interfaces';
 import * as signalR from '@microsoft/signalr';
 
 export class CapaceteSignalRService {

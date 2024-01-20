@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { watch } from 'vue'
-import { computed, ref } from 'vue'
 import type { Header } from '@/interfaces'
 import type { PropType } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useTheme } from 'vuetify'
+
 
 const props = defineProps({
     list: {
@@ -29,6 +30,7 @@ const maxPerPage = ref<number>(10)
 const page = ref<number>(1)
 const search = ref<string>('')
 const filterMenu = ref<boolean>(false)
+const theme = useTheme()
 
 // Filtering
 
@@ -170,7 +172,8 @@ watch(
 
 const rowSelected = (row: { [id: string]: string }) => {
     if (props.selected && props.selected['key'] && props.selected['value']) {
-        if (row[props.selected['key']] == props.selected['value']) return 'bg-grey-lighten-2'
+        if (row[props.selected['key']] == props.selected['value']) 
+            return theme.current.value.dark ? 'bg-grey-lighten-2' : 'bg-grey'
     }
     return ''
 }
@@ -256,7 +259,8 @@ const rowSelected = (row: { [id: string]: string }) => {
                 <th
                     v-for="header in headers"
                     :key="header.key"
-                    class="text-center bg-grey-lighten-2"
+                    class="text-center"
+                    :class="theme.current.value.dark ? 'bg-grey-darken-1' : 'bg-grey-lighten-2'"
                 >
                     {{ header.name }}
                     <v-btn
@@ -299,8 +303,6 @@ const rowSelected = (row: { [id: string]: string }) => {
             Nenhum elemento encontrado
         </v-alert>
     </v-sheet>
-    <v-divider
-    />
     <v-row class="mt-5">
         <v-spacer />
         <v-col
@@ -319,7 +321,7 @@ const rowSelected = (row: { [id: string]: string }) => {
             md="3"
         >
             <v-select
-                :disabled="list.length <= 10"
+                v-if="list.length > 10"
                 dense
                 v-model="maxPerPage"
                 label="Elements per Page"

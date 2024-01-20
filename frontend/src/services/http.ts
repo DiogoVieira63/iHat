@@ -1,5 +1,5 @@
+import type { Capacete, Log, MensagemCapacete, Obra, Position } from '@/interfaces'
 import axios from 'axios'
-import type { Obra, Capacete, Log, Position, MensagemCapacete } from '@/interfaces'
 const url = `http://localhost:5069/ihat`
 
 // Obras

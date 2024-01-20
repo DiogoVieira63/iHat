@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import SimuladorInput from '@/components/SimuladorInput.vue'
 import SimuladorInfo from '@/components/SimuladorInfo.vue'
-import { MqttService } from '@/services/mqtt'
-import { onMounted } from 'vue'
-import { useTaskStore } from '@/store'
-import { useMQTTStore } from '@/store'
-import { Task } from '@/store'
-import type { PropType } from 'vue'
+import SimuladorInput from '@/components/SimuladorInput.vue'
 import type { Capacete } from '@/interfaces'
+import { MqttService } from '@/services/mqtt'
+import { Task, useMQTTStore, useTaskStore } from '@/store'
+import type { PropType } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import ConfirmationDialog from './ConfirmationDialog.vue'
 let mqtt: MqttService | null = null
 const mqttStore = useMQTTStore()
@@ -50,7 +47,7 @@ const emit = defineEmits([
     'update:tempo',
     'update:taskName',
     'selectCapacete',
-    'selectAll',
+    'selectAllLivres',
     'unselectAll',
     'selectPosition'
 ])
@@ -184,14 +181,12 @@ const capacetesLivres = computed(() => {
         <v-card
             height="fit-content"
             rounded="xl"
-            color="grey-lighten-5"
         >
             <v-card
                 style="overflow: auto"
                 variant="text"
                 height="60vh"
                 rounded="xl"
-                color="black"
             >
                 <v-card-title class="my-4">
                     <v-row justify="space-between">
@@ -238,7 +233,7 @@ const capacetesLivres = computed(() => {
                             >
                                 <p class="text-h6 mt-16">
                                     <v-icon color="info">mdi-information-outline</v-icon>
-                                    Selecione ou adicione um capacete para editar os valores
+                                    Selecione um ou mais capacetes para editar os valores
                                 </p>
                             </v-col>
                         </template>
@@ -404,7 +399,7 @@ const capacetesLivres = computed(() => {
             <v-row class="ma-2">
                 <v-col
                     cols="6"
-                    class="text-h6 text-black"
+                    class="text-h6"
                 >
                     Capacetes Selecionados:
                     <v-menu
@@ -417,6 +412,7 @@ const capacetesLivres = computed(() => {
                                 color="primary"
                                 v-bind="props"
                                 icon
+                                :disabled="capacetesLivres.length == 0"
                             >
                                 <p class="text-white">
                                     {{ selected.length }}
@@ -447,7 +443,7 @@ const capacetesLivres = computed(() => {
                                     <v-btn
                                         icon
                                         color="success"
-                                        @click="emit('selectAll')"
+                                        @click="emit('selectAllLivres')"
                                     >
                                         <v-icon>mdi-checkbox-multiple-marked-circle-outline</v-icon>
                                     </v-btn>

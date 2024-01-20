@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import LiveDashboards from '@/components/LiveDashboards.vue'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
 import LiveData from '@/components/LiveData.vue'
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { CapaceteSignalRService } from '@/services/capaceteSignalR'
-import type { MensagemCapacete, Log } from '@/interfaces';
-import { CapaceteService } from '@/services/http'
-import Dashboards from '@/components/Dashboards.vue'
 import LogsPageCapacete from '@/components/LogsPageCapacete.vue'
+import type { Log, MensagemCapacete } from '@/interfaces'
+import { CapaceteSignalRService } from '@/services/capaceteSignalR'
+import { CapaceteService } from '@/services/http'
+import { onMounted, onUnmounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const idCapacete: string = route.params.id.toString()
@@ -109,7 +109,7 @@ onUnmounted(() => {
                 >
                     <template v-slot:title> Charts </template>
                     <v-card-text>
-                        <Dashboards :idCapacete="idCapacete" :dadosCapacete="dadosCapacete" />
+                        <LiveDashboards :idCapacete="idCapacete" :dadosCapacete="dadosCapacete" />
                         <!-- <ExampleGraph /> -->
                     </v-card-text>
                 </v-card>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import  type { PropType } from 'vue'
-import { useDisplay } from 'vuetify'
-import type { MensagemCapacete, Gases, ValueObject } from '@/interfaces';
+import type { Gases, MensagemCapacete, ValueObject } from '@/interfaces';
+import type { PropType } from 'vue';
+import { useDisplay } from 'vuetify';
 
 const { mdAndDown } = useDisplay()
 

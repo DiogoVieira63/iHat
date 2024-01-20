@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-import ConfirmationDialog from './ConfirmationDialog.vue'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import ConfirmationDialog from './ConfirmationDialog.vue';
 
 interface Props {
     row: { [numero: string]: string }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { ComputedRef } from 'vue'
-import type { PropType } from 'vue'
+import type { ComputedRef, PropType } from 'vue'
 
 export interface Option {
     value: string

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import MapEditor from '@/components/MapEditor.vue'
-import ConfirmationDialog from './ConfirmationDialog.vue'
-import { useDisplay } from 'vuetify'
-import FormMapa from './FormMapa.vue'
-import type { Mapa, Capacete } from '@/interfaces'
-import { useRoute } from 'vue-router'
-import type { PropType } from 'vue'
+import type { Capacete, Mapa } from '@/interfaces'
 import { ObraService } from '@/services/http'
+import type { PropType } from 'vue'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useDisplay } from 'vuetify'
+import ConfirmationDialog from './ConfirmationDialog.vue'
+import FormMapa from './FormMapa.vue'
 
 const route = useRoute()
 const { mdAndDown } = useDisplay()
@@ -15,6 +15,8 @@ const { mdAndDown } = useDisplay()
 const page = ref(1)
 const edit = ref(false)
 const id: string = route.params.id as string
+const addMapa = ref(false)
+const emit = defineEmits(['update', 'selectCapacete'])
 
 const props = defineProps({
     mapList: {
@@ -51,16 +53,8 @@ const saveEdit = async (ConfirmationDialog: boolean) => {
     edit.value = false
 }
 
-const addMapa = ref(false)
-const emit = defineEmits(['update', 'selectCapacete'])
 
-// const capacetesMap = computed(() => {
-//     return props.capacetesPosition.filter((capacete) => {
-//         if (capacete.position) {
-//             return capacete.position.z == page.value -1
-//         }
-//     })
-// })
+
 
 const capacetesMap = (floor: number) => {
     return props.capacetesPosition.filter((capacete) => {
@@ -137,38 +131,37 @@ const capacetesMap = (floor: number) => {
             <v-spacer />
         </v-row>
     </template>
-    <v-container v-else>
-        <v-sheet
-            width="100%"
-            height="900px"
-            class="d-flex justify-center"
-        >
-            <div class="d-flex align-center">
-                <v-sheet
-                    class="d-flex flex-column"
-                    width="500px"
-                >
-                    <div v-if="!addMapa">
-                        <p class="text-center text-h6">Não existem mapas para esta obra.</p>
-                        <v-btn
-                            block
-                            color="primary"
-                            @click="addMapa = true"
-                            class="text-center mt-5"
-                        >
-                            Adicionar Mapa
-                        </v-btn>
-                    </div>
-                    <FormMapa
-                        v-else
-                        @update="emit('update')"
-                        class="mt-2"
-                        :idObra="id"
-                    />
-                </v-sheet>
-            </div>
-        </v-sheet>
-    </v-container>
+    <v-sheet
+        v-else
+        width="100%"
+        height="900px"
+        class="d-flex justify-center"
+    >
+        <div class="d-flex align-center">
+            <v-sheet
+                class="d-flex flex-column"
+                width="500px"
+            >
+                <div v-if="!addMapa">
+                    <p class="text-center text-h6">Não existem mapas para esta obra.</p>
+                    <v-btn
+                        block
+                        color="primary"
+                        @click="addMapa = true"
+                        class="text-center mt-5"
+                    >
+                        Adicionar Mapa
+                    </v-btn>
+                </div>
+                <FormMapa
+                    v-else
+                    @update="emit('update')"
+                    class="mt-2"
+                    :idObra="id"
+                />
+            </v-sheet>
+        </div>
+    </v-sheet>
 </template>
 
 <style></style>

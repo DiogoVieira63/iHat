@@ -1,6 +1,6 @@
 // Import the SignalR library
+import type { Log, Position } from '@/interfaces'
 import * as signalR from '@microsoft/signalr'
-import type { Position, Log } from '@/interfaces'
 
 export class ObraSignalRService {
     connection: signalR.HubConnection
