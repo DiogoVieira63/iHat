@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { useTaskStore } from '@/store'
-import { computed } from 'vue'
-import { ref, onMounted } from 'vue'
-import { Task } from '@/store'
-import { useMQTTStore } from '@/store'
 import { MqttService } from '@/services/mqtt'
+import { Task, useMQTTStore, useTaskStore } from '@/store'
+import { computed, onMounted, ref } from 'vue'
 import ConfirmationDialog from './ConfirmationDialog.vue'
 
 const mqttStore = useMQTTStore()
@@ -163,7 +160,6 @@ const isAddCapaceteTask = computed(() => {
     <v-card
         class="my-4"
         rounded="xl"
-        color="grey-lighten-5"
     >
         <v-card-title>
             <v-tabs

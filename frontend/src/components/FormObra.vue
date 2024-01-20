@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useField, useForm } from 'vee-validate'
-import { object, string } from 'yup'
-import { ObraService } from '@/services/http'
 import FormMapa from '@/components/FormMapa.vue'
+import { ObraService } from '@/services/http'
+import { useField, useForm } from 'vee-validate'
+import { ref } from 'vue'
+import { object, string } from 'yup'
 
 const dialog = ref(false)
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ChartLayout from '@/components/Layouts/ChartLayout.vue'
-import { ref } from 'vue'
+import ChartLayout from '@/components/Layouts/ChartLayout.vue';
+import { ref } from 'vue';
 
 const options = (id: number) => {
     const options = {

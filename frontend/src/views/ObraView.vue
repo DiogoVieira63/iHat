@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import PageLayout from '@/components/Layouts/PageLayout.vue'
-import { ref, onMounted, nextTick, onUnmounted, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import RowObra from '@/components/RowObra.vue'
-import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
-import ObraLayout from '@/components/Layouts/ObraLayout.vue'
-import type { Capacete, Header } from '@/interfaces'
-import { CapaceteService, ObraService } from '@/services/http'
-import type { Mapa, Position } from '@/interfaces'
-import LogsObra from '@/components/LogsObra.vue'
+import BaseLogs from '@/components/BaseLogs.vue'
 import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
 import DataTable from '@/components/DataTable.vue'
+import FormCapaceteObra from '@/components/FormCapaceteObra.vue'
+import ObraLayout from '@/components/Layouts/ObraLayout.vue'
+import PageLayout from '@/components/Layouts/PageLayout.vue'
+import LogsObra from '@/components/LogsObra.vue'
+import RowObra from '@/components/RowObra.vue'
 import TheMap from '@/components/TheMap.vue'
+import type { Capacete, Header, Mapa, Position } from '@/interfaces'
+import { CapaceteService, ObraService } from '@/services/http'
 import { useNotificacoesStore } from '@/store/notifications'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
@@ -199,10 +199,15 @@ const selectCapacete = (idCapacete: number) => {
 <template>
     <PageLayout>
         <ObraLayout>
-            <template #map>
+            <template #title>
                 <v-row
-                    justify="center"
-                    class="my-3"
+                    class="my-3 d-flex justify-center"
+
+                >
+                <v-col
+                    cols="12"
+                    md="6"
+                    class="d-flex justify-center"
                 >
                     <div
                         class="text-h4 text-lg-h3"
@@ -218,117 +223,132 @@ const selectCapacete = (idCapacete: number) => {
                             v-model="title"
                             @keydown.enter="saveTitle"
                             ref="textField"
-                            class="my-0"
                         ></v-text-field>
                     </v-responsive>
-
-                </v-row>
-                <v-skeleton-loader
-                    :loading="!isLoaded"
-                    type="card, image"
-                    height="65vh"
-                >
-                    <TheMap
-                        :capacetesPosition="capacetes"
-                        :capacetesSelected="capacetesSelected"
-                        :mapList="mapList"
-                        @update="getObra"
-                        @selectCapacete="selectCapacete"
-                    ></TheMap>
-                </v-skeleton-loader>
-            </template>
-            <template #content>
-                <v-row class="d-flex align-center">
-                    <v-col
-                        cols="12"
-                        lg="6"
-                        xl="4"
+                </v-col>
+                <v-col cols="12" md="auto" class="mx-4">
+                    <ConfirmationDialog
+                        title="Confirmação"
+                        :function="changeEstado"
+                        v-if="isEditing"
                     >
-                        <ConfirmationDialog
-                            title="Confirmação"
-                            :function="changeEstado"
-                        >
-                            <template #button="{ open }">
-                                <v-select
-                                    rounded="t-xl"
-                                    label="Estado da Obra"
-                                    :items="['Em Curso', 'Pendente', 'Finalizada', 'Cancelada']"
-                                    :model-value="estadoObra"
-                                    @update:model-value="
-                                        (value) => {
-                                            newEstadoPossible(value)
-                                            open()
-                                        }
-                                    "
-                                >
-                                </v-select>
-                            </template>
-                            <template v-slot:message>
-                                Tem a certeza que pretende mudar o estado da obra de
-                                <span class="text-red font-weight-bold">{{ estadoObra }}</span> para
-                                <span class="text-green font-weight-bold">{{ newEstado }}</span
-                                >?
-                            </template>
-                        </ConfirmationDialog>
-                    </v-col>
-                    <v-spacer></v-spacer>
+                        <template #button="{ open }">
+                            <v-select
+                                rounded="t-xl"
+                                label="Estado da Obra"
+                                :items="['Em Curso', 'Pendente', 'Finalizada', 'Cancelada']"
+                                :model-value="estadoObra"
+                                @update:model-value="
+                                    (value) => {
+                                        newEstadoPossible(value)
+                                        open()
+                                    }
+                                "
+                            >
+                            </v-select>
+                        </template>
+                        <template v-slot:message>
+                            Tem a certeza que pretende mudar o estado da obra de
+                            <span class="text-red font-weight-bold">{{ estadoObra }}</span> para
+                            <span class="text-green font-weight-bold">{{ newEstado }}</span
+                            >?
+                        </template>
+                    </ConfirmationDialog>
+                    <v-alert
+                        v-else
+                        dense
+                        class="mx-4 rounded-pill"
+                        color="info"
+                    >
+                        Estado da Obra: {{ estadoObra }}
+                    </v-alert>
+                </v-col>
+                <v-spacer />
+                <v-col class="d-flex justify-end mr-6" cols="auto">
                     <v-btn
                         rounded="xl"
                         size="large"
                         variant="flat"
                         color="primary"
+                        block
                         @click="goToSimulador"
+                        :disabled="estadoObra !== 'Em Curso'"
                     >
                         Simulador
                     </v-btn>
                     <v-btn
                         rounded="xl"
-                        variant="flat"
+                        :variant="isEditing ? 'outlined' : 'flat'"
                         color="primary"
                         icon="mdi-pencil"
                         @click="toggleEditing"
                         class="ml-4"
                     ></v-btn>
+                </v-col>
                 </v-row>
+            </template>
+            <template #map>
                 <v-skeleton-loader
-                    :loading="!isLoaded"
+                    v-if="!isLoaded"
+                    type="card, image"
+                    height="65vh"
+                >
+                </v-skeleton-loader>
+                <TheMap
+                    :capacetesPosition="capacetes"
+                    :capacetesSelected="capacetesSelected"
+                    :mapList="mapList"
+                    @update="getObra"
+                    @selectCapacete="selectCapacete"
+                ></TheMap>
+            </template>
+            <template #content>
+                <v-skeleton-loader
+                    v-if="!isLoaded"
                     type="card, table"
                 >
-                    <DataTable
-                        :list="list"
-                        :headers="headers"
-                        :selected="{
-                            key: 'numero',
-                            value: capacetesSelected
-                        }"
-                    >
-                        <template v-slot:tabs>
-                            <p class="text-md-h6 ml-2 text-subtitle-1">Lista de Capacetes</p>
-                        </template>
-                        <template #row="{ row }">
-                            <RowObra
-                                :selected="capacetesSelected == row['numero']"
-                                :row="row"
-                                @removeCapacete="(numero) => removeCapacete(numero)"
-                                @changeStatus="(value) => changeEstadoCapacete(row, value)"
-                                @selectCapacete="selectCapacete"
-                            />
-                        </template>
-                        <template v-slot:add>
-                            <FormCapaceteObra
-                                :idObra="idObra"
-                                @update="getCapacetesObra"
-                            />
-                        </template>
-                    </DataTable>
                 </v-skeleton-loader>
+                <DataTable
+                    :list="list"
+                    :headers="headers"
+                    :selected="{
+                        key: 'numero',
+                        value: capacetesSelected
+                    }"
+                >
+                    <template v-slot:tabs>
+                        <p class="text-md-h6 ml-2 text-subtitle-1">Lista de Capacetes</p>
+                    </template>
+                    <template #row="{ row }">
+                        <RowObra
+                            :selected="capacetesSelected == row['numero']"
+                            :row="row"
+                            @removeCapacete="(numero) => removeCapacete(numero)"
+                            @changeStatus="(value) => changeEstadoCapacete(row, value)"
+                            @selectCapacete="selectCapacete"
+                        />
+                    </template>
+                    <template v-slot:add>
+                        <FormCapaceteObra
+                            :idObra="idObra"
+                            @update="getCapacetesObra"
+                        />
+                    </template>
+                </DataTable>
             </template>
             <template #logs>
-                <LogsObra
-                    :logs="logs"
-                    :capacete-selected="capacetesSelected"
-                    @selectCapacete="selectCapacete"
-                ></LogsObra>
+                <BaseLogs
+                    :list="capacetes.map((capacete) => capacete.numero)"
+                    :selected="capacetesSelected"
+                    @select="capacetesSelected = $event"
+                    title="Selecionar Capacete"
+                >
+                    <LogsObra
+                        :logs="logs"
+                        :capacete-selected="capacetesSelected"
+                        @selectCapacete="selectCapacete"
+                    ></LogsObra>
+                </BaseLogs>
             </template>
         </ObraLayout>
     </PageLayout>

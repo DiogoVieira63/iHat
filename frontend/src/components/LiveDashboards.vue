@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import ChartLayout from '@/components/Layouts/ChartLayout.vue'
-import { ref , onMounted, watch} from 'vue'
-import  type { PropType } from 'vue'
-import type { MensagemCapacete } from '@/interfaces';
-import type {Gases} from '@/interfaces';
+import ChartLayout from '@/components/Layouts/ChartLayout.vue';
+import type { Gases, MensagemCapacete } from '@/interfaces';
+import type { PropType } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 /*
 bodyTemperature : {value: 38}
 fall : false

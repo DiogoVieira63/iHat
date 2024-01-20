@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useField, useForm } from 'vee-validate'
-import { object, string } from 'yup'
 import type { Capacete } from '@/interfaces'
 import { CapaceteService } from '@/services/http'
+import { useField, useForm } from 'vee-validate'
+import { ref } from 'vue'
+import { object, string } from 'yup'
 
 interface Form {
     id: string

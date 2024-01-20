@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ObraService } from '@/services/http'
+import { ObraService } from '@/services/http';
+import { ref } from 'vue';
 
 const props = defineProps({
     idObra: {

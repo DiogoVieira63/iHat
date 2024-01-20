@@ -1,18 +1,13 @@
-// import { createApp } from "vue";
-// // import App from "./App.vue";
-// import iHat from "./iHat.vue";
-// createApp(iHat).use(router).mount("#app");
+import '@mdi/font/css/materialdesignicons.css'
 import { createApp } from 'vue'
 import App from './iHat.vue'
 import router from './router'
-import '@mdi/font/css/materialdesignicons.css'
-// Vuetify
-import 'vuetify/styles'
+import { createPinia } from 'pinia'
+import VueApexCharts from 'vue3-apexcharts'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import VueApexCharts from 'vue3-apexcharts'
-import { createPinia } from 'pinia'
+import 'vuetify/styles'
 
 const pinia = createPinia()
 
@@ -26,9 +21,8 @@ const vuetify = createVuetify({
                 colors: {
                     primary: '#D75958',
                     secondary: '#848283',
-                    info:'#435395'
-
-
+                    info:'#435395',
+                    surface:'#F5F5F5'
                 }
             },
             dark: {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Log } from '@/interfaces'
-import type { PropType } from 'vue'
+import type { Log } from '@/interfaces';
+import type { PropType } from 'vue';
 
 const props = defineProps({
     logs: {

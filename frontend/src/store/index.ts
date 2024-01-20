@@ -1,8 +1,7 @@
 // src/store/index.ts
-import { defineStore } from 'pinia'
-import type { Input } from '@/views/SimulatorView.vue'
 import { MqttService } from '@/services/mqtt'
-import mqtt from 'mqtt'
+import type { Input } from '@/views/SimulatorView.vue'
+import { defineStore } from 'pinia'
 
 type Status = 'Stopped' | 'Running' | 'Finished'
 
@@ -131,6 +130,8 @@ const envio = (mqtt: MqttService, task: Task) => {
             Metano: newInput['Gases Tóxicos (Metano)']
         }
 
+
+        
         const dataMQTT: DataMQTT = {
             HelmetNB: idCapacete,
             Fall: newInput['Probabilidade de Queda'] == 1,

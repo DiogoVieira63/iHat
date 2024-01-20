@@ -1,11 +1,11 @@
 <script setup lang="ts">
-
-import { useNotificacoesStore } from '@/store/notifications'
-import { useRouter } from 'vue-router'
-import { computed } from 'vue'
 import type { Log } from '@/interfaces'
 import { LogService } from '@/services/http'
+import { useNotificacoesStore } from '@/store/notifications'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
+import NotificationCard from './NotificationCard.vue'
 
 const router = useRouter()
 const notificacoesStore = useNotificacoesStore()
@@ -100,17 +100,7 @@ function toggleTheme() {
                             v-for="(item, index) in notificacoes"
                             :key="index"
                         >
-                            <v-card
-                                style="cursor: pointer;"
-                                @click="goToObraPage(item.idObra)"
-                                @mouseenter="seenNotificacao(item)"
-                                :title="titleNotificacao(item.idObra)"
-                                :subtitle="`Capacete ${item.idCapacete}`"
-                                :text="`${item.mensagem} - ${formatData(item.timestamp)}`"
-                                variant="flat"
-                                :color="item.vista ? 'white' : 'grey-lighten-2'"
-                            >
-                            </v-card>
+                            <NotificationCard :item="item" />
                             <v-divider />
                         </v-sheet>
                     </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts"></script>
 <template>
+    <slot name="title"></slot>
     <v-row class="mt-2">
         <v-col
             cols="12"

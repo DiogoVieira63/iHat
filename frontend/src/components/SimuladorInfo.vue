@@ -1,4 +1,3 @@
-<script setup lang="ts"></script>
 <template>
     <div class="text-body-1">
         <strong>Simulador</strong> é uma ferramenta que permite simular o comportamento dos
@@ -39,5 +38,3 @@
         </span>
     </div>
 </template>
-
-<style></style>

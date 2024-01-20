@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Log } from '@/interfaces'
-import type { PropType } from 'vue'
-import { computed } from 'vue'
+import type { Log } from '@/interfaces';
+import type { PropType } from 'vue';
+import { computed } from 'vue';
 
 
 
@@ -82,7 +82,6 @@ const logsFiltered = computed(() => {
             height="35vh"
             width="100%"
             side="end"
-            class="ma-12"
         >
             <v-timeline>
                 <v-timeline-item
@@ -136,7 +135,7 @@ const logsFiltered = computed(() => {
     <v-container v-else>
         <v-sheet
             height="35vh"
-            width="60vw"
+            width="400px"
             class="d-flex align-center mx-auto"
             rounded="xl"
         >

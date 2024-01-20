@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import PageLayout from '@/components/Layouts/PageLayout.vue'
+    import PageLayout from '@/components/Layouts/PageLayout.vue';
 
     const items = [
         {

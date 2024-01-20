@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import FormObra from '@/components/FormObra.vue'
-import FormCapacete from '@/components/FormCapacete.vue'
-import PageLayout from '@/components/Layouts/PageLayout.vue'
-import { computed, ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import type { ComputedRef } from 'vue'
-import type { Capacete, Obra } from '@/interfaces'
-import { CapaceteService, ObraService } from '@/services/http'
-import type { Header } from '@/interfaces'
 import DataTable from '@/components/DataTable.vue'
+import FormCapacete from '@/components/FormCapacete.vue'
+import FormObra from '@/components/FormObra.vue'
+import PageLayout from '@/components/Layouts/PageLayout.vue'
+import type { Capacete, Header, Obra } from '@/interfaces'
+import { CapaceteService, ObraService } from '@/services/http'
+import type { ComputedRef } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const obras = ref<Array<Obra>>([])
 const capacetes = ref<Array<Capacete>>([])
@@ -75,9 +74,17 @@ function changePage(id: string) {
             type="card, table"
         >
         </v-skeleton-loader>
+        <v-row justify="center" v-else>
+            
+        <v-col
+            cols="12"
+            md="10"
+            lg="8"
+            xl="6"
+        >
+
         <v-card
-            class="mx-auto my-10"
-            max-width="50vw"
+            class="mx-2 my-10"
             variant="text"
         >
             <DataTable
@@ -125,5 +132,7 @@ function changePage(id: string) {
                 </template>
             </DataTable>
         </v-card>
+    </v-col>
+</v-row>
     </PageLayout>
 </template>

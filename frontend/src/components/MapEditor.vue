@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import type { Ref } from 'vue'
-import { useDisplay } from 'vuetify'
+import type { Capacete, Point, Zone } from '@/interfaces'
 import { parse, type ElementNode } from 'svg-parser'
+import type { PropType, Ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useDisplay } from 'vuetify'
 import SvgDraw from './SvgDraw.vue'
-import SvgTooltip from './SvgTooltip.vue'
 import type { Option } from './SvgTooltip.vue'
-import type { PropType } from 'vue'
-import type { Capacete } from '@/interfaces'
-import type { Zone, Point } from '@/interfaces'
-import { watch } from 'vue'
+import SvgTooltip from './SvgTooltip.vue'
 
 const props = defineProps({
     svg: {
@@ -355,10 +352,12 @@ const pointSelectedString = computed(() => {
 </script>
 
 <template>
-    <v-container v-if="active">
+    <v-container
+        v-if="active"
+    >
         <v-sheet
             height="65vh"
-            class="d-flex align-center"
+            class="d-flex align-center rounded-xl"
         >
             <v-row justify="center">
                 <svg
@@ -384,7 +383,6 @@ const pointSelectedString = computed(() => {
                         :width="svgWidth"
                         :height="svgHeight"
                     />
-
                     <polygon
                         v-for="{ points, id } in props.zones"
                         :id="id.toString()"

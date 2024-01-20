@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { Capacete } from '@/interfaces'
-import { CapaceteService, ObraService } from '@/services/http'
+import type { Capacete } from '@/interfaces';
+import { CapaceteService, ObraService } from '@/services/http';
+import { ref } from 'vue';
 
 const props = defineProps({
     idObra: {
