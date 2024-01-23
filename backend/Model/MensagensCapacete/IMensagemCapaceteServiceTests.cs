@@ -31,30 +31,34 @@ public class MensagemCapaceteServiceTests{
     [Fact]
     public async void Test_AddMensagemCapacete(){
         var mensagem = new MensagemCapacete(1, "Grave", false, 36.5, 80, "Proximity", "Position", new Location(1.0, 1.0, 1.0), new Gases(1.0, 1.0));
-
         var mensagemCapaceteService = Setup();
         Assert.NotNull(mensagemCapaceteService);
-
-        await mensagemCapaceteService!.Add(mensagem);
-        /*
-        var sortDefinition = Builders<MensagemCapacete>.Sort.Descending("timestamp");
-        var listaMensagemCapacete = await _mensagemcapaceteCollection.Find(x => x.NCapacete == nCapacete).Sort(sortDefinition).ToListAsync();
-        var moreRecentMensagens = listaMensagemCapacete.Take(20).ToList();
-        return moreRecentMensagens; 
-        */
-        var moreRecentMensagens = await mensagemCapaceteService!.GetUltimosDadosDoCapacete(1);  
-        Assert.Equal(mensagem, moreRecentMensagens[0]);
-    }
-
-    [Fact]
-    public async void Test_GetUltimosDadosDoCapacete(){
         
-    
+        await mensagemCapaceteService.Add(mensagem);
+        var listaMensagemCapacete = await mensagemCapaceteService.GetUltimosDadosDoCapacete(1);
+        Assert.Equal(1, listaMensagemCapacete[0].NCapacete);
+        Assert.Equal("Grave", listaMensagemCapacete[0].Type);
+        Assert.Equal(false, listaMensagemCapacete[0].Fall);
+        Assert.Equal(36.5, listaMensagemCapacete[0].BodyTemperature.Value);
+        Assert.Equal(80, listaMensagemCapacete[0].Heartrate.Value);
+        Assert.Equal("Proximity", listaMensagemCapacete[0].Proximity);
+        Assert.Equal("Position", listaMensagemCapacete[0].Position);
+        Assert.Equal(1.0, listaMensagemCapacete[0].Location.X);
+        Assert.Equal(1.0, listaMensagemCapacete[0].Location.Y);
+        Assert.Equal(1.0, listaMensagemCapacete[0].Location.Z);
+        Assert.Equal(1.0, listaMensagemCapacete[0].Gases.Metano);
+        Assert.Equal(1.0, listaMensagemCapacete[0].Gases.MonoxidoCarbono);
     }
+
 
     [Fact]
     public async void Test_GetLastLocation(){
-
+        var mensagemCapaceteService = Setup();
+        Assert.NotNull(mensagemCapaceteService);
+        var location = await mensagemCapaceteService.GetLastLocation(1);
+        Assert.Equal(1.0, location.X);
+        Assert.Equal(1.0, location.Y);
+        Assert.Equal(1.0, location.Z);
     }
 
 }
