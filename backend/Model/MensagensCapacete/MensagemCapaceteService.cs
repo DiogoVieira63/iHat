@@ -7,7 +7,7 @@ public class MensagemCapaceteService : IMensagemCapaceteService {
 
     public readonly IMongoCollection<MensagemCapacete> _mensagemcapaceteCollection;
 
-    public MensagemCapaceteService(IOptions<DatabaseSettings> iHatDatabaseSettings){
+    public MensagemCapaceteService(IOptions<DatabaseSettings> iHatDatabaseSettings, ILogger<MensagemCapaceteService> logger){
         var mongoClient = new MongoClient(
             iHatDatabaseSettings.Value.ConnectionString);
 
