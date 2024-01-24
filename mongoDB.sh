@@ -23,7 +23,7 @@ db.${OBRAS_COLLECTION}.insertMany( [
     {
         "_id": ObjectId("000000000000000000000001"),
         "IdResponsavel":1,
-        "Nome":"Primeira Obra",
+        "Nome":"Pavilhão Gualtar",
         "Mapa": [],
         "Capacetes":[],
         "Status":"Pendente"
@@ -31,7 +31,7 @@ db.${OBRAS_COLLECTION}.insertMany( [
     {
         "_id": ObjectId("000000000000000000000002"),
         "IdResponsavel":1,
-        "Nome":"Segunda Obra",
+        "Nome":"Arena Lamaçães",
         "Mapa": [],
         "Capacetes":[1,2,3,4],
         "Status":"Em Curso"
@@ -44,8 +44,8 @@ db.createCollection("${CAPACETES_COLLECTION}")
 db.${CAPACETES_COLLECTION}.insertMany( [
     {
         "Numero":1,
-        "Status":"Em Uso",
-        "Trabalhador":"a01",
+        "Status":"Livre",
+        "Trabalhador":null,
         "Obra":"000000000000000000000002"
     },
     {
@@ -56,14 +56,14 @@ db.${CAPACETES_COLLECTION}.insertMany( [
     },
     {
         "Numero":3,
-        "Status":"Em Uso",
-        "Trabalhador":"a02",
+        "Status":"Livre",
+        "Trabalhador":null,
         "Obra":"000000000000000000000002"
     },
     {
         "Numero":4,
-        "Status":"Em Uso",
-        "Trabalhador":"a03",
+        "Status":"Livre",
+        "Trabalhador":null,
         "Obra":"000000000000000000000002"
     },
     {

@@ -32,7 +32,7 @@ const idObra = route.params.id as string
 
 const inputs = ref<Record<string, Input>>({})
 const title = ref('')
-const page = ref(1)
+const page = ref(route.query.page ? parseInt(route.query.page as string) : 1)
 const tempo = ref(1)
 const selected = ref<Array<number>>([])
 const capacetes = ref<Array<Capacete>>([])
@@ -115,6 +115,9 @@ const getObra = () => {
     return ObraService.getOneObra(route.params.id.toString()).then((answer) => {
         if (answer.mapa) mapList.value = answer.mapa
         if (answer.nome) title.value = answer.nome
+        if (answer.status != 'Em Curso'){
+            router.push('/obras/' + router.currentRoute.value.params.id)
+        }
     })
 }
 
@@ -130,7 +133,8 @@ const getCapacetesObra = () => {
 const setupMqtt = async () => {
     //make this async
     if (!mqttStore.mqtt) {
-        mqtt = new MqttService(undefined)
+        mqtt = new MqttService()
+        await mqtt.connect()
         mqttStore.setMqtt(mqtt)
     } else {
         mqtt = mqttStore.mqtt as MqttService
@@ -138,11 +142,11 @@ const setupMqtt = async () => {
 }
 
 onMounted(async () => {
-    const idObra = route.params.id as string
     taskStore.setActive(idObra)
     await Promise.all([getObra(), getCapacetesObra(), setupMqtt()])
     isLoaded.value = true
 })
+
 
 const updateCapacete = (capacete: Capacete) => {
     capacetes.value = capacetes.value.map((item) => {
@@ -154,7 +158,7 @@ const updateCapacete = (capacete: Capacete) => {
 }
 
 const goToObraPage = () => {
-    router.push('/obras/' + router.currentRoute.value.params.id)
+    router.push({path: '/obras/' + router.currentRoute.value.params.id, query: {page: page.value}})
 }
 
 const unselectCapacete = (id: number) => {
@@ -290,13 +294,13 @@ const points = computed(() => {
     }
 })
 
-const filterMenu = ref(false)
 const logsFiltered = computed(() => {
     if (!logSelected.value) return taskStore.messages[taskStore.active]
     return taskStore.messages[taskStore.active].filter((item) => {
         return item.idCapacete == logSelected.value
     })
 })
+
 </script>
 <template>
     <page-layout>

@@ -163,8 +163,14 @@ public class MQTTService {
             await _manageNotificationClients.NotifyClientsCapaceteWithLastMessage(messageJson.NCapacete, messageJson);
 
 
-            var obra = await _obrasService.GetObraWithCapaceteId(capacete.Numero);
+            var obraId = await _capacetesService.GetObraIdOfCapacete(messageJson.NCapacete);
+            if(obraId == null){
+                _logger.LogWarning("Mensagem recebida de um capacete que não está associado a nenhuma obra");
+                return;
+            }
+            var obra = await _obrasService.GetConstructionById(obraId);
             if(obra == null){
+                _logger.LogWarning("Obra não encontrada.");
                 return;
             }
 

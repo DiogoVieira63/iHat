@@ -45,6 +45,7 @@ export class Task {
             this.intervalId = intervalId
             this.status = 'Running'
         } else {
+            useTaskStore().suspendTask(mqtt, this)
             this.status = 'Finished'
         }
         this.time = new Date()
@@ -97,9 +98,11 @@ const envio = (mqtt: MqttService, task: Task) => {
     for (const idCapacete of capacetes) {
         const input = Object.values(inputs).map((item) => {
             if (item.tipo == 'Constante') {
+                let value = item.value[0]
+                if (item.title == 'Probabilidade de Queda') value = random(0, 1) <= value ? 1 : 0
                 return {
                     title: item.title,
-                    value: item.value[0]
+                    value: Number(value)
                 }
             } else {
                 let value = random(item.value[0], item.value[1])
@@ -130,8 +133,6 @@ const envio = (mqtt: MqttService, task: Task) => {
             Metano: newInput['Gases Tóxicos (Metano)']
         }
 
-
-        
         const dataMQTT: DataMQTT = {
             HelmetNB: idCapacete,
             Fall: newInput['Probabilidade de Queda'] == 1,
@@ -224,7 +225,14 @@ export const useTaskStore = defineStore('taskMQTT', {
                 task.play(mqtt)
             }, 1000)
             this.tasks[this.active][Date.now()] = task
-            //this.tasks.push(task)
+        },
+        playTask(mqtt: MqttService, task: Task) {
+            for (const idCapacete of task.capacetes) {
+                pairing(mqtt, idCapacete, this.active)
+            }
+            setTimeout(() => {
+                task.play(mqtt)
+            }, 500)
         },
         hasTask(idCapacete: number) {
             return Object.values(this.tasks[this.active]).some(
@@ -262,6 +270,20 @@ export const useTaskStore = defineStore('taskMQTT', {
                         this.suspendTask(mqtt, task)
                 }
             })
+        },
+        tasksRunning() {
+            // return an Array of tasks that are running with its idObra and Task, if no task is running return an empty array
+            const tasks = [] as Array<{ idObra: string; task: Task }>
+            for (const idObra in this.tasks) {
+                for (const idTask in this.tasks[idObra]) {
+                    const task = this.tasks[idObra][idTask]
+                    if (task.status == 'Running') {
+                        tasks.push({ idObra: idObra, task: task })
+                    }
+                }
+            }
+            // remove null tasks
+            return tasks.filter((task) => task != null)
         }
     }
 })

@@ -9,7 +9,7 @@ let mqtt: MqttService | null = null
 
 onMounted(() => {
     if (!mqttStore.mqtt) {
-        mqtt = new MqttService(undefined)
+        mqtt = new MqttService()
         mqttStore.setMqtt(mqtt)
     } else {
         mqtt = mqttStore.mqtt as MqttService
@@ -127,7 +127,7 @@ const functionAction = (status: string, task: Task, ConfirmationDialog: boolean)
         case 'Finished':
             if (mqtt) {
                 taskStore.stopTaskByCapacetes(task.capacetes, mqtt)
-                task.play(mqtt)
+                taskStore.playTask(mqtt, task)
             }
             break
     }

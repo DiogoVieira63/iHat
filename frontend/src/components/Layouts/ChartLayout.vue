@@ -62,7 +62,7 @@ const selected = (name: string, index: number) => {
 </script>
 
 <template>
-    <v-row
+    <!-- <v-row
         justify="center"
         class="ma-3"
     >
@@ -92,7 +92,7 @@ const selected = (name: string, index: number) => {
                 </template>
             </v-tooltip>
         </v-btn-toggle>
-    </v-row>
+    </v-row> -->
     <v-row>
         <template
             v-for="(key, index) in titles"

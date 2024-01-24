@@ -13,6 +13,10 @@ const props = defineProps({
     mensagemCapacete: {
         type: Object as PropType<MensagemCapacete>,
         required: true,
+    },
+    emUso: {
+        type: Boolean,
+        required: true,
     }
 })
 
@@ -117,11 +121,25 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
         height="auto"
     >
         <template v-slot:title>
-            <h3 v-if="mdAndDown">Capacete {{ props.idCapacete }} - Live Data</h3>
-            <h2 v-else>Capacete {{ props.idCapacete }} - Live Data</h2>
+            <h3 :class="mdAndDown ? 'text-h5' : 'text-h4' " >Live Data</h3>
         </template>
+        <v-sheet
+            v-if="!emUso"
+            class="d-flex align-center mx-auto"
+            rounded="b-xl"
+            width="400px"
+            height="35vh"
+        >
+        <v-alert
+            dense
+            type="info"
+            class="mx-4 rounded-pill"
+        >
+            Capacete não está em uso
+        </v-alert>
+    </v-sheet>
 
-        <v-row class="px-4 py-4">
+        <v-row class="px-4 py-4" v-else>
             <v-col
                 v-for="(value, key, index) in filteredMensagemCapacete()"
                 :key="index"
@@ -137,8 +155,7 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
                     :max-width="mdAndDown ? '750px' : '30vw'"
                 >
                     <template v-slot:title>
-                        <h5 v-if="mdAndDown" style="text-align: left;">{{ getTitle(key) }}</h5>
-                        <h4 v-else style="text-align: left;">{{ getTitle(key) }}</h4>
+                        <h4 :class="mdAndDown? 'text-h6': 'text-h5'" style="text-align: left;">{{ getTitle(key) }}</h4>
                     </template>
                     <v-card-text class="text-center">
                         <div
@@ -165,15 +182,19 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
                         </div>
                         <div
                             v-else
-                            v-for="(dictValue, dictKey) in value"
-                            class="text-h3"
                         >
-                            <v-chip class="custom-chip-size">
-                                <b v-if="key==='bodyTemperature' && dictValue !== null">{{ dictValue }}&deg;C</b>
-                                <b v-else-if="key==='heartrate' && dictValue !== null">{{ dictValue }} bpm</b>
-                                <b v-else-if="dictValue === null"> - </b> 
-                                <b v-else>{{ dictValue }}</b> 
-                            </v-chip>
+                            <div
+                                v-for="(dictValue, dictKey) in value"
+                                :key="dictKey"
+                                class="text-h3"
+                            >
+                                <v-chip class="custom-chip-size">
+                                    <b v-if="key==='bodyTemperature' && dictValue !== null">{{ dictValue }}&deg;C</b>
+                                    <b v-else-if="key==='heartrate' && dictValue !== null">{{ dictValue }} bpm</b>
+                                    <b v-else-if="dictValue === null"> - </b> 
+                                    <b v-else>{{ dictValue }}</b> 
+                                </v-chip>
+                            </div>
                         </div>
                     </v-card-text>
                 </v-card>

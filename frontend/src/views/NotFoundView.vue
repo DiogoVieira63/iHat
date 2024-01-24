@@ -4,11 +4,24 @@ import PageLayout from '@/components/Layouts/PageLayout.vue'
 
 <template>
     <PageLayout>
-        <div class="flex flex-col items-center justify-center">
-            <h1 class="text-4xl font-bold text-gray-800">404</h1>
-            <p class="text-gray-600">
-                Page not found. Go back to <router-link to="/">Home</router-link>
-            </p>
-        </div>
+        <v-sheet height="80vh" class="d-flex align-center border" >
+            <v-row class="my-auto">
+                <v-col cols="12">
+                    <h2 class="text-h1 text-center">404</h2>
+                </v-col>
+                    <v-col cols="12">
+                        <h3 class="text-h4 text-center">
+                        Oops, a Página não foi encontrada
+                    </h3>
+                </v-col>
+                <v-btn
+                    color="primary"
+                    @click="$router.push('/')"    
+                    class="mx-auto mt-6"
+                    >
+                    Voltar para a página inicial
+                </v-btn>
+            </v-row>
+        </v-sheet>
     </PageLayout>
 </template>

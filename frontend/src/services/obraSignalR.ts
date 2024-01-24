@@ -34,6 +34,7 @@ export class ObraSignalRService {
 
     updateCapacetePosition(callback: (capaceteId: number, position: Position) => void) {
         this.connection.on('UpdateSingleLocation', (message) => {
+            console.log('UpdateSingleLocation',message)
             const id = Object.keys(message)[0]
             callback(Number(id), message[id])
         })

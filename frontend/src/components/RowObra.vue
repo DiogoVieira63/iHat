@@ -2,10 +2,11 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ConfirmationDialog from './ConfirmationDialog.vue';
-
+import CapaceteStatus from './CapaceteStatus.vue';
 interface Props {
     row: { [numero: string]: string }
     selected: boolean
+    canEdit: boolean
 }
 
 const props = defineProps<Props>()
@@ -13,7 +14,6 @@ const props = defineProps<Props>()
 const emit = defineEmits(['removeCapacete', 'changeStatus', 'selectCapacete'])
 
 const router = useRouter()
-const dialog = ref(false)
 const removeDialog = ref(false)
 
 function changePage(numero: string) {
@@ -24,7 +24,6 @@ function changeStatus(ConfirmationDialog: boolean) {
     if (ConfirmationDialog) {
         emit('changeStatus', newStatus(props.row.status))
     }
-    dialog.value = false
 }
 
 function newStatus(Status: string) {
@@ -48,38 +47,13 @@ function isInUso() {
         {{ props.row['numero'] }}
     </td>
     <td>
-        <ConfirmationDialog
-            title="Confirmação"
-            :function="changeStatus"
+        <CapaceteStatus 
+            :estado="props.row['status']"
+            :idCapacete="Number(props.row['numero'])"
+            :canEdit="props.canEdit"
+            @changeStatus="changeStatus"
         >
-            <template #button="{ open }">
-                <v-select
-                    :disabled="isInUso()"
-                    class="mt-5 pa-0"
-                    density="compact"
-                    :items="['Livre', 'Não Operacional']"
-                    :model-value="
-                        props.row['status'] == 'Associado à Obra' ? 'Livre' : props.row['status']
-                    "
-                    @update:model-value="
-                        (value) => {
-                            if (value !== props.row['status']) open()
-                        }
-                    "
-                >
-                </v-select>
-            </template>
-            <template v-slot:message>
-                Tem a certeza que pretende alterar o Status do
-                <strong> Capacete {{ props.row.numero }}</strong> de
-                <span class="font-weight-bold text-red">{{
-                    props.row['status'] == 'Associado à Obra' ? 'Livre' : props.row['status']
-                }}</span>
-                para
-                <span class="font-weight-bold text-green">{{ newStatus(props.row['status']) }}</span
-                >?
-            </template>
-        </ConfirmationDialog>
+        </CapaceteStatus>
     </td>
     <td>
         <v-btn
@@ -98,7 +72,7 @@ function isInUso() {
                     v-bind="prop"
                     color="grey"
                     variant="text"
-                    :disabled="isInUso()"
+                    :disabled="isInUso() || !canEdit"
                 >
                     <v-icon>mdi-delete</v-icon>
                 </v-btn>

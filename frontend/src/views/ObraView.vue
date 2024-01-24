@@ -25,6 +25,7 @@ const textField = ref<HTMLInputElement | null>(null)
 const estadoObra = ref('')
 const newEstado = ref('')
 const mapList = ref<Array<Mapa>>([])
+const page = ref(route.query.page ? parseInt(route.query.page as string) : 1)
 const idObra: string = route.params.id.toString()
 const isLoaded = ref(false)
 const notificacoesStore = useNotificacoesStore()
@@ -36,6 +37,14 @@ const logs = computed(() => {
         })
         .slice()
         .reverse()
+})
+
+const canEdit = computed(() => {
+    return estadoObra.value != 'Finalizada' && estadoObra.value != 'Cancelada'
+})
+
+const canSimulador = computed(() => {
+    return estadoObra.value == 'Em Curso'
 })
 
 const toggleEditing = () => {
@@ -68,7 +77,7 @@ const getObra = () => {
         if (answer.status) estadoObra.value = answer.status
         if (estadoObra.value === 'Em Curso') {
             if (!(idObra in notificacoesStore.connections)){
-                notificacoesStore.startConnection(idObra)
+                notificacoesStore.startConnection(idObra, title.value)
             }
             const connection  = notificacoesStore.connections[idObra]
             connection.updateCapacetePosition(updateCapacetePosition)
@@ -153,8 +162,8 @@ function removeCapacete(id: string) {
         })
 }
 
-const changeEstadoCapacete = async (row: { [key: string]: string }, value: string) => {
-    await CapaceteService.changeEstadoCapacete(Number(row['numero']), value)
+const changeEstadoCapacete = async (idCapacete: number, value: string) => {
+    await CapaceteService.changeEstadoCapacete(idCapacete, value)
         .then(() => {
             getCapacetesObra()
         })
@@ -173,6 +182,7 @@ const changeEstado = (value: boolean) => {
         ObraService.changeEstadoObra(idObra, estadoObra.value)
             .then(() => {
                 getObra()
+                isEditing.value = false
             })
             .catch((error) => {
                 console.error('Error changing state:', error)
@@ -182,10 +192,8 @@ const changeEstado = (value: boolean) => {
 }
 
 const goToSimulador = () => {
-    //router.push({ name: 'simulador', params: { id: route.params.id } })
     const currentRoute = router.currentRoute.value
-
-    router.push(currentRoute.fullPath + '/simulador')
+    router.push({path: currentRoute.path + '/simulador', query: {page: page.value}})
 }
 
 const selectCapacete = (idCapacete: number) => {
@@ -202,7 +210,6 @@ const selectCapacete = (idCapacete: number) => {
             <template #title>
                 <v-row
                     class="my-3 d-flex justify-center"
-
                 >
                 <v-col
                     cols="12"
@@ -213,7 +220,7 @@ const selectCapacete = (idCapacete: number) => {
                         class="text-h4 text-lg-h3"
                         v-if="!isEditing"
                     >
-                        {{ title }}
+                        {{ title }} 
                     </div>
                     <v-responsive
                         v-else
@@ -265,17 +272,23 @@ const selectCapacete = (idCapacete: number) => {
                 </v-col>
                 <v-spacer />
                 <v-col class="d-flex justify-end mr-6" cols="auto">
-                    <v-btn
-                        rounded="xl"
-                        size="large"
-                        variant="flat"
-                        color="primary"
-                        block
-                        @click="goToSimulador"
-                        :disabled="estadoObra !== 'Em Curso'"
-                    >
-                        Simulador
-                    </v-btn>
+                    <v-tooltip text="A obra necessita de estar Em Curso" location="bottom" :disabled="canSimulador">
+                        <template #activator="{ props}">
+                            <div v-bind="props" >
+                                <v-btn
+                                rounded="xl"
+                                size="large"
+                                variant="flat"
+                                color="primary"
+                                block
+                                @click="goToSimulador"
+                                :disabled="!canSimulador"
+                                >
+                                Simulador
+                            </v-btn>
+                        </div>
+                    </template>
+                    </v-tooltip>
                     <v-btn
                         rounded="xl"
                         :variant="isEditing ? 'outlined' : 'flat'"
@@ -283,6 +296,7 @@ const selectCapacete = (idCapacete: number) => {
                         icon="mdi-pencil"
                         @click="toggleEditing"
                         class="ml-4"
+                        :disabled="!canEdit"
                     ></v-btn>
                 </v-col>
                 </v-row>
@@ -298,6 +312,9 @@ const selectCapacete = (idCapacete: number) => {
                     :capacetesPosition="capacetes"
                     :capacetesSelected="capacetesSelected"
                     :mapList="mapList"
+                    :canEdit="canEdit"
+                    :page="page"
+                    @updatePage="page = $event"
                     @update="getObra"
                     @selectCapacete="selectCapacete"
                 ></TheMap>
@@ -323,13 +340,15 @@ const selectCapacete = (idCapacete: number) => {
                         <RowObra
                             :selected="capacetesSelected == row['numero']"
                             :row="row"
+                            :canEdit="canEdit"
                             @removeCapacete="(numero) => removeCapacete(numero)"
-                            @changeStatus="(value) => changeEstadoCapacete(row, value)"
+                            @changeStatus="(value) => changeEstadoCapacete(Number(row['numero']), value)"
                             @selectCapacete="selectCapacete"
                         />
                     </template>
                     <template v-slot:add>
                         <FormCapaceteObra
+                            v-if="canEdit"
                             :idObra="idObra"
                             @update="getCapacetesObra"
                         />

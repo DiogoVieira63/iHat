@@ -1,11 +1,13 @@
 import type { IClientOptions, MqttClient } from 'mqtt'
 import mqtt from 'mqtt'
+import { th } from 'vuetify/locale'
 
 export class MqttService {
-    client: MqttClient
+    client: MqttClient | undefined
+    connected = false
 
-    constructor(client: MqttClient | undefined) {
-        if (client === undefined) {
+    connect() {
+        return new Promise((resolve, reject) => {
             const options: IClientOptions = {
                 clientId: 'admin',
                 username: 'admin',
@@ -17,22 +19,23 @@ export class MqttService {
 
             this.client.on('connect', () => {
                 console.log('Connected to MQTT broker')
-                this.client.publish('presence', 'Hello mqtt', (err) => {
-                    if (err) {
-                        console.error(`Failed to publish: ${err}`)
-                    }
-                })
+                this.connected = true
+                resolve(true)
             })
-        } else {
-            this.client = client
-        }
 
-        this.client.on('error', (err) => {
-            console.error(`MQTT error: ${err}`)
+            this.client.on('error', (err) => {
+                console.error(`MQTT error: ${err}`)
+                reject(err)
+            })
         })
     }
 
+
     async publish(topic: string, message: string) {
+        if (!this.client) {
+            console.error('MQTT client not connected')
+            return
+        }
         this.client.publish(topic, message, (err) => {
             if (err) {
                 console.error(`Failed to publish: ${err}`)
@@ -41,6 +44,10 @@ export class MqttService {
     }
 
     async subscribe(topic: string, callback: (topic: string, message: string) => void) {
+        if (!this.client) {
+            console.error('MQTT client not connected')
+            return
+        }
         this.client.subscribe(topic, (err) => {
             if (err) {
                 console.error(`Failed to subscribe: ${err}`)
