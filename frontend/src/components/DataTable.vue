@@ -173,7 +173,7 @@ watch(
 const rowSelected = (row: { [id: string]: string }) => {
     if (props.selected && props.selected['key'] && props.selected['value']) {
         if (row[props.selected['key']] == props.selected['value']) 
-            return theme.current.value.dark ? 'bg-grey-lighten-2' : 'bg-grey'
+            return theme.current.value.dark ? 'bg-red-darken-4' : 'bg-red-lighten-3'
     }
     return ''
 }
@@ -211,7 +211,7 @@ const rowSelected = (row: { [id: string]: string }) => {
                             v-model="filter[key]"
                             column
                             multiple
-                            color="info"
+                            color="success"
                         >
                             <v-chip
                                 v-for="option in value"
@@ -253,6 +253,7 @@ const rowSelected = (row: { [id: string]: string }) => {
         height="60vh"
         fixed-header
         class="rounded-b-xl"
+        style="cursor: pointer;"
     >
         <thead>
             <tr>

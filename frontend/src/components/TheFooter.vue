@@ -55,7 +55,7 @@ function navigateToLink(url: string) {
                 :key="value.url"
                 >
                 <v-card
-                    color="primary"
+                    color="transparent"
                     width="100" height="50"
                     class="mx-8"
                     :elevation="isHovering ? 10 : 0"

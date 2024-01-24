@@ -5,41 +5,40 @@
         {
           name: 'António Fernandes',
           role: `Backend`,
-          img: '/avatar.png',
+          img: '/to.png',
         },
         {
           name: 'Diogo Vieira',
           role: `Frontend`,
-          img: '/avatar.png',
+          img: '/Diogo.png',
         },
         {
           name: 'Eduardo Magalhães',
           role: `Frontend`,
-          img: '/avatar.png',
+          img: '/edu_.jpg',
         },
         {
           name: 'João Mendes',
           role: `Backend`,
-          img: '/avatar.png',
+          img: '/joaoMendes.png',
         },
         {
           name: 'João Torres',
           role: `Frontend`,
-          img: '/avatar.png',
+          img: '/sinel.png',
         },
         {
           name: 'Mariana Rodrigues',
           role: `Backend`,
-          img: '/avatar.png',
+          img: '/Mariana.jpeg',
         },
         {
           name: 'Rui Alves',
           role: `Backend`,
-          img: '/avatar.png',
+          img: '/rui.jpg',
         },
       ];
 
-    const transparent: string = 'rgba(255, 255, 255, 0)';
 
 </script>
 

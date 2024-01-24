@@ -176,7 +176,9 @@ export class CapaceteService {
             .then((response) => {
                 return response.data
             })
-            .catch((error) => console.error('Error:', error))
+            .catch((error) =>  {
+                throw new Error(error)
+            })
     }
 
     static addOneCapacete(body: Capacete): Promise<void> {

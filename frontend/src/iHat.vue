@@ -6,6 +6,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { ObraService } from './services/http'
 import type { Log } from './interfaces'
 import NotificationCard from './components/NotificationCard.vue'
+import { computed } from 'vue'
 
 const obras = ref<Array<Obra>>([])
 const connections = ref<Array<ObraSignalRService>>([])
@@ -41,9 +42,8 @@ onMounted(async () => {
         for (const obra of obras.value) {
             if (obra.status == 'Em Curso'){
                 const idObra = obra.id as string
-                notificacoesStore.namesObras[idObra] = obra.nome
                 await getLogsObra(idObra)
-                notificacoesStore.startConnection(idObra)
+                notificacoesStore.startConnection(idObra, obra.nome)
             }
         }
     }
@@ -77,22 +77,32 @@ notificacoesStore.$subscribe((mutation,state) => {
 function addNotification(log : Log) {
     if(log && !first.value){
         notifications.value[log.id] = log;
-        setTimeout(() => removeNotification(log.id), 3000);
+        setTimeout(() => removeNotification(log.id), 2500);
     }
   }
 
 function removeNotification(notificationId :string) {
-  delete notifications.value[notificationId];
-  }
+    if (notifications.value[notificationId]) {
+        setTimeout(() => delete notifications.value[notificationId],500) 
+    }
+}
+
+
+
+
+const notificacoesPorLer = computed(()=>{
+    return notificacoesStore.notificacoes.filter((item) => !item.vista).length
+}) 
 
 </script>
 <template>
+    {{ notificacoesStore.namesObras}}
     <div class="notificationContainer">
         <v-slide-y-transition group>
-            <template v-if="first">
+            <template v-if="first && notificacoesPorLer > 0">
                 <v-card
                     style="cursor: pointer;"
-                    :title="`${notificacoesStore.notificacoes.filter((item) => !item.vista).length} Notificações por ler`"
+                    :title="`${notificacoesPorLer} Notificações por ler`"
                     :text="`Bem-vindo ao iHat!`"
                     variant="flat"
                     color="grey-lighten-2"
@@ -104,6 +114,8 @@ function removeNotification(notificationId :string) {
                     v-for="notification in notifications"
                     :key="notification.id"
                     :item="notification"
+                    @mouseenter="removeNotification(notification.id)" 
+                    
                 />
             </template>
         </v-slide-y-transition>

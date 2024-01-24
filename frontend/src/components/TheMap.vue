@@ -12,11 +12,10 @@ import FormMapa from './FormMapa.vue'
 const route = useRoute()
 const { mdAndDown } = useDisplay()
 
-const page = ref(1)
 const edit = ref(false)
 const id: string = route.params.id as string
 const addMapa = ref(false)
-const emit = defineEmits(['update', 'selectCapacete'])
+const emit = defineEmits(['update', 'selectCapacete', 'updatePage'])
 
 const props = defineProps({
     mapList: {
@@ -30,6 +29,14 @@ const props = defineProps({
     capacetesSelected: {
         type: Number,
         default: -1
+    },
+    canEdit: {
+        type: Boolean,
+        default: false
+    },
+    page: {
+        type: Number,
+        default: 1
     }
 })
 
@@ -91,7 +98,8 @@ const capacetesMap = (floor: number) => {
             >
                 <v-pagination
                     v-if="props.mapList.length > 1"
-                    v-model="page"
+                    :model-value="props.page"
+                    @update:model-value="emit('updatePage', $event)"
                     :length="mapList.length"
                     :total-visible="5"
                 >
@@ -108,6 +116,7 @@ const capacetesMap = (floor: number) => {
                     variant="tonal"
                     color="primary"
                     @click="edit = !edit"
+                    :disabled="!props.canEdit"
                 >
                     {{ mdAndDown ? '' : 'Editar' }}
                 </v-btn>
@@ -132,10 +141,9 @@ const capacetesMap = (floor: number) => {
         </v-row>
     </template>
     <v-sheet
-        v-else
-        width="100%"
-        height="900px"
-        class="d-flex justify-center"
+        v-else-if="props.canEdit"
+        height="75vh"
+        class="d-flex justify-center rounded-xl"
     >
         <div class="d-flex align-center">
             <v-sheet
@@ -161,6 +169,13 @@ const capacetesMap = (floor: number) => {
                 />
             </v-sheet>
         </div>
+    </v-sheet>
+    <v-sheet
+        v-else
+        height="75vh"
+        class="d-flex align-center justify-center rounded-xl"
+    >
+        <p class="text-center text-h6">Não existem mapas para esta obra.</p>
     </v-sheet>
 </template>
 

@@ -18,16 +18,18 @@ export const useNotificacoesStore = defineStore('notificacoes', {
         unseenNotifications() {
             return this.notificacoes.filter((notification) => !notification.vista)
         },
-        startConnection(obraId: string) {
+        startConnection(obraId: string, obraName: string) {
             if (this.connections[obraId]) return
             const connection = new ObraSignalRService(obraId)
             connection.start()
             this.connections[obraId] = connection
+            this.namesObras[obraId] = obraName
             connection.handleIncomingLogs(this.addNotification)
         },
         stopConnection(obraId: string) {
             this.connections[obraId].close()
             delete this.connections[obraId]
+            delete this.namesObras[obraId]
         },
     }
 })

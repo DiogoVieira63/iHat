@@ -53,7 +53,7 @@ onMounted(() => {
     updateChartData()
 })
 
-watch(props.dadosCapacete, (newDadosCapacete, oldDadosCapacete) => {
+watch(props.dadosCapacete, () => {
     updateChartData();
 });
 
@@ -79,6 +79,7 @@ const options = (id: string) => {
             },
             tickAmount: 5,
         },
+        yaxis: {}
     }
 
     if (id === "Quedas"){
@@ -90,7 +91,7 @@ const options = (id: string) => {
             },
             tickAmount: 1
         }
-        options = { ...options, yaxis: yaxisOptions };
+        options['yaxis'] = yaxisOptions
     }
     return options
 }
@@ -109,8 +110,8 @@ const createSeries = (name:Array<string>, data: Array<Array<any>>) => {
 }
 
 const charts = ref([
-    { name: "Frequência Cardíaca (Last 20)", type: "line", data: heartrate },
-    { name: "Variação da Temperatura Corporal (Last 20)", type: "line", data: bodyTemperature },
+    { name: "Frequência Cardíaca", type: "line", data: heartrate },
+    { name: "Temperatura Corporal", type: "line", data: bodyTemperature },
     { name: "Gases", type: "line", data: gases },
     { name: "Quedas", type: "bar", data: fall }
 ]);
@@ -120,21 +121,24 @@ const charts = ref([
 <template>
     <ChartLayout>
         <template 
-            v-for="(chartInfo, index) in charts" 
-            #[chartInfo.name]
+            v-for="({name, type, data}, index) in charts" 
+            #[name]
             :key="index"
         >
-            <apexchart v-if="chartInfo.name !== 'Gases'"
-                :type="chartInfo.type"
-                :options="options(chartInfo.name)"
-                :series="createSeries([chartInfo.name], [chartInfo.data])"
+            <apexchart v-if="name !== 'Gases'"
+                :type="type"
+                :options="options(name)"
+                :series="[{
+                    name: name,
+                    data: data
+                }]"
             ></apexchart>
             <apexchart v-else
-                :type="chartInfo.type"
-                :options="options(chartInfo.name)"
+                :type="type"
+                :options="options(name)"
                 :series="createSeries(['Metano', 'Monóxido de Carbono'], [
-                  chartInfo.data.map(entry => (typeof entry === 'object' ? entry.metano : 0)),
-                  chartInfo.data.map(entry => (typeof entry === 'object' ? entry.monoxidoCarbono : 0))
+                  data.map(entry => (typeof entry === 'object' ? entry.metano : 0)),
+                  data.map(entry => (typeof entry === 'object' ? entry.monoxidoCarbono : 0))
                 ])"
             ></apexchart>
         </template>
