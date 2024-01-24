@@ -58,6 +58,7 @@ const filter = ref<{ [key: string]: string[] }>(resetFilter())
 const filterFunc = (row: { [id: string]: string }) => {
     let result = true
     for (let header in filter.value) {
+        if(header === 'id' || header === '_id') continue
         if (filter.value[header].length > 0 && !filter.value[header].includes(row[header])) {
             result = false
         }
@@ -70,9 +71,16 @@ const rowsFilter = computed(() => {
     if (!search.value) {
         return filtered
     } else {
+        // dont include id in filter
         filtered = filtered.filter((item) => {
-            return Object.values(item).some((val) => {
-                return String(val).toLowerCase().includes(search.value.toLowerCase())
+            return Object.entries(item).some((val) => {
+                const key = val[0]
+                if (props.headers.find((header) => header.key === key)?.params.includes('search')){
+                    let res = String(val[1]).toLowerCase().includes(search.value.toLowerCase())
+                    return res
+                }
+                return false
+                
             })
         })
         return filtered
