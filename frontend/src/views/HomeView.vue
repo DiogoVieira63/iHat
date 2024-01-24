@@ -50,13 +50,13 @@ const headers: ComputedRef<Array<Header>> = computed(() => {
     let value: Array<Header> = []
     if (tab.value === 'obras') {
         value = [
-            { key: 'nome', name: 'Nome', params: ['sort'] },
-            { key: 'status', name: 'Estado', params: ['filter', 'sort'] }
+            { key: 'nome', name: 'Nome', params: ['sort','search'] },
+            { key: 'status', name: 'Estado', params: ['filter', 'sort','search'] }
         ]
     } else if (tab.value === 'capacetes') {
         value = [
-            { key: 'numero', name: 'Id', params: ['sort'] },
-            { key: 'status', name: 'Estado', params: ['filter', 'sort'] }
+            { key: 'numero', name: 'Id', params: ['sort','search'] },
+            { key: 'status', name: 'Estado', params: ['filter', 'sort','search'] }
         ]
     }
     return value

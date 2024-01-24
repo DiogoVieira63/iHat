@@ -147,8 +147,8 @@ onUnmounted(() => {
 })
 
 const headers: Array<Header> = [
-    { key: 'numero', name: 'Id', params: ['sort'] },
-    { key: 'status', name: 'Estado', params: ['filter', 'sort'] },
+    { key: 'numero', name: 'Id', params: ['sort','search'] },
+    { key: 'status', name: 'Estado', params: ['filter', 'sort','search'] },
     { key: 'Actions', name: 'Actions', params: [] }
 ]
 
