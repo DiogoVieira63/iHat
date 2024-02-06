@@ -20,7 +20,7 @@ public class MQTTService {
     private readonly string _BasicTopic = "my/topic";
     private readonly string _PairingTopic = "ihat/obras";
     private readonly string _clientId = "iHatBackendServer";
-    private readonly string _url = "localhost";
+    private readonly string _url = "mqtt-broker";
     private readonly int _port = 1883;
     private readonly string _username = "admin";
     private readonly string _password = "password";

@@ -45,7 +45,7 @@ public class iHatFacade: IiHatFacade {
             ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
             content.Add(fileContent, "ifc_file", "ifc_file"); // "file" is the name of the parameter expected by the server
 
-            HttpResponseMessage response = await client.PostAsync("http://127.0.0.1:5000/ifc2svg", content);
+            HttpResponseMessage response = await client.PostAsync("http://model2svg:5000/ifc2svg", content);
 
             if (!response.IsSuccessStatusCode)
             {

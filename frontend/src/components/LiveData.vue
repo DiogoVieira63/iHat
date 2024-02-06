@@ -149,7 +149,7 @@ const getColor = (key: string, value: boolean | ValueObject | Gases ) => {
             >
                 <!-- Ajeitar caso sejam precisos mais dados -->
                 <v-card
-                    :color="getColor(key, value)"
+                    :color="getColor(key, value as boolean | ValueObject | Gases)"
                     :prepend-icon="getIcon(key)"
                     height="250px"
                     :max-width="mdAndDown ? '750px' : '30vw'"

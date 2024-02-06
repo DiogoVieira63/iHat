@@ -1,6 +1,5 @@
 import type { IClientOptions, MqttClient } from 'mqtt'
 import mqtt from 'mqtt'
-import { th } from 'vuetify/locale'
 
 export class MqttService {
     client: MqttClient | undefined

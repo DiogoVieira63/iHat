@@ -54,7 +54,7 @@ const emit = defineEmits([
 
 onMounted(() => {
     if (!mqttStore.mqtt) {
-        mqtt = new MqttService(undefined)
+        mqtt = new MqttService()
         mqttStore.setMqtt(mqtt)
     } else {
         mqtt = mqttStore.mqtt as MqttService

@@ -1,7 +1,6 @@
 import type { Capacete, Log, MensagemCapacete, Obra, Position } from '@/interfaces'
 import axios from 'axios'
 const url = `http://localhost:5069/ihat`
-
 // Obras
 
 export class ObraService {
