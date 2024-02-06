@@ -1,0 +1,86 @@
+version: "1"
+
+networks:
+  frontend: {}
+  backend: {}
+
+services:
+  frontend:
+    build:
+      context: frontend/
+      dockerfile: Dockerfile
+    image: acrihat.azurecr.io/frontend
+    ports:
+      - "8080:80"
+    networks:
+      - frontend
+    depends_on:
+      - dotnet
+    container_name: frontend
+
+  dotnet:
+    build:
+      context: backend/
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+      - mqtt-broker
+    ports:
+      - "5069:80"
+    image: acrihat.azurecr.io/dotnet
+    networks:
+      - backend
+      - frontend
+    container_name: dotnet
+
+
+  mqtt-broker:
+    image: eclipse-mosquitto:latest
+    hostname: mosquitto
+    user: mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mqtt_broker/config:/mosquitto/config
+      - ./mqtt_broker/log:/mosquitto/log
+      - ./mqtt_broker/data:/mosquitto/data
+    networks:
+      - backend
+      - frontend
+    container_name: mqtt-broker
+
+  model2svg:
+    build:
+      context: model2SVG/
+      dockerfile: Dockerfile
+    expose:
+      - "5000"
+    image: acrihat.azurecr.io/model2svg
+    networks:
+      - backend
+    container_name: model2svg
+
+  mongodb:
+    build: 
+      context: db/
+      dockerfile: Dockerfile
+    image: acrihat.azurecr.io/mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - dbdata6:/data/db
+    networks:
+      - backend
+    container_name: mongodb
+
+volumes:
+  config:
+    name: "mqtt-broker-config"
+  data:
+    name: "mqtt-broker-data"
+  log:
+    name: "mqtt-broker-log"
+  dbdata6:
+    name: "mongo-db-data"
+

@@ -66,7 +66,7 @@ public class PublisherService{
 
         // Create TCP based options using the builder pattern
         var options = new MqttClientOptionsBuilder()
-            .WithTcpServer("localhost",1883) // Replace with your broker's address
+            .WithTcpServer("mqtt-broker",1883) // Replace with your broker's address
             .WithClientId("YourClientId") // Provide a unique client ID
             .WithCredentials("admin", "password")
             .Build();

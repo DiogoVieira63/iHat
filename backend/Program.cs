@@ -16,16 +16,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddCors(options =>
-{
-    options.AddPolicy(
-        "MyPolicy",
-        builder =>
+    {
+        options.AddPolicy("AllowVueDev", builder =>
         {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
+            builder.WithOrigins("http://localhost:8080")// Replace with your Vue.js development server URL
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
         });
-});
+    });
+
+
 
 
 builder.Services.AddControllers();
@@ -63,7 +63,7 @@ builder.Services.AddSwaggerGen(options => {
 });
 
 var app = builder.Build();
-app.UseCors("MyPolicy");
+app.UseCors("AllowVueDev");
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapControllers();

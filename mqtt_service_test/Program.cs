@@ -6,7 +6,7 @@ using MQTTnet.Formatter;
 
 public class Program{
     
-    private string url = "localhost";
+    private string url = "mqtt-broker";
     private int port = 1883;
 
     private string username = "admin";
@@ -23,7 +23,7 @@ public class Program{
 
     private static async Task ConnectingAction(IMqttClient mqttClient, CancellationTokenSource timeoutToken){
         var mqttClientOptions = new MqttClientOptionsBuilder()
-            .WithTcpServer("localhost", 1883)
+            .WithTcpServer("mqtt-broker", 1883)
             .WithCredentials("admin", "password")
             .WithProtocolVersion(MqttProtocolVersion.V500)
             .Build();
