@@ -66,8 +66,6 @@ services:
       context: db/
       dockerfile: Dockerfile
     image: acrihat.azurecr.io/mongodb
-    ports:
-      - "27017:27017"
     volumes:
       - dbdata6:/data/db
     networks:
